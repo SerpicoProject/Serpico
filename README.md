@@ -8,12 +8,16 @@ Wouldn't exist without testing, support, and feature suggestion of the rest of t
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy (RVM is highly suggested):
 
-```gem install bundler
+```
+gem install bundler
 bundle install
-ruby scripts/first_time.rb```
+ruby scripts/first_time.rb
+```
 
 To start serpico:
-```ruby serpico.rb```
+```
+ruby serpico.rb
+```
 
 ## About Serpico
 Serpico is at its core a report generation tool but targeted at creating information security reports. When building a report the user adds "findings" from the template database to the report. When there are enough findings, click 'Generate Report' to create the docx with your findings. The docx design comes from a Report Template which can be added through the UI; a default one is included. The Report Templates use a custom Markup Language to stub the data from the UI (i.e. findings, customer name, etc) and put them into the report.
