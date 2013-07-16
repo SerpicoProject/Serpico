@@ -47,8 +47,7 @@ class Findings
 	property :remediation, String, :length => 20000, :required => false
 	property :notes, String, :length => 1000000, :required => false
 	property :assessment_type, String, :required => false
-  property :references, String, :length => 20000, :required => false
-
+	property :references, String, :length => 20000, :required => false
 	
 end
 
@@ -74,37 +73,37 @@ end
 class User
 	include DataMapper::Resource
 	
-  property :id,			          Serial
-  property :username,		      String, :key => true, :length => (3..40), :required => true
-  property :hashed_password, 	String 
-  property :salt,		          String 
-  property :type,							String
-  property :auth_type,				String, :required => false
-  property :created_at,		    DateTime,	:default => DateTime.now
+	property :id, Serial
+	property :username, String, :key => true, :length => (3..40), :required => true
+	property :hashed_password, String 
+	property :salt, String 
+	property :type, String
+	property :auth_type, String, :required => false
+	property :created_at, DateTime,	:default => DateTime.now
 	property :consultant_name, String, :required => false
 	property :consultant_phone, String, :required => false
 	property :consultant_email, String, :required => false
 	property :consultant_title, String, :required => false		
- 	
- 	attr_accessor :password
-  validates_presence_of :username
+		
+	attr_accessor :password
+	validates_presence_of :username
 
-  def password=(pass)
-    @password = pass
-    self.salt = rand(36**12).to_s(36) unless self.salt
-    self.hashed_password = User.encrypt(@password, self.salt)
-  end
+	def password=(pass)
+		@password = pass
+		self.salt = rand(36**12).to_s(36) unless self.salt
+		self.hashed_password = User.encrypt(@password, self.salt)
+	end
 
-  def self.encrypt(pass, salt)
-    return Digest::SHA1.hexdigest(pass + salt)
-  end
+	def self.encrypt(pass, salt)
+		return Digest::SHA1.hexdigest(pass + salt)
+	end
   
-  def self.authenticate(username, pass)
-    user = User.first(:username => username)
-    if user
-    	return user.username if User.encrypt(pass, user.salt) == user.hashed_password
-  	end
-  end
+	def self.authenticate(username, pass)
+	user = User.first(:username => username)
+		if user
+			return user.username if User.encrypt(pass, user.salt) == user.hashed_password
+		end
+	end
 	
 end
 
