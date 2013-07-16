@@ -9,10 +9,13 @@ Wouldn't exist without testing, support, and feature suggestion of the rest of t
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy (RVM is highly suggested):
 
 `gem install bundler`
+
 `bundle install`
+
 `ruby scripts/first_time.rb`
 
 To start serpico:
+
 `ruby serpico.rb`
 
 ## About Serpico
