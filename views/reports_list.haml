@@ -1,0 +1,50 @@
+.span9.indent3
+  %br
+    .table.table-striped
+      %table{:style => 'width: 80%'}
+        %tbody
+          - if @reports.size > 0
+            %tr
+              %td{:style => 'width: 70%'}
+                %b
+                  Report Name
+              %td{:style => 'width: 10%'}
+                %b
+                  Owner
+              %td{:style => 'width: 20%'}
+                %b
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Actions
+            - @reports.each do |report|
+              %tr
+                %td{:style => 'width: 70%'}
+                  #{report.report_name}
+                %td{:style => 'width: 10%'}
+                  #{report.owner}
+                %td{:style => 'width: 20%'}
+                  - if @master
+                    %a{:class => 'button btn btn-warning', :href => "/master/reports/#{finding.id}"}
+                      %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                    %a{:class => 'btn btn-info', :href => "/master/reports/#{report.id}/generate"}
+                      %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                  - else
+                    - if @admin
+                      %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
+                        %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                      %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
+                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                      %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
+                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}                    
+                      %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
+                        %i{:class => 'icon-user icon-white', :title => 'Add Author'}
+                    - else
+                      %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
+                        %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                      %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
+                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}                      
+                      %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
+                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}                    
+          - else
+            %h2 
+              You have no reports :-( 
+              %br
+              Try <a href="/report/new">creating</a> one...

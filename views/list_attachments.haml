@@ -1,0 +1,21 @@
+.span10
+  %br
+  - if @attachments
+    %br
+      %h3 Current Attachments
+      %br  
+      .table.table-striped
+        %table{:style => 'width: 90%'}
+          %tbody
+            - @attachments.each do |attachment|
+              %tr
+                %td{:style => 'width: 70%'}
+                  #{attachment.description}
+                %td{:style => 'width: 30%'}
+                  %a{ :class => "btn btn-info", :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}"}
+                    %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                  %a{ :class => "btn btn-danger", :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}"}
+                    %i{:class => 'icon-remove icon-white', :title => 'Delete'} 
+
+  - else
+    No Attachments Available.

@@ -1,0 +1,40 @@
+.span10
+  %form{:method => 'post'}
+    %br
+    %h2 New Report
+    %br
+    - if @templates.size > 0
+      %table
+        %tr
+          %td
+            Title &nbsp;
+          %td
+            %input{:type => 'text', :name => 'report_name'}
+        %tr
+          %td
+            Full Company Name &nbsp;
+          %td
+            %input{:type => 'text', :name => 'full_company_name'}
+        %tr
+          %td
+            Short Company Name &nbsp;
+          %td
+            %input{:type => 'text', :name => 'short_company_name'}
+        %tr
+          %td{:style => 'width: 30%'}
+            Report Type
+          %td{:style => 'width: 70%'}
+            %select{ :name => "report_type" }
+              - @templates.each do |template|
+                - if template.finding_template == false and template.status_template == false
+                  - if @report and template.report_type == @report.report_type
+                    %option{ :selected => "selected" } #{type}
+                  - else
+                    %option #{template.report_type}
+      %br
+      %input{:type => 'submit', :value => 'Save' }
+      %button{:value => 'Cancel'} Cancel
+    - else
+      %h4
+        Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-
+      

@@ -1,0 +1,32 @@
+.span10
+  %form{:method => 'post'}
+    %br
+    %h2 Consultant Information
+    %br
+    %table
+      %tr
+        %td
+          Consultant Name &nbsp;
+        %td
+          %input{:type => 'text', :name => 'name', :value=> "#{@user.consultant_name}"}
+      %tr
+        %td
+          Email &nbsp;
+        %td
+          %input{:type => 'text', :name => 'email', :value => "#{@user.consultant_email}"}
+      %tr
+        %td
+          Phone &nbsp;
+        %td
+          %input{:type => 'text', :name => 'phone', :value => "#{@user.consultant_phone}"}
+      %tr
+        %td
+          Title &nbsp;
+        %td
+          %input{:type => 'text', :name => 'title', :value => "#{@user.consultant_title}"}
+          
+    %br
+    %input{:type => 'submit', :value => 'Save' }
+    %button{:value => 'Cancel'} Cancel
+  
+      

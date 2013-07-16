@@ -1,0 +1,32 @@
+.span10
+  %form{:method => 'post', :action => "/admin/add_user/#{@report.id}"}
+    %br
+    %h2 Editing #{@report.report_name} Report
+    %br
+    %h3 Current Authors
+    .table.table-striped
+      %table{:style => 'width: 50%'}    
+        %tr
+          %td
+            #{@report.owner}
+          %td
+            &nbsp;
+        - if @report.authors 
+          - @report.authors.each do |user|
+            %tr
+              %td
+                #{user}
+              %td
+                %a{ :class => "btn btn-danger", :href => "/admin/del_user_report/#{@report.id}/#{user}"}
+                  %i{:class => 'icon-remove icon-white', :title => 'Remove Author'} 
+
+    %br
+    %label{ :class => "control-label", :for => "add_collaborator" } 
+      Add Collaborator
+      %select{ :name => "author" } 
+        - @users.each do |user|
+          %option #{user.username}
+    %br    
+    %input{:type => 'submit', :value => 'Modify' }
+  
+      

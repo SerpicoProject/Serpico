@@ -1,0 +1,49 @@
+.span10
+  %form{:method => 'post', :action => '/admin/add_user'}
+    %br
+    %h2 Add/Edit User
+    %br
+    %table
+      %tr
+        %td
+          Username &nbsp;
+        %td
+          - if @user
+            %input{:type => 'text', :name => 'username', :value => "#{@user.username}"}
+          - else
+            %input{:type => 'text', :name => 'username'}
+      %tr
+        %td
+          Password (Not required for AD Auth Type)
+        %td
+          %input{:type => 'password', :name => 'password'}
+      %tr
+        %td
+          Authorization Type
+        %td
+          - if @user
+            %select{ :name => "auth_type" }          
+              - if @user.auth_type == "AD"
+                %option{ :selected => "selected" }AD           
+              - else
+                %option AD  
+              - if @user.auth_type == "Local"
+                %option{ :selected => "selected" } Local            
+              - else
+                %option Local               	 
+          - else        
+            %select{ :name => "auth_type" }
+              %option{ :selected => "selected" }AD           
+              %option Local               	
+      %tr
+        %td
+          User Level
+        %td
+          %select{ :name => "type" }
+            %option{ :selected => "selected" } User
+            %option Administrator
+    %br
+    %input{:type => 'submit', :value => 'Modify' }
+    %button{:value => 'Cancel'} Cancel
+  
+      

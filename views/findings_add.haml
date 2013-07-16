@@ -1,0 +1,41 @@
+.span10
+  %br
+  %br
+    - if @findings
+      %h3 Templated Findings
+      %h4 
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
+      %form{:method => 'post'}
+        .table.table-striped
+          %table{:style => 'width: 90%'}
+            %tbody
+            - options.finding_types.each do |type|
+              %tr
+                %td{ :style => 'width: 70%' }
+                  %b
+                    #{type}
+                %td{:style => 'width: 20%'}
+                  &nbsp;      
+              - @findings.each do |finding|
+                - if finding.type == type
+                  %tr
+                    %td{:style => 'width: 80%'}
+                      %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
+                      #{finding.title}
+                      - if finding.overview
+                        %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
+                        .info{ :id => "info_#{finding.id}", :class => "collapse out" }
+                          #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}                                           
+                    %td{:style => 'width: 20%'}
+                      - if @master
+                        %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
+                          %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                        %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
+                          %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                      - else
+                        %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
+                          %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+        %input{ :type => "submit", :value => 'Add' }
+        %button{:value => 'Cancel'} Cancel
+    - else
+      No Findings Available

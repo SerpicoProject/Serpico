@@ -1,0 +1,36 @@
+.span10
+  %form{:method => 'post', :action => '/admin/templates/add', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Add Template
+    %br
+    %table
+      %tr
+        %td
+          Report Type &nbsp;
+        %td
+          %input{:type => 'text', :name => 'report_type', :required=>true}
+      %tr
+        %td
+          File Description &nbsp;
+        %td
+          %input{:type => 'text', :name => 'description'}
+      %tr
+        %td
+          Finding Template &nbsp;
+        %td
+          %input{:type => 'checkbox', :name => 'finding_template'}
+      %tr
+        %td
+          Status Template &nbsp;
+        %td
+          %input{:type => 'checkbox', :name => 'status_template'}
+      %tr
+        %td
+          DOCX
+        %td
+          %input{:type => 'file', :name => 'file'}
+    %br
+    %input{:type => 'submit', :value => 'Add' }
+    %button{:value => 'Cancel'} Cancel
+  
+      

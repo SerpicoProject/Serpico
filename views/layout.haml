@@ -1,0 +1,137 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %script{:src => "/js/jquery.js"}
+    %script{:src => "/js/bootstrap-collapse.js"}
+    %script{:src => "/js/bootstrap-transition.js"}
+    %script{:src => "/js/bootstrap-alert.js"}
+    %script{:src => "/js/bootstrap-modal.js"}
+    %script{:src => "/js/bootstrap-dropdown.js"}
+    %script{:src => "/js/bootstrap-scrollspy.js"}
+    %script{:src => "/js/bootstrap-tab.js"}
+    %script{:src => "/js/bootstrap-tooltip.js"}
+    %script{:src => "/js/bootstrap-popover.js"}
+    %script{:src => "/js/bootstrap-button.js"}
+    %script{:src => "/js/bootstrap-carousel.js"}
+    %script{:src => "/js/bootstrap-typeahead.js"}
+
+    %meta{:charset => "utf-8"}/
+    %title Serpico
+    %meta{:content => "", :name => "description"}/
+    %meta{:content => "", :name => "author"}/
+    %link{:href => "/css/bootstrap.css", :rel => "stylesheet"}/
+    %link{:href => "/css/bootstrap.min.css", :rel => "stylesheet"}/
+    %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}/
+    :css
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      } 
+      .padded {
+        padding-top: 20px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        padding-right: 0px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+      .orange {
+        background-color: #ffa500;
+      }
+        %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}
+  - if valid_session?
+    %body
+      .navbar.navbar-fixed-top
+        .navbar-inner
+          %ul.nav{"class" => "padded"}
+            %li
+              %a{:href => "/reports/list"} List Reports          
+            %li
+              %a{:href => "/report/new"} New Report                      
+          .nav-collapse
+            %ul.nav{"class" => "pull-right padded"}
+              - if is_administrator?
+                %li
+                  %a{:href => "/master/findings"} Template Database
+                %li
+                  %a{:href => "/admin/"} Administration
+              %li
+                %a{:href => "/info"} Consultant Information
+              %li
+                %a{:href => "/logout"} Log Out
+      <br>
+      .container-fluid
+        .row-fluid
+          .span2
+            %br
+            - if @master
+              %button.btn-danger.btn-small
+                WARNING: You are editing the Templates Database
+              %br
+              %br
+              %ul.nav.nav-list
+                %li.nav-header Findings Menu
+                %li
+                  %a{ :href => '/master/findings' } List Current Findings
+                %li
+                  %a{ :href => '/master/findings/new' } Add Finding
+              %ul.nav.nav-list
+                %li.nav-header Database Functions
+                %li
+                  %a{ :href => '/master/export' } Export Current Findings                
+                %li
+                  %a{ :href => '/master/import' } Import Findings                
+            - elsif @admin
+              %ul.nav.nav-list
+                %li.nav-header Admin User Menu
+                %li
+                  %a{ :href => '/admin/add_user' } Add User
+                %li
+                  %a{ :href => '/admin/list_user' } List Users
+                %li.nav-header Admin Report Template Menu
+                %li
+                  %a{ :href => '/admin/templates/add' } Add Report Template
+                %li
+                  %a{ :href => '/admin/templates' } List Report Templates
+            - else
+              - if @report
+                %ul.nav.nav-list
+                  %li.nav-header
+                    #{@report.report_name}
+                  %li
+                    %a{ :href => "/report/#{@report.id}/edit" } Edit Report Information
+                  %li
+                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report                   
+                  %li
+                    %a{ :href => "/report/#{@report.id}/status" } Generate Status Report       
+                  %li.nav-header Findings
+                  %li
+                    %a{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
+                  %li
+                    %a{ :href => "/report/#{@report.id}/findings_add" } Add Finding from Templates
+                  %li
+                    %a{ :href => "/report/#{@report.id}/findings/new" } Create New Finding
+          =yield
+  - else
+    %body
+    .container-fluid
+      %img{:src => "/img/logo.jpg", :class => 'pull-left'} 
+      .span12
+      %br
+      %br
+      %br     
+      %br
+      %br
+      %br     
+      %br
+      %br
+      %br     
+      .span7
+        %ul.nav{"class" => "pull-right padded"}
+          %form{:action => "/login", :method => "post"}
+            %input.input-small{:placeholder => "Username", :type => "text", :name => "username"}/
+            %br
+            %input.input-small{:placeholder => "Password", :type => "password", :name => "password"}/
+            %br
+            %button.btn{:type => "submit padded"} Sign in

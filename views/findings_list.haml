@@ -1,0 +1,66 @@
+.span10
+  %br
+  - if @newfinding
+    %h2 Finding(s) Added! You rock.
+  %br
+    %h3 Current Findings 
+    %br  
+    .table.table-striped
+      %table{:style => 'width: 90%'}
+        %tbody
+          - if @findings
+            - options.finding_types.each do |type|
+              - if @master
+                %tr
+                  %td{ :style => 'width: 70%' }
+                    %b
+                      #{type}
+                  %td{:style => 'width: 10%'}
+                    &nbsp;
+                  %td{:style => 'width: 20%'}
+                    &nbsp;      
+              - @findings.each do |finding|
+                - if finding.type == type
+                  -if @master and !finding.approved
+                    -@class="error"
+                  - else
+                    -@class=""
+                  %tr{:class => "#{@class}"}
+                    %td{:style => 'width: 70%'}
+                      #{finding.title} 
+                      - if finding.overview
+                        %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
+                        .info{ :id => "info_#{finding.id}", :class => "collapse out" }
+                          #{finding.overview.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                          - if !@master
+                            - if finding.notes
+                              %br
+                              %br
+                                %b
+                                  %u
+                                    Notes
+                              - if finding.notes.length > 1      
+                                #{finding.notes.gsub("<paragraph>","<br/><br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                              - else
+                                None.           
+                    %td{:style => 'width: 10%'}
+                      #{finding.dread_total}
+                    %td{:style => 'width: 20%'}
+                      - if @master
+                        %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
+                          %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                        %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
+                          %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                        %a{ :class => "btn btn-danger", :href => "/master/findings/#{finding.id}/delete"}
+                          %i{:class => 'icon-remove icon-white', :title => 'Delete'} 
+                      - else
+                        %a{ :class => "btn btn-warning", :href => "/report/#{@report.id}/findings/#{finding.id}/edit"}
+                          %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                        %a{ :class => "btn btn-info", :href => "/report/#{@report.id}/findings/#{finding.id}/preview"}
+                          %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                        %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/#{finding.id}/remove"}
+                          %i{:class => 'icon-remove icon-white', :title => 'Delete'} 
+                        %a{ :class => "btn btn-inverse", :href => "/report/#{@report.id}/findings/#{finding.id}/upload"}
+                          %i{:class => 'icon-arrow-up icon-white', :title => 'Add to the findings database'} 
+          - else
+            No Findings Available

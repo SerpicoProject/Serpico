@@ -1,0 +1,154 @@
+.span10
+  %br
+  %h2 #{@finding.title}
+  %br
+  %br
+  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+    .control-group
+      %label{ :class => "control-label", :for => "title" } Title
+      .controls
+        %input{ :type => 'text', :name => 'title', :value => "#{@finding.title}"}
+    -if !@master            
+      %br
+      .control-group
+        %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
+        .controls
+          %select{ :name => "assessment_type" } 
+            - options.assessment_types.each do |type|
+              - if @finding
+                - if type == @finding.assessment_type
+                  %option{ :selected => "selected" } #{type}
+                - else
+                  %option #{type}
+    -if @master
+      .control-group
+        %label{ :class => "control-label", :for => "approved" } Approved
+        .controls
+          -if @finding.approved
+            %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
+          - else 
+            %input{ :type=>"checkbox", :name => 'approved'}
+    .control-group
+      %label{ :class => "control-label", :for => "damage" } Damage
+      .controls
+        %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "#{@finding.damage}", :required => true}
+    .control-group
+      %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+      .controls
+        %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "#{@finding.reproducability}", :required => true}
+    .control-group
+      %label{ :class => "control-label", :for => "exploitability" } Exploitability
+      .controls
+        %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "#{@finding.exploitability}", :required => true}
+    .control-group
+      %label{ :class => "control-label", :for => "affected_users" } Affected Users
+      .controls
+        %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#{@finding.affected_users}", :required => true}
+    .control-group
+      %label{ :class => "control-label", :for => "discoverability" } Discoverability
+      .controls
+        %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "#{@finding.discoverability}", :required => true}
+    .control-group
+      %label{ :class => "control-label", :for => "effort" } Remediation Effort
+      .controls
+        %select{ :name => "effort" }
+          - options.effort.each do |effort|
+            - if effort == @finding.effort
+              %option{ :selected => "selected" } #{effort}
+            - else
+              %option #{effort}
+    .control-group
+      %label{ :class => "control-label", :for => "type" } Finding Type
+      .controls
+        %select{ :name => "type" }
+          - options.finding_types.each do |type|
+            - if type == @finding.type
+              %option{ :selected => "selected" } #{type}
+            - else
+              %option #{type}               
+    .control-group
+      %label{ :class => "control-label", :for => "overview" }
+        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'} 
+          Overview
+      .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+        .modal-header
+          %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+            x
+          %h3{:id=>"modal-label"}
+            Meta Markup
+        .modal-body
+          %p
+            There are four markup sets you can use in the Overview and the Remediation summary. This text is converted inside of Microsoft Word.
+            %p{:class=>"text-error"}
+              YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+            %b
+              Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word. 
+          %h2
+            Bullets
+          %p
+            Place the bulleted text inbetween a *- and a -* like so:
+            %br
+            %br
+            %code
+              *- Bulleted text goes here -*
+          %h2
+            Paragraph Heading Text
+          %p
+            Place the heading inbetween a [== and a ==] like so:
+            %br
+            %br
+            %code
+              [== Heading text goes here ==]
+          %h2
+            Italics
+          %p
+            Place italicized inbetween a [~~ and a ~~] like so:
+            %br
+            %br
+            %code
+              [~~ Italics ~~]
+          %h2
+            Code
+          %p
+            Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+            %br
+            %br
+            %code
+              [[[ code, code goes here ]]]
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
+          - if @finding
+            - if @finding.overview
+              #{meta_markup(@finding.overview)}
+    .control-group
+      %label{ :class => "control-label", :for => "poc" } Proof of Concept
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'poc'}
+          - if @finding
+            - if @finding.poc
+              #{meta_markup(@finding.poc)}
+    .control-group
+      %label{ :class => "control-label", :for => "remediation" } Remediation
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
+          - if @finding
+            - if @finding.remediation
+              #{meta_markup(@finding.remediation)}
+    .control-group
+      %label{ :class => "control-label", :for => "references" } References (One Per Line)
+      .controls
+        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
+          - if @finding
+            - if @finding.references
+              #{meta_markup(@finding.references)}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "notes" } Notes
+        .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
+            - if @finding
+              - if @finding.notes
+                #{meta_markup(@finding.notes)}    
+    
+    %input{:type => 'submit', :value => 'Save'}
+    %button{:value => 'Cancel'} Cancel

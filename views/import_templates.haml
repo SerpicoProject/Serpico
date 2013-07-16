@@ -1,0 +1,18 @@
+.span10
+  %form{:method => 'post', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Upload Templated Findings
+    %br
+    %table
+      %tr
+      %tr
+        %td
+          Upload JSON File - Please be careful. This must have been exported from the UI.&nbsp;
+          %br
+          %br         
+          %input{:type => 'file', :name => 'file'}
+    %br
+    %input{:type => 'submit', :value => 'Upload' }
+    %button{:value => 'Cancel'} Cancel
+  
+      

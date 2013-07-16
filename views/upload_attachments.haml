@@ -1,0 +1,21 @@
+.span10
+  %form{:method => 'post', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Upload Attachment
+    %br
+    %table
+      %tr
+        %td
+          File Description &nbsp;
+        %td
+          %input{:type => 'text', :name => 'description', :required=>true}
+      %tr
+        %td
+          Upload &nbsp;
+        %td
+          %input{:type => 'file', :name => 'file',}
+    %br
+    %input{:type => 'submit', :value => 'Upload' }
+    %button{:value => 'Cancel'} Cancel
+  
+      
