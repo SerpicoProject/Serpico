@@ -155,7 +155,7 @@ class Reports
 	include DataMapper::Resource
 
 	property :id, Serial
-	property :date, Date
+	property :date, String, :length => 20
 	property :report_type, String, :length => 200
 	property :report_name, String, :length => 200
 	property :consultant_name, String, :length => 200

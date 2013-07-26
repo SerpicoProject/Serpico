@@ -646,12 +646,12 @@ post '/report/new' do
     data = url_escape_hash(request.POST)
     
     data["owner"] = get_username
-    data["date"] = Date.parse(Time.now.strftime('%m/%d/%Y'))
+    data["date"] = DateTime.now.strftime "%m/%d/%Y"
 
     @report = Reports.new(data)
     @report.save
 
-    redirect to("/report/#{@report.id}/edit")
+   redirect to("/report/#{@report.id}/edit")
 end
 
 # List attachments
