@@ -1,35 +1,22 @@
 require 'webrick/https'
-require 'webrick'
 require 'openssl'
 
-# I can't take credit for this, it generates a self signed cert everytime it's run
-# http://blog.divebomb.org/2012/01/ruby-sinatra-and-ssl/
+# I can't take credit for this, this is from a stackoverflow article
+# http://stackoverflow.com/questions/2362148/how-to-enable-ssl-for-a-standalone-sinatra-app
 
 module Sinatra
   class Application
     def self.run!
+      certificate_content = File.open(ssl_certificate).read
+      key_content = File.open(ssl_key).read
 
-		name = "/C=US/ST=Here/L=There/O=Where/CN=serpico"
-		ca   = OpenSSL::X509::Name.parse(name)
-		key = OpenSSL::PKey::RSA.new(1024)
-		crt = OpenSSL::X509::Certificate.new
-		crt.version = 2
-		crt.serial  = 1
-		crt.subject = ca
-		crt.issuer = ca
-		crt.public_key = key.public_key
-		crt.not_before = Time.now
-		crt.not_after  = Time.now + 1 * 365 * 24 * 60 * 60 # 1 year
-		crt.sign key, OpenSSL::Digest::SHA1.new
-		
-		server_options = {
-			:Port               => 8443,
-			:SSLEnable          => true,
-			:SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE,
-			:SSLCertificate     => crt,
-			:SSLPrivateKey      => key,
-			:SSLCertName        => [[ "CN", "A" ]],
-		}
+      server_options = {
+        :Port => 8443,
+        :SSLEnable => true,
+        :SSLCertificate => OpenSSL::X509::Certificate.new(certificate_content),
+        :SSLPrivateKey => OpenSSL::PKey::RSA.new(key_content),
+        :SSLVerifyClient    => OpenSSL::SSL::VERIFY_NONE
+      }
 
       Rack::Handler::WEBrick.run self, server_options do |server|
         [:INT, :TERM].each { |sig| trap(sig) { server.stop } }

@@ -15,8 +15,8 @@ require './helpers/xslt_generation'
 
 ## SSL Settings
 # Insert your cert and uncomment me
-#set :ssl_certificate, "./server.crt"
-#set :ssl_key, "./server.key"
+set :ssl_certificate, "./cert.pem"
+set :ssl_key, "./key.pem"
 set :bind, "0.0.0.0"
 
 ## Global variables
