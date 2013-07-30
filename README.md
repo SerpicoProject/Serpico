@@ -2,9 +2,6 @@
 ## SimplE RePort wrIting and CollaboratiOn tool
 Serpico is a penetration testing report generation and collaboration tool. It was primarily developed to cut down on the amount of time it takes to write a penetration testing report. 
 
-## Huge Thanks
-Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
-
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy (RVM is highly suggested):
 
@@ -40,4 +37,7 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 #### LDAP Integration
 #### Status reports
 #### 
+
+## Huge Thanks
+Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
 
