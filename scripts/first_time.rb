@@ -122,7 +122,7 @@ key = OpenSSL::PKey::RSA.new(1024)
 
 crt = OpenSSL::X509::Certificate.new
 crt.version = 2
-crt.serial  = 0x01
+crt.serial  = rand(10**10)
 crt.subject = ca
 crt.issuer = ca
 crt.public_key = key.public_key
