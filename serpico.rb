@@ -108,6 +108,9 @@ post '/login' do
 			#try AD authentication
 			usern = params[:username]
 			data = url_escape_hash(request.POST)           
+            if usern == "" or params[:password] == ""
+                redirect to("/")
+            end
  
 			user = "#{options.domain}\\#{data["username"]}"
 			ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => params[:password]}    
