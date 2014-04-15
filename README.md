@@ -3,20 +3,31 @@
 Serpico is a penetration testing report generation and collaboration tool. It was primarily developed to cut down on the amount of time it takes to write a penetration testing report. 
 
 ## Installation
-Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy (RVM is highly suggested):
+Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
+1. You will need a copy of Ruby. RVM is suggested, but ruby1.9.3 on Ubuntu is fine also.
+
+2. If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
+```
+apt-get install libsqlite3-dev libxslt-dev libxml2-dev
+```
+
+3. Finally install the proper gems:
 ```
 gem install bundler
 bundle install
+```
+4. Run the first time script to get setup:
+```
 ruby scripts/first_time.rb
 ```
 
-To start serpico:
+To start using Serpico:
 ```
 ruby serpico.rb
 ```
 
-Note: A new cert is on first use. To add your own, just add it to the root directory.
+Note: A new cert is created on first use. To add your own, just add it to the root directory.
 
 ## About Serpico
 Serpico is at its core a report generation tool but targeted at creating information security reports. When building a report the user adds "findings" from the template database to the report. When there are enough findings, click 'Generate Report' to create the docx with your findings. The docx design comes from a Report Template which can be added through the UI; a default one is included. The Report Templates use a custom Markup Language to stub the data from the UI (i.e. findings, customer name, etc) and put them into the report.
@@ -34,9 +45,25 @@ Most findings have been found in a previous assessment. In Serpico, all authors 
 **Philosophy: It should be easy to share files with teammates.**
 Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap scans) or share with teammates on a pen test. No thumb drive swapping or e-mailing, just log into the UI and download the files. At the end of the assessment everything traded or generated for that assessment is in one place.
 
-#### LDAP Integration
 #### Status reports
-#### 
+**Philosophy: Creating a status report should be one button away.**
+Using the Create Status Report functionality, Serpico will take all of your findings up to the point and generate a Status Report.
+
+
+## Microsoft Word Meta-Language
+The Meta Language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report. I *highly* suggest looking at "Serpico - Report.docx" in the templates directory to get an impression of what I mean.
+
+### Character Meanings
+Here is the list of characters used:
+
+_Ω - Substitution Variable_
+Example Usage
+```
+ΩFULL_COMPANY_NAMEΩ
+
+renders as:
+Acme Corporation
+```
 
 ## Huge Thanks
 Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
