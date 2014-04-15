@@ -5,19 +5,21 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
-1. You will need a copy of Ruby. RVM is suggested, but ruby1.9.3 on Ubuntu is fine also.
+- You will need a copy of Ruby. RVM is suggested, but ruby1.9.3 on Ubuntu is fine also.
 
-2. If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
+- If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
 ```
 apt-get install libsqlite3-dev libxslt-dev libxml2-dev
 ```
 
-3. Finally install the proper gems:
+- Go into Serpico and install the proper gems:
 ```
+cd Serpico
 gem install bundler
 bundle install
 ```
-4. Run the first time script to get setup:
+
+- Run the first time script to get setup:
 ```
 ruby scripts/first_time.rb
 ```
@@ -47,7 +49,7 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 
 
 ## Microsoft Word Meta-Language
-The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - Kitchen Sink.docx" and editing these rather than working from scratch.
+The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - No DREAD.docx" and editing these rather than working from scratch.
 
 This is an area we know needs development so e-mail me with any ideas.
 
@@ -121,6 +123,13 @@ _≠- - Ends the choose/when inside of a for-each
 This will take each paragraph from the overview section of the finding. If the paragraph is labelled as code then the paragraph will be formatted as code. The "." above means the paragraph variable from the 'overview/paragraph' for loop. 
 
 ```
+
+_∆_ - End for each
+
+_¥_ - End if statement
+
+
+
 
 ## GOTCHAS
 - Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
