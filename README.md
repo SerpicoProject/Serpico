@@ -1,6 +1,6 @@
 # Serpico
 ## SimplE RePort wrIting and CollaboratiOn tool
-Serpico is a penetration testing report generation and collaboration tool. It was primarily developed to cut down on the amount of time it takes to write a penetration testing report. 
+Serpico is a penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report. 
 
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
@@ -45,25 +45,85 @@ Most findings have been found in a previous assessment. In Serpico, all authors 
 **Philosophy: It should be easy to share files with teammates.**
 Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap scans) or share with teammates on a pen test. No thumb drive swapping or e-mailing, just log into the UI and download the files. At the end of the assessment everything traded or generated for that assessment is in one place.
 
-#### Status reports
-**Philosophy: Creating a status report should be one button away.**
-Using the Create Status Report functionality, Serpico will take all of your findings up to the point and generate a Status Report.
-
 
 ## Microsoft Word Meta-Language
-The Meta Language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report. I *highly* suggest looking at "Serpico - Report.docx" in the templates directory to get an impression of what I mean.
+The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - Kitchen Sink.docx" and editing these rather than working from scratch.
 
-### Character Meanings
+This is an area we know needs development so e-mail me with any ideas.
+
+### Meta language In-Depth
 Here is the list of characters used:
 
-_Ω - Substitution Variable_
-Example Usage
+_Ω_ - A simple substitution variable.
+
 ```
 ΩFULL_COMPANY_NAMEΩ
 
 renders as:
 Acme Corporation
 ```
+
+_¬_ - for each
+```
+¬finding¬
+STUFF
+∆
+
+Renders as a for loop for every finding and prints 'STUFF' inbetween. 
+```
+
+_π_ - Substituition variable inside of for loops. Do not use Ω inside of a for loop.
+
+```
+¬report/findings_list/findings¬
+πtitleπ
+∆
+
+Renders the finding title for every finding in the findings_list of the report.
+```
+
+_æ_ - for each loop for table rows only
+_:::_ - is used for if statements within the row
+```
+æreport/findings_list/findings:::DREAD_TOTAL>35æ
+
+Renders a new table row every finding with a DREAD total greater than 35.
+```
+
+_∞_ - Substituition variable inside of a for loop inside of a table. Only used in a table.
+```
+æreport/findings_list/findings:::DREAD_TOTAL>35æ ∞title∞
+
+Renders a new table row with the title for every finding with a DREAD total greater than 35.
+```
+
+_†_ - if conditional
+```
+† DREAD_SCORE > 1 †
+HELLO WORLD
+¥
+
+Renders a HELLO WORLD if the DREAD_SCORE is > 1
+```
+
+_µ_ - Initiates choose/when structure
+_ƒ_ - The when value in a choose/when
+_å_ - Ends the choose/when not in a for-each
+_≠- - Ends the choose/when inside of a for-each
+
+```
+¬overview/paragraph¬ 
+µCONDITIONALµ π.π
+ƒcodeƒ π.π
+ƒitalicsƒ π.π
+÷ π.π ≠
+
+This will take each paragraph from the overview section of the finding. If the paragraph is labelled as code then the paragraph will be formatted as code. The "." above means the paragraph variable from the 'overview/paragraph' for loop. 
+
+```
+
+## GOTCHAS
+- Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
 
 ## Huge Thanks
 Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
