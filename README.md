@@ -5,7 +5,11 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
-- You will need a copy of Ruby. RVM is suggested, but ruby1.9.3 on Ubuntu is fine also.
+- You will need a copy of Ruby. RVM is suggested. ruby1.9.3 is supported.
+
+```
+apt-get install ruby1.9.3
+```
 
 - If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
 ```
@@ -66,6 +70,7 @@ Acme Corporation
 ```
 
 __¬__ - for each
+
 ```
 ¬finding¬
 STUFF
@@ -85,7 +90,9 @@ Renders the finding title for every finding in the findings_list of the report.
 ```
 
 __æ__ - for each loop for table rows only
-_:::_ - is used for if statements within the row
+
+__:::__ - is used for if statements within the row
+
 ```
 æreport/findings_list/findings:::DREAD_TOTAL>35æ
 
@@ -109,9 +116,13 @@ Renders a HELLO WORLD if the DREAD_SCORE is > 1
 ```
 
 __µ__ - Initiates choose/when structure
+
 __ƒ__ - The when value in a choose/when
+
 __å__ - Ends the choose/when not in a for-each
+
 __≠__ - Ends the choose/when inside of a for-each
+
 
 ```
 ¬overview/paragraph¬ 
