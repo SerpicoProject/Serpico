@@ -56,7 +56,7 @@ This is an area we know needs development so e-mail me with any ideas.
 ### Meta language In-Depth
 Here is the list of characters used:
 
-_Ω_ - A simple substitution variable.
+__Ω__ - A simple substitution variable.
 
 ```
 ΩFULL_COMPANY_NAMEΩ
@@ -65,16 +65,16 @@ renders as:
 Acme Corporation
 ```
 
-_¬_ - for each
+__¬__ - for each
 ```
 ¬finding¬
 STUFF
 ∆
 
-Renders as a for loop for every finding and prints 'STUFF' inbetween. 
+Renders as a for loop for every finding and prints 'STUFF' in each loop. 
 ```
 
-_π_ - Substituition variable inside of for loops. Do not use Ω inside of a for loop.
+__π__ - Substituition variable inside of for loops. Do not use Ω inside of a for loop.
 
 ```
 ¬report/findings_list/findings¬
@@ -84,7 +84,7 @@ _π_ - Substituition variable inside of for loops. Do not use Ω inside of a for
 Renders the finding title for every finding in the findings_list of the report.
 ```
 
-_æ_ - for each loop for table rows only
+__æ__ - for each loop for table rows only
 _:::_ - is used for if statements within the row
 ```
 æreport/findings_list/findings:::DREAD_TOTAL>35æ
@@ -92,14 +92,14 @@ _:::_ - is used for if statements within the row
 Renders a new table row every finding with a DREAD total greater than 35.
 ```
 
-_∞_ - Substituition variable inside of a for loop inside of a table. Only used in a table.
+__∞__ - Substituition variable inside of a for loop inside of a table. Only used in a table.
 ```
 æreport/findings_list/findings:::DREAD_TOTAL>35æ ∞title∞
 
 Renders a new table row with the title for every finding with a DREAD total greater than 35.
 ```
 
-_†_ - if conditional
+__†__ - if conditional
 ```
 † DREAD_SCORE > 1 †
 HELLO WORLD
@@ -108,10 +108,10 @@ HELLO WORLD
 Renders a HELLO WORLD if the DREAD_SCORE is > 1
 ```
 
-_µ_ - Initiates choose/when structure
-_ƒ_ - The when value in a choose/when
-_å_ - Ends the choose/when not in a for-each
-_≠- - Ends the choose/when inside of a for-each
+__µ__ - Initiates choose/when structure
+__ƒ__ - The when value in a choose/when
+__å__ - Ends the choose/when not in a for-each
+__≠__ - Ends the choose/when inside of a for-each
 
 ```
 ¬overview/paragraph¬ 
@@ -124,9 +124,9 @@ This will take each paragraph from the overview section of the finding. If the p
 
 ```
 
-_∆_ - End for each
+__∆__ - End for each
 
-_¥_ - End if statement
+__¥__ - End if statement
 
 
 
