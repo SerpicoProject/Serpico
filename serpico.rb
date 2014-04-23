@@ -24,6 +24,8 @@ set :finding_types, [ "Web Application","Network Services", "Best Practice", "Co
 set :effort, ["LOW","MEDIUM","HARD"]
 set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
 set :status, ["EXPLOITED"]
+set :show_exceptions, false
+set :dump_errors, true
 
 ## LDAP Settings
 set :ldap, false
@@ -37,6 +39,15 @@ enable :sessions
 # Used for 404 responses
 not_found do
     "Sorry, I don't know this page."
+end
+
+# Removing
+error do
+    if settings.show_exceptions
+        "Error!"+ env['sinatra.error'].name
+    else
+        "Error!! Check the process dump for the error or turn show_exceptions on to show in the web interface."
+    end
 end
 
 # Default Page
