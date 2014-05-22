@@ -179,10 +179,11 @@ elsif options[:password]   # Username and password submitted
             puts "Well then try again. Please use the -h options for help\n"
             exit
         end
+    else
+        puts "\n\033[33mERROR: The -p option only works when used with the -u <username> option.\033[0m\n\n"
+        puts optionparser.help
+        exit
     end
-    puts "\n\033[33mERROR: The -p option only works when used with the -u <username> option.\033[0m\n\n"
-    puts optionparser.help
-    exit
 elsif options[:username]
     find_user(users, username) # does user already exisit?
 else
