@@ -1,3 +1,10 @@
+if not File.file?('./db/master.db')
+    puts "|!| Creating blank db"
+    out_file = File.new("./master.db", "w")
+    out_file.puts("")
+    out_file.close
+end
+
 require 'rubygems'
 require './model/master.rb'
 require './helpers/xslt_generation'
