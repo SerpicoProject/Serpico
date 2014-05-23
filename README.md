@@ -89,6 +89,29 @@ __π__ - Substituition variable inside of for loops. Do not use Ω inside of a f
 Renders the finding title for every finding in the findings_list of the report.
 ```
 
+__NOTE__: You cannot use multiple if statements with for. Instead, you can do something like the following:
+```
+¬report/findings_list/findings¬
+†DREAD_TOTAL<50†
+†DREAD_TOTAL>30†
+πtitleπ
+¥
+¥
+∆
+
+# This is read as for each finding
+if dread_total is less than 50
+if dread_total is greater than 30
+
+print title
+
+close if
+close if
+close for loop
+
+```
+
+
 __æ__ - for each loop for table rows only
 
 __:::__ - is used for if statements within the row
