@@ -1,0 +1,8 @@
+{
+    "port":"8443",
+    "ssl_certificate":"./cert.pem",
+    "ssl_key":"key.pem",
+    "ldap":"false",
+    "ldap_domain":"",
+    "dc":""
+}

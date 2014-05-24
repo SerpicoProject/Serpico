@@ -13,10 +13,12 @@ require './helpers/helper'
 require './helpers/sinatra_ssl'
 require './helpers/xslt_generation'
 
+# import config options
+config_options = JSON.parse(File.read('./config.json'))
+
 ## SSL Settings
-# Insert your cert and uncomment me
-set :ssl_certificate, "./cert.pem"
-set :ssl_key, "./key.pem"
+set :ssl_certificate, config_options["ssl_certificate"]
+set :ssl_key, config_options["ssl_key"]
 set :bind, "0.0.0.0"
 
 ## Global variables
@@ -28,9 +30,13 @@ set :show_exceptions, false
 set :dump_errors, true
 
 ## LDAP Settings
-set :ldap, false
-set :domain, ""
-set :dc, ""
+if config_options["ssl_certificate"].downcase == "true"
+    set :ldap, true
+else
+    set :ldap, false
+end
+set :domain, config_options["domain"]
+set :dc, config_options["dc"]
 
 enable :sessions 
     
