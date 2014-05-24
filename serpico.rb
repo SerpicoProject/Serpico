@@ -30,13 +30,13 @@ set :show_exceptions, false
 set :dump_errors, true
 
 ## LDAP Settings
-if config_options["ssl_certificate"].downcase == "true"
+if config_options["ldap"].downcase == "true"
     set :ldap, true
 else
     set :ldap, false
 end
-set :domain, config_options["domain"]
-set :dc, config_options["dc"]
+set :domain, config_options["ldap_domain"]
+set :dc, config_options["ldap_dc"]
 
 enable :sessions 
     

@@ -4,5 +4,5 @@
     "ssl_key":"key.pem",
     "ldap":"false",
     "ldap_domain":"",
-    "dc":""
+    "ldap_dc":""
 }
