@@ -99,7 +99,8 @@ __NOTE__: You cannot use multiple if statements with for. Instead, you can do so
 ¥
 ∆
 
-# This is read as for each finding
+# This is read as:
+for each finding
 if dread_total is less than 50
 if dread_total is greater than 30
 
