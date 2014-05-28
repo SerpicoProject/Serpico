@@ -155,7 +155,9 @@ __≠__ - Ends the choose/when inside of a for-each
 ƒitalicsƒ π.π
 ÷ π.π ≠
 
-This will take each paragraph from the overview section of the finding. If the paragraph is labelled as code then the paragraph will be formatted as code. The "." above means the paragraph variable from the 'overview/paragraph' for loop. 
+This will take each paragraph from the overview section of the finding. 
+If the paragraph is labelled as code then the paragraph will be formatted as code. 
+The "." above means the paragraph variable from the 'overview/paragraph' for loop. 
 
 ```
 
