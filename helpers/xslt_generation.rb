@@ -230,7 +230,7 @@ def generate_xslt(docx)
 		q = ""
 		if omega =~ /:::/
 			conditions = omega.split(":::")
-            for_iffies.push(conditions.size)
+            for_iffies.push(conditions.size-1)
 			omega = conditions[0]
 
 			conditions.shift
