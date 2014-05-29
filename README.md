@@ -89,14 +89,10 @@ __π__ - Substituition variable inside of for loops. Do not use Ω inside of a f
 Renders the finding title for every finding in the findings_list of the report.
 ```
 
-__NOTE__: You cannot use multiple if statements with for. Instead, you can do something like the following:
+__NOTE__: You can use multiple if statements with for:
 ```
-¬report/findings_list/findings¬
-†DREAD_TOTAL<50†
-†DREAD_TOTAL>30†
+¬report/findings_list/findings:::DREAD_TOTAL<50:::DREAD_TOTAL>30¬
 πtitleπ
-¥
-¥
 ∆
 
 # This is read as:
@@ -106,9 +102,7 @@ if dread_total is greater than 30
 
 print title
 
-close if
-close if
-close for loop
+close for loop and both if's
 
 ```
 
