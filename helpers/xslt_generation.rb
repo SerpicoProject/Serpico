@@ -40,6 +40,7 @@ def generate_xslt(docx)
 	# add in xslt header
 	document = @top + document
 
+    for_iffies = []
 ###########################
 
 # Ω - used as a normal substituion variable
@@ -229,13 +230,15 @@ def generate_xslt(docx)
 		q = ""
 		if omega =~ /:::/
 			conditions = omega.split(":::")
+            for_iffies.push(conditions.size)
 			omega = conditions[0]
 
 			conditions.shift
 			conditions.each do |condition|
 				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
-
+        else
+            for_iffies.push(0)
 		end
 
 		# we need to search backwards for '<w:p>' or '<w:p ')
@@ -280,19 +283,9 @@ def generate_xslt(docx)
 
 		omega = compress(omega)
 
-		# we need to search backwards for '<w:p>' or '<w:p ')
-		woutspace = replace[count-1].rindex("<w:p>")
-		space = replace[count-1].rindex("<w:p ")
-		woutspace = 0 unless woutspace
-		space = 0 unless space
-		x = ""
-		if woutspace > space
-			x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p><xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
-			replace[count-1] = x
-		else
-			x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p><xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
-			replace[count-1] = x
-		end
+        x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p><xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
+        replace[count-1] = x
+
 		replace[count]=''
 
 		count = count + 1
@@ -471,7 +464,13 @@ def generate_xslt(docx)
 ###############################
 # ∆ - end for-each
 
-	document = document.gsub('∆',"</w:t></w:r></w:p></xsl:for-each><w:p><w:r><w:t>")
+    # add end if's
+    end_ifs = ''
+    p for_iffies
+    for_iffies.each do |fi|
+        end_ifs = "</xsl:if>"*fi
+        document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
+	end
 
 ###########################
 
