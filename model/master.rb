@@ -64,6 +64,11 @@ class TemplateReports
 	property :contact_city, String
 	property :contact_address, String
 	property :contact_zip, String
+	property :global_value_1, String, :required => false, :length => 200
+	property :global_value_2, String, :required => false, :length => 200
+	property :global_value_3, String, :required => false, :length => 200
+	property :global_value_4, String, :required => false, :length => 200
+	property :global_value_5, String, :required => false, :length => 200
 	property :full_company_name, String, :required => true, :length => 200
 	property :short_company_name, String, :required => true, :length => 200
 	property :company_website, String
@@ -170,6 +175,12 @@ class Reports
 	property :contact_address, String, :length => 200
 	property :contact_state, String
 	property :contact_zip, String
+	property :global_value_1, String, :required => false, :length => 200
+	property :global_value_2, String, :required => false, :length => 200
+	property :global_value_3, String, :required => false, :length => 200
+	property :global_value_4, String, :required => false, :length => 200
+	property :global_value_5, String, :required => false, :length => 200
+	property :full_company_name, String, :required => true, :length => 200
 	property :full_company_name, String, :length => 200
 	property :short_company_name, String, :length => 200
 	property :company_website, String, :length => 200
