@@ -40,7 +40,7 @@ def generate_xslt(docx)
 	# add in xslt header
 	document = @top + document
 
-    for_iffies = []
+	for_iffies = []
 ###########################
 
 # Ω - used as a normal substituion variable
@@ -230,15 +230,15 @@ def generate_xslt(docx)
 		q = ""
 		if omega =~ /:::/
 			conditions = omega.split(":::")
-            		for_iffies.push(conditions.size-1)
+			for_iffies.push(conditions.size-1)
 			omega = conditions[0]
 
 			conditions.shift
 			conditions.each do |condition|
 				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
-        	else
-            		for_iffies.push(0)
+        else
+			for_iffies.push(0)
 		end
 
 		# we need to search backwards for '<w:p>' or '<w:p ')
@@ -436,6 +436,33 @@ def generate_xslt(docx)
 	}
 	document = q
 
+	#######
+	# This is ugly but we have to presort the for_iffies and assign them
+	#	to the proper loop. This is because there are two types of
+	#	closing elements in a for loop, ∆ and ≠. In the case of ≠, you 
+	#	can't use an if element so we shouldn't close for it.
+
+	r_for_iffies = []
+	count = 0
+
+	document.split(" ").each do |current|
+		if current =~ /∆/ or current =~ /≠/
+			if current =~ /∆/
+				# pull out the first count of elements
+				sub_iffies = for_iffies[0..count]
+
+				elem = sub_iffies[0]
+				r_for_iffies.push(elem)
+
+				0.upto(count) do |n|
+					for_iffies.shift
+				end
+				count = -1
+			end
+			count = count + 1
+		end
+	end
+
 
 ###########################
 
@@ -466,7 +493,7 @@ def generate_xslt(docx)
 
     # add end if's
 	end_ifs = ''
-	for_iffies.each do |fi|
+	r_for_iffies.each do |fi|
 		end_ifs = "</xsl:if>"*fi
 		document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
 	end
