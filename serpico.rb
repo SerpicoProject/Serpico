@@ -1115,7 +1115,8 @@ get '/report/:id/findings/:finding_id/upload' do
                     :overview => @finding.overview,
                     :poc => @finding.poc,
                     :remediation => @finding.remediation,
-                    :approved => false
+                    :approved => false,
+					:references => @finding.references
                     }
 
     @new_finding = TemplateFindings.new(attr)
