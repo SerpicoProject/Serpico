@@ -6,7 +6,7 @@
       %h4 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
       %form{:method => 'post'}
-        .table.table-striped
+        .table
           %table{:style => 'width: 90%'}
             %tbody
             - options.finding_types.each do |type|
