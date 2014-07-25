@@ -4,5 +4,6 @@
     "ssl_key":"key.pem",
     "ldap":"false",
     "ldap_domain":"",
-    "ldap_dc":""
+    "ldap_dc":"",
+    "dread":true  //DREAD risk scoring used by default
 }

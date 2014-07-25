@@ -310,6 +310,7 @@ get '/master/findings' do
 
     @findings = TemplateFindings.all(:order => [:title.asc])
     @master = true
+    @dread = config_options["dread"]
 
     haml :findings_list, :encode_html => true
 end
@@ -321,6 +322,7 @@ get '/master/findings/f/:type' do
 
     @findings = TemplateFindings.all(:type => params[:type], :order => [:title.asc])
     @master = true
+    @dread = config_options["dread"]
 
     haml :findings_list, :encode_html => true
 end
@@ -330,18 +332,21 @@ get '/master/findings/new' do
     redirect to("/no_access") if not is_administrator?
 
     @master = true
-    
+    @dread = config_options["dread"]
+
     haml :create_finding, :encode_html => true
 end
 
 # Create the finding in the DB
 post '/master/findings/new' do
     redirect to("/no_access") if not is_administrator?
-    
+
     data = url_escape_hash(request.POST)
 
-    data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-	
+    if(config_options["dread"])
+        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    end
+
     @finding = TemplateFindings.new(data)
     @finding.save
 
@@ -351,12 +356,13 @@ end
 # Edit the templated finding
 get '/master/findings/:id/edit' do
     redirect to("/no_access") if not is_administrator?
-    
+
     @master = true
+    @dread = config_options["dread"]
 
     # Check for kosher name in report name
     id = params[:id]
-    
+
     # Query for all Findings
     @finding = TemplateFindings.first(:id => id)
 	@templates = Xslt.all()
@@ -364,7 +370,7 @@ get '/master/findings/:id/edit' do
     if @finding == nil
         return "No Such Finding"
     end
-        
+
     haml :findings_edit, :encode_html => true
 end
 
@@ -374,7 +380,7 @@ post '/master/findings/:id/edit' do
 
     # Check for kosher name in report name
     id = params[:id]
-        
+
     # Query for all Findings
     @finding = TemplateFindings.first(:id => id)
 
@@ -386,11 +392,13 @@ post '/master/findings/:id/edit' do
 
     if data["approved"] == "on"
         data["approved"] = true
-    else  
+    else
         data["approved"] = false
     end
-    
-    data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+
+    if(config_options["dread"])
+        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    end
 
     # Update the finding with templated finding stuff
     @finding.update(data)
@@ -480,7 +488,7 @@ get '/master/export' do
     redirect to("/no_access") if not is_administrator?
 
 	json = ""
-	
+
 	findings = TemplateFindings.all
 
 	local_filename = "./tmp/#{rand(36**12).to_s(36)}.json"
@@ -492,7 +500,7 @@ end
 # Import a findings database
 get '/master/import' do
     redirect to("/no_access") if not is_administrator?
-	
+
 	haml :import_templates
 end
 
@@ -503,14 +511,14 @@ post '/master/import' do
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 1000000
 		return "File too large. 1MB limit"
-	end	
-	
+	end
+
 	json_file = params[:file][:tempfile].read
 	line = JSON.parse(json_file)
-	
+
 	line.each do |j|
 		j["id"] = nil
- 
+
 		finding = TemplateFindings.first(:title => j["title"])
 
 		if finding
@@ -536,12 +544,12 @@ end
 # Manage Templated Reports
 get '/admin/templates' do
     redirect to("/no_access") if not is_administrator?
-    
+
     @admin = true
 
     # Query for all Findings
     @templates = Xslt.all(:order => [:report_type.asc])
-    
+
     haml :template_list, :encode_html => true       
 end
 
@@ -853,17 +861,23 @@ get '/report/:id/findings' do
 
     @report = true
     id = params[:id]
-        
+
     # Query for the first report matching the report_name
     @report = get_report(id)
 
     if @report == nil 
         return "No Such Report"
     end
-    
+
     # Query for the findings that match the report_id
-    @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])   
-    
+    if(config_options["dread"])
+        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    else
+        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+    end
+
+    @dread = config_options["dread"]
+
     haml :findings_list, :encode_html => true
 end
 
@@ -872,24 +886,28 @@ get '/report/:id/status' do
     redirect to("/") unless valid_session?
 
     id = params[:id]
-        
+
     # Query for the report
     @report = get_report(id)
-        
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
-    
+
     # Query for the findings that match the report_id
-    @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])   
-    
-    ## We have to do some hackery here for wordml 
+    if(config_options["dread"])
+        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    else
+        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+    end
+
+    ## We have to do some hackery here for wordml
     findings_xml = ""
     findings_xml << "<findings_list>"
     @findings.each do |finding|
         ### Let's find the diff between the original and the new overview and remediation
         master_finding = TemplateFindings.first(:id => finding.master_id)
-    
+
         findings_xml << finding.to_xml
     end
     findings_xml << "</findings_list>"
@@ -954,7 +972,7 @@ post '/report/:id/findings_add' do
 
     # Check for kosher name in report name
     id = params[:id]
-    
+
     # Query for the first report matching the report_name
     @report = get_report(id)
 
@@ -963,7 +981,7 @@ post '/report/:id/findings_add' do
     end
 
     add_findings = params[:finding]
-    
+
     if add_findings.size == 0
         redirect_to("/report/#{id}/edit")
     else
@@ -976,18 +994,26 @@ post '/report/:id/findings_add' do
             attr["master_id"] = finding.to_i
             @newfinding = Findings.new(attr)
             @newfinding.report_id = id
-            @newfinding.save            
+            @newfinding.save
         end
     end
 
-    @findings = Findings.all(:report_id => id, :order => [:dread_total.desc] )
-    
+    if(config_options["dread"])
+        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    else
+        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+    end
+
+    @dread = config_options["dread"]
+
     haml :findings_list, :encode_html => true
 end
 
 # Create a new finding in the report
 get '/report/:id/findings/new' do
     redirect to("/") unless valid_session?
+
+    @dread = config_options["dread"]
 
     haml :create_finding, :encode_html => true
 end
@@ -998,22 +1024,24 @@ post '/report/:id/findings/new' do
 
     data = url_escape_hash(request.POST)
 
-    data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    if(config_options["dread"])
+        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    end
 
     id = params[:id]
-    
+
     # Query for the first report matching the report_name
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
-    
+
     data["report_id"] = id
 
     @finding = Findings.new(data)
     @finding.save
-    
+
     # for a parameter_pollution on report_id
 
     redirect to("/report/#{id}/findings")
@@ -1024,23 +1052,25 @@ get '/report/:id/findings/:finding_id/edit' do
     redirect to("/") unless valid_session?
 
     id = params[:id]
-    
+
     # Query for the first report matching the report_name
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
-    
+
     finding_id = params[:finding_id]
-    
+
     # Query for all Findings
     @finding = Findings.first(:report_id => id, :id => finding_id)
-    
+
     if @finding == nil
         return "No Such Finding"
     end
-    
+
+    @dread = config_options["dread"]
+
     haml :findings_edit, :encode_html => true
 end
 
@@ -1050,27 +1080,28 @@ post '/report/:id/findings/:finding_id/edit' do
 
     # Check for kosher name in report name
     id = params[:id]
-    
+
     # Query for the report
     @report = get_report(id)
 
     if @report == nil 
         return "No Such Report"
     end
-    
+
     finding_id = params[:finding_id]
-    
+
     # Query for all Findings
     @finding = Findings.first(:report_id => id, :id => finding_id)
-    
+
     if @finding == nil
         return "No Such Finding"
     end
 
     data = url_escape_hash(request.POST)
 
-    data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-
+    if(config_options["dread"])
+        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    end
     # Update the finding with templated finding stuff
     @finding.update(data)
 
@@ -1083,19 +1114,19 @@ get '/report/:id/findings/:finding_id/upload' do
 
     # Check for kosher name in report name
     id = params[:id]
-    
+
     # Query for the report
     @report = get_report(id)
 
     if @report == nil 
         return "No Such Report"
     end
-    
+
     finding_id = params[:finding_id]
-    
+
     # Query for the finding
     @finding = Findings.first(:report_id => id, :id => finding_id)
-    
+
     if @finding == nil
         return "No Such Finding"
     end
@@ -1116,7 +1147,8 @@ get '/report/:id/findings/:finding_id/upload' do
                     :poc => @finding.poc,
                     :remediation => @finding.remediation,
                     :approved => false,
-					:references => @finding.references
+					:references => @finding.references,
+                    :risk => @finding.risk
                     }
 
     @new_finding = TemplateFindings.new(attr)
@@ -1131,7 +1163,7 @@ get '/report/:id/findings/:finding_id/remove' do
 
     # Check for kosher name in report name
     id = params[:id]
-    
+
     # Query for the report
     @report = get_report(id)
 
@@ -1235,50 +1267,54 @@ get '/report/:id/generate' do
 
     user = User.first(:username => get_username)
 
-   if user
-    @report.consultant_name = user.consultant_name 
-    @report.consultant_phone = user.consultant_phone
-    @report.consultant_email = user.consultant_email
-    @report.consultant_title = user.consultant_title
-   else
-    @report.consultant_name = ""
-    @report.consultant_phone = ""
-    @report.consultant_email = ""
-    @report.consultant_title = ""
-   end 
-   @report.save
-      
+    if user
+        @report.consultant_name = user.consultant_name 
+        @report.consultant_phone = user.consultant_phone
+        @report.consultant_email = user.consultant_email
+        @report.consultant_title = user.consultant_title
+    else
+        @report.consultant_name = ""
+        @report.consultant_phone = ""
+        @report.consultant_email = ""
+        @report.consultant_title = ""
+    end
+    @report.save
+
     # Query for the findings that match the report_id
-    @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])   
-    
+    if(config_options["dread"])
+        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])   
+    else
+        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+    end
+
     ## We have to do some hackery here for wordml 
     findings_xml = ""
     findings_xml << "<findings_list>"
-         
+
     @findings.each do |finding|
-        
+
         # This flags new or edited findings
         if finding.master_id
             master = TemplateFindings.first(:id => finding.master_id)
             if master
-               finding.overview = compare_text(finding.overview, master.overview)
-               finding.remediation = compare_text(finding.remediation, master.remediation)
+                finding.overview = compare_text(finding.overview, master.overview)
+                finding.remediation = compare_text(finding.remediation, master.remediation)
             else
-               finding.overview = compare_text(finding.overview, nil)
-               finding.remediation = compare_text(finding.remediation, nil)
+                finding.overview = compare_text(finding.overview, nil)
+                finding.remediation = compare_text(finding.remediation, nil)
             end
         else
             finding.overview = compare_text(finding.overview, nil)
             finding.remediation = compare_text(finding.remediation, nil)
-        end     
+        end
         findings_xml << finding.to_xml
-        
     end
+
     findings_xml << "</findings_list>"
 
     # Replace the stub elements with real XML elements
     findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
-    
+
     report_xml = "<report>#{@report.to_xml}#{findings_xml}</report>"
 
 	xslt_elem = Xslt.first(:report_type => @report.report_type)
@@ -1287,10 +1323,10 @@ get '/report/:id/generate' do
     xslt = Nokogiri::XSLT(File.read(xslt_elem.xslt_location))
 
     docx_xml = xslt.transform(Nokogiri::XML(report_xml))
-    
+
     # We use a temporary file with a random name
     rand_file = "./tmp/#{rand(36**12).to_s(36)}.docx"
-    
+
     # Create a temporary copy of the word doc
     FileUtils::copy_file(xslt_elem.docx_location,rand_file)
     

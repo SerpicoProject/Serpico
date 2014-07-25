@@ -1,9 +1,11 @@
 require 'rubygems'
 require 'data_mapper'
 require 'digest/sha1'
+require 'dm-migrations'
 
 # Initialize the Master DB
 DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/master.db")
+
 
 class TemplateFindings
 	include DataMapper::Resource
@@ -23,7 +25,8 @@ class TemplateFindings
 	property :remediation, String, :length => 20000, :required => false
 	property :references, String, :length => 20000, :required => false
 	property :approved, Boolean, :required => false, :default => true
-	
+    property :risk, Integer, :required => false
+
 end
 
 class Findings
@@ -48,13 +51,13 @@ class Findings
 	property :notes, String, :length => 1000000, :required => false
 	property :assessment_type, String, :required => false
 	property :references, String, :length => 20000, :required => false
-	
+    property :risk, Integer, :required => false
 end
 
 class TemplateReports
 	include DataMapper::Resource
 
-	property :id, Serial	
+	property :id, Serial
 	property :consultant_name, String, :required => false, :length => 200
 	property :consultant_phone, String
 	property :consultant_email, String, :required => false, :length => 200
@@ -67,24 +70,24 @@ class TemplateReports
 	property :full_company_name, String, :required => true, :length => 200
 	property :short_company_name, String, :required => true, :length => 200
 	property :company_website, String
-	
+
 end
 
 class User
 	include DataMapper::Resource
-	
+
 	property :id, Serial
 	property :username, String, :key => true, :length => (3..40), :required => true
-	property :hashed_password, String 
-	property :salt, String 
+	property :hashed_password, String
+	property :salt, String
 	property :type, String
 	property :auth_type, String, :required => false
 	property :created_at, DateTime,	:default => DateTime.now
 	property :consultant_name, String, :required => false
 	property :consultant_phone, String, :required => false
 	property :consultant_email, String, :required => false
-	property :consultant_title, String, :required => false		
-		
+	property :consultant_title, String, :required => false
+
 	attr_accessor :password
 	validates_presence_of :username
 
@@ -104,7 +107,7 @@ class User
 			return user.username if User.encrypt(pass, user.salt) == user.hashed_password
 		end
 	end
-	
+
 end
 
 class Sessions
@@ -113,7 +116,7 @@ class Sessions
 	property :id, Serial
 	property :session_key, String, :length => 128
 	property :username, String, :length => (3..40), :required => true
-	
+
 	def self.is_valid?(session_key)
 		sessions = Sessions.first(:session_key => session_key)
 		if sessions
@@ -121,21 +124,21 @@ class Sessions
 		else
 			puts "DEBUG: Invalid session"
 		end
-			
+
 		return true if sessions
 	end
-	
+
 	def self.type(session_key)
 		sess = Sessions.first(:session_key => session_key)
-		
+
 		if sess
 			return User.first(:username => sess.username).type
 		end
 	end
-	
+
 	def self.get_username(session_key)
 		sess = Sessions.first(:session_key => session_key)
-		
+
 		if sess
 			return sess.username
 		end
@@ -146,8 +149,8 @@ end
 # For a metasploit connector eventually
 class RemoteEndpoints
 	include DataMapper::Resource
-	
-	property :id, Serial	
+
+	property :id, Serial
 	property :ip, String
 end
 
@@ -175,7 +178,7 @@ class Reports
 	property :company_website, String, :length => 200
 	property :owner, String, :length => 200
 	property :authors, CommaSeparatedList, :required => false, :lazy => false
-	
+
 end
 
 class Attachments
@@ -195,12 +198,12 @@ class Hosts
 	property :id, Serial
 	property :ip, String
 	property :port, String
-	
+
 end
 
 class Xslt
 	include DataMapper::Resource
-	
+
 	property :id, Serial
 	property :docx_location, String, :length => 400
 	property :description, String, :length => 400
@@ -212,6 +215,9 @@ class Xslt
 end
 
 DataMapper.finalize
+
+# any differences between the data store and the data model should be fixed by this
+#   As discussed in http://datamapper.org/why.html it is limited. Hopefully we never create conflicts.
 DataMapper.auto_upgrade!
 
 

@@ -8,7 +8,7 @@
       %label{ :class => "control-label", :for => "title" } Title
       .controls
         %input{ :type => 'text', :name => 'title', :value => "#{@finding.title}"}
-    -if !@master            
+    -if !@master 
       %br
       .control-group
         %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
@@ -28,26 +28,40 @@
             %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
           - else 
             %input{ :type=>"checkbox", :name => 'approved'}
-    .control-group
-      %label{ :class => "control-label", :for => "damage" } Damage
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "#{@finding.damage}", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "reproducability" } Reproducibility
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "#{@finding.reproducability}", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "exploitability" } Exploitability
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "#{@finding.exploitability}", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "affected_users" } Affected Users
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#{@finding.affected_users}", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "discoverability" } Discoverability
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "#{@finding.discoverability}", :required => true}
+    - if @dread
+      .control-group
+        %label{ :class => "control-label", :for => "damage" } Damage
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "#{@finding.damage}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "#{@finding.reproducability}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "exploitability" } Exploitability
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "#{@finding.exploitability}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "affected_users" } Affected Users
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#{@finding.affected_users}", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "discoverability" } Discoverability
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "#{@finding.discoverability}", :required => true}
+    - else
+      .control-group
+        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        .controls
+          %select{ :name => "risk" }
+            - risk_types = ["Informational", "Low", "Moderate", "High", "Critical"]
+            - if !@finding.risk
+              - @finding.risk = @finding.dread_total/10
+            - [0,1,2,3,4].each do |r_type|
+              - if r_type == @finding.risk
+                %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
+              - else
+                %option{ :value => "#{r_type}"} #{risk_types[r_type]}
     .control-group
       %label{ :class => "control-label", :for => "effort" } Remediation Effort
       .controls

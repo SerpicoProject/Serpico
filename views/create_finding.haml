@@ -12,7 +12,7 @@
       .control-group
         %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
         .controls
-          %select{ :name => "assessment_type" } 
+          %select{ :name => "assessment_type" }
             - options.assessment_types.each do |type|
               %option #{type}
     .control-group
@@ -21,33 +21,44 @@
         %select{ :name => "type" }
           - options.finding_types.each do |type|
             %option #{type}
-    .control-group
-      %label{ :class => "control-label", :for => "damage" } Damage
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "reproducability" } Reproducibility
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "exploitability" } Exploitability
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "affected_users" } Affected Users
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "discoverability" } Discoverability
-      .controls
-        %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "", :required => true}
-    .control-group
-      %label{ :class => "control-label", :for => "effort" } Remediation Effort
-      .controls
-        %select{ :name => "effort" }
-          %option LOW
-          %option MODERATE
-          %option HARD
+    - if @dread
+      .control-group
+        %label{ :class => "control-label", :for => "damage" } Damage
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "exploitability" } Exploitability
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "affected_users" } Affected Users
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "discoverability" } Discoverability
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        .controls
+          %select{ :name => "effort" }
+            %option LOW
+            %option MODERATE
+            %option HARD
+    - else
+      .control-group
+        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        .controls
+          %select{ :name => "risk" }
+            %option{:value => 0}= "Informational"
+            %option{:value => 1}= "Low"
+            %option{:value => 2}= "Moderate"
+            %option{:value => 3}= "High"
+            %option{:value => 4}= "Critical"
     .control-group
       %label{ :class => "control-label", :for => "overview" }
         %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'} 

@@ -37,8 +37,17 @@
                                       %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
                                       .info{ :id => "info_#{finding.id}", :class => "collapse out" }
                                         #{finding.overview.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
-                                  %td{:style => 'width: 10%'}
-                                    #{finding.dread_total}
+                                  - if @dread
+                                    %td{:style => 'width: 10%'}
+                                      #{finding.dread_total}
+                                  - else
+                                    %td{:style => 'width: 10%' }
+                                      - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                                      - if finding.risk
+                                        #{risk_t[finding.risk]}
+                                      - else
+                                        - scr = finding.dread_total/10
+                                        #{risk_t[scr]}
                                   %td{:style => 'width: 20%'}
                                     - if @master
                                       %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
@@ -68,8 +77,17 @@
                                   #{finding.notes.gsub("<paragraph>","<br/><br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                                 - else
                                   None.           
-                      %td{:style => 'width: 10%'}
-                        #{finding.dread_total}
+                      - if @dread
+                        %td{:style => 'width: 10%'}
+                          #{finding.dread_total}
+                      - else
+                        %td{:style => 'width: 10%' }
+                          - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                          - if finding.risk
+                            #{risk_t[finding.risk]}
+                          - else
+                            - scr = finding.dread_total/10
+                            #{risk_t[scr]}
                       %td{:style => 'width: 20%'}
                         %a{ :class => "btn btn-warning", :href => "/report/#{@report.id}/findings/#{finding.id}/edit"}
                           %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
