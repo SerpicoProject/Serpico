@@ -7,6 +7,15 @@ require 'cgi'
 # This does the heavy lifting for taking a report template and creating the resulting XSLT template.
 #   It needs a lot of love but it works for now.
 
+# This is a custom error class to be thrown if the template fails to parse correctly.
+class ReportingError < RuntimeError
+  attr :errorString
+
+  def initialize(errorString)
+    @errorString = errorString
+  end
+end
+
 def generate_xslt(docx)
 
 # hardcoded stuff
@@ -48,14 +57,8 @@ def generate_xslt(docx)
 # let's pull out variables
 	replace = document.split('Ω')
 
-	if replace.size < 1
-		puts "Nothing to modify"
-		exit
-	end
-
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of Ω (count:#{replace.size-1} - Fix the docx"
-		exit
+        raise ReportingError.new("Uneven number of Ω. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -85,9 +88,8 @@ def generate_xslt(docx)
 	replace = document.split('π')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of π (count:#{replace.size-1} - Fix the docx"
-		exit
-	end
+	    raise ReportingError.new("Uneven number of π. This is usually caused by a mismatch in a variable.")
+    end
 
 	count = 0
 	replace.each do |omega|
@@ -111,8 +113,7 @@ def generate_xslt(docx)
 	replace = document.split('∞')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of ∞ (count:#{replace.size-1} - Fix the docx"
-		exit
+        raise ReportingError.new("Uneven number of ∞. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -143,9 +144,8 @@ def generate_xslt(docx)
 	replace = document.split('æ')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of æ (count:#{replace.size-1} - Fix the docx"
-		exit
-	end
+	    raise ReportingError.new("Uneven number of æ. This is usually caused by a mismatch in a variable.")
+    end
 
 	count = 0
 	replace.each do |omega|
@@ -214,8 +214,7 @@ def generate_xslt(docx)
 	replace = document.split('¬')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of ¬ (count:#{replace.size-1} - Fix the docx"
-		exit
+        raise ReportingError.new("Uneven number of ¬. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -270,8 +269,7 @@ def generate_xslt(docx)
 	replace = document.split('†')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of † (count:#{replace.size-1} - Fix the docx"
-		exit
+        raise ReportingError.new("Uneven number of †. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -340,8 +338,7 @@ def generate_xslt(docx)
 	replace = document.split('ƒ')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of ƒ (count:#{replace.size-1} - Fix the docx"
-		exit
+        raise ReportingError.new("Uneven number of ƒ. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -379,8 +376,7 @@ def generate_xslt(docx)
 	replace = document.split('µ')
 
 	if (((replace.size-1) % 2) != 0)
-		puts "Uneven number of µ (count:#{replace.size-1} - Fix the docx"
-		exit
+        raise ReportingError.new("Uneven number of µ. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -506,7 +502,7 @@ def generate_xslt(docx)
 #	§
 ###############################
 
-	#return the xslt		
+	#return the xslt
 	return document
 end
 
