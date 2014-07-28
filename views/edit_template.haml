@@ -1,0 +1,36 @@
+.span10
+  %form{:method => 'post', :action => '/admin/templates/edit', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Edit Template
+    %br
+    %table
+      %tr
+        %td
+          Report Type &nbsp;
+        %td
+          %input{:type => 'text', :name => 'report_type', :required=>true, :value => "#{@template.report_type}"}
+      %tr
+        %td
+          File Description &nbsp;
+        %td
+          %input{:type => 'text', :name => 'description', :value => "#{@template.description}"}
+      %tr
+        %td
+          Finding Template &nbsp;
+        %td
+          %input{:type => 'checkbox', :name => 'finding_template'}
+      %tr
+        %td
+          Status Template &nbsp;
+        %td
+          %input{:type => 'checkbox', :name => 'status_template'}
+      %tr
+        %td
+          DOCX
+        %td
+          %input{:type => 'file', :name => 'file', :required => true}
+    %br
+    %input{:type => 'hidden', :name => 'id', :value => "#{@template.id}"}
+    %input{:type => 'submit', :value => 'Modify' }
+    %button{:value => 'Cancel'} Cancel
+

@@ -3,7 +3,7 @@
     %h3 Current Templates
     %br  
     .table.table-striped
-      %table{:style => 'width: 40%'}
+      %table{:style => 'width: 80%'}
         %tbody
           - if @templates
             %tr
@@ -31,7 +31,9 @@
                     Status Template
                   - else
                     Report Template
-                %td{:style => 'width: 40%'}
+                %td{:style => 'width: 60%'}
+                  %a{:class => 'btn btn-info', :href => "/admin/templates/#{template.id}/edit"}
+                    %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
                   %a{ :class => "btn btn-danger", :href => "/admin/delete/templates/#{template.id}"}
                     %i{:class => 'icon-trash icon-white', :title => 'Delete Template'}
                   %a{:class => 'btn btn-info', :href => "/admin/templates/#{template.id}/download"}
