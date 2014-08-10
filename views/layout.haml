@@ -112,6 +112,11 @@
                     %a{ :href => "/report/#{@report.id}/findings_add" } Add Finding from Templates
                   %li
                     %a{ :href => "/report/#{@report.id}/findings/new" } Create New Finding
+                  %li.nav-header Attachments
+                  %li
+                    %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
+                  %li
+                    %a{ :href => "/report/#{@report.id}/attachments" } List Current Attachments
           =yield
   - else
     %body
