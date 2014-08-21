@@ -1,4 +1,4 @@
 Serpico Concept Logo
 ====================
 
-!(Serpico Logo)[serpico_concept_logo.svg]
+![Imgur](http://i.imgur.com/H0sP9pN.png)
