@@ -23,7 +23,7 @@ set :port, config_options["port"]
 set :bind, "0.0.0.0"
 
 ## Global variables
-set :finding_types, [ "Web Application","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing"]
+set :finding_types, config_options["finding_types"]
 set :effort, ["LOW","MEDIUM","HARD"]
 set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
 set :status, ["EXPLOITED"]
