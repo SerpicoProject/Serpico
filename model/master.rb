@@ -71,6 +71,7 @@ class TemplateReports
 	property :short_company_name, String, :required => true, :length => 200
 	property :company_website, String
 
+
 end
 
 class User
@@ -178,6 +179,7 @@ class Reports
 	property :company_website, String, :length => 200
 	property :owner, String, :length => 200
 	property :authors, CommaSeparatedList, :required => false, :lazy => false
+	property :user_defined_variables, String, :length => 10000
 
 end
 
