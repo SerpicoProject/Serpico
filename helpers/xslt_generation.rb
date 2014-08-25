@@ -83,6 +83,39 @@ def generate_xslt(docx)
 
 ###########################
 
+# § - used as a user defined variable substituion variable
+
+# let's pull out variables
+    replace = document.split('§')
+
+    if (((replace.size-1) % 2) != 0)
+        raise ReportingError.new("Uneven number of §. This is usually caused by a mismatch in a variable.")
+    end
+
+    count = 0
+    replace.each do |omega|
+        if (count % 2) == 0
+            count = count + 1
+            next
+        end
+
+        omega = compress(omega)
+
+        # now, we replace omega with the real deal
+        #<xsl:for-each select="report/reports">
+        #<w:t xml:space="preserve"> <xsl:value-of select="contact_name"/> </w:t>
+        #</xsl:for-each>
+        replace[count] = "<xsl:for-each select=\"report/udv\"><xsl:value-of select=\"#{omega.downcase}\"/></xsl:for-each>"
+        count = count + 1
+    end
+
+    # remove all the Ω and put the document back together
+    document = replace.join("")
+
+
+
+###########################
+
 # π - a replacement variable for for-each loops only
 
 	replace = document.split('π')

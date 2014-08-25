@@ -924,7 +924,7 @@ get '/report/:id/user_defined_variables' do
     @report = get_report(id)
     
     if  @report.user_defined_variables
-      @user_variables = JSON.parse(@report.user_defined_variables)
+		@user_variables = JSON.parse(@report.user_defined_variables)
     else
         @user_variables = ""
     end
@@ -936,7 +936,9 @@ end
 post '/report/:id/user_defined_variables' do
     redirect to("/") unless valid_session?
     
-    data = url_escape_hash(request.POST)
+    # moving the escape to the individual element
+    #data = url_escape_hash(request.POST)
+	data = request.POST
 
     variable_name_array = data.to_s.scan(/variable_name.+?"=>"(.*?)"/)
     variable_data_array = data.to_s.scan(/variable_data.+?"=>"(.*?)"/)
@@ -945,8 +947,12 @@ post '/report/:id/user_defined_variables' do
 
     z = 0
     while z < variable_name_array.size
-        variable_hash[variable_name_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,'')] = variable_data_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,'')
-        z = z + 1
+		# we check the size of the name and value, if either is blank we implicitly delete, blank => [\"\"]
+		if (variable_name_array[z].to_s.length > 4 and variable_data_array[z].to_s.length > 4)
+			# TODO: this line is way too long, should create a method to gsub
+			variable_hash[CGI.escapeHTML(variable_name_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))] = CGI.escapeHTML(variable_data_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))
+		end
+		z = z + 1
     end
 
     id = params[:id]
@@ -1417,8 +1423,24 @@ get '/report/:id/generate' do
 
     # Replace the stub elements with real XML elements
     findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+	
+	# check if the report has user_defined variables
+	if @report.user_defined_variables
+	
+		# we need the user defined variables in xml
+		udv_hash = JSON.parse(@report.user_defined_variables) 
+		udv = "<udv>"
+		udv_hash.each do |key,value|
+			udv << "<#{key}>"
+			udv << "#{value}"
+			udv << "</#{key}>\n"
+		end
+		udv << "</udv>"
+	else
+		udv = ""
+	end
 
-    report_xml = "<report>#{@report.to_xml}#{findings_xml}</report>"
+    report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}</report>"
 
 	xslt_elem = Xslt.first(:report_type => @report.report_type)
 
