@@ -1,0 +1,67 @@
+.span10
+  %form{:method => 'post'}
+    %br
+    %h2 Report Name: #{@report.report_name}
+    %br 
+    %br
+    - if @user_variables == ""
+      %h3
+        It appears you do not have any user defied variables. Would you like to add some? 
+      %br
+      %h3
+        Add user defined variables
+      %br
+      .table.table-striped 
+        %table
+          %tr
+          %td
+            Variable Name:&nbsp;
+          %td
+            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>'variable_name_0'}
+          %tr
+          %td
+            Variable data:&nbsp;
+          %td
+            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => 'variable_data_0'}
+        %br
+    - else
+      %h3 
+        Hot you have variables!! 
+      - i = 0
+      - w = 66
+      - @user_variables.each do | variables_name, variables_data|
+        .table.table-striped 
+          %table
+            %tr
+            %td
+              Variable Name:&nbsp;
+            %td
+              %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>"variable_name_#{w}", :value => "#{variables_name}"}
+            %tr
+            %td
+              Variable data:&nbsp;
+            %td
+              %textarea{:name => "variable_data_#{w}"}
+                #{variables_data}   
+          %br
+          - w = w + 1
+        %br
+        %br  
+      %h3
+      Add addtional user defined variables
+      .table.table-striped 
+        %table
+          %tr
+          %td
+            Variable Name:&nbsp;
+          %td
+            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name_#{i}', :name =>"variable_name_#{i}"}
+          %tr
+          %td
+            Variable data:&nbsp;
+          %td
+            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => "variable_data_#{i}"}
+        %br
+        - i = i + 1 
+    %input{:type => 'submit', :value => 'Save' }
+    %button{:value => 'Cancel'} Cancel

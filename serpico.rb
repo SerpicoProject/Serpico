@@ -916,6 +916,55 @@ post '/report/:id/edit' do
     redirect to("/report/#{id}/edit")
 end
 
+#Edit user defined variables
+get '/report/:id/user_defined_variables' do
+    redirect to("/") unless valid_session?
+
+    id = params[:id]
+    @report = get_report(id)
+    
+    if  @report.user_defined_variables
+      @user_variables = JSON.parse(@report.user_defined_variables)
+    else
+        @user_variables = ""
+    end
+    
+    haml :user_defined_variable, :encode_html => true
+end
+
+#Post user defined variables
+post '/report/:id/user_defined_variables' do
+    redirect to("/") unless valid_session?
+    
+    # moving the escape to the individual element
+    #data = url_escape_hash(request.POST)
+    data = request.POST
+
+    variable_name_array = data.to_s.scan(/variable_name.+?"=>"(.*?)"/)
+    variable_data_array = data.to_s.scan(/variable_data.+?"=>"(.*?)"/)
+    
+    variable_hash = Hash.new()
+
+    z = 0
+    while z < variable_name_array.size
+    # we check the size of the name and value, if either is blank we implicitly delete, blank => [\"\"]
+        if (variable_name_array[z].to_s.length > 4 and variable_data_array[z].to_s.length > 4)
+            # TODO: this line is way too long, should create a method to gsub
+            variable_hash[CGI.escapeHTML(variable_name_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))] = CGI.escapeHTML(variable_data_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))
+        end
+       z = z + 1
+
+    end
+
+    id = params[:id]
+    @report = get_report(id)
+    
+    @report.user_defined_variables = variable_hash.to_json
+    @report.save
+    redirect to("/report/#{id}/user_defined_variables")
+   
+end
+
 # Edit the Report's Current Findings
 get '/report/:id/findings' do
     redirect to("/") unless valid_session?
