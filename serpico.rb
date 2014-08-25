@@ -1425,7 +1425,23 @@ get '/report/:id/generate' do
     # Replace the stub elements with real XML elements
     findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
 
-    report_xml = "<report>#{@report.to_xml}#{findings_xml}</report>"
+	# check if the report has user_defined variables
+	if @report.user_defined_variables
+	
+		# we need the user defined variables in xml
+		udv_hash = JSON.parse(@report.user_defined_variables) 
+		udv = "<udv>"
+		udv_hash.each do |key,value|
+			udv << "<#{key}>"
+			udv << "#{value}"
+			udv << "</#{key}>\n"
+		end
+		udv << "</udv>"
+	else
+		udv = ""
+	end
+
+    report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}</report>"
 
 	xslt_elem = Xslt.first(:report_type => @report.report_type)
 
