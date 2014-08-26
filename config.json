@@ -7,5 +7,5 @@
     "ldap_dc":"",
     "dread":true,  //DREAD risk scoring used by default
     "finding_types": ["Web Application","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing"],
-    "logo":"https://www.newenglandflagandbanner.com/store/images/throwback-pennants/1337-Boston-Red-Sox.jpg"
+    "logo":"/img/logo_1.jpg"
 }
