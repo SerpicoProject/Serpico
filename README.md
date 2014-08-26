@@ -72,6 +72,15 @@ renders as:
 Acme Corporation
 ```
 
+__§__ - A User Defined Variable. These can be added by the user through UI. A user defined variable is very useful for adding your own variables to a report.
+```
+§my_executive_summary§
+
+renders as:
+Whatever the user has placed in the UI.
+
+```
+
 __¬__ - for each
 
 ```
