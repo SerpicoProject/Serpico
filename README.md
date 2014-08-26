@@ -178,5 +178,5 @@ __¥__ - End if statement
 - Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
 
 ## Huge Thanks
-Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
-
+* Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
+* @d4rkd0s for the great logo work. Thanks!

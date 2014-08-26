@@ -720,6 +720,9 @@ get '/reports/list' do
     @reports = get_reports
 
     @admin = true if is_administrator?
+	
+	# allow the user to set their logo in the configuration options
+	@logo = config_options["logo"]
 
     haml :reports_list, :encode_html => true
 end
