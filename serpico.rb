@@ -767,7 +767,9 @@ get '/report/:id/upload_attachments' do
 	redirect to("/") unless valid_session?
     
     id = params[:id]
-    
+    @no_file = params[:no_file]
+    p @no_file
+
     # Query for the first report matching the id
     @report = get_report(id)
     
@@ -776,7 +778,6 @@ get '/report/:id/upload_attachments' do
     end
     
     @attachments = Attachments.all(:report_id => id)
-    
     haml :upload_attachments, :encode_html => true
 end
 
@@ -790,6 +791,11 @@ post '/report/:id/upload_attachments' do
     
     if @report == nil 
         return "No Such Report"
+    end
+
+    if params[:filename] == nil
+	
+    	redirect to("/report/#{id}/upload_attachments?no_file=1")
     end
 
     # We use a random filename
