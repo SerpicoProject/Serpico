@@ -3,6 +3,10 @@
     %br
     %h2 Upload Attachment
     %br
+    - if @no_file == "1"
+      You forgot to include a file, silly
+    %br
+    %br
     %table
       %tr
         %td
