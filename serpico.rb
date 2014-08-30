@@ -796,7 +796,7 @@ post '/report/:id/upload_attachments' do
         return "No Such Report"
     end
 
-    if params[:filename] == nil
+    if params[:file] == nil
     	redirect to("/report/#{id}/upload_attachments?no_file=1")
     end
 
