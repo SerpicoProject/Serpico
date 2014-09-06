@@ -528,12 +528,12 @@ post '/master/import' do
 			else
 				# it's a modified finding
 				j["title"] = "#{j['title']} - [Uploaded Modified Templated Finding]"
-				j["approved"] = false
-				f = TemplateFindings.create(j)
+				params[:approved] !=nil ? j["approved"] = true : j["approved"] = false
+                f = TemplateFindings.create(j)
 				f.save
 			end
 		else
-			j["approved"] = false
+			params[:approved] != nil ? j["approved"] = true : j["approved"] = false
 			f = TemplateFindings.first_or_create(j)
 			f.save
 		end

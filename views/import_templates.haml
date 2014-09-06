@@ -9,10 +9,17 @@
         %td
           Upload JSON File - Please be careful. This must have been exported from the UI.&nbsp;
           %br
-          %br         
+          %br
           %input{:type => 'file', :name => 'file'}
+      %tr
+        %td
+          %br
+          &nbsp;&nbsp;&nbsp;
+          %input{:type => 'checkbox', :name => 'approved'}
+          Automatically Approve Imported Findings. By default you should manually approve findings, this overrides that.
+    %br
     %br
     %input{:type => 'submit', :value => 'Upload' }
     %button{:value => 'Cancel'} Cancel
-  
-      
+
+
