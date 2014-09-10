@@ -126,10 +126,10 @@
     %body
     %link(rel="stylesheet" type="text/css" href="/css/signin.css")
     .container
-  %form.form-signin{:action => "/login", :method => "POST", :role => "form"}
-    %img{:src => "#{@logo}", :height => 150, :width =>  500, :class => 'text-center'}
-    %br
-    %br
-    %input.form-control.btn-block{:autofocus => "", :placeholder => "Username", :required => "", :type => "text" :name=> "username"}/
-    %input.form-control.btn-block{:placeholder => "Password", :required => "", :type => "password" :name=> "password"}/
-    %button.btn.btn-primary.btn-block.form-control{:type => "submit"} Sign in
+    %form.form-signin{:action => "/login", :method => "POST", :role => "form"}
+      %img{:src => "#{@logo}", :height => 150, :width =>  500, :class => 'text-center'}
+      %br
+      %br
+      %input.form-control.btn-block{:autofocus => "", :placeholder => "Username", :required => "", :type => "text" :name=> "username"}/
+      %input.form-control.btn-block{:placeholder => "Password", :required => "", :type => "password" :name=> "password"}/
+      %button.btn.btn-primary.btn-block.form-control{:type => "submit"} Sign in
