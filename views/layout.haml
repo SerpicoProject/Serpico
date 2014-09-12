@@ -22,6 +22,7 @@
     %link{:href => "/css/bootstrap.css", :rel => "stylesheet"}/
     %link{:href => "/css/bootstrap.min.css", :rel => "stylesheet"}/
     %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}/
+    %link{:href => "/css/font-awesome.css", :rel => "stylesheet"}/
     :css
       body {
         padding-top: 60px;
@@ -46,20 +47,21 @@
         .navbar-inner
           %ul.nav{"class" => "padded"}
             %li
-              %a{:href => "/reports/list"} List Reports          
+              %a.fa.fa-file-word-o{:href => "/reports/list"} &nbsp;List Reports          
             %li
-              %a{:href => "/report/new"} New Report                      
+              %a.fa.fa-pencil-square-o{:href => "/report/new"} &nbsp;New Report                      
           .nav-collapse
             %ul.nav{"class" => "pull-right padded"}
               - if is_administrator?
                 %li
-                  %a{:href => "/master/findings"} Findings Database
+                  %a.fa.fa-sitemap{:href => "/master/findings"} &nbsp;Findings Database
                 %li
-                  %a{:href => "/admin/"} Administration
+                  %a.fa.fa-reorder{:href => "/admin/"} &nbsp;Administration
               %li
-                %a{:href => "/info"} Consultant Information
-              %li
-                %a{:href => "/logout"} Log Out
+                %a.fa.fa-tasks{:href => "/info"} &nbsp;Consultant Information
+              %li 
+                %a.fa.fa-external-link-square{:href => "/logout"} &nbsp;Logout
+                
       <br>
       .container-fluid
         .row-fluid
@@ -122,20 +124,12 @@
           =yield
   - else
     %body
-    .container-fluid
-      %br
-      %img{:src => "#{@logo}", :height => 150, :width =>  500, :class => 'pull-left'} 
-      .span12
-      %br
-      %br     
+    %link(rel="stylesheet" type="text/css" href="/css/signin.css")
+    .container
+    %form.form-signin{:action => "/login", :method => "POST", :role => "form"}
+      %img{:src => "#{@logo}", :height => 150, :width =>  500, :class => 'text-center'}
       %br
       %br
-      %br     
-      .span7
-        %ul.nav{"class" => "pull-right padded"}
-          %form{:action => "/login", :method => "post"}
-            %input.input-small{:placeholder => "Username", :type => "text", :name => "username"}/
-            %br
-            %input.input-small{:placeholder => "Password", :type => "password", :name => "password"}/
-            %br
-            %button.btn{:type => "submit padded"} Sign in
+      %input.form-control.btn-block{:autofocus => "", :placeholder => "Username", :required => "", :type => "text" :name=> "username"}/
+      %input.form-control.btn-block{:placeholder => "Password", :required => "", :type => "password" :name=> "password"}/
+      %button.btn.btn-primary.btn-block.form-control{:type => "submit"} Sign in
