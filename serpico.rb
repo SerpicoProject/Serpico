@@ -716,7 +716,7 @@ end
 #####
 
 # List current reports
-get '/reports/list' do
+get '/reports/list' do    
     @reports = get_reports
 
     @admin = true if is_administrator?
@@ -729,6 +729,8 @@ end
 
 # Create a report
 get '/report/new' do
+    redirect to("/") unless valid_session?
+    
     @templates = Xslt.all
     haml :new_report, :encode_html => true
 end
@@ -1472,6 +1474,70 @@ get '/report/:id/generate' do
     
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"
 end
+
+# Export a report
+get '/report/:id/export' do
+    redirect to("/") unless valid_session?
+
+	json = {}
+
+    id = params[:id]
+	report = get_report(id)
+
+	# bail without a report
+	redirect to("/") unless report
+
+	# add the report
+	json["report"] = report
+
+	# add the findings
+    findings = Findings.all(:report_id => id)
+	json["findings"] = findings
+
+	local_filename = "./tmp/#{rand(36**12).to_s(36)}.json"
+    File.open(local_filename, 'w') {|f| f.write(JSON.pretty_generate(json)) }
+
+	send_file local_filename, :type => 'json', :filename => "exported_report.json"
+end
+
+# Import a report
+get '/report/import' do
+    redirect to("/") unless valid_session?
+
+	haml :import_report
+end
+
+# Import a report
+post '/report/import' do
+    redirect to("/") unless valid_session?
+
+	# reject if the file is above a certain limit
+	if params[:file][:tempfile].size > 1000000
+		return "File too large. 1MB limit"
+	end
+
+	json_file = params[:file][:tempfile].read
+	line = JSON.parse(json_file)
+
+	line["report"]["id"] = nil
+
+	f = Reports.create(line["report"])
+	f.save
+	
+	# now add the findings
+	line["findings"].each do |finding|
+		finding["id"] = nil
+		finding["master_id"] = nil
+		finding["report_id"] = f.id
+		finding["finding_modified"] = nil
+		g = Findings.create(finding)
+		g.save
+	end 
+	
+	# we should redirect to the newly imported report
+	redirect to("/report/#{f.id}/edit")
+end
+
 
 # Helper Functions
 

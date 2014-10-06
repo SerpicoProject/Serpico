@@ -102,13 +102,15 @@
                   %li.nav-header
                     #{@report.report_name}
                   %li
+                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report                   
+                  %li
                     %a{ :href => "/report/#{@report.id}/edit" } Edit Report Information
                   %li
                     %a{ :href => "/report/#{@report.id}/user_defined_variables"} Edit User Defied Variables
                   %li
-                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report                   
-                  %li
                     %a{ :href => "/report/#{@report.id}/status" } Generate Status Report       
+                  %li
+                    %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
                   %li.nav-header Findings
                   %li
                     %a{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
