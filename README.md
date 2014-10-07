@@ -60,7 +60,7 @@ The Meta language used for Microsoft Word was designed to be as simple as possib
 
 This is an area we know needs development so e-mail me with any ideas.
 
-See the [Serpico WiKi|https://github.com/MooseDojo/Serpico/wiki/Serpico-Meta-Language-In-Depth].
+See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/MooseDojo/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
 ## GOTCHAS
 - Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
