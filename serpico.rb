@@ -1538,6 +1538,21 @@ post '/report/import' do
 	redirect to("/report/#{f.id}/edit")
 end
 
+get '/report/:id/text_status' do
+    redirect to("/") unless valid_session?
+
+    id = params[:id]
+	@report = get_report(id)
+
+	# bail without a report
+	redirect to("/") unless @report
+
+	# add the findings
+    @findings = Findings.all(:report_id => id)
+
+	haml :text_status, :encode_html => true
+end
+
 
 # Helper Functions
 
