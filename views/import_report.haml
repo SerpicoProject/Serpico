@@ -1,0 +1,19 @@
+.span10
+  %form{:method => 'post', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Import Report
+    %br
+    %table
+      %tr
+      %tr
+        %td
+          Upload JSON Report - Please be careful. This must have been exported from the UI.&nbsp;
+          %br
+          %br
+          %input{:type => 'file', :name => 'file'}
+    %br
+    %br
+    %input{:type => 'submit', :value => 'Upload' }
+    %button{:value => 'Cancel'} Cancel
+
+
