@@ -1,7 +1,16 @@
-require 'rubygems'
 require 'optparse'
-require "highline/import"
 require './model/master.rb'
+
+def agree(q)
+	puts q
+	change = gets.chomp.downcase
+
+	if change == "y" or change == ""
+		return true
+	else
+		return false
+	end
+end
 
 def find_user(users, user) 
     users.each do |u| 
@@ -16,7 +25,6 @@ end
 
 def print_all_users(users)
     users.each do |u| 
-        #puts "#{u.username} \t #{u.type} \t #{u.created_at}"
         printf("%-10s %20s %50s\n", u.username, u.type, u.created_at)
     end 
 end 
@@ -33,7 +41,7 @@ def create_user(username, password)
             user.password = password
         end
 
-        answer = agree("Make this #{ARGV[0]} user Administrator? (y/n) :")
+        answer = agree("Make this #{ARGV[0]} user Administrator? (Y/n) :")
 
         if answer
             user.type = "Administrator"
@@ -57,7 +65,7 @@ def create_user(username, password)
 end
 
 def make_admin(user, password)
-    if agree("Would you like to make #{user.username} an administrator (y/n) :")
+    if agree("Would you like to make #{user.username} an administrator (Y/n) :")
         user.update(:type => "Administrator", :auth_type => "Local", :password => password)
     else
         user.update(:type => "User", :auth_type => "Local", :password => password)
@@ -139,7 +147,7 @@ end
 if options[:random]
     if options[:username]
         if user = find_user(users, username) # does user already exisit?
-            if agree("Are you sure you want to set a random password for #{user.username} (y/n) :")
+            if agree("Are you sure you want to set a random password for #{user.username} (Y/n) :")
 
                 password = rand(36**10).to_s(36)
                 make_admin(user, password)
@@ -153,7 +161,7 @@ if options[:random]
                 exit
             end 
         else # Nope so lets create this user with random password!!
-            if agree("The user #{username} doesn't exist would you like to create it? (y/n) :")
+            if agree("The user #{username} doesn't exist would you like to create it? (Y/n) :")
                 create_user(username, nil)
             else
                 puts "Well then try again. Please use the -h options for help\n"
@@ -173,7 +181,7 @@ elsif options[:password]   # Username and password submitted
             make_admin(user, password)
             puts "User #{user.username} successfully updated."
 
-        elsif agree("The user #{username} doesn't exist would you like to create it? (y/n) :")
+        elsif agree("The user #{username} doesn't exist would you like to create it? (Y/n) :")
             create_user(username, password)
         else
             puts "Well then try again. Please use the -h options for help\n"
