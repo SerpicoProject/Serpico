@@ -818,7 +818,7 @@ post '/report/:id/upload_attachments' do
 	# to prevent traversal we hardcode this
 	datax["filename_location"] = "#{rand_file}"
 	datax["filename"] = params[:file][:filename]	
-	datax["description"] = CGI::escapeHTML(params[:description])
+	datax["description"] = CGI::escapeHTML(params[:description]).gsub(" ","_").gsub("/","_")
 	datax["report_id"] = id
 	data = url_escape_hash(datax)
 
@@ -1051,10 +1051,106 @@ get '/report/:id/status' do
 		# Create a temporary copy of the finding_template
 		FileUtils::copy_file(xslt_elem.docx_location,rand_file)
 
+		### IMAGE INSERT CODE
+		if docx_xml.to_s =~ /\[!!/
+			# first we read in the current [Content_Types.xml]
+			content_types = ""
+			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+				zipfile.fopen("[Content_Types].xml") do |f|
+					content_types = f.read # read entry content
+				end
+			end
+
+			# add the png and jpg handling to end of content types document
+			if !(content_types =~ /image\/png/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
+			end
+			if !(content_types =~ /image\/jpg/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
+			end
+
+			# replace the content types to support images
+			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+				 zipfile.add_or_replace_buffer("[Content_Types].xml",
+				   content_types)
+			end
+			
+			# replace all [!! image !!] in the document
+			imgs = docx_xml.to_s.split("[!!")
+			docx = imgs.first
+			imgs.delete_at(0)
+				
+			imgs.each do |image_i|
+					
+				name = image_i.split("!!]").first.gsub(" ","")
+				end_xml = image_i.split("!!]").last
+				
+				p name
+				# search for the image in the attachments
+				image = Attachments.first(:description => name, :report_id => id)
+					
+				# tries to prevent breakage in the case image dne
+				if image
+					
+					# assign random id, ms requires it begin with a letter. weird.
+					p_id = "d#{rand(36**7).to_s(36)}"
+						
+					# insert picture into xml
+					docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+					docx << end_xml
+						
+					# insert picture into zip
+					exists = false
+					img_data = ""
+					File.open(image.filename_location, 'rb') {|file| img_data << file.read }
+					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+						#iterate zipfile to see if it has media dir, this could be better
+						zipfile.each do	|file|
+							if file.name =~ /word\/media/
+								exists = true
+							end
+						end
+						if exists
+							zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
+						else
+							zipfile.add_or_replace_buffer("word/#{name}",img_data)
+						end
+					end
+									
+					# update document.xml.rels
+					docu_rels = ""
+					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+						zipfile.fopen("word/_rels/document.xml.rels") do |f|
+							docu_rels = f.read # read entry content
+						end
+					end
+							
+					if exists
+						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
+					else
+						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
+					end
+					
+					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+						zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
+						docu_rels)
+					end	
+				else
+					docx << end_xml
+				end
+					
+			end
+			
+		else
+			# no images in finding
+			docx = docx_xml.to_s
+		end
+		#### END IMAGE INSERT CODE
+
 		# A better way would be to create the zip file in memory and return to the user, this is not ideal
 		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
 			zipfile.add_or_replace_buffer('word/document.xml',
-										  docx_xml.to_s)
+										  docx)
 		end
 
 		send_file rand_file, :type => 'docx', :filename => "status.docx"
@@ -1357,12 +1453,106 @@ get '/report/:id/findings/:finding_id/preview' do
 		# Create a temporary copy of the finding_template
 		FileUtils::copy_file(xslt_elem.docx_location,rand_file)
 
+		### IMAGE INSERT CODE
+		if docx_xml.to_s =~ /\[!!/
+			# first we read in the current [Content_Types.xml]
+			content_types = ""
+			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+				zipfile.fopen("[Content_Types].xml") do |f|
+					content_types = f.read # read entry content
+				end
+			end
+
+			# add the png and jpg handling to end of content types document
+			if !(content_types =~ /image\/png/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
+			end
+			if !(content_types =~ /image\/jpg/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
+			end
+
+			# replace the content types to support images
+			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+				 zipfile.add_or_replace_buffer("[Content_Types].xml",
+				   content_types)
+			end
+			
+			# replace all [!! image !!] in the document
+			imgs = docx_xml.to_s.split("[!!")
+			docx = imgs.first
+			imgs.delete_at(0)
+				
+			imgs.each do |image_i|
+					
+				name = image_i.split("!!]").first.gsub(" ","")
+				end_xml = image_i.split("!!]").last
+					
+				# search for the image in the attachments
+				image = Attachments.first(:description => name, :report_id => id)
+					
+				# tries to prevent breakage in the case image dne
+				if image
+					
+					# assign random id, ms requires it begin with a letter. weird.
+					p_id = "d#{rand(36**7).to_s(36)}"
+						
+					# insert picture into xml
+					docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+					docx << end_xml
+						
+					# insert picture into zip
+					exists = false
+					img_data = ""
+					File.open(image.filename_location, 'rb') {|file| img_data << file.read }
+					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+						#iterate zipfile to see if it has media dir, this could be better
+						zipfile.each do	|file|
+							if file.name =~ /word\/media/
+								exists = true
+							end
+						end
+						if exists
+							zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
+						else
+							zipfile.add_or_replace_buffer("word/#{name}",img_data)
+						end
+					end
+									
+					# update document.xml.rels
+					docu_rels = ""
+					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+						zipfile.fopen("word/_rels/document.xml.rels") do |f|
+							docu_rels = f.read # read entry content
+						end
+					end
+							
+					if exists
+						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
+					else
+						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
+					end
+					
+					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+						zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
+						docu_rels)
+					end	
+				else
+					docx << end_xml
+				end
+					
+			end
+			
+		else
+			# no images in finding
+			docx = docx_xml.to_s
+		end
+		#### END IMAGE INSERT CODE
+		
 		# A better way would be to create the zip file in memory and return to the user, this is not ideal
 		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
 			 zipfile.add_or_replace_buffer('word/document.xml',
-				 docx_xml.to_s)
+				 docx)
 		end
-
 		send_file rand_file, :type => 'docx', :filename => "#{@finding.title}.docx"
 
 	else
@@ -1466,10 +1656,105 @@ get '/report/:id/generate' do
     # Create a temporary copy of the word doc
     FileUtils::copy_file(xslt_elem.docx_location,rand_file)
     
-    # A better way would be to create the zip file in memory and return to the user, this is not ideal
+	### IMAGE INSERT CODE
+	if docx_xml.to_s =~ /\[!!/
+		# first we read in the current [Content_Types.xml]
+		content_types = ""
+		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+			zipfile.fopen("[Content_Types].xml") do |f|
+				content_types = f.read # read entry content
+			end
+		end
+
+		# add the png and jpg handling to end of content types document
+		if !(content_types =~ /image\/png/)
+			content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
+		end
+		if !(content_types =~ /image\/jpg/)
+			content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
+		end
+
+		# replace the content types to support images
+		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+			 zipfile.add_or_replace_buffer("[Content_Types].xml",
+			   content_types)
+		end
+		
+		# replace all [!! image !!] in the document
+		imgs = docx_xml.to_s.split("[!!")
+		docx = imgs.first
+		imgs.delete_at(0)
+			
+		imgs.each do |image_i|
+				
+			name = image_i.split("!!]").first.gsub(" ","")
+			end_xml = image_i.split("!!]").last
+				
+			# search for the image in the attachments
+			image = Attachments.first(:description => name, :report_id => id)
+				
+			# tries to prevent breakage in the case image dne
+			if image
+				
+				# assign random id, ms requires it begin with a letter. weird.
+				p_id = "d#{rand(36**7).to_s(36)}"
+					
+				# insert picture into xml
+				docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+				docx << end_xml
+					
+				# insert picture into zip
+				exists = false
+				img_data = ""
+				File.open(image.filename_location, 'rb') {|file| img_data << file.read }
+				Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+					#iterate zipfile to see if it has media dir, this could be better
+					zipfile.each do	|file|
+						if file.name =~ /word\/media/
+							exists = true
+						end
+					end
+					if exists
+						zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
+					else
+						zipfile.add_or_replace_buffer("word/#{name}",img_data)
+					end
+				end
+								
+				# update document.xml.rels
+				docu_rels = ""
+				Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+					zipfile.fopen("word/_rels/document.xml.rels") do |f|
+						docu_rels = f.read # read entry content
+					end
+				end
+						
+				if exists
+					docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
+				else
+					docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
+				end
+				
+				Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+					zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
+					docu_rels)
+				end	
+			else
+				docx << end_xml
+			end
+				
+		end
+		
+	else
+		# no images in finding
+		docx = docx_xml.to_s
+	end
+	#### END IMAGE INSERT CODE
+
+    # Create the docx, would be better to create the zip file in memory and return to the user
     Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
          zipfile.add_or_replace_buffer('word/document.xml',
-           docx_xml.to_s)
+           docx)
     end
     
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"

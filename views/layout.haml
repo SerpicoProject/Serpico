@@ -105,11 +105,7 @@
                     %a{ :href => "/report/#{@report.id}/edit" } Edit Report Information
                   %li
                     %a{ :href => "/report/#{@report.id}/generate" } Generate Report                   
-                  %li
-                    %a{ :href => "/report/#{@report.id}/user_defined_variables"} Edit User Defied Variables
-                  %li
-                    %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report       
-                  %li.nav-header Findings
+                    %li.nav-header Findings
                   %li
                     %a{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
                   %li
@@ -122,6 +118,10 @@
                   %li
                     %a{ :href => "/report/#{@report.id}/attachments" } List Current Attachments
                   %li.nav-header Additional Features
+                  %li
+                    %a{ :href => "/report/#{@report.id}/user_defined_variables"} Edit User Defied Variables
+                  %li
+                    %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report       
                   %li
                     %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
                   %li
