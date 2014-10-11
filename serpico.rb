@@ -1079,62 +1079,18 @@ get '/report/:id/status' do
 			imgs = docx_xml.to_s.split("[!!")
 			docx = imgs.first
 			imgs.delete_at(0)
-				
+			
 			imgs.each do |image_i|
 					
 				name = image_i.split("!!]").first.gsub(" ","")
 				end_xml = image_i.split("!!]").last
 				
-				p name
 				# search for the image in the attachments
 				image = Attachments.first(:description => name, :report_id => id)
 					
 				# tries to prevent breakage in the case image dne
 				if image
-					
-					# assign random id, ms requires it begin with a letter. weird.
-					p_id = "d#{rand(36**7).to_s(36)}"
-						
-					# insert picture into xml
-					docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
-					docx << end_xml
-						
-					# insert picture into zip
-					exists = false
-					img_data = ""
-					File.open(image.filename_location, 'rb') {|file| img_data << file.read }
-					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-						#iterate zipfile to see if it has media dir, this could be better
-						zipfile.each do	|file|
-							if file.name =~ /word\/media/
-								exists = true
-							end
-						end
-						if exists
-							zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
-						else
-							zipfile.add_or_replace_buffer("word/#{name}",img_data)
-						end
-					end
-									
-					# update document.xml.rels
-					docu_rels = ""
-					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-						zipfile.fopen("word/_rels/document.xml.rels") do |f|
-							docu_rels = f.read # read entry content
-						end
-					end
-							
-					if exists
-						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
-					else
-						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
-					end
-					
-					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-						zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
-						docu_rels)
-					end	
+					docx = image_insert(docx, rand_file, image, end_xml)
 				else
 					docx << end_xml
 				end
@@ -1492,50 +1448,8 @@ get '/report/:id/findings/:finding_id/preview' do
 					
 				# tries to prevent breakage in the case image dne
 				if image
-					
-					# assign random id, ms requires it begin with a letter. weird.
-					p_id = "d#{rand(36**7).to_s(36)}"
-						
-					# insert picture into xml
-					docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
-					docx << end_xml
-						
-					# insert picture into zip
-					exists = false
-					img_data = ""
-					File.open(image.filename_location, 'rb') {|file| img_data << file.read }
-					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-						#iterate zipfile to see if it has media dir, this could be better
-						zipfile.each do	|file|
-							if file.name =~ /word\/media/
-								exists = true
-							end
-						end
-						if exists
-							zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
-						else
-							zipfile.add_or_replace_buffer("word/#{name}",img_data)
-						end
-					end
-									
-					# update document.xml.rels
-					docu_rels = ""
-					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-						zipfile.fopen("word/_rels/document.xml.rels") do |f|
-							docu_rels = f.read # read entry content
-						end
-					end
-							
-					if exists
-						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
-					else
-						docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
-					end
-					
-					Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-						zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
-						docu_rels)
-					end	
+					# inserts the image into the doc
+					docx = image_insert(docx, rand_file, image, end_xml)
 				else
 					docx << end_xml
 				end
@@ -1693,58 +1607,15 @@ get '/report/:id/generate' do
 			# search for the image in the attachments
 			image = Attachments.first(:description => name, :report_id => id)
 				
-			# tries to prevent breakage in the case image dne
-			if image
-				
-				# assign random id, ms requires it begin with a letter. weird.
-				p_id = "d#{rand(36**7).to_s(36)}"
-					
-				# insert picture into xml
-				docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
-				docx << end_xml
-					
-				# insert picture into zip
-				exists = false
-				img_data = ""
-				File.open(image.filename_location, 'rb') {|file| img_data << file.read }
-				Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-					#iterate zipfile to see if it has media dir, this could be better
-					zipfile.each do	|file|
-						if file.name =~ /word\/media/
-							exists = true
-						end
-					end
-					if exists
-						zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
-					else
-						zipfile.add_or_replace_buffer("word/#{name}",img_data)
-					end
-				end
-								
-				# update document.xml.rels
-				docu_rels = ""
-				Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-					zipfile.fopen("word/_rels/document.xml.rels") do |f|
-						docu_rels = f.read # read entry content
-					end
-				end
-						
-				if exists
-					docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
+				# tries to prevent breakage in the case image dne
+				if image
+					# inserts the image
+					docx = image_insert(docx, rand_file, image, end_xml)
 				else
-					docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
+					docx << end_xml
 				end
 				
-				Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-					zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
-					docu_rels)
-				end	
-			else
-				docx << end_xml
-			end
-				
-		end
-		
+		end		
 	else
 		# no images in finding
 		docx = docx_xml.to_s
@@ -1895,4 +1766,55 @@ def get_reports
         return nil unless reports_array
         return reports_array            
     end
+end
+
+def image_insert(docx, rand_file, image, end_xml)				
+	# assign random id, ms requires it begin with a letter. weird.
+	p_id = "d#{rand(36**7).to_s(36)}"
+	name = image.description
+						
+	# insert picture into xml
+	docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+	docx << end_xml
+						
+	# insert picture into zip
+	exists = false
+	img_data = ""
+	
+	File.open(image.filename_location, 'rb') {|file| img_data << file.read }
+	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+		#iterate zipfile to see if it has media dir, this could be better
+		zipfile.each do	|file|
+			if file.name =~ /word\/media/
+				exists = true
+			end
+		end
+		
+		if exists
+			zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
+		else
+			zipfile.add_or_replace_buffer("word/#{name}",img_data)
+		end
+	end
+									
+	# update document.xml.rels
+	docu_rels = ""
+	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+		zipfile.fopen("word/_rels/document.xml.rels") do |f|
+			docu_rels = f.read # read entry content
+		end
+	end
+							
+	if exists
+		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
+	else
+		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
+	end
+					
+	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+		zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
+			docu_rels)
+	end
+	
+	return docx	
 end
