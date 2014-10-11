@@ -39,8 +39,8 @@ end
 set :domain, config_options["ldap_domain"]
 set :dc, config_options["ldap_dc"]
 
-enable :sessions 
-    
+enable :sessions
+
 ### Basic Routes
 
 # Used for 404 responses
@@ -67,7 +67,7 @@ get '/info' do
     redirect to("/") unless valid_session?
 
     @user = User.first(:username => get_username)
-    
+
     if !@user
         @user = User.new
         @user.auth_type = "AD"
@@ -75,16 +75,16 @@ get '/info' do
         @user.type = "User"
         @user.save
     end
-    
+
     haml :info, :encode_html => true
 end
 
 # Save the consultant information into the database
 post '/info' do
     redirect to("/") unless valid_session?
-    
+
     user = User.first(:username => get_username)
-    
+
     if !user
         user = User.new
         user.auth_type = "AD"
@@ -92,10 +92,10 @@ post '/info' do
         user.type = "User"
     end
 
-    user.consultant_email = params[:email] 
-    user.consultant_phone = params[:phone] 
-    user.consultant_title = params[:title]  
-    user.consultant_name = params[:name] 
+    user.consultant_email = params[:email]
+    user.consultant_phone = params[:phone]
+    user.consultant_title = params[:title]
+    user.consultant_name = params[:name]
     user.save
 
     redirect to("/info")
@@ -107,11 +107,11 @@ end
 
 post '/login' do
     user = User.first(:username => params[:username])
-    
+
     if user and user.auth_type == "Local"
-    
+
         usern = User.authenticate(params["username"], params["password"])
-    
+
         if usern and session[:session_id]
             # replace the session in the session table
             # TODO : This needs an expiration, session fixation
@@ -119,19 +119,19 @@ post '/login' do
             @del_session.destroy if @del_session
             @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
             @curr_session.save
-    
+
         end
     else
 		if options.ldap
 			#try AD authentication
 			usern = params[:username]
-			data = url_escape_hash(request.POST)           
+			data = url_escape_hash(request.POST)
             if usern == "" or params[:password] == ""
                 redirect to("/")
             end
- 
+
 			user = "#{options.domain}\\#{data["username"]}"
-			ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => params[:password]}    
+			ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => params[:password]}
 
 			if ldap.bind
 			   # replace the session in the session table
@@ -198,7 +198,7 @@ post '/admin/add_user' do
     redirect to("/no_access") if not is_administrator?
 
     user = User.first(:username => params[:username])
-    
+
     if user
         if params[:password]
             # we have to hardcode the input params to prevent param pollution
@@ -214,7 +214,7 @@ post '/admin/add_user' do
         user.type = params[:type]
         user.auth_type = params[:auth_type]
         user.save
-    end 
+    end
 
     redirect to('/admin/list_user')
 end
@@ -223,7 +223,7 @@ get '/admin/list_user' do
     redirect to("/no_access") if not is_administrator?
     @admin = true
     @users = User.all
-    
+
     haml :list_user, :encode_html => true
 end
 
@@ -231,18 +231,18 @@ get '/admin/edit_user/:id' do
     redirect to("/no_access") if not is_administrator?
 
     @user = User.first(:id => params[:id])
-    
+
     haml :add_user, :encode_html => true
 end
 
 get '/admin/delete/:id' do
     redirect to("/no_access") if not is_administrator?
-    
+
     @user = User.first(:id => params[:id])
     @user.destroy if @user
-    
+
     redirect to('/admin/list_user')
-end 
+end
 
 get '/admin/add_user/:id' do
     redirect to("/no_access") if not is_administrator?
@@ -250,7 +250,7 @@ get '/admin/add_user/:id' do
     @users = User.all(:order => [:username.asc])
     @report = Reports.first(:id => params[:id])
     @admin = true
-    
+
     haml :add_user_report, :encode_html => true
 end
 
@@ -264,16 +264,16 @@ post '/admin/add_user/:id' do
     end
 
     authors = report.authors
-    
+
     if authors
         authors = authors.push(params[:author])
     else
-        authors = ["#{params[:author]}"] 
+        authors = ["#{params[:author]}"]
     end
-    
+
     report.authors = authors
     report.save
-    
+
     redirect to("/reports/list")
 end
 
@@ -287,14 +287,14 @@ get '/admin/del_user_report/:id/:author' do
     end
 
     authors = report.authors
-    
+
     if authors
         authors = authors - ["#{params[:author]}"]
     end
-    
+
     report.authors = authors
     report.save
-    
+
     redirect to("/reports/list")
 end
 
@@ -412,7 +412,7 @@ get '/master/findings/:id/delete' do
 
     # Check for kosher name in report name
     id = params[:id]
-        
+
     # Query for all Findings
     @finding = TemplateFindings.first(:id => id)
 
@@ -432,27 +432,27 @@ get '/master/findings/:id/preview' do
 
     # Check for kosher name in report name
     id = params[:id]
-        
+
     # Query for all Findings
     @finding = TemplateFindings.first(:id => id)
-    
+
     if @finding == nil
         return "No Such Finding"
     end
-    
-    ## We have to do some hackery here for wordml 
+
+    ## We have to do some hackery here for wordml
     findings_xml = ""
     findings_xml << "<findings_list>"
     findings_xml << @finding.to_xml
     findings_xml << "</findings_list>"
-    
+
     findings_xml = meta_markup_unencode(findings_xml, nil)
-        
+
     # this is the master db so we have to do a bait and switch
     # The other option is creating a master finding specific docx
-    findings_xml = findings_xml.gsub("<template_findings>","<findings>")        
+    findings_xml = findings_xml.gsub("<template_findings>","<findings>")
     findings_xml = findings_xml.gsub("</template_findings>;","</template_findings>")
-    
+
     report_xml = "#{findings_xml}"
 
 	xslt_elem = Xslt.first(:finding_template => true)
@@ -550,7 +550,7 @@ get '/admin/templates' do
     # Query for all Findings
     @templates = Xslt.all(:order => [:report_type.asc])
 
-    haml :template_list, :encode_html => true       
+    haml :template_list, :encode_html => true
 end
 
 # Manage Templated Reports
@@ -559,7 +559,7 @@ get '/admin/templates/add' do
 
     @admin = true
 
-    haml :add_template, :encode_html => true       
+    haml :add_template, :encode_html => true
 end
 
 # Manage Templated Reports
@@ -716,11 +716,11 @@ end
 #####
 
 # List current reports
-get '/reports/list' do    
+get '/reports/list' do
     @reports = get_reports
 
     @admin = true if is_administrator?
-	
+
 	# allow the user to set their logo in the configuration options
 	@logo = config_options["logo"]
 
@@ -730,7 +730,7 @@ end
 # Create a report
 get '/report/new' do
     redirect to("/") unless valid_session?
-    
+
     @templates = Xslt.all
     haml :new_report, :encode_html => true
 end
@@ -738,9 +738,9 @@ end
 # Create a report
 post '/report/new' do
     redirect to("/") unless valid_session?
-    
+
     data = url_escape_hash(request.POST)
-    
+
     data["owner"] = get_username
     data["date"] = DateTime.now.strftime "%m/%d/%Y"
 
@@ -753,16 +753,16 @@ end
 # List attachments
 get '/report/:id/attachments' do
 	redirect to("/") unless valid_session?
-    
+
     id = params[:id]
 
     # Query for the first report matching the id
     @report = get_report(id)
-    
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
-    
+
     @attachments = Attachments.all(:report_id => id)
     haml :list_attachments, :encode_html => true
 end
@@ -770,31 +770,31 @@ end
 # Upload attachment menu
 get '/report/:id/upload_attachments' do
 	redirect to("/") unless valid_session?
-    
+
     id = params[:id]
     @no_file = params[:no_file]
-     
+
     # Query for the first report matching the id
     @report = get_report(id)
-    
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
-    
+
     @attachments = Attachments.all(:report_id => id)
-    
+
     haml :upload_attachments, :encode_html => true
 end
 
 post '/report/:id/upload_attachments' do
 	redirect to("/") unless valid_session?
-    
+
     id = params[:id]
-   
+
     # Query for the first report matching the id
     @report = get_report(id)
-    
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
 
@@ -804,20 +804,20 @@ post '/report/:id/upload_attachments' do
 
     # We use a random filename
     rand_file = "./attachments/#{rand(36**36).to_s(36)}"
-    
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 100000000
 		return "File too large. 100MB limit"
-	end	
+	end
 
 	# open up a file handle and write the attachment
-	File.open(rand_file, 'wb') {|f| f.write(params[:file][:tempfile].read) }	
-	
+	File.open(rand_file, 'wb') {|f| f.write(params[:file][:tempfile].read) }
+
 	# delete the file data from the attachment
 	datax = Hash.new
 	# to prevent traversal we hardcode this
 	datax["filename_location"] = "#{rand_file}"
-	datax["filename"] = params[:file][:filename]	
+	datax["filename"] = params[:file][:filename]
 	datax["description"] = CGI::escapeHTML(params[:description]).gsub(" ","_").gsub("/","_")
 	datax["report_id"] = id
 	data = url_escape_hash(datax)
@@ -830,16 +830,16 @@ end
 # display attachment
 get '/report/:id/attachments/:att_id' do
 	redirect to("/") unless valid_session?
-    
+
     id = params[:id]
-    
+
     # Query for the first report matching the id
     @report = get_report(id)
-    
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
-    
+
     @attachment = Attachments.first(:report_id => id, :id => params[:att_id])
     send_file @attachment.filename_location, :filename => "#{@attachment.filename}"
 end
@@ -847,16 +847,16 @@ end
 #Delete an attachment
 get '/report/:id/attachments/delete/:att_id' do
 	redirect to("/") unless valid_session?
-    
+
     id = params[:id]
-    
+
     # Query for the first report matching the id
     @report = get_report(id)
-    
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
-    
+
     @attachment = Attachments.first(:report_id => id, :id => params[:att_id])
 
 	if @attachment == nil
@@ -867,7 +867,7 @@ get '/report/:id/attachments/delete/:att_id' do
 
     # delete the entries
     @attachment.destroy
-    
+
 	redirect to("/report/#{id}/attachments")
 end
 
@@ -875,23 +875,23 @@ end
 #Delete a report
 get '/report/:id/remove' do
     redirect to("/") unless valid_session?
-    
+
     id = params[:id]
-    
+
     # Query for the first report matching the id
     @report = get_report(id)
-    
+
     if @report == nil
         return "No Such Report"
     end
-    
+
     # get all findings associated with the report
     @findings = Findings.all(:report_id => id)
-    
+
     # delete the entries
     @findings.destroy
     @report.destroy
-    
+
     redirect to("/reports/list")
 end
 
@@ -900,7 +900,7 @@ get '/report/:id/edit' do
     redirect to("/") unless valid_session?
 
     id = params[:id]
-    
+
     # Query for the first report matching the report_name
     @report = get_report(id)
 	@templates = Xslt.all(:order => [:report_type.asc])
@@ -908,7 +908,7 @@ get '/report/:id/edit' do
     if @report == nil
         return "No Such Report"
     end
-    
+
     haml :report_edit, :encode_html => true
 end
 
@@ -920,7 +920,7 @@ post '/report/:id/edit' do
 
     data = url_escape_hash(request.POST)
 
-    @report = get_report(id)    
+    @report = get_report(id)
     @report = @report.update(data)
 
     redirect to("/report/#{id}/edit")
@@ -932,27 +932,27 @@ get '/report/:id/user_defined_variables' do
 
     id = params[:id]
     @report = get_report(id)
-    
+
     if  @report.user_defined_variables
       @user_variables = JSON.parse(@report.user_defined_variables)
     else
         @user_variables = ""
     end
-    
+
     haml :user_defined_variable, :encode_html => true
 end
 
 #Post user defined variables
 post '/report/:id/user_defined_variables' do
     redirect to("/") unless valid_session?
-    
+
     # moving the escape to the individual element
     #data = url_escape_hash(request.POST)
     data = request.POST
 
     variable_name_array = data.to_s.scan(/variable_name.+?"=>"(.*?)"/)
     variable_data_array = data.to_s.scan(/variable_data.+?"=>"(.*?)"/)
-    
+
     variable_hash = Hash.new()
 
     z = 0
@@ -968,11 +968,11 @@ post '/report/:id/user_defined_variables' do
 
     id = params[:id]
     @report = get_report(id)
-    
+
     @report.user_defined_variables = variable_hash.to_json
     @report.save
     redirect to("/report/#{id}/user_defined_variables")
-   
+
 end
 
 # Edit the Report's Current Findings
@@ -985,7 +985,7 @@ get '/report/:id/findings' do
     # Query for the first report matching the report_name
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
 
@@ -1031,9 +1031,9 @@ get '/report/:id/status' do
         findings_xml << finding.to_xml
     end
     findings_xml << "</findings_list>"
-    
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name) 
-        
+
+    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+
     report_xml = "#{findings_xml}"
 
 	xslt_elem = Xslt.first(:status_template => true)
@@ -1074,29 +1074,29 @@ get '/report/:id/status' do
 				 zipfile.add_or_replace_buffer("[Content_Types].xml",
 				   content_types)
 			end
-			
+
 			# replace all [!! image !!] in the document
 			imgs = docx_xml.to_s.split("[!!")
 			docx = imgs.first
 			imgs.delete_at(0)
-			
+
 			imgs.each do |image_i|
-					
+
 				name = image_i.split("!!]").first.gsub(" ","")
 				end_xml = image_i.split("!!]").last
-				
+
 				# search for the image in the attachments
 				image = Attachments.first(:description => name, :report_id => id)
-					
+
 				# tries to prevent breakage in the case image dne
 				if image
 					docx = image_insert(docx, rand_file, image, end_xml)
 				else
 					docx << end_xml
 				end
-					
+
 			end
-			
+
 		else
 			# no images in finding
 			docx = docx_xml.to_s
@@ -1124,17 +1124,17 @@ get '/report/:id/findings_add' do
 
     # Check for kosher name in report name
     id = params[:id]
-    
+
     # Query for the first report matching the report_name
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
 
     # Query for all Findings
     @findings = TemplateFindings.all(:approved => true, :order => [:title.asc])
-    
+
     haml :findings_add, :encode_html => true
 end
 
@@ -1148,7 +1148,7 @@ post '/report/:id/findings_add' do
     # Query for the first report matching the report_name
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
 
@@ -1256,7 +1256,7 @@ post '/report/:id/findings/:finding_id/edit' do
     # Query for the report
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
 
@@ -1290,7 +1290,7 @@ get '/report/:id/findings/:finding_id/upload' do
     # Query for the report
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
 
@@ -1339,15 +1339,15 @@ get '/report/:id/findings/:finding_id/remove' do
     # Query for the report
     @report = get_report(id)
 
-    if @report == nil 
+    if @report == nil
         return "No Such Report"
     end
-    
+
     finding_id = params[:finding_id]
-    
+
     # Query for all Findings
     @finding = Findings.first(:report_id => id, :id => finding_id)
-    
+
     if @finding == nil
         return "No Such Finding"
     end
@@ -1366,30 +1366,30 @@ get '/report/:id/findings/:finding_id/preview' do
 
     # Query for the report
     @report = get_report(id)
-        
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
-    
+
     # Query for the Finding
     @finding = Findings.first(:report_id => id, :id => params[:finding_id])
-    
+
     if @finding == nil
         return "No Such Finding"
     end
-    
+
     # this flags edited findings
     if @finding.master_id
             master = TemplateFindings.first(:id => @finding.master_id)
             @finding.overview = compare_text(@finding.overview, master.overview)
     end
-    
-    ## We have to do some hackery here for wordml 
+
+    ## We have to do some hackery here for wordml
     findings_xml = ""
     findings_xml << "<findings_list>"
     findings_xml << @finding.to_xml
     findings_xml << "</findings_list>"
-    
+
     findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
 
     report_xml = "#{findings_xml}"
@@ -1432,20 +1432,20 @@ get '/report/:id/findings/:finding_id/preview' do
 				 zipfile.add_or_replace_buffer("[Content_Types].xml",
 				   content_types)
 			end
-			
+
 			# replace all [!! image !!] in the document
 			imgs = docx_xml.to_s.split("[!!")
 			docx = imgs.first
 			imgs.delete_at(0)
-				
+
 			imgs.each do |image_i|
-					
+
 				name = image_i.split("!!]").first.gsub(" ","")
 				end_xml = image_i.split("!!]").last
-					
+
 				# search for the image in the attachments
 				image = Attachments.first(:description => name, :report_id => id)
-					
+
 				# tries to prevent breakage in the case image dne
 				if image
 					# inserts the image into the doc
@@ -1453,15 +1453,15 @@ get '/report/:id/findings/:finding_id/preview' do
 				else
 					docx << end_xml
 				end
-					
+
 			end
-			
+
 		else
 			# no images in finding
 			docx = docx_xml.to_s
 		end
 		#### END IMAGE INSERT CODE
-		
+
 		# A better way would be to create the zip file in memory and return to the user, this is not ideal
 		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
 			 zipfile.add_or_replace_buffer('word/document.xml',
@@ -1481,18 +1481,18 @@ get '/report/:id/generate' do
     redirect to("/") unless valid_session?
 
     id = params[:id]
-        
+
     # Query for the report
     @report = get_report(id)
-        
-    if @report == nil 
+
+    if @report == nil
         return "No Such Report"
     end
 
     user = User.first(:username => get_username)
 
     if user
-        @report.consultant_name = user.consultant_name 
+        @report.consultant_name = user.consultant_name
         @report.consultant_phone = user.consultant_phone
         @report.consultant_email = user.consultant_email
         @report.consultant_title = user.consultant_title
@@ -1506,12 +1506,12 @@ get '/report/:id/generate' do
 
     # Query for the findings that match the report_id
     if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])   
+        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
-    ## We have to do some hackery here for wordml 
+    ## We have to do some hackery here for wordml
     findings_xml = ""
     findings_xml << "<findings_list>"
 
@@ -1541,9 +1541,9 @@ get '/report/:id/generate' do
 
 	# check if the report has user_defined variables
 	if @report.user_defined_variables
-	
+
 		# we need the user defined variables in xml
-		udv_hash = JSON.parse(@report.user_defined_variables) 
+		udv_hash = JSON.parse(@report.user_defined_variables)
 		udv = "<udv>"
 		udv_hash.each do |key,value|
 			udv << "<#{key}>"
@@ -1569,7 +1569,7 @@ get '/report/:id/generate' do
 
     # Create a temporary copy of the word doc
     FileUtils::copy_file(xslt_elem.docx_location,rand_file)
-    
+
 	### IMAGE INSERT CODE
 	if docx_xml.to_s =~ /\[!!/
 		# first we read in the current [Content_Types.xml]
@@ -1593,20 +1593,20 @@ get '/report/:id/generate' do
 			 zipfile.add_or_replace_buffer("[Content_Types].xml",
 			   content_types)
 		end
-		
+
 		# replace all [!! image !!] in the document
 		imgs = docx_xml.to_s.split("[!!")
 		docx = imgs.first
 		imgs.delete_at(0)
-			
+
 		imgs.each do |image_i|
-				
+
 			name = image_i.split("!!]").first.gsub(" ","")
 			end_xml = image_i.split("!!]").last
-				
+
 			# search for the image in the attachments
 			image = Attachments.first(:description => name, :report_id => id)
-				
+
 				# tries to prevent breakage in the case image dne
 				if image
 					# inserts the image
@@ -1614,8 +1614,8 @@ get '/report/:id/generate' do
 				else
 					docx << end_xml
 				end
-				
-		end		
+
+		end
 	else
 		# no images in finding
 		docx = docx_xml.to_s
@@ -1627,7 +1627,7 @@ get '/report/:id/generate' do
          zipfile.add_or_replace_buffer('word/document.xml',
            docx)
     end
-    
+
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"
 end
 
@@ -1679,7 +1679,7 @@ post '/report/import' do
 
 	f = Reports.create(line["report"])
 	f.save
-	
+
 	# now add the findings
 	line["findings"].each do |finding|
 		finding["id"] = nil
@@ -1688,8 +1688,8 @@ post '/report/import' do
 		finding["finding_modified"] = nil
 		g = Findings.create(finding)
 		g.save
-	end 
-	
+	end
+
 	# we should redirect to the newly imported report
 	redirect to("/report/#{f.id}/edit")
 end
@@ -1714,7 +1714,7 @@ end
 
 # Return if the user has a valid session or not
 def valid_session?
-  return Sessions.is_valid?(session[:session_id])  
+  return Sessions.is_valid?(session[:session_id])
 end
 
 # Get the current users type
@@ -1758,29 +1758,29 @@ def get_reports
         reports.each do |report|
             next unless report and get_username
             authors = report.authors
-            reports_array.push(report) if report.owner == get_username 
+            reports_array.push(report) if report.owner == get_username
             if authors
                 reports_array.push(report) if authors.include?(get_username)
             end
         end
         return nil unless reports_array
-        return reports_array            
+        return reports_array
     end
 end
 
-def image_insert(docx, rand_file, image, end_xml)				
+def image_insert(docx, rand_file, image, end_xml)
 	# assign random id, ms requires it begin with a letter. weird.
 	p_id = "d#{rand(36**7).to_s(36)}"
 	name = image.description
-						
+
 	# insert picture into xml
 	docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
 	docx << end_xml
-						
+
 	# insert picture into zip
 	exists = false
 	img_data = ""
-	
+
 	File.open(image.filename_location, 'rb') {|file| img_data << file.read }
 	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
 		#iterate zipfile to see if it has media dir, this could be better
@@ -1789,14 +1789,14 @@ def image_insert(docx, rand_file, image, end_xml)
 				exists = true
 			end
 		end
-		
+
 		if exists
-			zipfile.add_or_replace_buffer("word/media/#{name}",img_data)					
+			zipfile.add_or_replace_buffer("word/media/#{name}",img_data)
 		else
 			zipfile.add_or_replace_buffer("word/#{name}",img_data)
 		end
 	end
-									
+
 	# update document.xml.rels
 	docu_rels = ""
 	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
@@ -1804,17 +1804,17 @@ def image_insert(docx, rand_file, image, end_xml)
 			docu_rels = f.read # read entry content
 		end
 	end
-							
+
 	if exists
-		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")				
+		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")
 	else
 		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
 	end
-					
+
 	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
 		zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
 			docu_rels)
 	end
-	
-	return docx	
+
+	return docx
 end
