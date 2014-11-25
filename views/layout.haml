@@ -47,9 +47,9 @@
         .navbar-inner
           %ul.nav{"class" => "padded"}
             %li
-              %a.fa.fa-file-word-o{:href => "/reports/list"} &nbsp;List Reports          
+              %a.fa.fa-file-word-o{:href => "/reports/list"} &nbsp;List Reports 
             %li
-              %a.fa.fa-pencil-square-o{:href => "/report/new"} &nbsp;New Report                      
+              %a.fa.fa-pencil-square-o{:href => "/report/new"} &nbsp;New Report
           .nav-collapse
             %ul.nav{"class" => "pull-right padded"}
               - if is_administrator?
@@ -59,9 +59,9 @@
                   %a.fa.fa-reorder{:href => "/admin/"} &nbsp;Administration
               %li
                 %a.fa.fa-tasks{:href => "/info"} &nbsp;Consultant Information
-              %li 
+              %li
                 %a.fa.fa-external-link-square{:href => "/logout"} &nbsp;Logout
-                
+
       <br>
       .container-fluid
         .row-fluid
@@ -81,9 +81,9 @@
               %ul.nav.nav-list
                 %li.nav-header Database Functions
                 %li
-                  %a{ :href => '/master/export' } Export Current Findings                
+                  %a{ :href => '/master/export' } Export Current Findings
                 %li
-                  %a{ :href => '/master/import' } Import Findings                
+                  %a{ :href => '/master/import' } Import Findings
             - elsif @admin
               %ul.nav.nav-list
                 %li.nav-header Admin User Menu
@@ -104,7 +104,7 @@
                   %li
                     %a{ :href => "/report/#{@report.id}/edit" } Edit Report Information
                   %li
-                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report                   
+                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report
                     %li.nav-header Findings
                   %li
                     %a{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
@@ -117,16 +117,8 @@
                     %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
                   %li
                     %a{ :href => "/report/#{@report.id}/attachments" } List Current Attachments
-                  %li.nav-header Additional Features
-                  %li
-                    %a{ :href => "/report/#{@report.id}/user_defined_variables"} Edit User Defied Variables
-                  %li
-                    %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report       
-                  %li
-                    %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
-                  %li
-                    %a{ :href => "/report/#{@report.id}/status" } Generate Status Report       
- 
+                  %li.nav-header <a href="/report/#{@report.id}/additional_features">Additional Features</a>
+
           =yield
   - else
     %body

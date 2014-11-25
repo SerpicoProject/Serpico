@@ -912,6 +912,23 @@ get '/report/:id/edit' do
     haml :report_edit, :encode_html => true
 end
 
+# Edit the Report's main information; Name, Consultant, etc.
+get '/report/:id/additional_features' do
+    redirect to("/") unless valid_session?
+
+    id = params[:id]
+
+    # Query for the first report matching the report_name
+    @report = get_report(id)
+
+    if @report == nil
+        return "No Such Report"
+    end
+
+    haml :additional_features, :encode_html => true
+end
+
+
 # Edit a report
 post '/report/:id/edit' do
     redirect to("/") unless valid_session?
