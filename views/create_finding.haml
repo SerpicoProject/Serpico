@@ -25,23 +25,23 @@
       .control-group
         %label{ :class => "control-label", :for => "damage" } Damage
         .controls
-          %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "", :required => true}
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'damage', :value => "0", :required => true}
       .control-group
         %label{ :class => "control-label", :for => "reproducability" } Reproducibility
         .controls
-          %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "", :required => true}
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'reproducability', :value => "0", :required => true}
       .control-group
         %label{ :class => "control-label", :for => "exploitability" } Exploitability
         .controls
-          %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "", :required => true}
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'exploitability', :value => "0", :required => true}
       .control-group
         %label{ :class => "control-label", :for => "affected_users" } Affected Users
         .controls
-          %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#", :required => true}
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'affected_users', :value => "0", :required => true}
       .control-group
         %label{ :class => "control-label", :for => "discoverability" } Discoverability
         .controls
-          %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "", :required => true}
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'discoverability', :value => "0", :required => true}
       .control-group
         %label{ :class => "control-label", :for => "effort" } Remediation Effort
         .controls
@@ -61,7 +61,7 @@
             %option{:value => 4}= "Critical"
     .control-group
       %label{ :class => "control-label", :for => "overview" }
-        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'} 
+        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
       .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
         .modal-header
@@ -75,7 +75,7 @@
             %p{:class=>"text-error"}
               YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
             %b
-              Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word. 
+              Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
           %h2
             Bullets
           %p
@@ -114,7 +114,7 @@
     .control-group
       %label{ :class => "control-label", :for => "poc" } Proof of Concept
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc'}        
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc'}
     .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
@@ -122,12 +122,12 @@
     .control-group
       %label{ :class => "control-label", :for => "references" } References (One Per Line)
       .controls
-        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}      
+        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
     - if !@master
       .control-group
         %label{ :class => "control-label", :for => "notes" } Notes
         .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'notes', :name => 'notes'}  
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'notes', :name => 'notes'}
 
     %input{:type => 'submit', :value => 'Save'}
     %button{:value => 'Cancel'} Cancel
