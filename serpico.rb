@@ -944,6 +944,9 @@ post '/report/:id/edit' do
     redirect to("/report/#{id}/edit")
 end
 
+# TODO: The way that UDV's handle HTML input does not fit with the rest 
+#		of serpico. This needs to be rewritten.
+
 #Edit user defined variables
 get '/report/:id/user_defined_variables' do
     redirect to("/") unless valid_session?
@@ -952,12 +955,18 @@ get '/report/:id/user_defined_variables' do
     @report = get_report(id)
 
     if  @report.user_defined_variables
-      @user_variables = JSON.parse(@report.user_defined_variables)
+        @user_variables = JSON.parse(@report.user_defined_variables)
+        
+        # we need to remove encodings, this is a hack
+        @user_variables.each do |k,v|
+			@user_variables[k] = v.gsub("\\\\r\\\\n","\r").gsub("\\\\","\\")
+        end
+		
     else
         @user_variables = ""
     end
 
-    haml :user_defined_variable, :encode_html => true
+    haml :user_defined_variable, :encode_html => false
 end
 
 #Post user defined variables
@@ -979,6 +988,7 @@ post '/report/:id/user_defined_variables' do
         if (variable_name_array[z].to_s.length > 4 and variable_data_array[z].to_s.length > 4)
             # TODO: this line is way too long, should create a method to gsub
             variable_hash[CGI.escapeHTML(variable_name_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))] = CGI.escapeHTML(variable_data_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))
+			
         end
        z = z + 1
 
