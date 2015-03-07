@@ -966,7 +966,7 @@ get '/report/:id/user_defined_variables' do
         @user_variables = ""
     end
 
-    haml :user_defined_variable, :encode_html => false
+    haml :user_defined_variable, :encode_html => true
 end
 
 #Post user defined variables
