@@ -1180,23 +1180,20 @@ post '/report/:id/findings_add' do
         return "No Such Report"
     end
 
-    add_findings = params[:finding]
+	redirect to("/report/#{id}/edit") unless params[:finding]
+    
+	params[:finding].each do |finding|
+		templated_finding = TemplateFindings.first(:id => finding.to_i)
 
-    if add_findings.size == 0
-        redirect_to("/report/#{id}/edit")
-    else
-        add_findings.each do |finding|
-            templated_finding = TemplateFindings.first(:id => finding.to_i)
-
-            templated_finding.id = nil
-            attr = templated_finding.attributes
-            attr.delete(:approved)
-            attr["master_id"] = finding.to_i
-            @newfinding = Findings.new(attr)
-            @newfinding.report_id = id
-            @newfinding.save
-        end
-    end
+		templated_finding.id = nil
+		attr = templated_finding.attributes
+		attr.delete(:approved)
+		attr["master_id"] = finding.to_i
+		@newfinding = Findings.new(attr)
+		@newfinding.report_id = id
+		@newfinding.save
+	end
+    
 
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
