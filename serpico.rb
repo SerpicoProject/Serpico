@@ -1180,7 +1180,7 @@ post '/report/:id/findings_add' do
         return "No Such Report"
     end
 
-	redirect to("/report/#{id}/edit") unless params[:finding]
+	redirect to("/report/#{id}/findings") unless params[:finding]
     
 	params[:finding].each do |finding|
 		templated_finding = TemplateFindings.first(:id => finding.to_i)
