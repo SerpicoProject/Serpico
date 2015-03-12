@@ -956,12 +956,11 @@ get '/report/:id/user_defined_variables' do
 
     if  @report.user_defined_variables
         @user_variables = JSON.parse(@report.user_defined_variables)
-        
-        # we need to remove encodings, this is a hack
         @user_variables.each do |k,v|
-			@user_variables[k] = v.gsub("\\\\r\\\\n","\r").gsub("\\\\","\\")
-        end
-		
+			if v
+				@user_variables[k] = meta_markup(v)
+			end
+        end		
     else
         @user_variables = ""
     end
@@ -973,26 +972,46 @@ end
 post '/report/:id/user_defined_variables' do
     redirect to("/") unless valid_session?
 
-    # moving the escape to the individual element
-    #data = url_escape_hash(request.POST)
-    data = request.POST
+    data = url_escape_hash(request.POST)
 
-    variable_name_array = data.to_s.scan(/variable_name.+?"=>"(.*?)"/)
-    variable_data_array = data.to_s.scan(/variable_data.+?"=>"(.*?)"/)
-
-    variable_hash = Hash.new()
-
-    z = 0
-    while z < variable_name_array.size
-    # we check the size of the name and value, if either is blank we implicitly delete, blank => [\"\"]
-        if (variable_name_array[z].to_s.length > 4 and variable_data_array[z].to_s.length > 4)
-            # TODO: this line is way too long, should create a method to gsub
-            variable_hash[CGI.escapeHTML(variable_name_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))] = CGI.escapeHTML(variable_data_array[z].to_s.gsub(/\"/, '\'').gsub(/[\[\]]/, '').gsub(/\'/,''))
+	variable_hash = Hash.new()
+	data.each do |k,v|
+		if k =~ /variable_name/
+			key = k.split("variable_name_").last.split("_").first
 			
-        end
-       z = z + 1
+			# remove certain elements from name %&"<>			
+			v = v.gsub("%","_").gsub("&quot;","'").gsub("&amp;","").gsub("&gt;","").gsub("&lt;","")
+			variable_hash["#{key}%#{v}"] = "DEFAULT"
+			
+		end
+		if k =~ /variable_data/
+			key = k.split("variable_data_").last.split("_").first
 
-    end
+			variable_hash.each do |k1,v1|
+				if k1 =~ /%/
+					kk = k1.split("%")
+					if kk.first == key
+						variable_hash[k1] = v
+					end
+				end
+			end
+		end	
+	end
+
+	# remove the % and any blank values
+	q = variable_hash.clone
+	variable_hash.each do |k,v|
+		if k =~ /%/
+			p k.split("%")
+			if k.split("%").size == 1
+				q.delete(k)
+			else
+				q[k.split("%").last] = v
+				q.delete(k)
+			end
+		end
+	end
+	variable_hash = q
 
     id = params[:id]
     @report = get_report(id)

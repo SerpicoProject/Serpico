@@ -17,16 +17,14 @@
           %td
             Variable Name:&nbsp;
           %td
-            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>'variable_name_0'}
+            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>'variable_name_0_'}
           %tr
           %td
             Variable data:&nbsp;
           %td
-            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => 'variable_data_0'}
+            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => 'variable_data_0_'}
         %br
     - else
-      %h3 
-        Hot you have variables!! 
       - i = 0
       - w = 66
       - @user_variables.each do | variables_name, variables_data|
@@ -36,12 +34,12 @@
             %td
               Variable Name:&nbsp;
             %td
-              %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>"variable_name_#{w}", :value => "#{variables_name}"}
+              %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>"variable_name_#{w}_", :value => "#{variables_name}"}
             %tr
             %td
               Variable data:&nbsp;
             %td
-              %textarea{:name => "variable_data_#{w}"}
+              %textarea{:name => "variable_data_#{w}_"}
                 #{variables_data}   
           %br
           - w = w + 1
@@ -55,12 +53,12 @@
           %td
             Variable Name:&nbsp;
           %td
-            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name_#{i}', :name =>"variable_name_#{i}"}
+            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name_#{i}_', :name =>"variable_name_#{i}_"}
           %tr
           %td
             Variable data:&nbsp;
           %td
-            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => "variable_data_#{i}"}
+            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => "variable_data_#{i}_"}
         %br
         - i = i + 1 
     %input{:type => 'submit', :value => 'Save' }
