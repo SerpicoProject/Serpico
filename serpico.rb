@@ -1109,14 +1109,14 @@ get '/report/:id/status' do
 			end
 
 			# add the png and jpg handling to end of content types document
+			if !(content_types =~ /image\/jpg/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"jpg\" ContentType=\"image/jpg\"/></Types>")
+			end
 			if !(content_types =~ /image\/png/)
 				content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
 			end
 			if !(content_types =~ /image\/jpeg/)
 				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
-			end
-			if !(content_types =~ /image\/jpg/)
-				content_types = content_types.sub("</Types>","<Default Extension=\"jpg\" ContentType=\"image/jpg\"/></Types>")
 			end
 
 			# replace the content types to support images
@@ -1467,10 +1467,13 @@ get '/report/:id/findings/:finding_id/preview' do
 			end
 
 			# add the png and jpg handling to end of content types document
+			if !(content_types =~ /image\/jpg/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"jpg\" ContentType=\"image/jpg\"/></Types>")
+			end
 			if !(content_types =~ /image\/png/)
 				content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
 			end
-			if !(content_types =~ /image\/jpg/)
+			if !(content_types =~ /image\/jpeg/)
 				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
 			end
 
@@ -1628,10 +1631,13 @@ get '/report/:id/generate' do
 		end
 
 		# add the png and jpg handling to end of content types document
+		if !(content_types =~ /image\/jpg/)
+			content_types = content_types.sub("</Types>","<Default Extension=\"jpg\" ContentType=\"image/jpg\"/></Types>")
+		end
 		if !(content_types =~ /image\/png/)
 			content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
 		end
-		if !(content_types =~ /image\/jpg/)
+		if !(content_types =~ /image\/jpeg/)
 			content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
 		end
 
