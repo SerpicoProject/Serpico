@@ -1112,8 +1112,11 @@ get '/report/:id/status' do
 			if !(content_types =~ /image\/png/)
 				content_types = content_types.sub("</Types>","<Default Extension=\"png\" ContentType=\"image/png\"/></Types>")
 			end
-			if !(content_types =~ /image\/jpg/)
+			if !(content_types =~ /image\/jpeg/)
 				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
+			end
+			if !(content_types =~ /image\/jpg/)
+				content_types = content_types.sub("</Types>","<Default Extension=\"jpg\" ContentType=\"image/jpg\"/></Types>")
 			end
 
 			# replace the content types to support images
