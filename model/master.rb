@@ -25,7 +25,7 @@ class TemplateFindings
 	property :remediation, String, :length => 20000, :required => false
 	property :references, String, :length => 20000, :required => false
 	property :approved, Boolean, :required => false, :default => true
-    property :risk, Integer, :required => false
+	property :risk, Integer, :required => false
 
 end
 
@@ -153,6 +153,14 @@ class RemoteEndpoints
 
 	property :id, Serial
 	property :ip, String
+end
+
+class NessusMapping
+        include DataMapper::Resource
+
+        property :id, Serial
+        property :templatefindings_id, String, :required => true
+	property :pluginid, String, :required => true
 end
 
 class Reports
