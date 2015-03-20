@@ -1,12 +1,12 @@
 {
-    "port":"8445",
+    "port":"8443",
     "ssl_certificate":"./cert.pem",
     "ssl_key":"key.pem",
     "ldap":"false",
     "ldap_domain":"",
     "ldap_dc":"",
-    "dread":false,  //DREAD risk scoring used by default
-    "nessusmap":true, //maps nessus findings to serpico findings
+    "dread":true,  //DREAD risk scoring used by default
+    "nessusmap":false, //maps nessus findings to serpico findings
     "finding_types": ["Web Application","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing"],
     "logo":"/img/logo_1.jpg"
 }

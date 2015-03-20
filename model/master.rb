@@ -51,7 +51,7 @@ class Findings
 	property :notes, String, :length => 1000000, :required => false
 	property :assessment_type, String, :required => false
 	property :references, String, :length => 20000, :required => false
-    property :risk, Integer, :required => false
+    	property :risk, Integer, :required => false
 end
 
 class TemplateReports
