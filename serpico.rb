@@ -12,6 +12,7 @@ require './model/master'
 require './helpers/helper'
 require './helpers/sinatra_ssl'
 require './helpers/xslt_generation'
+require './helpers/vuln_importer'
 
 # import config options
 config_options = JSON.parse(File.read('./config.json'))
@@ -360,6 +361,7 @@ get '/master/findings/:id/edit' do
 
     @master = true
     @dread = config_options["dread"]
+    @nessusmap = config_options["nessusmap"]
 
     # Check for kosher name in report name
     id = params[:id]
@@ -368,6 +370,10 @@ get '/master/findings/:id/edit' do
     @finding = TemplateFindings.first(:id => id)
 	@templates = Xslt.all()
 
+    if (@nessusmap)
+        @nessus = NessusMapping.all(:templatefindings_id => id)
+    end
+
     if @finding == nil
         return "No Such Finding"
     end
@@ -375,7 +381,7 @@ get '/master/findings/:id/edit' do
     haml :findings_edit, :encode_html => true
 end
 
-# Edit a finding in the report
+# Edit a finding 
 post '/master/findings/:id/edit' do
     redirect to("/no_access") if not is_administrator?
 
@@ -401,8 +407,20 @@ post '/master/findings/:id/edit' do
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     end
 
+    # split out any nessus mapping data
+    nessusdata = Hash.new()
+    nessusdata["pluginid"] = data["pluginid"]
+    data.delete("pluginid")
+    nessusdata["templatefindings_id"] = id
+
     # Update the finding with templated finding stuff
     @finding.update(data)
+
+    # save nessus mapping data to db
+    if(config_options["nessusmap"])
+        @nessus = NessusMapping.new(nessusdata)
+        @nessus.save
+    end
 
     redirect to("/master/findings")
 end
@@ -767,6 +785,97 @@ get '/report/:id/attachments' do
     @attachments = Attachments.all(:report_id => id)
     haml :list_attachments, :encode_html => true
 end
+
+# upload nessus xml files to be processed
+get '/report/:id/import_nessus' do
+        redirect to("/") unless valid_session?
+
+   id = params[:id]
+   
+   # Query for the first report matching the id
+   @report = get_report(id)
+
+   @attachments = Attachments.all(:report_id => id)
+
+   haml :import_nessus, :encode_html => true
+end
+
+# auto add serpico findings if mapped to nessus ids
+post '/report/:id/import_nessus' do
+        redirect to("/") unless valid_session?
+
+    nessus_xml = params[:file][:tempfile].read
+    if not (nessus_xml =~ /^<NessusClientData_v2>/)
+        return "File does not contain valid nessus v2 data"
+    end
+
+    # reject if the file is above a certain limit
+    #if params[:file][:tempfile].size > 1000000
+    #        return "File too large. 1MB limit"
+    #end
+    # Check for kosher name in report name
+    id = params[:id]
+
+    add_findings = Array.new
+
+    # Query for the first report matching the report_name
+    @report = get_report(id)
+
+    if @report == nil
+        return "No Such Report"
+    end
+    
+    # load all findings
+    @findings = TemplateFindings.all(:order => [:title.asc])
+    
+    # parse nessus xml into hash
+    nessus_vulns = parse_nessus_xml(nessus_xml)
+
+    # determine findings to add from nessus data
+    # host/ip is key, value is array of nessus ids
+    nessus_vulns.keys.each do |i|
+        nessus_vulns[i].each do |v|
+            # if serpico finding id maps to nessus plugin id, add to report and add host, if finding already exists just add host (if it doesnt exist already)
+            @nessus = NessusMapping.all(:pluginid => v)
+            if (@nessus)
+                @nessus.each do |n|
+                    add_findings << n.templatefindings_id
+                end
+            end
+        end
+    end
+
+    if add_findings.size == 0
+        redirect_to("/report/#{id}/edit")
+    else
+        add_findings.each do |finding|
+            currentfindings = Findings.all(:report_id => id)
+            currentfindings.each do |cf|
+                if cf.master_id == finding.to_i
+                    puts "finding already in report"
+                    puts "#{cf.master_id}" "#{finding.to_i}"
+                    @skip = true
+                end
+            end
+            if not (@skip)
+                puts "adding finding to report"
+                templated_finding = TemplateFindings.first(:id => finding.to_i)
+
+                templated_finding.id = nil
+                attr = templated_finding.attributes
+                attr.delete(:approved)
+                attr["master_id"] = finding.to_i
+                @newfinding = Findings.new(attr)
+                @newfinding.report_id = id
+                @newfinding.save
+            end
+            @skip = false
+        end
+    end
+
+    redirect to("/report/#{id}/findings")
+end
+
 
 # Upload attachment menu
 get '/report/:id/upload_attachments' do
