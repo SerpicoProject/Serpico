@@ -8,12 +8,12 @@
       %label{ :class => "control-label", :for => "title" } Title
       .controls
         %input{ :type => 'text', :name => 'title', :value => "#{@finding.title}"}
-    -if !@master 
+    -if !@master
       %br
       .control-group
         %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
         .controls
-          %select{ :name => "assessment_type" } 
+          %select{ :name => "assessment_type" }
             - options.assessment_types.each do |type|
               - if @finding
                 - if type == @finding.assessment_type
@@ -26,7 +26,7 @@
         .controls
           -if @finding.approved
             %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
-          - else 
+          - else
             %input{ :type=>"checkbox", :name => 'approved'}
     - if @dread
       .control-group
@@ -79,10 +79,10 @@
             - if type == @finding.type
               %option{ :selected => "selected" } #{type}
             - else
-              %option #{type}               
+              %option #{type}
     .control-group
       %label{ :class => "control-label", :for => "overview" }
-        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'} 
+        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
       .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
         .modal-header
@@ -100,7 +100,7 @@
           %h2
             &lt;&lt;CUSTOMER&gt;&gt;
           %p
-            If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings. 
+            If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
             %br
             %br
             %code
@@ -157,6 +157,13 @@
             - if @finding.poc
               #{meta_markup(@finding.poc)}
     .control-group
+      %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'affected_hosts'}
+          - if @finding
+            - if @finding.affected_hosts
+              #{meta_markup(@finding.affected_hosts)}
+    .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
@@ -177,7 +184,7 @@
           %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
             - if @finding
               - if @finding.notes
-                #{meta_markup(@finding.notes)}    
-    
+                #{meta_markup(@finding.notes)}
+
     %input{:type => 'submit', :value => 'Save'}
     %button{:value => 'Cancel'} Cancel

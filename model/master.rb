@@ -25,7 +25,8 @@ class TemplateFindings
 	property :remediation, String, :length => 20000, :required => false
 	property :references, String, :length => 20000, :required => false
 	property :approved, Boolean, :required => false, :default => true
-    property :risk, Integer, :required => false
+  property :risk, Integer, :required => false
+	property :affected_hosts, String, :length => 20000, :required => false
 
 end
 
@@ -51,7 +52,8 @@ class Findings
 	property :notes, String, :length => 1000000, :required => false
 	property :assessment_type, String, :required => false
 	property :references, String, :length => 20000, :required => false
-    property :risk, Integer, :required => false
+  property :risk, Integer, :required => false
+	property :affected_hosts, String, :length => 1000000, :required => false
 end
 
 class TemplateReports
@@ -101,7 +103,7 @@ class User
 	def self.encrypt(pass, salt)
 		return Digest::SHA1.hexdigest(pass + salt)
 	end
-  
+
 	def self.authenticate(username, pass)
 	user = User.first(:username => username)
 		if user
@@ -144,7 +146,7 @@ class Sessions
 			return sess.username
 		end
 	end
-	
+
 end
 
 # For a metasploit connector eventually
@@ -221,6 +223,3 @@ DataMapper.finalize
 # any differences between the data store and the data model should be fixed by this
 #   As discussed in http://datamapper.org/why.html it is limited. Hopefully we never create conflicts.
 DataMapper.auto_upgrade!
-
-
-
