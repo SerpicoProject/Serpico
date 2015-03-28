@@ -28,6 +28,19 @@
             %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
           - else
             %input{ :type=>"checkbox", :name => 'approved'}
+      - if @nessusmap
+        .control-group
+          %label{ :class => "control-label", :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
+          .controls
+            - @nessus.each do |item|
+              - if item.pluginid
+                #{item.pluginid}
+                %br
+          %br
+        .control-group
+          %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
+          .controls
+            %input{ :type => 'text', :name => 'pluginid'}
     - if @dread
       .control-group
         %label{ :class => "control-label", :for => "damage" } Damage
