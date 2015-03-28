@@ -795,8 +795,6 @@ get '/report/:id/import_nessus' do
    # Query for the first report matching the id
    @report = get_report(id)
 
-   @attachments = Attachments.all(:report_id => id)
-
    haml :import_nessus, :encode_html => true
 end
 
