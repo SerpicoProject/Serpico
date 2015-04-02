@@ -7,13 +7,16 @@
         %a{ :href => "/report/#{@report.id}/user_defined_variables"} Edit User Defined Variables
     %tr
       %td
-        %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report
+        %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
     %tr
       %td
-        %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
+        %a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/status" } Generate Status Report
     %tr
       %td
-        %a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML
+        %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report
+    %tr
+      %td
+        %a{ :href => "/report/#{@report.id}/asciidoc_status" } Generate AsciiDoc of Current Findings (Experimental)

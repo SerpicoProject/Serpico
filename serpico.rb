@@ -13,6 +13,7 @@ require './helpers/helper'
 require './helpers/sinatra_ssl'
 require './helpers/xslt_generation'
 require './helpers/vuln_importer'
+require './helpers/asciidoc_exporter'
 
 # import config options
 config_options = JSON.parse(File.read('./config.json'))
@@ -1863,6 +1864,30 @@ get '/report/:id/text_status' do
     @findings = Findings.all(:report_id => id)
 
 	haml :text_status, :encode_html => true
+end
+
+# generate an asciidoc version of current findings
+get '/report/:id/asciidoc_status' do
+    redirect to("/") unless valid_session?
+
+    id = params[:id]
+	report = get_report(id)
+
+	# bail without a report
+	redirect to("/") unless report
+
+	# add the findings
+    findings = Findings.all(:report_id => id)
+
+	ascii_doc_ = ""
+	findings.each do |finding|
+		ascii_doc_ << gen_asciidoc(finding,config_options["dread"])
+	end
+	
+	local_filename = "./tmp/#{rand(36**12).to_s(36)}.asd"
+    File.open(local_filename, 'w') {|f| f.write(ascii_doc_) }
+
+	send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
 end
 
 
