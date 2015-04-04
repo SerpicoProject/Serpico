@@ -5,6 +5,21 @@
       %h3 Templated Findings
       %h4 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
+      %br
+      &nbsp;
+      %input{:type => "text", :class=>"form-control", :placeholder=>"Finding Name Search", :id=>"search"}
+      %style{:id => "search_style" }
+      %span{:class=>"input-group-btn"}
+      %script{:type=>"text/javascript"}
+        // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this 
+        var searchStyle = document.getElementById('search_style');
+        document.getElementById('search').addEventListener('input', function() {
+        if (!this.value) {
+        searchStyle.innerHTML = "";
+        return;
+        }
+        searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&rt;').replace(/>/g, '&lt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
+        });
       %form{:method => 'post'}
         .table
           %table{:style => 'width: 90%'}
@@ -26,14 +41,14 @@
                           - @findings.each do |finding|
                             - if finding.type == type
                               %tr
-                                %td{:style => 'width: 80%'}
+                                %td{:style => 'width: 80%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                   %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
                                   #{finding.title}
                                   - if finding.overview
                                     %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
                                     .info{ :id => "info_#{finding.id}", :class => "collapse out" }
                                       #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}                                           
-                                %td{:style => 'width: 20%'}
+                                %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                   - if @master
                                     %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
                                       %i{:class => 'icon-pencil icon-white', :title => 'Edit'}

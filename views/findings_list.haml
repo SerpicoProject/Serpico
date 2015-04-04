@@ -10,6 +10,21 @@
         %tbody
           - if @findings
             - if @master
+              %input{:type => "text", :class=>"form-control", :placeholder=>"Finding Name Search", :id=>"search"}
+              %style{:id => "search_style" }
+              %span{:class=>"input-group-btn"}
+              %script{:type=>"text/javascript"}
+                // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this 
+                var searchStyle = document.getElementById('search_style');
+                document.getElementById('search').addEventListener('input', function() {
+                if (!this.value) {
+                searchStyle.innerHTML = "";
+                return;
+                }
+                searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
+                });
+              %br
+              &nbsp;
               - options.finding_types.each do |type|
                 %tr
                   %td{:colspan => "3"}
@@ -31,24 +46,24 @@
                                 - else
                                   -@class=""
                                 %tr{:class => "#{@class}"}
-                                  %td{:style => 'width: 70%'}
+                                  %td{:style => 'width: 70%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                     #{finding.title} 
                                     - if finding.overview
                                       %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
                                       .info{ :id => "info_#{finding.id}", :class => "collapse out" }
                                         #{finding.overview.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                                   - if @dread
-                                    %td{:style => 'width: 10%'}
+                                    %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.dread_total}
                                   - else
-                                    %td{:style => 'width: 10%' }
+                                    %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       - risk_t = ["Informational","Low","Moderate","High","Critical"]
                                       - if finding.risk
                                         #{risk_t[finding.risk]}
                                       - else
                                         - scr = finding.dread_total/10
                                         #{risk_t[scr]}
-                                  %td{:style => 'width: 20%'}
+                                  %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                     - if @master
                                       %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
                                         %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
