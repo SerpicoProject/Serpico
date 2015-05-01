@@ -169,13 +169,14 @@
           - if @finding
             - if @finding.poc
               #{meta_markup(@finding.poc)}
-    .control-group
-      %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
-      .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'affected_hosts'}
-          - if @finding
-            - if @finding.affected_hosts
-              #{meta_markup(@finding.affected_hosts)}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts/URLs
+        .controls
+          %textarea{ :rows => '3', :class => 'input-xxlarge', :name => 'affected_hosts'}
+            - if @finding
+              - if @finding.affected_hosts
+                #{meta_markup(@finding.affected_hosts)}
     .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
