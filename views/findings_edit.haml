@@ -32,11 +32,17 @@
         .control-group
           %label{ :class => "control-label", :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
           .controls
-            - @nessus.each do |item|
-              - if item.pluginid
-                #{item.pluginid}
-                %br
-          %br
+            .table
+              %table{ :style => 'width: 220px'}
+                %tbody
+                - @nessus.each do |item|
+                  - if item.pluginid
+                    %tr
+                      %td
+                        #{item.pluginid}
+                      %td{ :align => "right"}
+                        %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete"}
+                          %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
         .control-group
           %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
           .controls

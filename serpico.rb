@@ -426,6 +426,22 @@ post '/master/findings/:id/edit' do
     redirect to("/master/findings")
 end
 
+# Delete a mapping from finding
+get '/mapping/:id/nessus/:mappingid/delete' do
+    redirect to("/no_access") if not is_administrator?
+
+    # Check for kosher name in report name
+    id = params[:id]
+
+    mappingid = params[:mappingid]
+
+    @map = NessusMapping.first(:templatefindings_id => id, :pluginid => mappingid)
+
+    @map.destroy
+    redirect to("/master/findings/#{id}/edit")
+end
+
+
 # Delete a template finding
 get '/master/findings/:id/delete' do
     redirect to("/no_access") if not is_administrator?
@@ -789,14 +805,16 @@ end
 
 # upload nessus xml files to be processed
 get '/report/:id/import_nessus' do
-        redirect to("/") unless valid_session?
+    redirect to("/") unless valid_session?
 
-   id = params[:id]
-   
-   # Query for the first report matching the id
-   @report = get_report(id)
+    id = params[:id]
+    
+    @nessusmap = config_options["nessusmap"]
 
-   haml :import_nessus, :encode_html => true
+    # Query for the first report matching the id
+    @report = get_report(id)
+
+    haml :import_nessus, :encode_html => true
 end
 
 # auto add serpico findings if mapped to nessus ids
@@ -816,6 +834,8 @@ post '/report/:id/import_nessus' do
     id = params[:id]
 
     add_findings = Array.new
+    dup_findings = Array.new
+    autoadd_hosts = Hash.new
 
     # Query for the first report matching the report_name
     @report = get_report(id)
@@ -838,39 +858,43 @@ post '/report/:id/import_nessus' do
             @nessus = NessusMapping.all(:pluginid => v)
             if (@nessus)
                 @nessus.each do |n|
+                    if autoadd_hosts[n.templatefindings_id]
+                        autoadd_hosts[n.templatefindings_id] << i
+                    else
+                        autoadd_hosts[n.templatefindings_id] = []
+                        autoadd_hosts[n.templatefindings_id] << i
+                    end
                     add_findings << n.templatefindings_id
                 end
             end
         end
     end
+    puts "hash: #{autoadd_hosts}"
+    add_findings = add_findings.uniq
 
     if add_findings.size == 0
         redirect to("/report/#{id}/edit")
     else
+        @autoadd = true
+        
         add_findings.each do |finding|
+            # if the finding already exists in the report dont add
             currentfindings = Findings.all(:report_id => id)
             currentfindings.each do |cf|
                 if cf.master_id == finding.to_i
-                    @skip = true
+                    if not dup_findings.include?(finding.to_i)
+                        dup_findings << finding.to_i
+                    end
+                    add_findings.delete(finding.to_i)
                 end
             end
-            if not (@skip)
-                templated_finding = TemplateFindings.first(:id => finding.to_i)
-                templated_finding.id = nil
-                attr = templated_finding.attributes
-                attr.delete(:approved)
-                attr["master_id"] = finding.to_i
-                @newfinding = Findings.new(attr)
-                @newfinding.report_id = id
-                @newfinding.save
-            end
-            @skip = false
         end
+        @autoadd_hosts = autoadd_hosts
+        @dup_findings = dup_findings.uniq
+        @autoadd_findings = add_findings
     end
-
-    redirect to("/report/#{id}/findings")
+    haml :findings_add, :encode_html => true
 end
-
 
 # Upload attachment menu
 get '/report/:id/upload_attachments' do
@@ -1320,6 +1344,20 @@ post '/report/:id/findings_add' do
 		@newfinding.save
 	end
     
+    # if we have hosts add them to the findings too
+    params[:finding].each do |number|
+        @findingnum = "finding#{number}"
+        @hosts = params["#{@findingnum}"]
+
+        #TODO: merge with existing hosts (if any)
+        finding = Findings.first(:report_id => id, :master_id => number.to_i)
+        #TODO: this is dirty
+        @hosts = "<paragraph>" + @hosts.gsub!(/\[/,'').gsub!(/\]/,'').gsub!(/\"/,'').gsub!(/\s/,'').gsub!(/\,/,'</paragraph><paragraph>')
+        finding.affected_hosts = @hosts
+        finding.save
+        
+        puts "findings for hosts #{finding.affected_hosts}"
+    end
 
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])

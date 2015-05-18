@@ -2,9 +2,14 @@
   %br
   %br
     - if @findings
-      %h3 Templated Findings
-      %h4 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
+      - if @autoadd
+        %h3 Auto Add Findings
+        %h4 
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following findings were automatically selected to be added to your report.
+      - else
+        %h3 Templated Findings
+        %h4 
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
       %br
       &nbsp;
       %input{:type => "text", :class=>"form-control", :placeholder=>"Finding Name Search", :id=>"search"}
@@ -20,7 +25,7 @@
         }
         searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&rt;').replace(/>/g, '&lt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
         });
-      %form{:method => 'post'}
+      %form{:method => 'post', :action => "/report/#{@report.id}/findings_add"}
         .table
           %table{:style => 'width: 90%'}
             %tbody
@@ -42,12 +47,27 @@
                             - if finding.type == type
                               %tr
                                 %td{:style => 'width: 80%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
-                                  %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
+                                  - if @autoadd
+                                    - if @autoadd_findings.include?(finding.id.to_s) and not @dup_findings.include?(finding.id)
+                                      %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}", :checked => ""}
+                                    - else
+                                      %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
+                                  - else
+                                    %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
                                   #{finding.title}
+                                  - if @dup_findings
+                                    - if @dup_findings.include?(finding.id)
+                                      .label.label-warning Duplicate
                                   - if finding.overview
                                     %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
                                     .info{ :id => "info_#{finding.id}", :class => "collapse out" }
-                                      #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}                                           
+                                      #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                                    - if @autoadd_hosts
+                                      - @autoadd_hosts.keys.each do |x|
+                                        - if finding.id == x.to_i
+                                          - @autoadd_hosts[x].each do |ip|
+                                            .label.label-default #{ip}
+                                          %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{@autoadd_hosts[x]}"}
                                 %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                   - if @master
                                     %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
@@ -58,6 +78,7 @@
                                     %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
                                       %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
         %input{ :type => "submit", :value => 'Add' }
-        %button{:value => 'Cancel'} Cancel
+        %a{ :href => "/report/#{@report.id}/findings"}
+          %input{ :type => "button", :value => 'Cancel'}
     - else
       No Findings Available
