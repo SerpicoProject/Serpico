@@ -1347,16 +1347,16 @@ post '/report/:id/findings_add' do
     # if we have hosts add them to the findings too
     params[:finding].each do |number|
         @findingnum = "finding#{number}"
-        @hosts = params["#{@findingnum}"]
+        if params["#{@findingnum}"] != nil
+            @hosts = params["#{@findingnum}"]
 
-        #TODO: merge with existing hosts (if any)
-        finding = Findings.first(:report_id => id, :master_id => number.to_i)
-        #TODO: this is dirty
-        @hosts = "<paragraph>" + @hosts.gsub!(/\[/,'').gsub!(/\]/,'').gsub!(/\"/,'').gsub!(/\s/,'').gsub!(/\,/,'</paragraph><paragraph>')
-        finding.affected_hosts = @hosts
-        finding.save
-        
-        puts "findings for hosts #{finding.affected_hosts}"
+            #TODO: merge with existing hosts (if any)
+            finding = Findings.first(:report_id => id, :master_id => number.to_i)
+            #TODO: this is dirty
+            @hosts = "<paragraph>" + @hosts.gsub!(/\[/,'').gsub!(/\]/,'').gsub!(/\"/,'').gsub!(/\s/,'').gsub!(/\,/,'</paragraph><paragraph>')
+            finding.affected_hosts = @hosts
+            finding.save
+        end
     end
 
     if(config_options["dread"])
