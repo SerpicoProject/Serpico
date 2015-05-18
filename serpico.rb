@@ -869,7 +869,7 @@ post '/report/:id/import_nessus' do
             end
         end
     end
-    puts "hash: #{autoadd_hosts}"
+
     add_findings = add_findings.uniq
 
     if add_findings.size == 0
@@ -1347,16 +1347,17 @@ post '/report/:id/findings_add' do
     # if we have hosts add them to the findings too
     params[:finding].each do |number|
         @findingnum = "finding#{number}"
-        if params["#{@findingnum}"] != nil
+        #TODO: merge with existing hosts (if any)
+        finding = Findings.first(:report_id => id, :master_id => number.to_i)
+        
+        if (params["#{@findingnum}"] != nil)
             @hosts = params["#{@findingnum}"]
-
-            #TODO: merge with existing hosts (if any)
-            finding = Findings.first(:report_id => id, :master_id => number.to_i)
+            puts @hosts
             #TODO: this is dirty
             @hosts = "<paragraph>" + @hosts.gsub!(/\[/,'').gsub!(/\]/,'').gsub!(/\"/,'').gsub!(/\s/,'').gsub!(/\,/,'</paragraph><paragraph>')
             finding.affected_hosts = @hosts
-            finding.save
         end
+        finding.save
     end
 
     if(config_options["dread"])
