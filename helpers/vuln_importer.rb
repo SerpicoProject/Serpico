@@ -26,9 +26,9 @@ end
 def parse_burp_xml(xml)
     vulns = Hash.new
     
-    doc = Nokogiri::XML(File.open(xml))
+    doc = Nokogiri::XML(xml)
     doc.css('//issues/issue').each do |issue|
-        if issue.css('severity').text == "Medium"
+        if issue.css('severity').text
             host = issue.css('host').text
             ip = issue.css('host').attr('ip')
             id = issue.css('type').text
