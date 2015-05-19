@@ -1,0 +1,25 @@
+.span10
+  - if not @burpmap
+    Burp Auto Mapping not enabled. Contact your administrator to enable.
+  - else
+    %form{:method => 'post', :action => "/report/#{@report.id}/import_autoadd", :enctype=>"multipart/form-data"}
+      %br
+      %h2 Auto Add Findings from Burp scanner report (XML only)
+      %br
+      %table
+        %tr
+        %tr
+          %td
+            Upload burp scanner report file (XML only).&nbsp;
+            %br
+            %br
+            %input{:type => 'file', :name => 'file'}
+        %tr
+          %td
+            %br
+      %br
+      %br
+      %input{:type => 'submit', :value => 'Upload' }
+      %button{:value => 'Cancel'} Cancel
+
+
