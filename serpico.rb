@@ -1330,7 +1330,9 @@ post '/report/:id/findings_add' do
         return "No Such Report"
     end
 
-	redirect to("/report/#{id}/findings") unless params[:finding]
+    hosts = ""
+	
+    redirect to("/report/#{id}/findings") unless params[:finding]
     
 	params[:finding].each do |finding|
 		templated_finding = TemplateFindings.first(:id => finding.to_i)
@@ -1346,16 +1348,19 @@ post '/report/:id/findings_add' do
     
     # if we have hosts add them to the findings too
     params[:finding].each do |number|
+        # if there are hosts to add with a finding they'll have a param syntax of "findingXXX=ip1,ip2,ip3"
         @findingnum = "finding#{number}"
-        #TODO: merge with existing hosts (if any)
+        #TODO: merge with existing hosts (if any) probably should handle this host stuff in the db
         finding = Findings.first(:report_id => id, :master_id => number.to_i)
-        
+
         if (params["#{@findingnum}"] != nil)
-            @hosts = params["#{@findingnum}"]
-            puts @hosts
-            #TODO: this is dirty
-            @hosts = "<paragraph>" + @hosts.gsub!(/\[/,'').gsub!(/\]/,'').gsub!(/\"/,'').gsub!(/\s/,'').gsub!(/\,/,'</paragraph><paragraph>')
-            finding.affected_hosts = @hosts
+            params["#{@findingnum}"].split(",").each do |ip|
+                #TODO: this is dirty. also should support different delimeters instead of just newline
+                hosts << "<paragraph>" + ip.to_s + "</paragraph>"
+            end
+
+            finding.affected_hosts = hosts
+            hosts = ""
         end
         finding.save
     end

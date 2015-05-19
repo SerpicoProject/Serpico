@@ -67,7 +67,8 @@
                                         - if finding.id == x.to_i
                                           - @autoadd_hosts[x].each do |ip|
                                             .label.label-default #{ip}
-                                          %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{@autoadd_hosts[x]}"}
+                                          - iplist = @autoadd_hosts[x].join(",")
+                                          %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{iplist}"}
                                 %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                   - if @master
                                     %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
