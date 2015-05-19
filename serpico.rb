@@ -426,6 +426,22 @@ post '/master/findings/:id/edit' do
     redirect to("/master/findings")
 end
 
+# Delete a mapping from finding
+get '/mapping/:id/nessus/:mappingid/delete' do
+    redirect to("/no_access") if not is_administrator?
+
+    # Check for kosher name in report name
+    id = params[:id]
+
+    mappingid = params[:mappingid]
+
+    @map = NessusMapping.first(:templatefindings_id => id, :pluginid => mappingid)
+
+    @map.destroy
+    redirect to("/master/findings/#{id}/edit")
+end
+
+
 # Delete a template finding
 get '/master/findings/:id/delete' do
     redirect to("/no_access") if not is_administrator?
@@ -789,14 +805,16 @@ end
 
 # upload nessus xml files to be processed
 get '/report/:id/import_nessus' do
-        redirect to("/") unless valid_session?
+    redirect to("/") unless valid_session?
 
-   id = params[:id]
-   
-   # Query for the first report matching the id
-   @report = get_report(id)
+    id = params[:id]
+    
+    @nessusmap = config_options["nessusmap"]
 
-   haml :import_nessus, :encode_html => true
+    # Query for the first report matching the id
+    @report = get_report(id)
+
+    haml :import_nessus, :encode_html => true
 end
 
 # auto add serpico findings if mapped to nessus ids
@@ -816,6 +834,8 @@ post '/report/:id/import_nessus' do
     id = params[:id]
 
     add_findings = Array.new
+    dup_findings = Array.new
+    autoadd_hosts = Hash.new
 
     # Query for the first report matching the report_name
     @report = get_report(id)
@@ -838,39 +858,43 @@ post '/report/:id/import_nessus' do
             @nessus = NessusMapping.all(:pluginid => v)
             if (@nessus)
                 @nessus.each do |n|
+                    if autoadd_hosts[n.templatefindings_id]
+                        autoadd_hosts[n.templatefindings_id] << i
+                    else
+                        autoadd_hosts[n.templatefindings_id] = []
+                        autoadd_hosts[n.templatefindings_id] << i
+                    end
                     add_findings << n.templatefindings_id
                 end
             end
         end
     end
 
+    add_findings = add_findings.uniq
+
     if add_findings.size == 0
         redirect to("/report/#{id}/edit")
     else
+        @autoadd = true
+        
         add_findings.each do |finding|
+            # if the finding already exists in the report dont add
             currentfindings = Findings.all(:report_id => id)
             currentfindings.each do |cf|
                 if cf.master_id == finding.to_i
-                    @skip = true
+                    if not dup_findings.include?(finding.to_i)
+                        dup_findings << finding.to_i
+                    end
+                    add_findings.delete(finding.to_i)
                 end
             end
-            if not (@skip)
-                templated_finding = TemplateFindings.first(:id => finding.to_i)
-                templated_finding.id = nil
-                attr = templated_finding.attributes
-                attr.delete(:approved)
-                attr["master_id"] = finding.to_i
-                @newfinding = Findings.new(attr)
-                @newfinding.report_id = id
-                @newfinding.save
-            end
-            @skip = false
         end
+        @autoadd_hosts = autoadd_hosts
+        @dup_findings = dup_findings.uniq
+        @autoadd_findings = add_findings
     end
-
-    redirect to("/report/#{id}/findings")
+    haml :findings_add, :encode_html => true
 end
-
 
 # Upload attachment menu
 get '/report/:id/upload_attachments' do
@@ -1306,7 +1330,9 @@ post '/report/:id/findings_add' do
         return "No Such Report"
     end
 
-	redirect to("/report/#{id}/findings") unless params[:finding]
+    hosts = ""
+	
+    redirect to("/report/#{id}/findings") unless params[:finding]
     
 	params[:finding].each do |finding|
 		templated_finding = TemplateFindings.first(:id => finding.to_i)
@@ -1320,6 +1346,24 @@ post '/report/:id/findings_add' do
 		@newfinding.save
 	end
     
+    # if we have hosts add them to the findings too
+    params[:finding].each do |number|
+        # if there are hosts to add with a finding they'll have a param syntax of "findingXXX=ip1,ip2,ip3"
+        @findingnum = "finding#{number}"
+        #TODO: merge with existing hosts (if any) probably should handle this host stuff in the db
+        finding = Findings.first(:report_id => id, :master_id => number.to_i)
+
+        if (params["#{@findingnum}"] != nil)
+            params["#{@findingnum}"].split(",").each do |ip|
+                #TODO: this is dirty. also should support different delimeters instead of just newline
+                hosts << "<paragraph>" + ip.to_s + "</paragraph>"
+            end
+
+            finding.affected_hosts = hosts
+            hosts = ""
+        end
+        finding.save
+    end
 
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
