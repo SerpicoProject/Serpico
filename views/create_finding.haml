@@ -19,8 +19,13 @@
       %label{ :class => "control-label", :for => "type" } Finding Type
       .controls
         %select{ :name => "type" }
-          - options.finding_types.each do |type|
+          - options.finding_types.each do |type|  
             %option #{type}
+    - if @nessusmap
+      .control-group
+        %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
+        .controls
+          %input{ :type => 'text', :name => 'pluginid'}
     - if @dread
       .control-group
         %label{ :class => "control-label", :for => "damage" } Damage

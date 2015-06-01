@@ -336,6 +336,7 @@ get '/master/findings/new' do
 
     @master = true
     @dread = config_options["dread"]
+    @nessusmap = config_options["nessusmap"]
 
     haml :create_finding, :encode_html => true
 end
@@ -350,9 +351,25 @@ post '/master/findings/new' do
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     end
 
+    # split out any nessus mapping data
+    nessusdata = Hash.new()
+    nessusdata["pluginid"] = data["pluginid"]
+    data.delete("pluginid")
+
     @finding = TemplateFindings.new(data)
     @finding.save
 
+    # find the id of the newly created finding so we can link mappings to it
+    @newfinding = TemplateFindings.first(:title => data["title"], :order => [:id.desc], :limit => 1)
+
+    # save nessus mapping
+    if(config_options["nessusmap"])
+        nessusdata["templatefindings_id"] = @newfinding.id
+
+        @nessus = NessusMapping.new(nessusdata)
+        @nessus.save
+    end
+    
     redirect to('/master/findings')
 end
 
