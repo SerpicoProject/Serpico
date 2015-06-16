@@ -1,22 +1,25 @@
 .span10
-  %form{:method => 'post', :enctype=>"multipart/form-data"}
-    %br
-    %h2 Auto Add Findings from Nessus XML
-    %br
-    %table
-      %tr
-      %tr
-        %td
-          Upload Nessus XML File (Nessusv2 only).&nbsp;
-          %br
-          %br
-          %input{:type => 'file', :name => 'file'}
-      %tr
-        %td
-          %br
-    %br
-    %br
-    %input{:type => 'submit', :value => 'Upload' }
-    %button{:value => 'Cancel'} Cancel
+  - if not @nessusmap
+    Nessus Auto Mapping not enabled. Contact your administrator to enable.
+  - else
+    %form{:method => 'post', :enctype=>"multipart/form-data"}
+      %br
+      %h2 Auto Add Findings from Nessus XML
+      %br
+      %table
+        %tr
+        %tr
+          %td
+            Upload Nessus XML File (Nessusv2 only).&nbsp;
+            %br
+            %br
+            %input{:type => 'file', :name => 'file'}
+        %tr
+          %td
+            %br
+      %br
+      %br
+      %input{:type => 'submit', :value => 'Upload' }
+      %button{:value => 'Cancel'} Cancel
 
 

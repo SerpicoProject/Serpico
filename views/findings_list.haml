@@ -48,10 +48,6 @@
                                 %tr{:class => "#{@class}"}
                                   %td{:style => 'width: 70%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                     #{finding.title} 
-                                    - if finding.overview
-                                      %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
-                                      .info{ :id => "info_#{finding.id}", :class => "collapse out" }
-                                        #{finding.overview.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                                   - if @dread
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.dread_total}
