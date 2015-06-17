@@ -1,16 +1,16 @@
 .span10
-  - if not @nessusmap
-    Nessus Auto Mapping not enabled. Contact your administrator to enable.
+  - if not @burpmap
+    Burp Auto Mapping not enabled. Contact your administrator to enable.
   - else
     %form{:method => 'post', :action => "/report/#{@report.id}/import_autoadd", :enctype=>"multipart/form-data"}
       %br
-      %h2 Auto Add Findings from Nessus XML
+      %h2 Auto Add Findings from Burp scanner report (XML only)
       %br
       %table
         %tr
         %tr
           %td
-            Upload Nessus XML File (Nessusv2 only).&nbsp;
+            Upload burp scanner report file (XML only).&nbsp;
             %br
             %br
             %input{:type => 'file', :name => 'file'}
@@ -19,7 +19,7 @@
             %br
       %br
       %br
-      %input{:type => "hidden", :name => "type", :value => "nessus"}
+      %input{:type => "hidden", :name => "type", :value => "burp"}
       %input{:type => 'submit', :value => 'Upload' }
       %button{:value => 'Cancel'} Cancel
 

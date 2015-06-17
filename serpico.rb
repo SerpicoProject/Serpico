@@ -380,6 +380,7 @@ get '/master/findings/:id/edit' do
     @master = true
     @dread = config_options["dread"]
     @nessusmap = config_options["nessusmap"]
+    @burpmap = config_options["burpmap"]
 
     # Check for kosher name in report name
     id = params[:id]
@@ -390,6 +391,10 @@ get '/master/findings/:id/edit' do
 
     if (@nessusmap)
         @nessus = NessusMapping.all(:templatefindings_id => id)
+    end
+
+    if (@burpmap)
+        @burp = BurpMapping.all(:templatefindings_id => id)
     end
 
     if @finding == nil
@@ -427,9 +432,15 @@ post '/master/findings/:id/edit' do
 
     # split out any nessus mapping data
     nessusdata = Hash.new()
-    nessusdata["pluginid"] = data["pluginid"]
-    data.delete("pluginid")
+    nessusdata["pluginid"] = data["nessus_pluginid"]
+    data.delete("nessus_pluginid")
     nessusdata["templatefindings_id"] = id
+
+    # split out any burp mapping data
+    burpdata = Hash.new()
+    burpdata["pluginid"] = data["burp_pluginid"]
+    data.delete("burp_pluginid")
+    burpdata["templatefindings_id"] = id
 
     # Update the finding with templated finding stuff
     @finding.update(data)
@@ -438,6 +449,12 @@ post '/master/findings/:id/edit' do
     if(config_options["nessusmap"])
         @nessus = NessusMapping.new(nessusdata)
         @nessus.save
+    end
+
+    # save burp mapping data to db
+    if(config_options["burpmap"])
+        @burp = BurpMapping.new(burpdata)
+        @burp.save
     end
 
     redirect to("/master/findings")
@@ -458,6 +475,20 @@ get '/mapping/:id/nessus/:mappingid/delete' do
     redirect to("/master/findings/#{id}/edit")
 end
 
+# Delete a mapping from finding
+get '/mapping/:id/burp/:mappingid/delete' do
+    redirect to("/no_access") if not is_administrator?
+
+    # Check for kosher name in report name
+    id = params[:id]
+
+    mappingid = params[:mappingid]
+
+    @map = BurpMapping.first(:templatefindings_id => id, :pluginid => mappingid)
+
+    @map.destroy
+    redirect to("/master/findings/#{id}/edit")
+end
 
 # Delete a template finding
 get '/master/findings/:id/delete' do
@@ -835,12 +866,20 @@ get '/report/:id/import_nessus' do
 end
 
 # auto add serpico findings if mapped to nessus ids
-post '/report/:id/import_nessus' do
+post '/report/:id/import_autoadd' do
     redirect to("/") unless valid_session?
 
-    nessus_xml = params[:file][:tempfile].read
-    if not (nessus_xml =~ /^<NessusClientData_v2>/)
-        return "File does not contain valid nessus v2 data"
+    type = params[:type]
+
+    xml = params[:file][:tempfile].read
+    if (xml =~ /^<NessusClientData_v2>/ && type == "nessus")
+        import_nessus = true
+        vulns = parse_nessus_xml(xml)
+    elsif (xml =~ /^<issues burpVersion/ && type == "burp")
+        import_burp = true
+        vulns = parse_burp_xml(xml)
+    else
+        return "File does not contain valid XML import data"
     end
 
     # reject if the file is above a certain limit
@@ -865,23 +904,31 @@ post '/report/:id/import_nessus' do
     @findings = TemplateFindings.all(:order => [:title.asc])
     
     # parse nessus xml into hash
-    nessus_vulns = parse_nessus_xml(nessus_xml)
+    #nessus_vulns = parse_nessus_xml(nessus_xml)
 
-    # determine findings to add from nessus data
-    # host/ip is key, value is array of nessus ids
-    nessus_vulns.keys.each do |i|
-        nessus_vulns[i].each do |v|
-			# if serpico finding id maps to nessus plugin id, add to report and add host, if finding already exists just add host (if it doesnt exist already)
-            @nessus = NessusMapping.all(:pluginid => v)
-            if (@nessus)
-                @nessus.each do |n|
-                    if autoadd_hosts[n.templatefindings_id]
-                        autoadd_hosts[n.templatefindings_id] << i
+    # determine findings to add from vuln data
+    # host/ip is key, value is array of vuln ids
+    vulns.keys.each do |i|
+        vulns[i].each do |v|
+			# if serpico finding id maps to nessus/burp plugin id, add to report
+            if import_nessus
+                @mappings = NessusMapping.all(:pluginid => v)
+            elsif import_burp
+                @mappings = BurpMapping.all(:pluginid => v)
+            end
+            # add affected hosts for each finding
+            if (@mappings)
+                @mappings.each do |m|
+                    if autoadd_hosts[m.templatefindings_id]
+                        # only one host/url per finding (regardless of ports and urls). this should change in the future
+                        if not autoadd_hosts[m.templatefindings_id].include?(i)
+                            autoadd_hosts[m.templatefindings_id] << i
+                        end
                     else
-                        autoadd_hosts[n.templatefindings_id] = []
-                        autoadd_hosts[n.templatefindings_id] << i
+                        autoadd_hosts[m.templatefindings_id] = []
+                        autoadd_hosts[m.templatefindings_id] << i
                     end
-                    add_findings << n.templatefindings_id
+                    add_findings << m.templatefindings_id
                 end
             end
         end
@@ -911,6 +958,20 @@ post '/report/:id/import_nessus' do
         @autoadd_findings = add_findings
     end
     haml :findings_add, :encode_html => true
+end
+
+# upload burp xml files to be processed
+get '/report/:id/import_burp' do
+    redirect to("/") unless valid_session?
+
+    id = params[:id]
+    
+    @burpmap = config_options["burpmap"]
+
+    # Query for the first report matching the id
+    @report = get_report(id)
+
+    haml :import_burp, :encode_html => true
 end
 
 # Upload attachment menu

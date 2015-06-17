@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'nokogiri'
+require 'zipruby'
 
 def parse_nessus_xml(xml)
     vulns = Hash.new
@@ -18,6 +19,27 @@ def parse_nessus_xml(xml)
         end
         vulns[host] = items
         items = []
+    end
+    return vulns
+end
+
+def parse_burp_xml(xml)
+    vulns = Hash.new
+    
+    doc = Nokogiri::XML(xml)
+    doc.css('//issues/issue').each do |issue|
+        if issue.css('severity').text
+            host = issue.css('host').text
+            ip = issue.css('host').attr('ip')
+            id = issue.css('type').text
+            hostname = "#{ip} #{host}"
+            if vulns[hostname]
+                vulns[hostname] << id
+            else 
+                vulns[hostname] = []
+                vulns[hostname] << id
+            end
+        end
     end
     return vulns
 end

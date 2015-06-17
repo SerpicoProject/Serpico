@@ -44,9 +44,42 @@
                         %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete"}
                           %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
         .control-group
-          %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
+          %label{ :class => "control-label", :for => "nessus_pluginid" } Add new nessus ID mapping
           .controls
-            %input{ :type => 'text', :name => 'pluginid'}
+            %input{ :type => 'text', :name => 'nessus_pluginid'}
+      - if @burpmap
+        .control-group
+          %label{ :class => "control-label", :for => "existingburpmaps" } Burp IDs Mapped to this finding
+          .controls
+            .table
+              %table{ :style => 'width: 220px'}
+                %tbody
+                - @burp.each do |item|
+                  - if item.pluginid
+                    %tr
+                      %td
+                        #{item.pluginid}
+                      %td{ :align => "right"}
+                        %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/burp/#{item.pluginid}/delete"}
+                          %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
+        .control-group
+          %label{ :class => "control-label", :for => "burp_pluginid" }
+            %a{:href=> '#burpmodal', "data-toggle"=>'modal'}
+              Add new Burp ID mapping
+          .modal{:id=>'burpmodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+            .modal-header
+              %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+                x
+              %h3{:id=>"modal-label"}
+                Mapping Burp findings
+            .modal-body
+              You can use the following link to help map burp's ids to your findings:
+              %br
+              %br
+              %a{:href=> "http://portswigger.net/burp/help/scanner_issuetypes.html", :target => "_blank"} http://portswigger.net/burp/help/scanner_issuetypes.html
+              %br
+          .controls
+            %input{ :type => 'text', :name => 'burp_pluginid'}
     - if @dread
       .control-group
         %label{ :class => "control-label", :for => "damage" } Damage
