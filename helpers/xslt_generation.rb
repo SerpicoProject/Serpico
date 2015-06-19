@@ -43,9 +43,9 @@ def generate_xslt(docx)
 	#add line breaks for easier reading, only use with debugging
 	#document = document.gsub('>',">\n")
 
-	# replace crazy <a:ext uri=" thing
-	document = document.gsub(/<a:ext uri=\"\{.*\}\">/,"<a:ext uri=\"\">")
-
+	# replace {} for the sake of XSL 	
+	document = document.gsub("{","{{").gsub("}","}}")
+	
 	# add in xslt header
 	document = @top + document
 
