@@ -26,10 +26,24 @@ set :bind, "0.0.0.0"
 
 ## Global variables
 set :finding_types, config_options["finding_types"]
-set :effort, ["LOW","MEDIUM","HARD"]
+set :effort, ["Quick","Planned","Involved"]
+set :av, ["Local","Local Network","Network"]
+set :ac, ["High","Medium","Low"]
+set :au, ["Multiple","Single","None"]
+set :c, ["None","Partial","Complete"]
+set :i, ["None","Partial","Complete"]
+set :a, ["None","Partial","Complete"]
+set :e, ["Not Defined","Unproven Exploit Exists","Proof-of-Concept Code","Functional Exploit Exists","High"]
+set :rl, ["Not Defined","Official Fix","Temporary Fix","Workaround","Unavailable"]
+set :rc, ["Not Defined","Unconfirmed","Uncorroborated","Confirmed"]
+set :cdp, ["Not Defined","None","Low","Low-Medium","Medium-High","High"]
+set :td, ["Not Defined","None","Low","Medium","High"]
+set :cr, ["Not Defined","Low","Medium","High"]
+set :ir, ["Not Defined","Low","Medium","High"]
+set :ar, ["Not Defined","Low","Medium","High"]
 set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
-set :status, ["EXPLOITED"]
-set :show_exceptions, false
+set :status, ["EXPLOIT SUCCESSFUL", "CONFIRMED"""]
+set :show_exceptions, true
 set :dump_errors, true
 set :protection, except: :session_hijacking
 
@@ -314,6 +328,7 @@ get '/master/findings' do
     @findings = TemplateFindings.all(:order => [:title.asc])
     @master = true
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -326,6 +341,7 @@ get '/master/findings/f/:type' do
     @findings = TemplateFindings.all(:type => params[:type], :order => [:title.asc])
     @master = true
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -337,6 +353,7 @@ get '/master/findings/new' do
     @master = true
     @dread = config_options["dread"]
     @nessusmap = config_options["nessusmap"]
+    @cvss = config_options["cvss"]
 
     haml :create_finding, :encode_html => true
 end
@@ -349,12 +366,189 @@ post '/master/findings/new' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    end
-
-    # split out any nessus mapping data
-    nessusdata = Hash.new()
-    nessusdata["pluginid"] = data["pluginid"]
-    data.delete("pluginid")
+    
+    elsif(config_options["cvss"])
+        AV = data["av"]
+        AC = data["ac"]
+        Au = data["au"]
+        C = data["c"]
+        I = data["i"]
+        A = data["a"]
+        E = data["e"]
+        RL = data["rl"]
+        RC = data["rc"]
+        CDP = data["cdp"]
+        TD = data["td"]
+        CR = data["cr"]
+        IR = data["ir"]
+        AR = data["ar"]
+        if AC == "High"
+            cvss_ac = 0.35
+        elsif AC == "Medium"
+            cvss_ac = 0.61
+        else
+            cvss_ac = 0.71
+        end
+        
+        if Au == "None"
+            cvss_au = 0.704
+        elsif Au == "Single"
+            cvss_au = 0.56
+        else
+            cvss_au = 0.45
+        end
+        
+        if AV == "Local"
+            cvss_av = 0.395
+        elsif AV == "Local Network"
+            cvss_av = 0.646
+        else
+            cvss_av = 1
+        end
+        
+        if C == "None"
+            cvss_c = 0
+        elsif C == "Partial"
+            cvss_c = 0.275
+        else
+            cvss_c = 0.660
+        end
+            
+        if I == "None"
+            cvss_i = 00
+        elsif I == "Partial"
+            cvss_i = 0.275
+        else
+            cvss_i = 0.660
+        end
+            
+        if A == "None"
+            cvss_a = 0
+        elsif A == "Partial"
+            cvss_a = 0.275
+        else
+            cvss_a = 0.660
+        end
+            
+        
+        # Temporal Score Calculations
+        if E == "Unproven Exploit Exists"
+            cvss_e = 0.85
+        elsif E == "Proof-of-Concept Code"
+            cvss_e = 0.90
+        elsif E == "Functional Exploit Exists"
+            cvss_e = 0.95
+        else
+            cvss_e = 1
+        end
+            
+        if RL == "Official Fix"
+            cvss_rl = 0.87
+        elsif RL == "Temporary Fix"
+            cvss_rl = 0.90
+        elsif RL == "Workaround"
+            cvss_rl = 0.95
+        else
+            cvss_rl = 1
+        end
+            
+        if RC == "Unconfirmed"
+            cvss_rc = 0.90
+        elsif RC == "Uncorroborated"
+            cvss_rc = 0.95
+        else
+            cvss_rc = 1
+        end    
+        
+        
+        #Environemental
+        if CDP == "Low"
+            cvss_cdp = 0.1
+        elsif CDP == "Low-Medium"
+            cvss_cdp = 0.3
+        elsif CDP == "Medium-High"
+            cvss_cdp = 0.4
+        elsif CDP == "High"
+            cvss_cdp = 0.5
+        else
+            cvss_cdp = 0
+        end
+            
+        if TD == "None"
+            cvss_td = 0
+        elsif TD == "Low"
+            cvss_td = 0.25
+        elsif TD == "Medium"
+            cvss_td = 0.75
+        else
+            cvss_td = 1
+        end
+        
+        if CR == "Low"
+            cvss_cr = 0.5
+        elsif CR == "High"
+            cvss_cr = 1.51
+        else
+            cvss_cr = 1
+        end
+            
+        if IR == "Low"
+            cvss_ir = 0.5
+        elsif IR == "High"
+            cvss_ir = 1.51
+        else
+            cvss_ir = 1
+        end
+            
+        if AR == "Low"
+            cvss_ar = 0.5
+        elsif AR == "High"
+            cvss_ar = 1.51
+        else
+            cvss_ar = 1
+        end
+            
+        
+        cvss_impact = 10.41 * (1 - (1 - cvss_c) * (1 - cvss_i) * (1 - cvss_a))
+        cvss_exploitability = 20 * cvss_ac * cvss_au * cvss_av
+        if cvss_impact == 0
+            cvss_impact_f = 0
+        else
+            cvss_impact_f = 1.176
+        end
+        cvss_base = (0.6*cvss_impact + 0.4*cvss_exploitability-1.5)*cvss_impact_f
+            
+        cvss_temporal = cvss_base * cvss_e * cvss_rl * cvss_rc
+            
+        cvss_modified_impact = [10, 10.41 * (1 - (1 - cvss_c * cvss_cr) * (1 - cvss_i * cvss_ir) * (1 - cvss_a * cvss_ar))].min
+        
+        if cvss_modified_impact == 0
+            cvss_modified_impact_f = 0
+        else
+            cvss_modified_impact_f = 1.176
+        end
+        
+        cvss_modified_base = (0.6*cvss_modified_impact + 0.4*cvss_exploitability-1.5)*cvss_modified_impact_f
+        cvss_adjusted_temporal = cvss_modified_base * cvss_e * cvss_rl * cvss_rc
+        cvss_environmental = (cvss_adjusted_temporal + (10 - cvss_adjusted_temporal) * cvss_cdp) * cvss_td
+            
+        if cvss_environmental
+            cvss_total = cvss_environmental
+        elsif cvss_temporal
+            cvss_total = cvss_temporal
+        else
+            cvss_total = cvss_base
+        end
+        
+            
+        data["cvss_base"] = sprintf("%0.1f" % cvss_base)
+        data["cvss_impact"] = sprintf("%0.1f" % cvss_impact)
+        data["cvss_exploitability"] = sprintf("%0.1f" % cvss_exploitability)
+        data["cvss_temporal"] = sprintf("%0.1f" % cvss_temporal)
+        data["cvss_environmental"] = sprintf("%0.1f" % cvss_environmental)
+        data["cvss_modified_impact"] = sprintf("%0.1f" % cvss_modified_impact)
+        data["cvss_total"] = sprintf("%0.1f" % cvss_total)
+end
 
     @finding = TemplateFindings.new(data)
     @finding.save
@@ -379,6 +573,7 @@ get '/master/findings/:id/edit' do
 
     @master = true
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
     @nessusmap = config_options["nessusmap"]
     @burpmap = config_options["burpmap"]
 
@@ -428,6 +623,187 @@ post '/master/findings/:id/edit' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    elsif(config_options["cvss"])
+        AV = data["av"]
+        AC = data["ac"]
+        Au = data["au"]
+        C = data["c"]
+        I = data["i"]
+        A = data["a"]
+        E = data["e"]
+        RL = data["rl"]
+        RC = data["rc"]
+        CDP = data["cdp"]
+        TD = data["td"]
+        CR = data["cr"]
+        IR = data["ir"]
+        AR = data["ar"]
+        if AC == "High"
+            cvss_ac = 0.35
+        elsif AC == "Medium"
+            cvss_ac = 0.61
+        else
+            cvss_ac = 0.71
+        end
+        
+        if Au == "None"
+            cvss_au = 0.704
+        elsif Au == "Single"
+            cvss_au = 0.56
+        else
+            cvss_au = 0.45
+        end
+        
+        if AV == "Local"
+            cvss_av = 0.395
+        elsif AV == "Local Network"
+            cvss_av = 0.646
+        else
+            cvss_av = 1
+        end
+        
+        if C == "None"
+            cvss_c = 0
+        elsif C == "Partial"
+            cvss_c = 0.275
+        else
+            cvss_c = 0.660
+        end
+            
+        if I == "None"
+            cvss_i = 00
+        elsif I == "Partial"
+            cvss_i = 0.275
+        else
+            cvss_i = 0.660
+        end
+            
+        if A == "None"
+            cvss_a = 0
+        elsif A == "Partial"
+            cvss_a = 0.275
+        else
+            cvss_a = 0.660
+        end
+            
+        
+        # Temporal Score Calculations
+        if E == "Unproven Exploit Exists"
+            cvss_e = 0.85
+        elsif E == "Proof-of-Concept Code"
+            cvss_e = 0.90
+        elsif E == "Functional Exploit Exists"
+            cvss_e = 0.95
+        else
+            cvss_e = 1
+        end
+            
+        if RL == "Official Fix"
+            cvss_rl = 0.87
+        elsif RL == "Temporary Fix"
+            cvss_rl = 0.90
+        elsif RL == "Workaround"
+            cvss_rl = 0.95
+        else
+            cvss_rl = 1
+        end
+            
+        if RC == "Unconfirmed"
+            cvss_rc = 0.90
+        elsif RC == "Uncorroborated"
+            cvss_rc = 0.95
+        else
+            cvss_rc = 1
+        end    
+        
+        
+        #Environemental
+        if CDP == "Low"
+            cvss_cdp = 0.1
+        elsif CDP == "Low-Medium"
+            cvss_cdp = 0.3
+        elsif CDP == "Medium-High"
+            cvss_cdp = 0.4
+        elsif CDP == "High"
+            cvss_cdp = 0.5
+        else
+            cvss_cdp = 0
+        end
+            
+        if TD == "None"
+            cvss_td = 0
+        elsif TD == "Low"
+            cvss_td = 0.25
+        elsif TD == "Medium"
+            cvss_td = 0.75
+        else
+            cvss_td = 1
+        end
+        
+        if CR == "Low"
+            cvss_cr = 0.5
+        elsif CR == "High"
+            cvss_cr = 1.51
+        else
+            cvss_cr = 1
+        end
+            
+        if IR == "Low"
+            cvss_ir = 0.5
+        elsif IR == "High"
+            cvss_ir = 1.51
+        else
+            cvss_ir = 1
+        end
+            
+        if AR == "Low"
+            cvss_ar = 0.5
+        elsif AR == "High"
+            cvss_ar = 1.51
+        else
+            cvss_ar = 1
+        end
+            
+        
+        cvss_impact = 10.41 * (1 - (1 - cvss_c) * (1 - cvss_i) * (1 - cvss_a))
+        cvss_exploitability = 20 * cvss_ac * cvss_au * cvss_av
+        if cvss_impact == 0
+            cvss_impact_f = 0
+        else
+            cvss_impact_f = 1.176
+        end
+        cvss_base = (0.6*cvss_impact + 0.4*cvss_exploitability-1.5)*cvss_impact_f
+            
+        cvss_temporal = cvss_base * cvss_e * cvss_rl * cvss_rc
+            
+        cvss_modified_impact = [10, 10.41 * (1 - (1 - cvss_c * cvss_cr) * (1 - cvss_i * cvss_ir) * (1 - cvss_a * cvss_ar))].min
+        
+        if cvss_modified_impact == 0
+            cvss_modified_impact_f = 0
+        else
+            cvss_modified_impact_f = 1.176
+        end
+        
+        cvss_modified_base = (0.6*cvss_modified_impact + 0.4*cvss_exploitability-1.5)*cvss_modified_impact_f
+        cvss_adjusted_temporal = cvss_modified_base * cvss_e * cvss_rl * cvss_rc
+        cvss_environmental = (cvss_adjusted_temporal + (10 - cvss_adjusted_temporal) * cvss_cdp) * cvss_td
+            
+        if cvss_environmental
+            cvss_total = cvss_environmental
+        elsif cvss_temporal
+            cvss_total = cvss_temporal
+        else
+            cvss_total = cvss_base
+        end
+        
+            
+        data["cvss_base"] = sprintf("%0.1f" % cvss_base)
+        data["cvss_impact"] = sprintf("%0.1f" % cvss_impact)
+        data["cvss_exploitability"] = sprintf("%0.1f" % cvss_exploitability)
+        data["cvss_temporal"] = sprintf("%0.1f" % cvss_temporal)
+        data["cvss_environmental"] = sprintf("%0.1f" % cvss_environmental)
+        data["cvss_modified_impact"] = sprintf("%0.1f" % cvss_modified_impact)
+        data["cvss_total"] = sprintf("%0.1f" % cvss_total)
     end
 
     # split out any nessus mapping data
@@ -1245,11 +1621,14 @@ get '/report/:id/findings' do
     # Query for the findings that match the report_id
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -1270,6 +1649,8 @@ get '/report/:id/status' do
     # Query for the findings that match the report_id
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -1445,11 +1826,14 @@ post '/report/:id/findings_add' do
 
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
     @dread = config_options["dread"]
+    @dread = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -1459,6 +1843,7 @@ get '/report/:id/findings/new' do
     redirect to("/") unless valid_session?
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :create_finding, :encode_html => true
 end
@@ -1471,7 +1856,188 @@ post '/report/:id/findings/new' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    end
+    elsif(config_options["cvss"])
+        AV = data["av"]
+        AC = data["ac"]
+        Au = data["au"]
+        C = data["c"]
+        I = data["i"]
+        A = data["a"]
+        E = data["e"]
+        RL = data["rl"]
+        RC = data["rc"]
+        CDP = data["cdp"]
+        TD = data["td"]
+        CR = data["cr"]
+        IR = data["ir"]
+        AR = data["ar"]
+        if AC == "High"
+            cvss_ac = 0.35
+        elsif AC == "Medium"
+            cvss_ac = 0.61
+        else
+            cvss_ac = 0.71
+        end
+        
+        if Au == "None"
+            cvss_au = 0.704
+        elsif Au == "Single"
+            cvss_au = 0.56
+        else
+            cvss_au = 0.45
+        end
+        
+        if AV == "Local"
+            cvss_av = 0.395
+        elsif AV == "Local Network"
+            cvss_av = 0.646
+        else
+            cvss_av = 1
+        end
+        
+        if C == "None"
+            cvss_c = 0
+        elsif C == "Partial"
+            cvss_c = 0.275
+        else
+            cvss_c = 0.660
+        end
+            
+        if I == "None"
+            cvss_i = 00
+        elsif I == "Partial"
+            cvss_i = 0.275
+        else
+            cvss_i = 0.660
+        end
+            
+        if A == "None"
+            cvss_a = 0
+        elsif A == "Partial"
+            cvss_a = 0.275
+        else
+            cvss_a = 0.660
+        end
+            
+        
+        # Temporal Score Calculations
+        if E == "Unproven Exploit Exists"
+            cvss_e = 0.85
+        elsif E == "Proof-of-Concept Code"
+            cvss_e = 0.90
+        elsif E == "Functional Exploit Exists"
+            cvss_e = 0.95
+        else
+            cvss_e = 1
+        end
+            
+        if RL == "Official Fix"
+            cvss_rl = 0.87
+        elsif RL == "Temporary Fix"
+            cvss_rl = 0.90
+        elsif RL == "Workaround"
+            cvss_rl = 0.95
+        else
+            cvss_rl = 1
+        end
+            
+        if RC == "Unconfirmed"
+            cvss_rc = 0.90
+        elsif RC == "Uncorroborated"
+            cvss_rc = 0.95
+        else
+            cvss_rc = 1
+        end    
+        
+        
+        #Environemental
+        if CDP == "Low"
+            cvss_cdp = 0.1
+        elsif CDP == "Low-Medium"
+            cvss_cdp = 0.3
+        elsif CDP == "Medium-High"
+            cvss_cdp = 0.4
+        elsif CDP == "High"
+            cvss_cdp = 0.5
+        else
+            cvss_cdp = 0
+        end
+            
+        if TD == "None"
+            cvss_td = 0
+        elsif TD == "Low"
+            cvss_td = 0.25
+        elsif TD == "Medium"
+            cvss_td = 0.75
+        else
+            cvss_td = 1
+        end
+        
+        if CR == "Low"
+            cvss_cr = 0.5
+        elsif CR == "High"
+            cvss_cr = 1.51
+        else
+            cvss_cr = 1
+        end
+            
+        if IR == "Low"
+            cvss_ir = 0.5
+        elsif IR == "High"
+            cvss_ir = 1.51
+        else
+            cvss_ir = 1
+        end
+            
+        if AR == "Low"
+            cvss_ar = 0.5
+        elsif AR == "High"
+            cvss_ar = 1.51
+        else
+            cvss_ar = 1
+        end
+            
+        
+        cvss_impact = 10.41 * (1 - (1 - cvss_c) * (1 - cvss_i) * (1 - cvss_a))
+        cvss_exploitability = 20 * cvss_ac * cvss_au * cvss_av
+        if cvss_impact == 0
+            cvss_impact_f = 0
+        else
+            cvss_impact_f = 1.176
+        end
+        cvss_base = (0.6*cvss_impact + 0.4*cvss_exploitability-1.5)*cvss_impact_f
+            
+        cvss_temporal = cvss_base * cvss_e * cvss_rl * cvss_rc
+            
+        cvss_modified_impact = [10, 10.41 * (1 - (1 - cvss_c * cvss_cr) * (1 - cvss_i * cvss_ir) * (1 - cvss_a * cvss_ar))].min
+        
+        if cvss_modified_impact == 0
+            cvss_modified_impact_f = 0
+        else
+            cvss_modified_impact_f = 1.176
+        end
+        
+        cvss_modified_base = (0.6*cvss_modified_impact + 0.4*cvss_exploitability-1.5)*cvss_modified_impact_f
+        cvss_adjusted_temporal = cvss_modified_base * cvss_e * cvss_rl * cvss_rc
+        cvss_environmental = (cvss_adjusted_temporal + (10 - cvss_adjusted_temporal) * cvss_cdp) * cvss_td
+            
+        if cvss_environmental
+            cvss_total = cvss_environmental
+        elsif cvss_temporal
+            cvss_total = cvss_temporal
+        else
+            cvss_total = cvss_base
+        end
+        
+            
+        data["cvss_base"] = sprintf("%0.1f" % cvss_base)
+        data["cvss_impact"] = sprintf("%0.1f" % cvss_impact)
+        data["cvss_exploitability"] = sprintf("%0.1f" % cvss_exploitability)
+        data["cvss_temporal"] = sprintf("%0.1f" % cvss_temporal)
+        data["cvss_environmental"] = sprintf("%0.1f" % cvss_environmental)
+        data["cvss_modified_impact"] = sprintf("%0.1f" % cvss_modified_impact)
+        data["cvss_total"] = sprintf("%0.1f" % cvss_total)
+end
 
     id = params[:id]
 
@@ -1515,6 +2081,7 @@ get '/report/:id/findings/:finding_id/edit' do
     end
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -1546,7 +2113,188 @@ post '/report/:id/findings/:finding_id/edit' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    end
+    elsif(config_options["cvss"])
+        AV = data["av"]
+        AC = data["ac"]
+        Au = data["au"]
+        C = data["c"]
+        I = data["i"]
+        A = data["a"]
+        E = data["e"]
+        RL = data["rl"]
+        RC = data["rc"]
+        CDP = data["cdp"]
+        TD = data["td"]
+        CR = data["cr"]
+        IR = data["ir"]
+        AR = data["ar"]
+        if AC == "High"
+            cvss_ac = 0.35
+        elsif AC == "Medium"
+            cvss_ac = 0.61
+        else
+            cvss_ac = 0.71
+        end
+        
+        if Au == "None"
+            cvss_au = 0.704
+        elsif Au == "Single"
+            cvss_au = 0.56
+        else
+            cvss_au = 0.45
+        end
+        
+        if AV == "Local"
+            cvss_av = 0.395
+        elsif AV == "Local Network"
+            cvss_av = 0.646
+        else
+            cvss_av = 1
+        end
+        
+        if C == "None"
+            cvss_c = 0
+        elsif C == "Partial"
+            cvss_c = 0.275
+        else
+            cvss_c = 0.660
+        end
+            
+        if I == "None"
+            cvss_i = 00
+        elsif I == "Partial"
+            cvss_i = 0.275
+        else
+            cvss_i = 0.660
+        end
+            
+        if A == "None"
+            cvss_a = 0
+        elsif A == "Partial"
+            cvss_a = 0.275
+        else
+            cvss_a = 0.660
+        end
+            
+        
+        # Temporal Score Calculations
+        if E == "Unproven Exploit Exists"
+            cvss_e = 0.85
+        elsif E == "Proof-of-Concept Code"
+            cvss_e = 0.90
+        elsif E == "Functional Exploit Exists"
+            cvss_e = 0.95
+        else
+            cvss_e = 1
+        end
+            
+        if RL == "Official Fix"
+            cvss_rl = 0.87
+        elsif RL == "Temporary Fix"
+            cvss_rl = 0.90
+        elsif RL == "Workaround"
+            cvss_rl = 0.95
+        else
+            cvss_rl = 1
+        end
+            
+        if RC == "Unconfirmed"
+            cvss_rc = 0.90
+        elsif RC == "Uncorroborated"
+            cvss_rc = 0.95
+        else
+            cvss_rc = 1
+        end    
+        
+        
+        #Environemental
+        if CDP == "Low"
+            cvss_cdp = 0.1
+        elsif CDP == "Low-Medium"
+            cvss_cdp = 0.3
+        elsif CDP == "Medium-High"
+            cvss_cdp = 0.4
+        elsif CDP == "High"
+            cvss_cdp = 0.5
+        else
+            cvss_cdp = 0
+        end
+            
+        if TD == "None"
+            cvss_td = 0
+        elsif TD == "Low"
+            cvss_td = 0.25
+        elsif TD == "Medium"
+            cvss_td = 0.75
+        else
+            cvss_td = 1
+        end
+        
+        if CR == "Low"
+            cvss_cr = 0.5
+        elsif CR == "High"
+            cvss_cr = 1.51
+        else
+            cvss_cr = 1
+        end
+            
+        if IR == "Low"
+            cvss_ir = 0.5
+        elsif IR == "High"
+            cvss_ir = 1.51
+        else
+            cvss_ir = 1
+        end
+            
+        if AR == "Low"
+            cvss_ar = 0.5
+        elsif AR == "High"
+            cvss_ar = 1.51
+        else
+            cvss_ar = 1
+        end
+            
+        
+        cvss_impact = 10.41 * (1 - (1 - cvss_c) * (1 - cvss_i) * (1 - cvss_a))
+        cvss_exploitability = 20 * cvss_ac * cvss_au * cvss_av
+        if cvss_impact == 0
+            cvss_impact_f = 0
+        else
+            cvss_impact_f = 1.176
+        end
+        cvss_base = (0.6*cvss_impact + 0.4*cvss_exploitability-1.5)*cvss_impact_f
+            
+        cvss_temporal = cvss_base * cvss_e * cvss_rl * cvss_rc
+            
+        cvss_modified_impact = [10, 10.41 * (1 - (1 - cvss_c * cvss_cr) * (1 - cvss_i * cvss_ir) * (1 - cvss_a * cvss_ar))].min
+        
+        if cvss_modified_impact == 0
+            cvss_modified_impact_f = 0
+        else
+            cvss_modified_impact_f = 1.176
+        end
+        
+        cvss_modified_base = (0.6*cvss_modified_impact + 0.4*cvss_exploitability-1.5)*cvss_modified_impact_f
+        cvss_adjusted_temporal = cvss_modified_base * cvss_e * cvss_rl * cvss_rc
+        cvss_environmental = (cvss_adjusted_temporal + (10 - cvss_adjusted_temporal) * cvss_cdp) * cvss_td
+            
+        if cvss_environmental
+            cvss_total = cvss_environmental
+        elsif cvss_temporal
+            cvss_total = cvss_temporal
+        else
+            cvss_total = cvss_base
+        end
+        
+            
+        data["cvss_base"] = sprintf("%0.1f" % cvss_base)
+        data["cvss_impact"] = sprintf("%0.1f" % cvss_impact)
+        data["cvss_exploitability"] = sprintf("%0.1f" % cvss_exploitability)
+        data["cvss_temporal"] = sprintf("%0.1f" % cvss_temporal)
+        data["cvss_environmental"] = sprintf("%0.1f" % cvss_environmental)
+        data["cvss_modified_impact"] = sprintf("%0.1f" % cvss_modified_impact)
+        data["cvss_total"] = sprintf("%0.1f" % cvss_total)
+end
     # Update the finding with templated finding stuff
     @finding.update(data)
 
@@ -1586,6 +2334,13 @@ get '/report/:id/findings/:finding_id/upload' do
                     :affected_users => @finding.affected_users,
                     :discoverability => @finding.discoverability,
                     :dread_total => @finding.dread_total,
+		    :cvss_base => @finding.cvss_base,
+                    :cvss_impact => @finding.cvss_impact,
+                    :cvss_exploitability => @finding.cvss_exploitability,
+                    :cvss_temporal => @finding.cvss_temporal,
+                    :cvss_environmental => @finding.cvss_environmental,
+                    :cvss_modified_impact => @finding.cvss_modified_impact,
+                    :cvss_total => @finding.cvss_total,
                     :effort => @finding.effort,
                     :type => @finding.type,
                     :overview => @finding.overview,
@@ -1783,6 +2538,8 @@ get '/report/:id/generate' do
     # Query for the findings that match the report_id
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end

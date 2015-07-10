@@ -5,6 +5,7 @@ if not File.file?('./db/master.db')
     out_file.close
 end
 
+require 'rubygems'
 require './model/master.rb'
 require './helpers/xslt_generation'
 require 'openssl'

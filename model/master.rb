@@ -10,21 +10,43 @@ DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/master.db")
 class TemplateFindings
     include DataMapper::Resource
 
-    property :id, Serial
-    property :title, String, :required => true, :length => 200
-    property :damage, Integer, :required => false
-    property :reproducability, Integer, :required => false
-    property :exploitability, Integer, :required => false
-    property :affected_users, Integer, :required => false
-    property :discoverability, Integer, :required => false
-    property :dread_total, Integer, :required => false
-    property :effort, String, :required => false
-    property :type, String, :required => false
-    property :overview, String, :length => 20000, :required => false
-    property :poc, String, :length => 20000, :required => false
-    property :remediation, String, :length => 20000, :required => false
-    property :references, String, :length => 20000, :required => false
-    property :approved, Boolean, :required => false, :default => true
+	property :id, Serial
+	property :title, String, :required => true, :length => 200
+	property :av, String, :required => false
+	property :ac, String, :required => false
+	property :au, String, :required => false
+	property :c, String, :required => false
+	property :i, String, :required => false
+	property :a, String, :required => false
+	property :e, String, :required => false
+	property :rl, String, :required => false
+	property :rc, String, :required => false
+	property :cdp, String, :required => false
+	property :td, String, :required => false
+	property :cr, String, :required => false
+	property :ir, String, :required => false
+	property :ar, String, :required => false
+	property :damage, Integer, :required => false
+	property :reproducability, Integer, :required => false
+	property :exploitability, Integer, :required => false
+	property :affected_users, Integer, :required => false
+	property :discoverability, Integer, :required => false
+	property :dread_total, Integer, :required => false
+	property :cvss_base, String, :required => false
+	property :cvss_impact, String, :required => false
+	property :cvss_exploitability, String, :required => false
+	property :cvss_temporal, String, :required => false
+	property :cvss_environmental, String, :required => false
+	property :cvss_modified_impact, String, :required => false
+	property :cvss_total, String, :required => false
+	property :ease, String, :required => false
+	property :effort, String, :required => false
+	property :type, String, :required => false
+	property :overview, String, :length => 20000, :required => false
+	property :poc, String, :length => 20000, :required => false
+	property :remediation, String, :length => 20000, :required => false
+	property :references, String, :length => 20000, :required => false
+	property :approved, Boolean, :required => false, :default => true
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 20000, :required => false
 
@@ -33,25 +55,47 @@ end
 class Findings
     include DataMapper::Resource
 
-    property :id, Serial
-    property :report_id, Integer, :required => true
-    property :master_id, Integer, :required => false
-    property :finding_modified, Boolean, :required => false
-    property :title, String, :required => true, :length => 200
-    property :damage, Integer, :required => false
-    property :reproducability, Integer, :required => false
-    property :exploitability, Integer, :required => false
-    property :affected_users, Integer, :required => false
-    property :discoverability, Integer, :required => false
-    property :effort, String, :required => false
-    property :type, String, :required => false
-    property :dread_total, Integer, :required => false
-    property :overview, String, :length => 20000, :required => false
-    property :poc, String, :length => 20000, :required => false
-    property :remediation, String, :length => 20000, :required => false
-    property :notes, String, :length => 1000000, :required => false
-    property :assessment_type, String, :required => false
-    property :references, String, :length => 20000, :required => false
+	property :id, Serial
+	property :report_id, Integer, :required => true
+	property :master_id, Integer, :required => false
+	property :finding_modified, Boolean, :required => false
+	property :title, String, :required => true, :length => 200
+	property :av, String, :required => false
+	property :ac, String, :required => false
+	property :au, String, :required => false
+	property :c, String, :required => false
+	property :i, String, :required => false
+	property :a, String, :required => false
+	property :e, String, :required => false
+	property :rl, String, :required => false
+	property :rc, String, :required => false
+	property :cdp, String, :required => false
+	property :td, String, :required => false
+	property :cr, String, :required => false
+	property :ir, String, :required => false
+	property :ar, String, :required => false
+	property :damage, Integer, :required => false
+	property :reproducability, Integer, :required => false
+	property :exploitability, Integer, :required => false
+	property :affected_users, Integer, :required => false
+	property :discoverability, Integer, :required => false
+	property :cvss_base, String, :required => false
+	property :cvss_impact, String, :required => false
+	property :cvss_exploitability, String, :required => false
+	property :cvss_temporal, String, :required => false
+	property :cvss_environmental, String, :required => false
+	property :cvss_modified_impact, String, :required => false
+	property :cvss_total, String, :required => false
+	property :ease, String, :required => false
+	property :effort, String, :required => false
+	property :type, String, :required => false
+	property :dread_total, Integer, :required => false
+	property :overview, String, :length => 20000, :required => false
+	property :poc, String, :length => 20000, :required => false
+	property :remediation, String, :length => 20000, :required => false
+	property :notes, String, :length => 1000000, :required => false
+	property :assessment_type, String, :required => false
+	property :references, String, :length => 20000, :required => false
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 1000000, :required => false
 end

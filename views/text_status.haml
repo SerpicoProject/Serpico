@@ -10,6 +10,8 @@
         &nbsp;&nbsp;&nbsp;#{finding.title} - 
         - if @dread
           DREAD Score: #{finding.dread_total}
+        - elsif @cvss
+          CVSS Score: #{finding.cvss_total}
         - else
           - risk_t = ["Informational","Low","Moderate","High","Critical"]
           - if finding.risk
