@@ -52,8 +52,119 @@
         .controls
           %select{ :name => "effort" }
             %option LOW
-            %option MEDIUM
+            %option MODERATE
             %option HARD
+    - elsif @cvss
+      .control-group
+        %label{ :class => "control-label", :for => "av" } Access Vector
+        .controls
+          %select{ :name => "av" }
+            %option Local
+            %option Local Network
+            %option Network
+      .control-group
+        %label{ :class => "control-label", :for => "ac" } Access Complexity
+        .controls
+          %select{ :name => "ac" }
+            %option High
+            %option Medium
+            %option Low
+      .control-group
+        %label{ :class => "control-label", :for => "au" } Authentication
+        .controls
+          %select{ :name => "au" }
+            %option Multiple
+            %option Single
+            %option None
+      .control-group
+        %label{ :class => "control-label", :for => "c" } Confidentiality Impact
+        .controls
+          %select{ :name => "c" }
+            %option None
+            %option Partial
+            %option Complete
+      .control-group
+        %label{ :class => "control-label", :for => "i" } Integrity Impact
+        .controls
+          %select{ :name => "i" }
+            %option None
+            %option Partial
+            %option Complete
+      .control-group
+        %label{ :class => "control-label", :for => "a" } Availability Impact
+        .controls
+          %select{ :name => "a" }
+            %option None
+            %option Partial
+            %option Complete
+      .control-group
+        %label{ :class => "control-label", :for => "e" } Exploitability
+        .controls
+          %select{ :name => "e" }
+            %option Unproven Exploit Exists
+            %option Proof-of-Concept Code
+            %option Functional Exploit Exists
+            %option High
+      .control-group
+        %label{ :class => "control-label", :for => "rl" } Remediation Level
+        .controls
+          %select{ :name => "rl" }
+            %option Official Fix
+            %option Temporary Fix
+            %option Workaround
+            %option Unavailable
+      .control-group
+        %label{ :class => "control-label", :for => "rc" } Report Confidence
+        .controls
+          %select{ :name => "rc" }
+            %option Unconfirmed
+            %option Uncorroborated
+            %option Confirmed
+      .control-group
+        %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
+        .controls
+          %select{ :name => "cdp" }
+            %option None
+            %option Low
+            %option Low-Medium
+            %option Medium-High
+            %option High
+      .control-group
+        %label{ :class => "control-label", :for => "td" } Target Distribution
+        .controls
+          %select{ :name => "td" }
+            %option None
+            %option Low
+            %option Medium
+            %option High
+      .control-group
+        %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
+        .controls
+          %select{ :name => "cr" }
+            %option Low
+            %option Medium
+            %option High
+      .control-group
+        %label{ :class => "control-label", :for => "ir" } Integrity Requirement
+        .controls
+          %select{ :name => "ir" }
+            %option Low
+            %option Medium
+            %option High
+      .control-group
+        %label{ :class => "control-label", :for => "ar" } Availability Requirement
+        .controls
+          %select{ :name => "ar" }
+            %option Low
+            %option Medium
+            %option High
+      .control-group
+        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        .controls
+          %select{ :name => "effort" }
+            %option QUICK
+            %option PLANNED
+            %option INVOLVED
     - else
       .control-group
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level

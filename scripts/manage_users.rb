@@ -1,5 +1,7 @@
 require 'optparse'
 require './model/master.rb'
+require 'rubygems'
+require 'highline/import'
 
 def agree(q)
 	puts q
