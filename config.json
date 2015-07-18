@@ -9,5 +9,7 @@
     "nessusmap":false, //maps nessus findings to serpico findings
     "burpmap":false, //maps burp findings to serpico findings
     "finding_types": ["Web Application","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing"],
-    "logo":"/img/logo_1.png"
+    "logo":"/img/logo_1.png",
+    "auto_import":false //Experimental, will automatically create new findings on import
 }
+

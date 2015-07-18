@@ -145,7 +145,7 @@ post '/login' do
 			end
 		end
     end
-  
+
     redirect to("/")
 end
 
@@ -173,7 +173,7 @@ end
 get '/admin/' do
     redirect to("/no_access") if not is_administrator?
     @admin = true
-    
+
     haml :admin, :encode_html => true
 end
 
@@ -181,7 +181,7 @@ get '/admin/add_user' do
     redirect to("/no_access") if not is_administrator?
 
     @admin = true
-    
+
     haml :add_user, :encode_html => true
 end
 
@@ -369,7 +369,7 @@ post '/master/findings/new' do
         @nessus = NessusMapping.new(nessusdata)
         @nessus.save
     end
-    
+
     redirect to('/master/findings')
 end
 
@@ -404,7 +404,7 @@ get '/master/findings/:id/edit' do
     haml :findings_edit, :encode_html => true
 end
 
-# Edit a finding 
+# Edit a finding
 post '/master/findings/:id/edit' do
     redirect to("/no_access") if not is_administrator?
 
@@ -856,7 +856,7 @@ get '/report/:id/import_nessus' do
     redirect to("/") unless valid_session?
 
     id = params[:id]
-    
+
     @nessusmap = config_options["nessusmap"]
 
     # Query for the first report matching the id
@@ -899,10 +899,10 @@ post '/report/:id/import_autoadd' do
     if @report == nil
         return "No Such Report"
     end
-    
+
     # load all findings
     @findings = TemplateFindings.all(:order => [:title.asc])
-    
+
     # parse nessus xml into hash
     #nessus_vulns = parse_nessus_xml(nessus_xml)
 
@@ -910,6 +910,7 @@ post '/report/:id/import_autoadd' do
     # host/ip is key, value is array of vuln ids
     vulns.keys.each do |i|
         vulns[i].each do |v|
+
 			# if serpico finding id maps to nessus/burp plugin id, add to report
             if import_nessus
                 @mappings = NessusMapping.all(:pluginid => v)
@@ -936,11 +937,20 @@ post '/report/:id/import_autoadd' do
 
     add_findings = add_findings.uniq
 
+    # create new findings from an import
+    # TODO: This will duplicate if the user already has a nessus id mapped
+    if config_options["auto_import"]
+        vulns["findings"].each do |vuln|
+            vuln.report_id = id
+            vuln.save
+        end
+    end
+
     if add_findings.size == 0
-        redirect to("/report/#{id}/edit")
+        redirect to("/report/#{id}/findings")
     else
         @autoadd = true
-        
+
         add_findings.each do |finding|
             # if the finding already exists in the report dont add
             currentfindings = Findings.all(:report_id => id)
@@ -965,7 +975,7 @@ get '/report/:id/import_burp' do
     redirect to("/") unless valid_session?
 
     id = params[:id]
-    
+
     @burpmap = config_options["burpmap"]
 
     # Query for the first report matching the id
@@ -1150,7 +1160,7 @@ post '/report/:id/edit' do
     redirect to("/report/#{id}/edit")
 end
 
-# TODO: The way that UDV's handle HTML input does not fit with the rest 
+# TODO: The way that UDV's handle HTML input does not fit with the rest
 #		of serpico. This needs to be rewritten.
 
 #Edit user defined variables
@@ -1166,7 +1176,7 @@ get '/report/:id/user_defined_variables' do
 			if v
 				@user_variables[k] = meta_markup(v)
 			end
-        end		
+        end
     else
         @user_variables = ""
     end
@@ -1184,11 +1194,11 @@ post '/report/:id/user_defined_variables' do
 	data.each do |k,v|
 		if k =~ /variable_name/
 			key = k.split("variable_name_").last.split("_").first
-			
-			# remove certain elements from name %&"<>			
+
+			# remove certain elements from name %&"<>
 			v = v.gsub("%","_").gsub("&quot;","'").gsub("&amp;","").gsub("&gt;","").gsub("&lt;","")
 			variable_hash["#{key}%#{v}"] = "DEFAULT"
-			
+
 		end
 		if k =~ /variable_data/
 			key = k.split("variable_data_").last.split("_").first
@@ -1201,7 +1211,7 @@ post '/report/:id/user_defined_variables' do
 					end
 				end
 			end
-		end	
+		end
 	end
 
 	# remove the % and any blank values
@@ -1409,9 +1419,9 @@ post '/report/:id/findings_add' do
     end
 
     hosts = ""
-	
+
     redirect to("/report/#{id}/findings") unless params[:finding]
-    
+
 	params[:finding].each do |finding|
 		templated_finding = TemplateFindings.first(:id => finding.to_i)
 
@@ -1423,7 +1433,7 @@ post '/report/:id/findings_add' do
 		@newfinding.report_id = id
 		@newfinding.save
 	end
-    
+
     # if we have hosts add them to the findings too
     params[:finding].each do |number|
         # if there are hosts to add with a finding they'll have a param syntax of "findingXXX=ip1,ip2,ip3"
@@ -2005,7 +2015,7 @@ get '/report/:id/asciidoc_status' do
 	findings.each do |finding|
 		ascii_doc_ << gen_asciidoc(finding,config_options["dread"])
 	end
-	
+
 	local_filename = "./tmp/#{rand(36**12).to_s(36)}.asd"
     File.open(local_filename, 'w') {|f| f.write(ascii_doc_) }
 
