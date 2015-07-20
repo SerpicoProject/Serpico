@@ -33,16 +33,20 @@
                       %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
                         %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                       %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
-                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}                    
+                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}
                       %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
                         %i{:class => 'icon-user icon-white', :title => 'Add Author'}
                     - else
                       %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
                         %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
                       %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
-                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}                      
+                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                       %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
-                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}                    
+                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}
+                      %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
+                        %i{:class => 'icon-user icon-white', :title => 'Add Author'}
+
+
           - else
             %h4
               You have no reports, how about <a href="/report/new">creating</a> or <a href="/report/import">importing</a> one...
