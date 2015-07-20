@@ -248,17 +248,32 @@ get '/admin/delete/:id' do
 end
 
 get '/admin/add_user/:id' do
-    redirect to("/no_access") if not is_administrator?
+
+    if not is_administrator?
+      id = params[:id]
+      unless get_report(id)
+        redirect to("/no_access")
+      end
+    end
 
     @users = User.all(:order => [:username.asc])
     @report = Reports.first(:id => params[:id])
-    @admin = true
+
+    if is_administrator?
+      @admin = true
+    end
 
     haml :add_user_report, :encode_html => true
 end
 
 post '/admin/add_user/:id' do
-    redirect to("/no_access") if not is_administrator?
+
+    if not is_administrator?
+      id = params[:id]
+      unless get_report(id)
+        redirect to("/no_access")
+      end
+    end
 
     report = Reports.first(:id => params[:id])
 
@@ -281,7 +296,14 @@ post '/admin/add_user/:id' do
 end
 
 get '/admin/del_user_report/:id/:author' do
-    redirect to("/no_access") if not is_administrator?
+
+    if not is_administrator?
+      id = params[:id]
+      unless get_report(id)
+        redirect to("/no_access")
+      end
+    end
+
 
     report = Reports.first(:id => params[:id])
 
