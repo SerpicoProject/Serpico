@@ -30,8 +30,6 @@ set :effort, ["LOW","MEDIUM","HARD"]
 set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
 set :status, ["EXPLOITED"]
 set :show_exceptions, false
-set :dump_errors, true
-set :protection, except: :session_hijacking
 
 ## LDAP Settings
 if config_options["ldap"].downcase == "true"
