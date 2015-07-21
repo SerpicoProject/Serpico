@@ -5,10 +5,10 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
-- You will need a copy of Ruby. RVM is suggested. ruby1.9.3 is supported.
+- You will need a copy of Ruby. RVM is suggested (https://rvm.io/rvm/install). ruby version 2.1.5 is supported.
 
 ```
-apt-get install ruby1.9.3
+rvm install 2.1.5
 ```
 
 - If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
