@@ -9,6 +9,7 @@ Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation shou
 
 ```
 rvm install 2.1.5
+rvm use 2.1.5
 ```
 
 - If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
