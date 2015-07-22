@@ -54,6 +54,9 @@ class Findings
     property :references, String, :length => 20000, :required => false
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 1000000, :required => false
+    property :presentation_points, String, :length => 100000, :required => false
+    property :presentation_rem_points, String, :length => 100000, :required => false
+
 end
 
 class TemplateReports

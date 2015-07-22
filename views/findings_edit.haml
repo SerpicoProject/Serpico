@@ -232,12 +232,37 @@
               #{meta_markup(@finding.references)}
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "notes" } Notes
-        .controls
+        %label{ :class => "control-label", :for => "notes" } Notes Data
+        %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_2", :id=>"actionButton"}
+        .info{ :id => "info_2", :class => "collapse out" }
+          %label
+            Notes
+          .controls
           %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "preso" } Presentation Data
+        %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_1", :id=>"actionButton"}
+        .info{ :id => "info_1", :class => "collapse out" }
+          %label
+            Presentation Points (One Per Line)
+          .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_points'}
+            - if @finding
+              - if @finding.presentation_points
+                #{meta_markup(@finding.presentation_points)}
+          %label
+            Presentation Remediation Points (One Per Line)
+          .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_rem_points'}
+            - if @finding
+              - if @finding.presentation_rem_points
+                #{meta_markup(@finding.presentation_rem_points)}
+
+
 
     %input{:type => 'submit', :value => 'Save'}
     %button{:value => 'Cancel'} Cancel
