@@ -19,7 +19,7 @@
       %label{ :class => "control-label", :for => "type" } Finding Type
       .controls
         %select{ :name => "type" }
-          - options.finding_types.each do |type|  
+          - options.finding_types.each do |type|
             %option #{type}
     - if @nessusmap
       .control-group
@@ -59,7 +59,6 @@
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
-            %option{:value => 0}= "Informational"
             %option{:value => 1}= "Low"
             %option{:value => 2}= "Moderate"
             %option{:value => 3}= "High"

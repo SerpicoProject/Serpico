@@ -106,10 +106,11 @@
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
-            - risk_types = ["Informational", "Low", "Moderate", "High", "Critical"]
+            - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
             - if !@finding.risk
               - @finding.risk = @finding.dread_total/10
-            - [0,1,2,3,4].each do |r_type|
+              - @finding.risk = 4 if dread_total == 50
+            - [1,2,3,4].each do |r_type|
               - if r_type == @finding.risk
                 %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
               - else

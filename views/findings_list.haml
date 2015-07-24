@@ -53,8 +53,9 @@
                                       #{finding.dread_total}
                                   - else
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
-                                      - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                                      - risk_t = ["None","Low","Moderate","High","Critical"]
                                       - if finding.risk
+                                        - finding.risk = 1 if finding.risk == 0
                                         #{risk_t[finding.risk]}
                                       - else
                                         - scr = finding.dread_total/10
@@ -93,8 +94,9 @@
                       #{finding.dread_total}
                   - else
                     %td{:style => 'width: 10%' }
-                      - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                      - risk_t = ["None","Low","Moderate","High","Critical"]
                       - if finding.risk
+                        - finding.risk = 1 if finding.risk == 0
                         #{risk_t[finding.risk]}
                       - else
                         - scr = finding.dread_total/10
