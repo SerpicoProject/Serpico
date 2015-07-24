@@ -54,6 +54,7 @@
               risk_types = ["Informational", "Low", "Moderate", "High", "Critical"]
                 if !@dread
                   risk_d = @finding.dread_total/10
+                  risk_d = 4 if dread_total == 50
                   risk = risk_types[risk_d]
                 else
                   risk = risk_types[finding.risk]
@@ -87,6 +88,7 @@
                 risk_types = ["Informational", "Low", "Moderate", "High", "Critical"]
                   if !@dread
                     risk_d = @finding.dread_total/10
+                    risk_d = 4 if dread_total == 50
                     risk = risk_types[risk_d]
                   else
                     risk = risk_types[finding.risk]
