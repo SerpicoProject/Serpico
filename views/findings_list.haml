@@ -70,18 +70,34 @@
             - else
               :ruby
                 vulns = Hash.new 0
-                @findings.each do |finding|
-                  if finding.dread_total > 39
-                    vulns["critical"] += 1
-                  elsif finding.dread_total < 40 && finding.dread_total > 24
-                    vulns["severe"] += 1
-                  elsif finding.dread_total < 25 && finding.dread_total > 10
-                    vulns["moderate"] += 1
-                  else finding.dread_total < 10 && finding.dread_total > 0
-                    vulns["low"] += 1
+                if @dread
+                  @findings.each do |finding|
+                    if finding.dread_total > 39
+                      vulns["critical"] += 1
+                    elsif finding.dread_total < 40 && finding.dread_total > 24
+                      vulns["severe"] += 1
+                    elsif finding.dread_total < 25 && finding.dread_total > 10
+                      vulns["moderate"] += 1
+                    else finding.dread_total < 10 && finding.dread_total > 0
+                      vulns["low"] += 1
+                    end
                   end
+                  labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
+                else
+                  @findings.each do |finding|
+                    if finding.risk == 4
+                      vulns["critical"] += 1
+                    elsif finding.risk == 3
+                      vulns["severe"] += 1
+                    elsif finding.risk == 2
+                      vulns["moderate"] += 1
+                    else finding.risk == 1
+                      vulns["low"] += 1
+                    end
+                  end
+                  labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
+                  p labels
                 end
-                puts #{vulns["low"]}
               %div{:id =>"chart"}
                 %h4
                   Findings Chart:
@@ -91,7 +107,7 @@
                 :plain
                   <script src= '/js/d3.js'></script>
                   <script type= "text/javascript">
-                    var data = [{"label":"Critical", "value": #{vulns["critical"]}},{"label":"Severe", "value": #{vulns["severe"]}}, {"label":"Moderate", "value":#{vulns["moderate"]}}, {"label":"Low", "value": #{vulns["low"]}}];
+                    var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
                     var w = 400;
                     var h = 400;
                     var r = h/2;
