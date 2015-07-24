@@ -3,8 +3,8 @@
   - if @newfinding
     %h2 Finding(s) Added! You rock.
   %br
-    %h3 Current Findings 
-    %br  
+    %h3 Current Findings
+    %br
     .table
       %table{:style => 'width: 90%'}
         %tbody
@@ -14,7 +14,7 @@
               %style{:id => "search_style" }
               %span{:class=>"input-group-btn"}
               %script{:type=>"text/javascript"}
-                // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this 
+                // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
                 var searchStyle = document.getElementById('search_style');
                 document.getElementById('search').addEventListener('input', function() {
                 if (!this.value) {
@@ -47,7 +47,7 @@
                                   -@class=""
                                 %tr{:class => "#{@class}"}
                                   %td{:style => 'width: 70%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
-                                    #{finding.title} 
+                                    #{finding.title}
                                   - if @dread
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.dread_total}
@@ -66,12 +66,82 @@
                                       %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
                                         %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                                       %a{ :class => "btn btn-danger", :href => "/master/findings/#{finding.id}/delete"}
-                                        %i{:class => 'icon-remove icon-white', :title => 'Delete'} 
+                                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}
             - else
+              :ruby
+                vulns = Hash.new 0
+                @findings.each do |finding|
+                  if finding.dread_total > 39
+                    vulns["critical"] += 1
+                  elsif finding.dread_total < 40 && finding.dread_total > 24
+                    vulns["severe"] += 1
+                  elsif finding.dread_total < 25 && finding.dread_total > 10
+                    vulns["moderate"] += 1
+                  else finding.dread_total < 10 && finding.dread_total > 0
+                    vulns["low"] += 1
+                  end
+                end
+                puts #{vulns["low"]}
+              %div{:id =>"chart"}
+                %h4
+                  Findings Chart:
+                  %br
+                  %br
+                  //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
+                :plain
+                  <script src= '/js/d3.js'></script>
+                  <script type= "text/javascript">
+                    var data = [{"label":"Critical", "value": #{vulns["critical"]}},{"label":"Severe", "value": #{vulns["severe"]}}, {"label":"Moderate", "value":#{vulns["moderate"]}}, {"label":"Low", "value": #{vulns["low"]}}];
+                    var w = 400;
+                    var h = 400;
+                    var r = h/2;
+                    var color = d3.scale.ordinal()
+                      .range(['#FF2800', '#FFBF00', '#0000FF', '#008C00']);
+                    var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
+                    var pie = d3.layout.pie().value(function(d){return d.value;});
+                    var arc = d3.svg.arc().outerRadius(r);
+                    var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+
+                    arcs.append("svg:path")
+                      .attr("fill", function(d, i){
+                        return color(i);
+                        })
+                      .attr("d", function (d) {
+                        console.log(arc(d));
+                        return arc(d);
+                      });
+                    arcs.append("svg:text").attr("transform", function(d){
+                      d.innerRadius = 0;
+                      d.outerRadius = r;
+                      return "translate(" + arc.centroid(d) + ")";});
+
+                    var legend = d3.select("#chart").append("svg")
+                      .attr("class", "legend")
+                      .attr("width", r)
+                      .attr("height", r * 2)
+                      .selectAll("g")
+                      .data(color.domain().slice())
+                      .enter().append("g")
+                      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+                    legend.append("rect")
+                      .attr("width", 18)
+                      .attr("height", 18)
+                      .style("fill", color);
+
+                    legend.append("text")
+                      .attr("x", 24)
+                      .attr("y", 9)
+                      .attr("dy", ".35em")
+                      .text(function( d,i ) {return data[i].label +": " + data[i].value })
+                      .style("font-size","px");
+                  </script>
+              %br
+              %br
               - @findings.each do |finding|
                 %tr{:class => "#{@class}"}
                   %td{:style => 'width: 70%'}
-                    #{finding.title} 
+                    #{finding.title}
                     - if finding.overview
                       %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
                       .info{ :id => "info_#{finding.id}", :class => "collapse out" }
@@ -83,10 +153,10 @@
                               %b
                                 %u
                                   Notes
-                            - if finding.notes.length > 1      
+                            - if finding.notes.length > 1
                               #{finding.notes.gsub("<paragraph>","<br/><br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                             - else
-                              None.           
+                              None.
                   - if @dread
                     %td{:style => 'width: 10%'}
                       #{finding.dread_total}
@@ -104,8 +174,8 @@
                     %a{ :class => "btn btn-info", :href => "/report/#{@report.id}/findings/#{finding.id}/preview"}
                       %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                     %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/#{finding.id}/remove"}
-                      %i{:class => 'icon-remove icon-white', :title => 'Delete'} 
+                      %i{:class => 'icon-remove icon-white', :title => 'Delete'}
                     %a{ :class => "btn btn-inverse", :href => "/report/#{@report.id}/findings/#{finding.id}/upload"}
-                      %i{:class => 'icon-arrow-up icon-white', :title => 'Add to the findings database'} 
+                      %i{:class => 'icon-arrow-up icon-white', :title => 'Add to the findings database'}
           - else
             No Findings Available
