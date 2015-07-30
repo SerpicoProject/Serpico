@@ -10,10 +10,16 @@
         %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
     %tr
       %td
+        &nbsp;
+    %tr
+      %td
         %a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/import_burp" } Auto Add Findings from a Burp XML scanner report
+    %tr
+      %td
+        &nbsp;
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/status" } Generate Status Report
@@ -23,3 +29,7 @@
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/asciidoc_status" } Generate AsciiDoc of Current Findings (Experimental)
+    %tr
+      %td
+        %a{ :href => "/report/#{@report.id}/presentation" }
+          Generate Presentation from Report

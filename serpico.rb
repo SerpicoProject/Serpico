@@ -2042,6 +2042,30 @@ get '/report/:id/asciidoc_status' do
 	send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
 end
 
+# generate an presentation of current report
+get '/report/:id/presentation' do
+    redirect to("/") unless valid_session?
+
+    # check the user has installed reveal
+    if !(File.directory?(Dir.pwd+"/public/reveal.js"))
+        return "reveal.js not found in /public/ directory. To install:<br><br> 1. Goto [INSTALL_DIR]/public/ <br>2.run 'git clone https://github.com/hakimel/reveal.js.git'<br>3. Restart Serpico"
+    end
+
+    id = params[:id]
+
+    @report = get_report(id)
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    # add the findings
+    @findings = Findings.all(:report_id => id)
+
+    @dread = config_options["dread"]
+
+    haml :presentation, :encode_html => true, :layout => false
+end
+
 
 # Helper Functions
 
