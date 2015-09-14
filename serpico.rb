@@ -1261,7 +1261,7 @@ end
 # Edit the Report's Current Findings
 get '/report/:id/findings' do
     redirect to("/") unless valid_session?
-
+    @chart = config_options["chart"]
     @report = true
     id = params[:id]
 
