@@ -41,7 +41,8 @@ set :domain, config_options["ldap_domain"]
 set :dc, config_options["ldap_dc"]
 
 enable :sessions
-
+# this should be randomly set
+set :session_secret, rand(36**12).to_s(36)
 ### Basic Routes
 
 # Used for 404 responses
