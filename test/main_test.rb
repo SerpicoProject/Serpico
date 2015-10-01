@@ -90,7 +90,7 @@ class SerpicoTests < Test::Unit::TestCase
     assert_equal browser.last_response.status,302
 
     browser.get '/reports/list'
-    assert_equal browser.last_response.status,302
+    assert_equal browser.last_response.status,200
 
     browser.get '/report/new'
     assert_equal browser.last_response.status,302
