@@ -125,12 +125,6 @@ class Sessions
 
     def self.is_valid?(session_key)
         sessions = Sessions.first(:session_key => session_key)
-        if sessions
-            puts "DEBUG: Valid session for #{sessions.username}"
-        else
-            puts "DEBUG: Invalid session"
-        end
-
         return true if sessions
     end
 
