@@ -100,12 +100,13 @@
                   labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
                   p labels
                 end
-              %div{:id =>"chart"}
+              - if @chart
+                %div{:id =>"chart"}
                 %h4
                   Findings Chart:
-                  %br
-                  %br
-                  //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
+                %br
+                %br
+                //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
                 :plain
                   <script src= '/js/d3.js'></script>
                   <script type= "text/javascript">
@@ -154,8 +155,8 @@
                       .text(function( d,i ) {return data[i].label +": " + data[i].value })
                       .style("font-size","px");
                   </script>
-              %br
-              %br
+                %br
+                %br
               - @findings.each do |finding|
                 %tr{:class => "#{@class}"}
                   %td{:style => 'width: 70%'}
