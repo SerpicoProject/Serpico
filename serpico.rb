@@ -162,12 +162,12 @@ end
 
 ## We use a persistent session table, one session per user; no end date
 get '/logout' do
-  if session[:session_id]
-    sess = Sessions.first(:session_key => session[:session_id])
-    if sess
-      sess.destroy
+    if session[:session_id]
+        sess = Sessions.first(:session_key => session[:session_id])
+        if sess
+            sess.destroy
+        end
     end
-  end
 
     redirect to("/")
 end
@@ -198,7 +198,7 @@ end
 
 # serve a copy of the code
 get '/admin/pull' do
-   redirect to("/no_access") if not is_administrator?
+    redirect to("/no_access") if not is_administrator?
 
 	if File.exists?("./export.zip")
 		send_file "./export.zip", :filename => "export.zip", :type => 'Application/octet-stream'
@@ -260,10 +260,10 @@ end
 
 get '/admin/add_user/:id' do
     if not is_administrator?
-      id = params[:id]
-      unless get_report(id)
-        redirect to("/no_access")
-      end
+        id = params[:id]
+        unless get_report(id)
+            redirect to("/no_access")
+        end
     end
 
     @users = User.all(:order => [:username.asc])
@@ -278,10 +278,10 @@ end
 
 post '/admin/add_user/:id' do
     if not is_administrator?
-      id = params[:id]
-      unless get_report(id)
-        redirect to("/no_access")
-      end
+        id = params[:id]
+        unless get_report(id)
+            redirect to("/no_access")
+        end
     end
 
     report = Reports.first(:id => params[:id])
@@ -306,10 +306,10 @@ end
 
 get '/admin/del_user_report/:id/:author' do
     if not is_administrator?
-      id = params[:id]
-      unless get_report(id)
-        redirect to("/no_access")
-      end
+        id = params[:id]
+        unless get_report(id)
+            redirect to("/no_access")
+        end
     end
 
     report = Reports.first(:id => params[:id])
@@ -339,16 +339,6 @@ end
 # List Available Templated Findings
 get '/master/findings' do
     @findings = TemplateFindings.all(:order => [:title.asc])
-    @master = true
-    @dread = config_options["dread"]
-
-    haml :findings_list, :encode_html => true
-end
-
-# Show only certain findings
-#	This isn't implemented, should probably remove it =/
-get '/master/findings/f/:type' do
-    @findings = TemplateFindings.all(:type => params[:type], :order => [:title.asc])
     @master = true
     @dread = config_options["dread"]
 
@@ -753,7 +743,7 @@ post '/admin/templates/edit' do
 
     # reject if the file is above a certain limit
     if params[:file][:tempfile].size > 100000000
-      return "File too large. 10MB limit"
+        return "File too large. 10MB limit"
     end
 
     docx = "./templates/#{rand(36**36).to_s(36)}.docx"
@@ -830,7 +820,7 @@ post '/report/new' do
     @report = Reports.new(data)
     @report.save
 
-   redirect to("/report/#{@report.id}/edit")
+    redirect to("/report/#{@report.id}/edit")
 end
 
 # List attachments
@@ -1611,8 +1601,8 @@ get '/report/:id/findings/:finding_id/preview' do
 
     # this flags edited findings
     if @finding.master_id
-            master = TemplateFindings.first(:id => @finding.master_id)
-            @finding.overview = compare_text(@finding.overview, master.overview)
+        master = TemplateFindings.first(:id => @finding.master_id)
+        @finding.overview = compare_text(@finding.overview, master.overview)
     end
 
     ## We have to do some hackery here for wordml
@@ -1958,7 +1948,7 @@ get '/report/:id/asciidoc_status' do
 	send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
 end
 
-# generate an presentation of current report
+# generate a presentation of current report
 get '/report/:id/presentation' do
     # check the user has installed reveal
     if !(File.directory?(Dir.pwd+"/public/reveal.js"))
@@ -1985,12 +1975,12 @@ end
 
 # Return if the user has a valid session or not
 def valid_session?
-  return Sessions.is_valid?(session[:session_id])
+    return Sessions.is_valid?(session[:session_id])
 end
 
 # Get the current users type
 def user_type
-  return Sessions.type(session[:session_id])
+    return Sessions.type(session[:session_id])
 end
 
 # Get the current users, username
@@ -2000,7 +1990,7 @@ end
 
 # Check if the user is an administrator
 def is_administrator?
-  return true if Sessions.type(session[:session_id]) == "Administrator"
+    return true if Sessions.type(session[:session_id]) == "Administrator"
 end
 
 # Grab a specific report
@@ -2013,7 +2003,7 @@ def get_report(id)
             authors = report.authors
             return report if report.owner == get_username
             if authors
-              return report if authors.include?(get_username)
+                return report if authors.include?(get_username)
             end
         end
     end
