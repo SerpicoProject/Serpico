@@ -12,5 +12,5 @@
     "logo":"/img/logo_1.png",
     "auto_import":false, //Experimental, will automatically create new findings on import
     "chart":false, //Enabled or disable support
-    "cvss":true
+    "cvss":false
 }
