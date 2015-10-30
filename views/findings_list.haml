@@ -51,6 +51,9 @@
                                   - if @dread
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.dread_total}
+                                  - elsif @cvss
+                                    %td{:style => 'width: 10%'}
+                                      #{finding.cvss_total}
                                   - else
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       - risk_t = ["None","Low","Moderate","High","Critical"]
@@ -179,6 +182,9 @@
                   - if @dread
                     %td{:style => 'width: 10%'}
                       #{finding.dread_total}
+                  - elsif @cvss
+                    %td{:style => 'width: 10%'}
+                      #{finding.cvss_total}
                   - else
                     %td{:style => 'width: 10%' }
                       - risk_t = ["None","Low","Moderate","High","Critical"]

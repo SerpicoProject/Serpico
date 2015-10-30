@@ -101,6 +101,134 @@
         %label{ :class => "control-label", :for => "discoverability" } Discoverability
         .controls
           %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "#{@finding.discoverability}", :required => true}
+    - elsif @cvss
+      .control-group
+        %label{ :class => "control-label", :for => "av" } Access Vector
+        .controls
+          %select{ :name => "av" }
+            - options.av.each do |av|
+              - if av == @finding.av
+                %option{ :selected => "selected" } #{av}
+              - else
+                %option #{av}
+      .control-group
+        %label{ :class => "control-label", :for => "ac" } Access Complexity
+        .controls
+          %select{ :name => "ac" }
+            - options.ac.each do |ac|
+              - if ac == @finding.ac
+                %option{ :selected => "selected" } #{ac}
+              - else
+                %option #{ac}
+      .control-group
+        %label{ :class => "control-label", :for => "au" } Authentication
+        .controls
+          %select{ :name => "au" }
+            - options.au.each do |au|
+              - if au == @finding.au
+                %option{ :selected => "selected" } #{au}
+              - else
+                %option #{au}
+      .control-group
+        %label{ :class => "control-label", :for => "c" } Confidentiality Impact
+        .controls
+          %select{ :name => "c" }
+            - options.c.each do |c|
+              - if c == @finding.c
+                %option{ :selected => "selected" } #{c}
+              - else
+                %option #{c}
+      .control-group
+        %label{ :class => "control-label", :for => "i" } Integrity Impact
+        .controls
+          %select{ :name => "i" }
+            - options.i.each do |i|
+              - if i == @finding.i
+                %option{ :selected => "selected" } #{i}
+              - else
+                %option #{i}
+      .control-group
+        %label{ :class => "control-label", :for => "a" } Availability Impact
+        .controls
+          %select{ :name => "a" }
+            - options.a.each do |a|
+              - if a == @finding.a
+                %option{ :selected => "selected" } #{a}
+              - else
+                %option #{a}
+      .control-group
+        %label{ :class => "control-label", :for => "e" } Exploitability
+        .controls
+          %select{ :name => "e" }
+            - options.e.each do |e|
+              - if e == @finding.e
+                %option{ :selected => "selected" } #{e}
+              - else
+                %option #{e}
+      .control-group
+        %label{ :class => "control-label", :for => "rl" } Remediation Level
+        .controls
+          %select{ :name => "rl" }
+            - options.rl.each do |rl|
+              - if rl == @finding.rl
+                %option{ :selected => "selected" } #{rl}
+              - else
+                %option #{rl}
+      .control-group
+        %label{ :class => "control-label", :for => "rc" } Report Confidence
+        .controls
+          %select{ :name => "rc" }
+            - options.rc.each do |rc|
+              - if rc == @finding.rc
+                %option{ :selected => "selected" } #{rc}
+              - else
+                %option #{rc}
+      .control-group
+        %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
+        .controls
+          %select{ :name => "cdp" }
+            - options.cdp.each do |cdp|
+              - if cdp == @finding.cdp
+                %option{ :selected => "selected" } #{cdp}
+              - else
+                %option #{cdp}
+      .control-group
+        %label{ :class => "control-label", :for => "td" } Target Distribution
+        .controls
+          %select{ :name => "td" }
+            - options.td.each do |td|
+              - if td == @finding.td
+                %option{ :selected => "selected" } #{td}
+              - else
+                %option #{td}
+      .control-group
+        %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
+        .controls
+          %select{ :name => "cr" }
+            - options.cr.each do |cr|
+              - if cr == @finding.cr
+                %option{ :selected => "selected" } #{cr}
+              - else
+                %option #{cr}
+      .control-group
+        %label{ :class => "control-label", :for => "ir" } Integrity Requirement
+        .controls
+          %select{ :name => "ir" }
+            - options.ir.each do |ir|
+              - if ir == @finding.ir
+                %option{ :selected => "selected" } #{ir}
+              - else
+                %option #{ir}
+      .control-group
+        %label{ :class => "control-label", :for => "ar" } Availability Requirement
+        .controls
+          %select{ :name => "ar" }
+            - options.ar.each do |ar|
+              - if ar == @finding.ar
+                %option{ :selected => "selected" } #{ar}
+              - else
+                %option #{ar}
+
     - else
       .control-group
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
