@@ -1132,13 +1132,19 @@ get '/report/:id/user_defined_variables' do
 
     if  @report.user_defined_variables
         @user_variables = JSON.parse(@report.user_defined_variables)
+
+        # add in the global UDV from config
+        if config_options["user_defined_variables"].size > 0 and !@user_variables.include?(config_options["user_defined_variables"][0])
+            @user_variables = @user_variables + config_options["user_defined_variables"]
+        end
+
         @user_variables.each do |k,v|
 			if v
 				@user_variables[k] = meta_markup(v)
 			end
         end
     else
-        @user_variables = ""
+        @user_variables = config_options["user_defined_variables"]
     end
 
     haml :user_defined_variable, :encode_html => true
