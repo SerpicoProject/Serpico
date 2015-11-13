@@ -270,7 +270,9 @@ def generate_xslt(docx)
 
 			conditions.shift
 			conditions.each do |condition|
-				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&").gsub("&#39;","'")}\">"
+				# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
+				q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
+				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
         else
 			for_iffies.push(0)
