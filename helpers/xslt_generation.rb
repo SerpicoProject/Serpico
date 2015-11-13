@@ -43,9 +43,9 @@ def generate_xslt(docx)
 	#add line breaks for easier reading, only use with debugging
 	#document = document.gsub('>',">\n")
 
-	# replace {} for the sake of XSL 	
+	# replace {} for the sake of XSL
 	document = document.gsub("{","{{").gsub("}","}}")
-	
+
 	# add in xslt header
 	document = @top + document
 
@@ -198,7 +198,10 @@ def generate_xslt(docx)
 			if replace[count-1] =~ /\<w:tr /
 				conditions.shift
 				q = ""
+
 				conditions.each do |condition|
+					# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
+					q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 					q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 				end
 				q << "<w:tr "
@@ -267,7 +270,7 @@ def generate_xslt(docx)
 
 			conditions.shift
 			conditions.each do |condition|
-				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
+				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&").gsub("&#39;","'")}\">"
 			end
         else
 			for_iffies.push(0)
@@ -468,7 +471,7 @@ def generate_xslt(docx)
 	#######
 	# This is ugly but we have to presort the for_iffies and assign them
 	#	to the proper loop. This is because there are two types of
-	#	closing elements in a for loop, ∆ and ≠. In the case of ≠, you 
+	#	closing elements in a for loop, ∆ and ≠. In the case of ≠, you
 	#	can't use an if element so we shouldn't close for it.
 
 	r_for_iffies = []
