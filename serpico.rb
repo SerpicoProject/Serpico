@@ -135,7 +135,7 @@ post '/login' do
             @curr_session.save
 
         end
-    else
+    elsif user
 		if options.ldap
 			#try AD authentication
 			usern = params[:username]
