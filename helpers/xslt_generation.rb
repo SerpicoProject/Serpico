@@ -540,9 +540,21 @@ def generate_xslt(docx)
 #	§
 ###############################
 
+	# final changes placed here
+	document = white_space(document)
+
 	#return the xslt
 	return document
 end
+
+# subtle annoying word 2007 v word 2010 bug. Found the solution on
+# http://answers.microsoft.com/en-us/office/forum/office_2010-word/word-2010-randomly-deleting-spaces-between-words/34682f6f-7be2-4835-9c18-907b0abd5615?page=6
+# Basically we replace space with alt-255 space; go figure
+def white_space(document)
+	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>")
+	return document
+end
+
 
 def compress(omega)
 	replacement = ""
