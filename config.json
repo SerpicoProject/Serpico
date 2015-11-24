@@ -1,5 +1,7 @@
 {
     "port":"8443",
+    "use_ssl":true,
+    "bind_address":"0.0.0.0",
     "ssl_certificate":"./cert.pem",
     "ssl_key":"key.pem",
     "ldap":"false",
