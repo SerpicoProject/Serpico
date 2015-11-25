@@ -21,8 +21,9 @@ config_options = JSON.parse(File.read('./config.json'))
 ## SSL Settings
 set :ssl_certificate, config_options["ssl_certificate"]
 set :ssl_key, config_options["ssl_key"]
+set :use_ssl, config_options["use_ssl"]
 set :port, config_options["port"]
-set :bind, "0.0.0.0"
+set :bind_address, config_options["bind_address"]
 
 ## Global variables
 set :finding_types, config_options["finding_types"]
