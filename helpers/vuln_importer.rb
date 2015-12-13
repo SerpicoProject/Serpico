@@ -35,8 +35,6 @@ def clean(text)
 
     text = text.gsub("\n","<paragraph>")
 
-    p text
-
     return text
 end
 
