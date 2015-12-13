@@ -41,6 +41,25 @@ def clean(text)
     return text
 end
 
+def uniq_findings(findings)
+    vfindings = []
+    # this gets a uniq on the findings and groups hosts, could be more efficient
+    findings.each do |single|
+        # check if the finding has been added before
+        exists = vfindings.detect {|f| f["title"] == single.title }
+
+        if exists
+            #get the index
+            i = vfindings.index(exists)
+            exists.affected_hosts = clean(exists.affected_hosts+"<br>#{single.affected_hosts}")
+            vfindings[i] = exists
+        else
+            vfindings << single
+        end
+    end
+    return vfindings
+end
+
 def parse_nessus_xml(xml)
     vulns = Hash.new
     findings = Array.new
@@ -82,7 +101,7 @@ def parse_nessus_xml(xml)
         items = []
     end
 
-    vulns["findings"] = findings.uniq
+    vulns["findings"] = uniq_findings(findings)
     return vulns
 end
 
@@ -127,19 +146,6 @@ def parse_burp_xml(xml)
         end
     end
 
-    # this gets a uniq on the findings and groups hosts, could be more efficient
-    findings.each do |single|
-        # check if the finding has been added before
-        exists = vulns["findings"].detect {|f| f["title"] == single.title }
-
-        if exists
-            #get the index
-            i = vulns["findings"].index(exists)
-            exists.affected_hosts = clean(exists.affected_hosts+"<br>#{single.affected_hosts}")
-            vulns["findings"][i] = exists
-        else
-            vulns["findings"] << single
-        end
-    end
+    vulns["findings"] = uniq_findings(findings)
     return vulns
 end
