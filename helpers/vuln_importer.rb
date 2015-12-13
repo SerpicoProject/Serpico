@@ -7,13 +7,16 @@ require './model/master'
 def clean(text)
     return unless text
 
-    text = text.gsub(/\s+/, " ")
     text = text.gsub("<br>", "\n")
     text = text.gsub("<p>", "\n")
     text = text.gsub("<description>","")
     text = text.gsub("</description>","")
     text = text.gsub("<solution>","")
     text = text.gsub("</solution>","")
+    text = text.gsub("<see_also>","")
+    text = text.gsub("</see_also>","")
+    text = text.gsub("<plugin_output>","")
+    text = text.gsub("</plugin_output>","")
 
     # burp stores html and needs to be removed, TODO better way to handle this
     text = text.gsub("</p>", "")
@@ -67,8 +70,11 @@ def parse_nessus_xml(xml)
                 finding.discoverability = 0
                 finding.dread_total = 0
 
-                findings << finding
+                finding.affected_hosts = hostnode["name"]
+                finding.notes = clean(hostnode.css("plugin_output").to_s)
+                finding.references = clean(hostnode.css("see_also").to_s)
 
+                findings << finding
                 items << itemnode['pluginID'].to_s()
             end
         end
