@@ -119,7 +119,7 @@ if !templates
 	puts "Adding the Serpico Default Finding Template"
 
 	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
-	docx = "./templates/Serpico - Finding.docx"
+	docx = "./templates/Serpico - Risk Finding.docx"
 
 	xslt = generate_xslt(docx)
 	if xslt =~ /Error file DNE/
