@@ -7,6 +7,7 @@ require './model/master'
 def clean(text)
     return unless text
 
+    text = text.squeeze(" ")
     text = text.gsub("<br>", "\n")
     text = text.gsub("<p>", "\n")
     text = text.gsub("<description>","")
@@ -35,6 +36,7 @@ def clean(text)
     text = text.gsub("<![CDATA[","")
     text = text.gsub("]]>","")
     text = text.gsub("\n\n","\n")
+
 
     text = text.gsub("\n","<paragraph>")
 
