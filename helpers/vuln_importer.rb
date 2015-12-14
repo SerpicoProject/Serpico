@@ -31,8 +31,8 @@ def clean(text)
     text = text.gsub("</td>", "")
     text = text.gsub("<tr>", "")
     text = text.gsub("</tr>", "")
-    text = text.gsub("<b>", "[~~")
-    text = text.gsub("</b>", "~~]")
+    text = text.gsub("<b>", "")
+    text = text.gsub("</b>", "")
     text = text.gsub("<![CDATA[","")
     text = text.gsub("]]>","")
     text = text.gsub("\n\n","\n")
@@ -83,13 +83,13 @@ def parse_nessus_xml(xml)
                 finding.remediation = clean(itemnode.css("solution").to_s)
 
                 # hardcode the risk, the user should fix this
-                finding.risk = 0
-                finding.damage = 0
-                finding.reproducability = 0
-                finding.exploitability = 0
-                finding.affected_users = 0
-                finding.discoverability = 0
-                finding.dread_total = 0
+                finding.risk = 1
+                finding.damage = 1
+                finding.reproducability = 1
+                finding.exploitability = 1
+                finding.affected_users = 1
+                finding.discoverability = 1
+                finding.dread_total = 1
 
                 finding.affected_hosts = hostnode["name"]
                 finding.notes = clean(hostnode.css("plugin_output").to_s)
@@ -122,13 +122,13 @@ def parse_burp_xml(xml)
             finding.remediation = clean(issue.css('remediationBackground').text.to_s())
 
             # hardcode the risk, the user assign the risk
-            finding.risk = 0
-            finding.damage = 0
-            finding.reproducability = 0
-            finding.exploitability = 0
-            finding.affected_users = 0
-            finding.discoverability = 0
-            finding.dread_total = 0
+            finding.risk = 1
+            finding.damage = 1
+            finding.reproducability = 1
+            finding.exploitability = 1
+            finding.affected_users = 1
+            finding.discoverability = 1
+            finding.dread_total = 1
 
             findings << finding
 
