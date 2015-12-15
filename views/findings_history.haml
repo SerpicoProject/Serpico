@@ -1,0 +1,76 @@
+.span10
+  %br
+  %br
+  %h2 Revision History
+  %br
+  :css
+    .diff{overflow:auto;}
+    .diff ul{background:#fff;overflow:auto;font-size:13px;list-style:none;margin:0;padding:0;display:table;width:100%;}
+    .diff del, .diff ins{display:block;text-decoration:none;}
+    .diff li{padding:0; display:table-row;margin: 0;height:1em;}
+    .diff li.ins{background:#dfd; color:#080}
+    .diff li.del{background:#fee; color:#b00}
+    .diff li:hover{background:#ffc}
+    .diff del, .diff ins, .diff span{white-space:pre-wrap;font-family:courier;}
+    .diff del strong{font-weight:normal;background:#fcc;}
+    .diff ins strong{font-weight:normal;background:#9f9;}
+    .diff li.diff-comment { display: none; }
+    .diff li.diff-block-info { background: none repeat scroll 0 0 gray; }
+  - if @currentfinding and @previousfinding
+    .well.well-small 
+      Comapring 
+      %a{:href => "/stale/findings/#{@previousfinding.id}"} previous finding
+      edited by #{@previousfinding.last_updated_by} at #{@previousfinding.updated_at.strftime("%H:%M %m/%d/%Y")} with 
+      %a{:href => "/master/findings/#{@currentfinding.id}/edit"} current finding
+      last edited by #{@currentfinding.last_updated_by} at #{@currentfinding.updated_at.strftime("%H:%M %m/%d/%Y")}
+    %dl
+      %dt 
+        Title:
+      %dd
+        - if @compare["title"]
+          #{@compare["title"]}
+        %br
+      %dt
+        Type:
+      %dd
+        - if @compare["type"]
+          #{@compare["type"]}
+        %br
+      %dt
+        Risk:
+      %dd
+        - if @compare["risk"]
+          #{@compare["risk"]}
+        %br
+      %dt
+        Overview:
+      %dd
+        - if @compare["overview"]
+          #{@compare["overview"]}
+        %br
+      %dt
+        Remediation:
+      %dd
+        - if @compare["remediation"]
+          #{@compare["remediation"]}
+        %br
+      %dt
+        References:
+      %dd
+        - if @compare["references"]
+          #{@compare["references"]}
+        %br
+  - else
+    Choose a previous finding to diff with current:
+    %br
+    %br
+    %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+      - if @revisedfindings
+        - @revisedfindings.each do |finding|
+          .radio
+            %input{:class => "radiogroup", :type => "radio", :name => "diff", :value => "#{finding.id}"} #{finding.last_updated_by} last updated at #{finding.updated_at.strftime("%H:%M on %B %d %Y")}
+      - else
+        No previous revisions exist
+      %br
+      %input{:type => 'submit', :value => 'Submit'}
+

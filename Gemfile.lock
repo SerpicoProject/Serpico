@@ -17,6 +17,7 @@ GEM
       dm-validations (~> 1.2.0)
     data_objects (0.10.16)
       addressable (~> 2.1)
+    diffy (3.0.7)
     dm-aggregates (1.2.0)
       dm-core (~> 1.2.0)
     dm-constraints (1.2.0)
@@ -79,11 +80,15 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  data_mapper
-  dm-sqlite-adapter
+  data_mapper (= 1.2.0)
+  diffy
+  dm-sqlite-adapter (= 1.2.0)
   haml
   json
-  net-ldap
+  net-ldap (~> 0.11)
   nokogiri
   sinatra
-  zipruby
+  zipruby (= 0.3.6)
+
+BUNDLED WITH
+   1.10.5

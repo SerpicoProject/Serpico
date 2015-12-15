@@ -6,6 +6,7 @@ require 'haml'
 require 'zipruby'
 require 'net/ldap'
 require 'json'
+require 'diffy'
 
 #serpico handlers
 require './model/master'
@@ -363,6 +364,9 @@ post '/master/findings/new' do
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     end
 
+    # update metadata 
+    data["last_updated_by"] = get_username
+
     # split out any nessus mapping data
     nessusdata = Hash.new()
     nessusdata["pluginid"] = data["pluginid"]
@@ -411,6 +415,8 @@ get '/master/findings/:id/edit' do
         return "No Such Finding"
     end
 
+    @revisedfindings = RevisedFindings.all(:templatefindings_id => id)
+
     haml :findings_edit, :encode_html => true
 end
 
@@ -419,12 +425,20 @@ post '/master/findings/:id/edit' do
     # Check for kosher name in report name
     id = params[:id]
 
-    # Query for all Findings
+    # Query for Finding
     @finding = TemplateFindings.first(:id => id)
 
     if @finding == nil
         return "No Such Finding"
     end
+
+    # make copy of finding for revision history
+    attr = @finding.attributes
+    attr["id"] = nil
+    attr["templatefindings_id"] = @finding.id
+    attr.delete(:affected_hosts)
+    @revisedfinding = RevisedFindings.new(attr)
+    @revisedfinding.save
 
     data = url_escape_hash(request.POST)
 
@@ -437,6 +451,9 @@ post '/master/findings/:id/edit' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     end
+
+    # update metadata 
+    data["last_updated_by"] = get_username
 
     # split out any nessus mapping data
     nessusdata = Hash.new()
@@ -466,6 +483,63 @@ post '/master/findings/:id/edit' do
     end
 
     redirect to("/master/findings")
+end
+
+# Revision history
+get '/master/findings/:id/history' do
+    @master = true
+
+    @currentfinding = TemplateFindings.first(:id => params[:id])
+    if @currentfinding == nil
+        return "No current/master finding exists to compare with"
+    end
+
+    @revisedfindings = RevisedFindings.all(:templatefindings_id => params[:id], :order => [:id.desc])
+    if @revisedfindings.size == 0
+        return "No history available"
+    end
+
+    haml :findings_history, :encode_html => true
+end
+
+# Revision history
+post '/master/findings/:id/history' do
+    @master = true
+    id = params[:id]
+    finding_to_diff = params[:diff]
+
+    @currentfinding = TemplateFindings.first(:id => id)
+    @previousfinding = RevisedFindings.first(:templatefindings_id => id, :id => finding_to_diff)
+
+    @compare = Hash.new
+    @compare["title"] = Diffy::Diff.new(@previousfinding.title, @currentfinding.title, :include_plus_and_minus_in_html => true).to_s(:html)
+    @compare["type"] = Diffy::Diff.new(@previousfinding.type,@currentfinding.type, :include_plus_and_minus_in_html => true).to_s(:html)
+    @compare["risk"] = Diffy::Diff.new(@previousfinding.risk, @currentfinding.risk, :include_plus_and_minus_in_html => true).to_s(:html)
+    @compare["overview"] = Diffy::Diff.new(@previousfinding.overview, @currentfinding.overview, :include_plus_and_minus_in_html => true).to_s(:html)
+    @compare["remediation"] = Diffy::Diff.new(@previousfinding.remediation, @currentfinding.remediation, :include_plus_and_minus_in_html => true).to_s(:html)
+    @compare["references"] = Diffy::Diff.new( @previousfinding.references, @currentfinding.references, :include_plus_and_minus_in_html => true).to_s(:html)
+
+    if @previousfinding == nil or @currentfinding == nil
+        return "No finding exists or no history available"
+    end
+
+    haml :findings_history, :encode_html => true
+end
+
+# read only view of previously edited findings
+get '/stale/findings/:id' do
+    @master = true
+    id = params[:id]
+
+    @revisedfinding = RevisedFindings.first(:id => id)
+
+    if @revisedfinding == nil
+        return "No such revised finding exists"
+    end
+
+    @dread = config_options["dread"]
+
+    haml :findings_readonly, :encode_html => true
 end
 
 # Delete a mapping from finding
@@ -926,6 +1000,7 @@ post '/report/:id/import_autoadd' do
     if config_options["auto_import"]
         vulns["findings"].each do |vuln|
             vuln.report_id = id
+            vuln.last_updated_by = "auto_importer"
             vuln.save
         end
     end
@@ -1508,6 +1583,10 @@ post '/report/:id/findings/:finding_id/edit' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     end
+
+    # update metadata 
+    data["last_updated_by"] = get_username
+
     # Update the finding with templated finding stuff
     @finding.update(data)
 
@@ -1539,6 +1618,7 @@ get '/report/:id/findings/:finding_id/upload' do
     # Check model/master.rb to compare
     attr = {
                     :title => @finding.title,
+                    :last_updated_by => get_username,
                     :damage => @finding.damage,
                     :reproducability => @finding.reproducability,
                     :exploitability => @finding.exploitability,
@@ -1557,6 +1637,9 @@ get '/report/:id/findings/:finding_id/upload' do
 
     @new_finding = TemplateFindings.new(attr)
     @new_finding.save
+
+    @revised_finding = RevisedFindings.new(attr)
+    @revised_finding.save
 
     redirect to("/report/#{id}/findings")
 end

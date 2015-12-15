@@ -1,0 +1,84 @@
+.span10
+  %br
+  %br
+  .page-header
+    %h1 
+      Historical Read-Only View
+      %br
+      %small 
+        #{@revisedfinding.title}
+  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+    .control-group
+      %label{ :class => "control-label", :for => "title" } Title
+      .controls
+        %input{ :type => 'text', :name => 'title', :value => "#{@revisedfinding.title}", :disabled => "disabled"}
+    - if @dread
+      .control-group
+        %label{ :class => "control-label", :for => "damage" } Damage
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "#{@revisedfinding.damage}", :required => true, :disabled => "disabled"}
+      .control-group
+        %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "#{@revisedfinding.reproducability}", :required => true, :disabled => "disabled"}
+      .control-group
+        %label{ :class => "control-label", :for => "exploitability" } Exploitability
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "#{@revisedfinding.exploitability}", :required => true, :disabled => "disabled"}
+      .control-group
+        %label{ :class => "control-label", :for => "affected_users" } Affected Users
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#{@revisedfinding.affected_users}", :required => true, :disabled => "disabled"}
+      .control-group
+        %label{ :class => "control-label", :for => "discoverability" } Discoverability
+        .controls
+          %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "#{@revisedfinding.discoverability}", :required => true, :disabled => "disabled"}
+    - else
+      .control-group
+        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        .controls
+          %select{ :name => "risk", :disabled => "disabled"}
+            - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
+            - if !@revisedfinding.risk
+              - @revisedfinding.risk = @revisedfinding.dread_total/10
+              - @revisedfinding.risk = 4 if dread_total == 50
+            - [1,2,3,4].each do |r_type|
+              - if r_type == @revisedfinding.risk
+                %option{ :value => "#{r_type}", :selected => "selected"} #{risk_types[r_type]}
+              - else
+                %option{ :value => "#{r_type}"} #{risk_types[r_type]}
+    .control-group
+      %label{ :class => "control-label", :for => "effort" } Remediation Effort
+      .controls
+        %select{ :name => "effort", :disabled => "disabled" }
+          - options.effort.each do |effort|
+            - if effort == @revisedfinding.effort
+              %option{ :selected => "selected" } #{effort}
+            - else
+              %option #{effort}
+    .control-group
+      %label{ :class => "control-label", :for => "type" } Finding Type
+      .controls
+        %select{ :name => "type", :disabled => "disabled" }
+          %option{ :selected => "selected" } #{@revisedfinding.type}
+    .control-group
+      %label{ :class => "control-label", :for => "overview" } Overview
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview', :disabled => "disabled"}
+          - if @revisedfinding
+            - if @revisedfinding.overview
+              #{meta_markup(@revisedfinding.overview)}
+    .control-group
+      %label{ :class => "control-label", :for => "overview" } Remediation
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'remediation', :name => 'remediation', :disabled => "disabled"}
+          - if @revisedfinding
+            - if @revisedfinding.remediation
+              #{meta_markup(@revisedfinding.remediation)}
+    .control-group
+      %label{ :class => "control-label", :for => "references" } References (One Per Line)
+      .controls
+        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references', :disabled => "disabled"}
+          - if @revisedfinding
+            - if @revisedfinding.references
+              #{meta_markup(@revisedfinding.references)}

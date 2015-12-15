@@ -11,6 +11,36 @@ class TemplateFindings
     include DataMapper::Resource
 
     property :id, Serial
+    property :last_updated_by, String, :length => 40
+    property :created_at, DateTime, :default => DateTime.now
+    property :updated_at, DateTime, :default => DateTime.now
+    property :title, String, :required => true, :length => 200
+    property :damage, Integer, :required => false
+    property :reproducability, Integer, :required => false
+    property :exploitability, Integer, :required => false
+    property :affected_users, Integer, :required => false
+    property :discoverability, Integer, :required => false
+    property :dread_total, Integer, :required => false
+    property :effort, String, :required => false
+    property :type, String, :required => false
+    property :overview, String, :length => 20000, :required => false
+    property :poc, String, :length => 20000, :required => false
+    property :remediation, String, :length => 20000, :required => false
+    property :references, String, :length => 20000, :required => false
+    property :approved, Boolean, :required => false, :default => true
+    property :risk, Integer, :required => false
+    property :affected_hosts, String, :length => 20000, :required => false
+
+end
+
+class RevisedFindings
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :templatefindings_id, Integer, :required => true
+    property :last_updated_by, String, :length => 40
+    property :created_at, DateTime, :default => DateTime.now
+    property :updated_at, DateTime, :default => DateTime.now
     property :title, String, :required => true, :length => 200
     property :damage, Integer, :required => false
     property :reproducability, Integer, :required => false
@@ -34,6 +64,9 @@ class Findings
     include DataMapper::Resource
 
     property :id, Serial
+    property :last_updated_by, String, :length => 40
+    property :created_at, DateTime, :default => DateTime.now
+    property :updated_at, DateTime, :default => DateTime.now
     property :report_id, Integer, :required => true
     property :master_id, Integer, :required => false
     property :finding_modified, Boolean, :required => false
