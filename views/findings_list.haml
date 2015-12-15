@@ -59,7 +59,7 @@
                                         #{risk_t[finding.risk]}
                                       - else
                                         - scr = finding.dread_total/10
-                                        - scr = 4 if dread_total == 50
+                                        - scr = 4 if finding.dread_total == 50
                                         #{risk_t[scr]}
                                   %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                     - if @master

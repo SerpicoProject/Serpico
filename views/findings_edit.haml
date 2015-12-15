@@ -114,7 +114,7 @@
             - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
             - if !@finding.risk
               - @finding.risk = @finding.dread_total/10
-              - @finding.risk = 4 if dread_total == 50
+              - @finding.risk = 4 if @finding.dread_total == 50
             - [1,2,3,4].each do |r_type|
               - if r_type == @finding.risk
                 %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
