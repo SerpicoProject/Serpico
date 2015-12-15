@@ -33,8 +33,9 @@
                     %option #{template.report_type}
       %br
       %input{:type => 'submit', :value => 'Save' }
-      %button{:value => 'Cancel'} Cancel
+      %a{ :href => "/"}
+        %input{ :type => "button", :value => 'Cancel'}
     - else
       %h4
         Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-
-      
+

@@ -84,7 +84,8 @@
       %br
       %input{:type => 'hidden', :name => 'id', :value => "#{@report.id}"}
       %input{:type => 'submit', :value => 'Save'}
-      %button{:value => 'Cancel'} Cancel
+      %a{ :href => "/report/#{@report.id}/edit"}
+        %input{ :type => "button", :value => 'Cancel'}
     - else
       %h3
         Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-
