@@ -3,6 +3,7 @@
 Serpico is a penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report.
 
 Video Demo of Functionality:
+
 [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
 
 [Additional Video Demos](https://github.com/MooseDojo/Serpico/wiki#online-demos)
