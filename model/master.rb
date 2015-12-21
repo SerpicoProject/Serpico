@@ -64,6 +64,7 @@ class TemplateReports
 
     property :id, Serial
     property :consultant_name, String, :required => false, :length => 200
+    property :consultant_company, String, :required => false, :length => 200
     property :consultant_phone, String
     property :consultant_email, String, :required => false, :length => 200
     property :contact_name, String, :required => false, :length => 200
@@ -90,6 +91,7 @@ class User
     property :auth_type, String, :required => false
     property :created_at, DateTime, :default => DateTime.now
     property :consultant_name, String, :required => false
+    property :consultant_company, String, :required => false
     property :consultant_phone, String, :required => false
     property :consultant_email, String, :required => false
     property :consultant_title, String, :required => false
@@ -178,6 +180,7 @@ class Reports
     property :report_type, String, :length => 200
     property :report_name, String, :length => 200
     property :consultant_name, String, :length => 200
+    property :consultant_company, String, :length => 200
     property :consultant_phone, String
     property :consultant_title, String, :length => 200
     property :consultant_email, String, :length => 200
