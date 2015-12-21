@@ -5,6 +5,8 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 Video Demo of Functionality:
 [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
 
+[Additional Video Demos](https://github.com/MooseDojo/Serpico/wiki#online-demos)
+
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
