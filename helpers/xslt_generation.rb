@@ -116,12 +116,12 @@ def generate_xslt(docx)
 
 ###########################
 
-# π - a replacement variable for for-each loops only
+#  Æ- a replacement variable for for-each loops only
 
-	replace = document.split('π')
+	replace = document.split('Æ')
 
 	if (((replace.size-1) % 2) != 0)
-	    raise ReportingError.new("Uneven number of π. This is usually caused by a mismatch in a variable.")
+	    raise ReportingError.new("Uneven number of Æ. This is usually caused by a mismatch in a variable.")
     end
 
 	count = 0
