@@ -409,12 +409,12 @@ def generate_xslt(docx)
 	document = replace.join("")
 ###############################
 
-# µ - initiates choose/when structure
+# Ñ - initiates choose/when structure
 
-	replace = document.split('µ')
+	replace = document.split('Ñ')
 
 	if (((replace.size-1) % 2) != 0)
-        raise ReportingError.new("Uneven number of µ. This is usually caused by a mismatch in a variable.")
+        raise ReportingError.new("Uneven number of Ñ. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
