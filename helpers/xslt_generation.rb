@@ -52,13 +52,13 @@ def generate_xslt(docx)
 	for_iffies = []
 ###########################
 
-# Ω - used as a normal substituion variable
+# Œ - used as a normal substituion variable
 
 # let's pull out variables
-	replace = document.split('Ω')
+	replace = document.split('Œ')
 
 	if (((replace.size-1) % 2) != 0)
-        raise ReportingError.new("Uneven number of Ω. This is usually caused by a mismatch in a variable.")
+        raise ReportingError.new("Uneven number of Œ. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -78,7 +78,7 @@ def generate_xslt(docx)
 		count = count + 1
 	end
 
-	# remove all the Ω and put the document back together
+	# remove all the Œ and put the document back together
 	document = replace.join("")
 
 ###########################
