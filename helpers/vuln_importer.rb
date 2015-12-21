@@ -37,8 +37,10 @@ def clean(text)
     text = text.gsub("]]>","")
     text = text.gsub("\n\n","\n")
 
+    text = text.gsub("\n","\r\n")
 
-    text = text.gsub("\n","<paragraph>")
+    text_ = url_escape_hash({'a' => text})
+    text = text_['a']
 
     return text
 end
@@ -53,7 +55,7 @@ def uniq_findings(findings)
         if exists
             #get the index
             i = vfindings.index(exists)
-            exists.affected_hosts = clean(exists.affected_hosts+"<br>#{single.affected_hosts}")
+            exists.affected_hosts = clean(exists.affected_hosts+", #{single.affected_hosts}")
             vfindings[i] = exists
         else
             vfindings << single
