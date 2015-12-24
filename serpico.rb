@@ -115,6 +115,7 @@ post '/info' do
     user.consultant_phone = params[:phone]
     user.consultant_title = params[:title]
     user.consultant_name = params[:name]
+    user.consultant_company = params[:company]
     user.save
 
     redirect to("/info")
@@ -1725,11 +1726,15 @@ get '/report/:id/generate' do
         @report.consultant_phone = user.consultant_phone
         @report.consultant_email = user.consultant_email
         @report.consultant_title = user.consultant_title
+        @report.consultant_company = user.consultant_company
+
     else
         @report.consultant_name = ""
         @report.consultant_phone = ""
         @report.consultant_email = ""
         @report.consultant_title = ""
+        @report.consultant_company = "" 
+
     end
     @report.save
 

@@ -6,6 +6,11 @@
     %table
       %tr
         %td
+          Consultant Company &nbsp;
+        %td
+          %input{:type => 'text', :name => 'company', :value=> "#{@user.consultant_company}"}
+      %tr
+        %td
           Consultant Name &nbsp;
         %td
           %input{:type => 'text', :name => 'name', :value=> "#{@user.consultant_name}"}

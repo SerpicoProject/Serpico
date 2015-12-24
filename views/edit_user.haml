@@ -4,7 +4,12 @@
     %h2 Consultant Information
     %br
     %table
-      %tr
+     %tr
+        %td
+          Consultant Company &nbsp;
+        %td
+          %input{:type => 'text', :name => 'company', :value=> "#{@user.name}"} 
+     %tr
         %td
           Consultant Name &nbsp;
         %td
