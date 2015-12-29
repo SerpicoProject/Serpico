@@ -84,6 +84,9 @@ def parse_nessus_xml(xml)
                 finding.overview = clean(itemnode.css("description").to_s)
                 finding.remediation = clean(itemnode.css("solution").to_s)
 
+                # can this be inherited from an import properly?
+                finding.type = "Imported"
+
                 # hardcode the risk, the user should fix this
                 finding.risk = 1
                 finding.damage = 1
@@ -131,6 +134,7 @@ def parse_burp_xml(xml)
             finding.affected_users = 1
             finding.discoverability = 1
             finding.dread_total = 1
+            finding.type = "Web Application"
 
             findings << finding
 
