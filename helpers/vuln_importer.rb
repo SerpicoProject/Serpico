@@ -87,8 +87,9 @@ def parse_nessus_xml(xml)
                 # can this be inherited from an import properly?
                 finding.type = "Imported"
 
-                # hardcode the risk, the user should fix this
-                finding.risk = 1
+                finding.risk = itemnode["severity"]
+                
+                # hardcode the DREAD score, the user should fix this
                 finding.damage = 1
                 finding.reproducability = 1
                 finding.exploitability = 1
