@@ -126,8 +126,17 @@ def parse_burp_xml(xml)
             finding.overview = clean(issue.css('issueBackground').text.to_s()+issue.css('issueDetail').text.to_s())
             finding.remediation = clean(issue.css('remediationBackground').text.to_s())
 
-            # hardcode the risk, the user assign the risk
-            finding.risk = 1
+            if issue.css('severity').text == 'Low'
+                finding.risk = 1
+            elsif issue.css('severity').text == 'Medium'
+                finding.risk = 2
+            elsif issue.css('severity').text =='High'
+                finding.risk = 3
+            else
+                finding.risk = 1
+            end
+            
+            # hardcode the DREAD score, the user assign the risk
             finding.damage = 1
             finding.reproducability = 1
             finding.exploitability = 1
