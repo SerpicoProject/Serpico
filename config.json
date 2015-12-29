@@ -8,11 +8,11 @@
     "ldap_domain":"",
     "ldap_dc":"",
     "dread":false,  //DREAD risk scoring not used by default
-    "nessusmap":true, //maps nessus findings to serpico findings
-    "burpmap":true, //maps burp findings to serpico findings
+    "nessusmap":false, //maps nessus findings to serpico findings
+    "burpmap":false, //maps burp findings to serpico findings
     "finding_types": ["Web Application","Business Logic","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing", "Imported"],
     "logo":"/img/logo_1.png",
-    "auto_import":true, //Experimental, will automatically create new findings on import
+    "auto_import":false, //Experimental, will automatically create new findings on import
     "chart":false, //Enabled or disable support,
     "user_defined_variables":[] //set your global UDV's here; ["client_start_date","client_abbreviated_name"]
 }
