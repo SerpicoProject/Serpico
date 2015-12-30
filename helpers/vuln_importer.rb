@@ -98,8 +98,8 @@ def parse_nessus_xml(xml)
                 finding.dread_total = 1
 
                 finding.affected_hosts = hostnode["name"]
-                finding.notes = clean(hostnode.css("plugin_output").to_s)
-                finding.references = clean(hostnode.css("see_also").to_s)
+                finding.notes = clean(itemnode.css("plugin_output").to_s)
+                finding.references = clean(itemnode.css("see_also").to_s)
 
                 findings << finding
                 items << itemnode['pluginID'].to_s()
