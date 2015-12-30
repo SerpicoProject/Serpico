@@ -16,6 +16,8 @@ def clean(text)
     text = text.gsub("</solution>","")
     text = text.gsub("<see_also>","")
     text = text.gsub("</see_also>","")
+    text = text.gsub("<plugin_output>\n\n","")    #remove leading newline characters from nessus plugin output too!
+    text = text.gsub("<plugin_output>\n","")    #remove leading newline character from nessus plugin output too!
     text = text.gsub("<plugin_output>","")
     text = text.gsub("</plugin_output>","")
 
@@ -56,6 +58,7 @@ def uniq_findings(findings)
             #get the index
             i = vfindings.index(exists)
             exists.affected_hosts = clean(exists.affected_hosts+", #{single.affected_hosts}")
+            exists.notes=exists.notes+"<paragraph></paragraph><paragraph></paragraph>#{single.notes}"
             vfindings[i] = exists
         else
             vfindings << single
@@ -98,7 +101,11 @@ def parse_nessus_xml(xml)
                 finding.dread_total = 1
 
                 finding.affected_hosts = hostnode["name"]
-                finding.notes = clean(itemnode.css("plugin_output").to_s)
+                
+                if itemnode.css("plugin_output")
+                    finding.notes = hostnode["name"]+" ("+itemnode["protocol"]+ " port " + itemnode["port"]+"):"+clean(itemnode.css("plugin_output").to_s)
+                end
+                
                 finding.references = clean(itemnode.css("see_also").to_s)
 
                 findings << finding
