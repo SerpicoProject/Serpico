@@ -16,6 +16,8 @@ def clean(text)
     text = text.gsub("</solution>","")
     text = text.gsub("<see_also>","")
     text = text.gsub("</see_also>","")
+    text = text.gsub("<plugin_output>\n\n","")    #remove leading newline characters from nessus plugin output too!
+    text = text.gsub("<plugin_output>\n","")    #remove leading newline character from nessus plugin output too!
     text = text.gsub("<plugin_output>","")
     text = text.gsub("</plugin_output>","")
 
@@ -56,6 +58,7 @@ def uniq_findings(findings)
             #get the index
             i = vfindings.index(exists)
             exists.affected_hosts = clean(exists.affected_hosts+", #{single.affected_hosts}")
+            exists.notes=exists.notes+"<paragraph></paragraph><paragraph></paragraph>#{single.notes}"
             vfindings[i] = exists
         else
             vfindings << single
@@ -87,8 +90,9 @@ def parse_nessus_xml(xml)
                 # can this be inherited from an import properly?
                 finding.type = "Imported"
 
-                # hardcode the risk, the user should fix this
-                finding.risk = 1
+                finding.risk = itemnode["severity"]
+                
+                # hardcode the DREAD score, the user should fix this
                 finding.damage = 1
                 finding.reproducability = 1
                 finding.exploitability = 1
@@ -97,8 +101,12 @@ def parse_nessus_xml(xml)
                 finding.dread_total = 1
 
                 finding.affected_hosts = hostnode["name"]
-                finding.notes = clean(hostnode.css("plugin_output").to_s)
-                finding.references = clean(hostnode.css("see_also").to_s)
+                
+                if itemnode.css("plugin_output")
+                    finding.notes = hostnode["name"]+" ("+itemnode["protocol"]+ " port " + itemnode["port"]+"):"+clean(itemnode.css("plugin_output").to_s)
+                end
+                
+                finding.references = clean(itemnode.css("see_also").to_s)
 
                 findings << finding
                 items << itemnode['pluginID'].to_s()
@@ -126,8 +134,17 @@ def parse_burp_xml(xml)
             finding.overview = clean(issue.css('issueBackground').text.to_s()+issue.css('issueDetail').text.to_s())
             finding.remediation = clean(issue.css('remediationBackground').text.to_s())
 
-            # hardcode the risk, the user assign the risk
-            finding.risk = 1
+            if issue.css('severity').text == 'Low'
+                finding.risk = 1
+            elsif issue.css('severity').text == 'Medium'
+                finding.risk = 2
+            elsif issue.css('severity').text =='High'
+                finding.risk = 3
+            else
+                finding.risk = 1
+            end
+            
+            # hardcode the DREAD score, the user assign the risk
             finding.damage = 1
             finding.reproducability = 1
             finding.exploitability = 1
