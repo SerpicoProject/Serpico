@@ -159,7 +159,7 @@
                 %br
               - @findings.each do |finding|
                 %tr{:class => "#{@class}"}
-                  %td{:style => 'width: 70%'}
+                  %td{:style => 'width:70%;max-width: 0px;'}
                     #{finding.title}
                     - if finding.overview
                       %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
