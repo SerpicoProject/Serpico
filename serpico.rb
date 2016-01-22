@@ -587,6 +587,8 @@ end
 
 # Import a findings database
 post '/master/import' do
+    redirect to("/master/import") unless params[:file]
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 1000000
 		return "File too large. 1MB limit"
@@ -674,6 +676,8 @@ post '/admin/templates/add' do
 
 	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
 
+    redirect to("/admin/templates/add") unless params[:file]
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 100000000
 		return "File too large. 10MB limit"
@@ -742,6 +746,8 @@ post '/admin/templates/edit' do
     template = Xslt.first(:id => params[:id])
 
     xslt_file = template.xslt_location
+
+    redirect to("/admin/templates/#{params[:id]}/edit") unless params[:file]
 
     # reject if the file is above a certain limit
     if params[:file][:tempfile].size > 100000000
@@ -1733,7 +1739,7 @@ get '/report/:id/generate' do
         @report.consultant_phone = ""
         @report.consultant_email = ""
         @report.consultant_title = ""
-        @report.consultant_company = "" 
+        @report.consultant_company = ""
 
     end
     @report.save
@@ -1898,6 +1904,8 @@ end
 
 # Import a report
 post '/report/import' do
+    redirect to("/report/import") unless params[:file]
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 1000000
 		return "File too large. 1MB limit"
