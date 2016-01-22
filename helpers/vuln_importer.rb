@@ -58,7 +58,9 @@ def uniq_findings(findings)
             #get the index
             i = vfindings.index(exists)
             exists.affected_hosts = clean(exists.affected_hosts+", #{single.affected_hosts}")
-            exists.notes=exists.notes+"<paragraph></paragraph><paragraph></paragraph>#{single.notes}"
+            if exists.notes
+                exists.notes = exists.notes+"<paragraph></paragraph><paragraph></paragraph>#{single.notes}"
+            end
             vfindings[i] = exists
         else
             vfindings << single
@@ -91,7 +93,7 @@ def parse_nessus_xml(xml)
                 finding.type = "Imported"
 
                 finding.risk = itemnode["severity"]
-                
+
                 # hardcode the DREAD score, the user should fix this
                 finding.damage = 1
                 finding.reproducability = 1
@@ -101,11 +103,11 @@ def parse_nessus_xml(xml)
                 finding.dread_total = 1
 
                 finding.affected_hosts = hostnode["name"]
-                
+
                 if itemnode.css("plugin_output")
                     finding.notes = hostnode["name"]+" ("+itemnode["protocol"]+ " port " + itemnode["port"]+"):"+clean(itemnode.css("plugin_output").to_s)
                 end
-                
+
                 finding.references = clean(itemnode.css("see_also").to_s)
 
                 findings << finding
@@ -143,7 +145,7 @@ def parse_burp_xml(xml)
             else
                 finding.risk = 1
             end
-            
+
             # hardcode the DREAD score, the user assign the risk
             finding.damage = 1
             finding.reproducability = 1
