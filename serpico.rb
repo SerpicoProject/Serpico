@@ -1990,6 +1990,71 @@ get '/report/:id/presentation' do
     haml :presentation, :encode_html => true, :layout => false
 end
 
+##### Simple API Components - Read-Only for now
+
+# returns an API session key
+post '/v1/session' do
+    return auth(params[:username],params[:password])
+end
+
+# returns all reports available to the user, requires Session Key
+post '/v1/reports' do
+    return "Please provide the API session" unless params[:session]
+    return "Session is not valid \n" unless Sessions.is_valid?(params[:session])
+
+    # use implicit session methods
+    session[:session_id] = params[:session]
+
+    if params[:report_id]
+        reports = [get_report(params[:report_id])]
+    else
+        reports = Reports.all()
+    end
+
+    return "{}" if reports.first == nil
+
+    if is_administrator?
+        return reports.to_json
+    else
+        # return reports owned by user
+        data = []
+        i = 0
+        reports.each do |r|
+            report = get_report(r.id)
+            if report
+                data[i] = report
+                i = i + 1
+            end
+        end
+        return data.to_json
+    end
+
+    return data
+end
+
+# returns finding based on report id, requires Session Key
+post '/v1/findings' do
+    return "Please provide the API session" unless params[:session]
+    return "Session is not valid" unless Sessions.is_valid?(params[:session])
+    return "Please provide a report_id" unless params[:report_id]
+
+    # use implicit session methods
+    session[:session_id] = params[:session]
+
+    report = get_report(params[:report_id])
+
+    if report == nil
+        return "|-| Access rejected to report or report_id does not exist"
+    end
+
+    # Query for the findings that match the report_id
+    findings = Findings.all(:report_id => params[:report_id])
+
+    return findings.to_json
+end
+
+### API --------
+
 
 # Helper Functions
 
@@ -2012,6 +2077,46 @@ end
 def is_administrator?
     return true if Sessions.type(session[:session_id]) == "Administrator"
 end
+
+# authentication method used by API, returns Session Key
+def auth(username,password)
+    user = User.first(:username => username)
+
+    if user and user.auth_type == "Local"
+        usern = User.authenticate(username,password)
+
+        if usern
+            # TODO : This needs an expiration, session fixation
+            @del_session = Sessions.first(:username => "#{usern}")
+            @del_session.destroy if @del_session
+            @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
+            @curr_session.save
+            return @curr_session.session_key
+        end
+    elsif user
+        if options.ldap
+            #try AD authentication
+            usern = username
+            if usern == "" or password == ""
+                return ""
+            end
+
+            user = "#{options.domain}\\#{username}"
+            ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => password}
+
+            if ldap.bind
+               # replace the session in the session table
+               @del_session = Sessions.first(:username => "#{usern}")
+               @del_session.destroy if @del_session
+               @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
+               @curr_session.save
+               return @curr_session.session_key
+            end
+        end
+    end
+    return ""
+end
+
 
 # Grab a specific report
 def get_report(id)
