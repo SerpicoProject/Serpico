@@ -14,5 +14,6 @@
     "logo":"/img/logo_1.png",
     "auto_import":false, //Experimental, will automatically create new findings on import
     "chart":false, //Enabled or disable support,
-    "user_defined_variables":[] //set your global UDV's here; ["client_start_date","client_abbreviated_name"]
+    "user_defined_variables":[], //set your global UDV's here; ["client_start_date","client_abbreviated_name"],
+    "threshold":"2" // must be a string; "0","1","2"...
 }

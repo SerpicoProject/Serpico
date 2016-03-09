@@ -865,7 +865,7 @@ post '/report/:id/import_autoadd' do
     xml = params[:file][:tempfile].read
     if (xml =~ /^<NessusClientData_v2>/ && type == "nessus")
         import_nessus = true
-        vulns = parse_nessus_xml(xml)
+        vulns = parse_nessus_xml(xml, config_options["threshold"])
     elsif (xml =~ /^<issues burpVersion/ && type == "burp")
         import_burp = true
         vulns = parse_burp_xml(xml)

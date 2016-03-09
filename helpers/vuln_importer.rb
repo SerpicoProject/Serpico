@@ -69,7 +69,7 @@ def uniq_findings(findings)
     return vfindings
 end
 
-def parse_nessus_xml(xml)
+def parse_nessus_xml(xml,threshold)
     vulns = Hash.new
     findings = Array.new
     items = Array.new
@@ -81,7 +81,7 @@ def parse_nessus_xml(xml)
             host = hostnode["name"]
         end
         hostnode.css("ReportItem").each do |itemnode|
-            if (itemnode["port"] != "0" && itemnode["severity"] > "1")
+            if (itemnode["port"] != "0" && itemnode["severity"] >= threshold)
 
                 # create a temporary finding object
                 finding = Findings.new()
