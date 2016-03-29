@@ -8,6 +8,7 @@
     "ldap_domain":"",
     "ldap_dc":"",
     "dread":false,  //DREAD risk scoring not used by default
+    "cvss":false,
     "nessusmap":false, //maps nessus findings to serpico findings
     "burpmap":false, //maps burp findings to serpico findings
     "finding_types": ["Web Application","Business Logic","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing", "Imported"],

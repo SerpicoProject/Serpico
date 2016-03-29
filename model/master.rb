@@ -27,7 +27,29 @@ class TemplateFindings
     property :approved, Boolean, :required => false, :default => true
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 20000, :required => false
-
+    # CVSS
+    property :av, String, :required => false
+    property :ac, String, :required => false
+    property :au, String, :required => false
+    property :c, String, :required => false
+    property :i, String, :required => false
+    property :a, String, :required => false
+    property :e, String, :required => false
+    property :rl, String, :required => false
+    property :rc, String, :required => false
+    property :cdp, String, :required => false
+    property :td, String, :required => false
+    property :cr, String, :required => false
+    property :ir, String, :required => false
+    property :ar, String, :required => false
+    property :cvss_base, Float, :required => false
+    property :cvss_impact, Float, :required => false
+    property :cvss_exploitability, Float, :required => false
+    property :cvss_temporal, Float, :required => false
+    property :cvss_environmental, Float, :required => false
+    property :cvss_modified_impact, Float, :required => false
+    property :cvss_total, Float, :required => false
+    property :ease, String, :required => false
 end
 
 class Findings
@@ -56,6 +78,29 @@ class Findings
     property :affected_hosts, String, :length => 1000000, :required => false
     property :presentation_points, String, :length => 100000, :required => false
     property :presentation_rem_points, String, :length => 100000, :required => false
+    #CVSS
+    property :av, String, :required => false
+    property :ac, String, :required => false
+    property :au, String, :required => false
+    property :c, String, :required => false
+    property :i, String, :required => false
+    property :a, String, :required => false
+    property :e, String, :required => false
+    property :rl, String, :required => false
+    property :rc, String, :required => false
+    property :cdp, String, :required => false
+    property :td, String, :required => false
+    property :cr, String, :required => false
+    property :ir, String, :required => false
+    property :ar, String, :required => false
+    property :cvss_base, Float, :required => false
+    property :cvss_impact, Float, :required => false
+    property :cvss_exploitability, Float, :required => false
+    property :cvss_temporal, Float, :required => false
+    property :cvss_environmental, Float, :required => false
+    property :cvss_modified_impact, Float, :required => false
+    property :cvss_total, Float, :required => false
+    property :ease, String, :required => false
 
 end
 

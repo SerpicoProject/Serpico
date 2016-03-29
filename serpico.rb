@@ -27,10 +27,26 @@ set :bind_address, config_options["bind_address"]
 
 ## Global variables
 set :finding_types, config_options["finding_types"]
-set :effort, ["LOW","MEDIUM","HARD"]
+set :effort, ["Quick","Planned","Involved"]
 set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
 set :status, ["EXPLOITED"]
 set :show_exceptions, false
+
+# CVSS
+set :av, ["Local","Local Network","Network"]
+set :ac, ["High","Medium","Low"]
+set :au, ["Multiple","Single","None"]
+set :c, ["None","Partial","Complete"]
+set :i, ["None","Partial","Complete"]
+set :a, ["None","Partial","Complete"]
+set :e, ["Not Defined","Unproven Exploit Exists","Proof-of-Concept Code","Functional Exploit Exists","High"]
+set :rl, ["Not Defined","Official Fix","Temporary Fix","Workaround","Unavailable"]
+set :rc, ["Not Defined","Unconfirmed","Uncorroborated","Confirmed"]
+set :cdp, ["Not Defined","None","Low","Low-Medium","Medium-High","High"]
+set :td, ["Not Defined","None","Low","Medium","High"]
+set :cr, ["Not Defined","Low","Medium","High"]
+set :ir, ["Not Defined","Low","Medium","High"]
+set :ar, ["Not Defined","Low","Medium","High"]
 
 ## LDAP Settings
 if config_options["ldap"].downcase == "true"
@@ -43,6 +59,7 @@ set :dc, config_options["ldap_dc"]
 
 enable :sessions
 set :session_secret, rand(36**12).to_s(36)
+
 ### Basic Routes
 
 # Used for 404 responses
@@ -343,6 +360,7 @@ get '/master/findings' do
     @findings = TemplateFindings.all(:order => [:title.asc])
     @master = true
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -351,6 +369,7 @@ end
 get '/master/findings/new' do
     @master = true
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
     @nessusmap = config_options["nessusmap"]
 
     haml :create_finding, :encode_html => true
@@ -381,6 +400,8 @@ post '/master/findings/new' do
 
         @nessus = NessusMapping.new(nessusdata)
         @nessus.save
+    elsif(config_options["cvss"])
+        data = cvss(data)
     end
 
     redirect to('/master/findings')
@@ -390,6 +411,7 @@ end
 get '/master/findings/:id/edit' do
     @master = true
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
     @nessusmap = config_options["nessusmap"]
     @burpmap = config_options["burpmap"]
 
@@ -437,6 +459,8 @@ post '/master/findings/:id/edit' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    elsif(config_options["cvss"])
+        data = cvss(data)
     end
 
     # split out any nessus mapping data
@@ -1227,11 +1251,14 @@ get '/report/:id/findings' do
     # Query for the findings that match the report_id
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -1250,6 +1277,8 @@ get '/report/:id/status' do
     # Query for the findings that match the report_id
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -1397,6 +1426,13 @@ post '/report/:id/findings_add' do
 		attr["master_id"] = finding.to_i
 		@newfinding = Findings.new(attr)
 		@newfinding.report_id = id
+
+        # because of multiple scores we need to make sure all are set
+        # => leave it up to the user to make the calculation if they switch mid report
+        @newfinding.dread_total = 0 if @newfinding.dread_total == nil
+        @newfinding.cvss_total = 0  if @newfinding.cvss_total == nil
+        @newfinding.risk = 0 if @newfinding.risk == nil
+
 		@newfinding.save
 	end
 
@@ -1421,11 +1457,14 @@ post '/report/:id/findings_add' do
 
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_list, :encode_html => true
 end
@@ -1433,6 +1472,7 @@ end
 # Create a new finding in the report
 get '/report/:id/findings/new' do
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :create_finding, :encode_html => true
 end
@@ -1443,6 +1483,8 @@ post '/report/:id/findings/new' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    elsif(config_options["cvss"])
+        data = cvss(data)
     end
 
     id = params[:id]
@@ -1459,8 +1501,14 @@ post '/report/:id/findings/new' do
     @finding = Findings.new(data)
     @finding.save
 
-    # for a parameter_pollution on report_id
+    # because of multiple scores we need to make sure all are set
+    # => leave it up to the user to make the calculation if they switch mid report
+    @finding.dread_total = 0 if @finding.dread_total == nil
+    @finding.cvss_total = 0 if @finding.cvss_total == nil
+    @finding.risk = 0 if @finding.risk == nil
+    @finding.save
 
+    # for a parameter_pollution on report_id
     redirect to("/report/#{id}/findings")
 end
 
@@ -1485,6 +1533,7 @@ get '/report/:id/findings/:finding_id/edit' do
     end
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -1514,9 +1563,18 @@ post '/report/:id/findings/:finding_id/edit' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    elsif(config_options["cvss"])
+        data = cvss(data)
     end
     # Update the finding with templated finding stuff
     @finding.update(data)
+
+    # because of multiple scores we need to make sure all are set
+    # => leave it up to the user to make the calculation if they switch mid report
+    @finding.dread_total = 0 if @finding.dread_total == nil
+    @finding.cvss_total = 0 if @finding.cvss_total == nil
+    @finding.risk = 0 if @finding.risk == nil
+    @finding.save
 
     redirect to("/report/#{id}/findings")
 end
@@ -1552,6 +1610,13 @@ get '/report/:id/findings/:finding_id/upload' do
                     :affected_users => @finding.affected_users,
                     :discoverability => @finding.discoverability,
                     :dread_total => @finding.dread_total,
+                    :cvss_base => @finding.cvss_base,
+                    :cvss_impact => @finding.cvss_impact,
+                    :cvss_exploitability => @finding.cvss_exploitability,
+                    :cvss_temporal => @finding.cvss_temporal,
+                    :cvss_environmental => @finding.cvss_environmental,
+                    :cvss_modified_impact => @finding.cvss_modified_impact,
+                    :cvss_total => @finding.cvss_total,
                     :effort => @finding.effort,
                     :type => @finding.type,
                     :overview => @finding.overview,
@@ -1747,6 +1812,8 @@ get '/report/:id/generate' do
     # Query for the findings that match the report_id
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -1925,6 +1992,11 @@ post '/report/import' do
 		finding["master_id"] = nil
 		finding["report_id"] = f.id
 		finding["finding_modified"] = nil
+
+        finding["dread_total"] = 0 if finding["dread_total"] == nil
+        finding["cvss_total"] = 0 if finding["cvss_total"] == nil
+        finding["risk"] = 1 if finding["risk"] == nil
+
 		g = Findings.create(finding)
 		g.save
 	end
@@ -1986,6 +2058,7 @@ get '/report/:id/presentation' do
     @findings = Findings.all(:report_id => id)
 
     @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
 
     haml :presentation, :encode_html => true, :layout => false
 end
