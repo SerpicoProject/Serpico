@@ -133,7 +133,7 @@ if !templates
 	datax["docx_location"] = "#{docx}"
 	datax["xslt_location"] = "#{xslt_file}"
 	datax["description"] = 	"Default CVSS Report"
-	datax["report_type"] = "Default Template"
+	datax["report_type"] = "Default CVSS Report"
 	report = Xslt.new(datax)
 	report.save
 
