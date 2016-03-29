@@ -43,9 +43,9 @@ def generate_xslt(docx)
 	#add line breaks for easier reading, only use with debugging
 	#document = document.gsub('>',">\n")
 
-	# replace {} for the sake of XSL 	
+	# replace {} for the sake of XSL
 	document = document.gsub("{","{{").gsub("}","}}")
-	
+
 	# add in xslt header
 	document = @top + document
 
@@ -198,7 +198,10 @@ def generate_xslt(docx)
 			if replace[count-1] =~ /\<w:tr /
 				conditions.shift
 				q = ""
+
 				conditions.each do |condition|
+					# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
+					q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 					q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 				end
 				q << "<w:tr "
@@ -267,6 +270,8 @@ def generate_xslt(docx)
 
 			conditions.shift
 			conditions.each do |condition|
+				# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
+				q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
         else
@@ -313,8 +318,13 @@ def generate_xslt(docx)
 		end
 
 		omega = compress(omega)
+		# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
+		cs = "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />"
+		if document.include?("<xsl:variable name=\"up\"") or replace[count-1].include?("<xsl:variable name=\"up\"")
+			cs = ""
+		end
 
-		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p><xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
+		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p>#{cs}<xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
 		replace[count-1] = x
 
 		replace[count]=''
@@ -468,7 +478,7 @@ def generate_xslt(docx)
 	#######
 	# This is ugly but we have to presort the for_iffies and assign them
 	#	to the proper loop. This is because there are two types of
-	#	closing elements in a for loop, ∆ and ≠. In the case of ≠, you 
+	#	closing elements in a for loop, ∆ and ≠. In the case of ≠, you
 	#	can't use an if element so we shouldn't close for it.
 
 	r_for_iffies = []
@@ -535,9 +545,21 @@ def generate_xslt(docx)
 #	§
 ###############################
 
+	# final changes placed here
+	document = white_space(document)
+
 	#return the xslt
 	return document
 end
+
+# subtle annoying word 2007 v word 2010 bug. Found the solution on
+# http://answers.microsoft.com/en-us/office/forum/office_2010-word/word-2010-randomly-deleting-spaces-between-words/34682f6f-7be2-4835-9c18-907b0abd5615?page=6
+# Basically we replace space with alt-255 space; go figure
+def white_space(document)
+	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>")
+	return document
+end
+
 
 def compress(omega)
 	replacement = ""

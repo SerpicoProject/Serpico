@@ -20,6 +20,7 @@
           %input{:type => 'file', :name => 'file',}
     %br
     %input{:type => 'submit', :value => 'Upload' }
-    %button{:value => 'Cancel'} Cancel
-  
-      
+    %a{ :href => "/report/#{@report.id}/edit"}
+      %input{ :type => "button", :value => 'Cancel'}
+
+

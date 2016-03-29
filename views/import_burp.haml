@@ -21,6 +21,7 @@
       %br
       %input{:type => "hidden", :name => "type", :value => "burp"}
       %input{:type => 'submit', :value => 'Upload' }
-      %button{:value => 'Cancel'} Cancel
+      %a{ :href => "/report/#{@report.id}/additional_features"}
+        %input{ :type => "button", :value => 'Cancel'}
 
 

@@ -6,6 +6,11 @@
     %table
       %tr
         %td
+          Consultant Company &nbsp;
+        %td
+          %input{:type => 'text', :name => 'company', :value=> "#{@user.consultant_company}"}
+      %tr
+        %td
           Consultant Name &nbsp;
         %td
           %input{:type => 'text', :name => 'name', :value=> "#{@user.consultant_name}"}
@@ -24,9 +29,10 @@
           Title &nbsp;
         %td
           %input{:type => 'text', :name => 'title', :value => "#{@user.consultant_title}"}
-          
+
     %br
     %input{:type => 'submit', :value => 'Save' }
-    %button{:value => 'Cancel'} Cancel
-  
-      
+    %a{ :href => "/"}
+      %input{ :type => "button", :value => 'Cancel'}
+
+

@@ -162,7 +162,7 @@
                 %br
               - @findings.each do |finding|
                 %tr{:class => "#{@class}"}
-                  %td{:style => 'width: 70%'}
+                  %td{:style => 'width:70%;max-width: 0px;'}
                     #{finding.title}
                     - if finding.overview
                       %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
@@ -176,7 +176,7 @@
                                 %u
                                   Notes
                             - if finding.notes.length > 1
-                              #{finding.notes.gsub("<paragraph>","<br/><br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                              #{finding.notes.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                             - else
                               None.
                   - if @dread

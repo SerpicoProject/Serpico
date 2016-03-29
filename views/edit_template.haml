@@ -32,5 +32,6 @@
     %br
     %input{:type => 'hidden', :name => 'id', :value => "#{@template.id}"}
     %input{:type => 'submit', :value => 'Modify' }
-    %button{:value => 'Cancel'} Cancel
+    %a{ :href => "/admin/templates"}
+      %input{ :type => "button", :value => 'Cancel'}
 

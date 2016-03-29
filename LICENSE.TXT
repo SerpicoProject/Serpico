@@ -1,4 +1,4 @@
-Copyright (c) 2013, Willis Vandevanter
+Copyright (c) 2013-2015, Willis Vandevanter
 All rights reserved.
 
 License: BSD-3-clause

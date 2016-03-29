@@ -1,6 +1,12 @@
 # Serpico
 ## SimplE RePort wrIting and CollaboratiOn tool
-Serpico is a penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report. 
+Serpico is a penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report.
+
+Video Demo of Functionality:
+
+[Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
+
+[Additional Video Demos](https://github.com/MooseDojo/Serpico/wiki#online-demos)
 
 ## Installation
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
@@ -65,6 +71,11 @@ https://github.com/MooseDojo/Serpico/wiki/Inserting-Screenshots
 This is an area we know needs development so e-mail me with any ideas.
 
 See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/MooseDojo/Serpico/wiki/Serpico-Meta-Language-In-Depth)
+
+## Support
+- As questions come up we try to add them to the [Wiki](https://github.com/MooseDojo/Serpico/wiki)
+- IRC: [#therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
+- If all else fails create an issue and we will try to get it answered
 
 ## GOTCHAS
 - Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language

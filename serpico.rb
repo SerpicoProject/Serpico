@@ -21,8 +21,9 @@ config_options = JSON.parse(File.read('./config.json'))
 ## SSL Settings
 set :ssl_certificate, config_options["ssl_certificate"]
 set :ssl_key, config_options["ssl_key"]
+set :use_ssl, config_options["use_ssl"]
 set :port, config_options["port"]
-set :bind, "0.0.0.0"
+set :bind_address, config_options["bind_address"]
 
 ## Global variables
 set :finding_types, config_options["finding_types"]
@@ -131,6 +132,7 @@ post '/info' do
     user.consultant_phone = params[:phone]
     user.consultant_title = params[:title]
     user.consultant_name = params[:name]
+    user.consultant_company = params[:company]
     user.save
 
     redirect to("/info")
@@ -152,7 +154,7 @@ post '/login' do
             @curr_session.save
 
         end
-    else
+    elsif user
 		if options.ldap
 			#try AD authentication
 			usern = params[:username]
@@ -609,6 +611,8 @@ end
 
 # Import a findings database
 post '/master/import' do
+    redirect to("/master/import") unless params[:file]
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 1000000
 		return "File too large. 1MB limit"
@@ -696,6 +700,8 @@ post '/admin/templates/add' do
 
 	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
 
+    redirect to("/admin/templates/add") unless params[:file]
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 100000000
 		return "File too large. 10MB limit"
@@ -764,6 +770,8 @@ post '/admin/templates/edit' do
     template = Xslt.first(:id => params[:id])
 
     xslt_file = template.xslt_location
+
+    redirect to("/admin/templates/#{params[:id]}/edit") unless params[:file]
 
     # reject if the file is above a certain limit
     if params[:file][:tempfile].size > 100000000
@@ -881,7 +889,7 @@ post '/report/:id/import_autoadd' do
     xml = params[:file][:tempfile].read
     if (xml =~ /^<NessusClientData_v2>/ && type == "nessus")
         import_nessus = true
-        vulns = parse_nessus_xml(xml)
+        vulns = parse_nessus_xml(xml, config_options["threshold"])
     elsif (xml =~ /^<issues burpVersion/ && type == "burp")
         import_burp = true
         vulns = parse_burp_xml(xml)
@@ -1156,13 +1164,19 @@ get '/report/:id/user_defined_variables' do
 
     if  @report.user_defined_variables
         @user_variables = JSON.parse(@report.user_defined_variables)
+
+        # add in the global UDV from config
+        if config_options["user_defined_variables"].size > 0 and !@user_variables.include?(config_options["user_defined_variables"][0])
+            @user_variables = @user_variables + config_options["user_defined_variables"]
+        end
+
         @user_variables.each do |k,v|
 			if v
 				@user_variables[k] = meta_markup(v)
 			end
         end
     else
-        @user_variables = ""
+        @user_variables = config_options["user_defined_variables"]
     end
 
     haml :user_defined_variable, :encode_html => true
@@ -1783,11 +1797,15 @@ get '/report/:id/generate' do
         @report.consultant_phone = user.consultant_phone
         @report.consultant_email = user.consultant_email
         @report.consultant_title = user.consultant_title
+        @report.consultant_company = user.consultant_company
+
     else
         @report.consultant_name = ""
         @report.consultant_phone = ""
         @report.consultant_email = ""
         @report.consultant_title = ""
+        @report.consultant_company = ""
+
     end
     @report.save
 
@@ -1953,6 +1971,8 @@ end
 
 # Import a report
 post '/report/import' do
+    redirect to("/report/import") unless params[:file]
+
 	# reject if the file is above a certain limit
 	if params[:file][:tempfile].size > 1000000
 		return "File too large. 1MB limit"
@@ -2043,6 +2063,71 @@ get '/report/:id/presentation' do
     haml :presentation, :encode_html => true, :layout => false
 end
 
+##### Simple API Components - Read-Only for now
+
+# returns an API session key
+post '/v1/session' do
+    return auth(params[:username],params[:password])
+end
+
+# returns all reports available to the user, requires Session Key
+post '/v1/reports' do
+    return "Please provide the API session" unless params[:session]
+    return "Session is not valid \n" unless Sessions.is_valid?(params[:session])
+
+    # use implicit session methods
+    session[:session_id] = params[:session]
+
+    if params[:report_id]
+        reports = [get_report(params[:report_id])]
+    else
+        reports = Reports.all()
+    end
+
+    return "{}" if reports.first == nil
+
+    if is_administrator?
+        return reports.to_json
+    else
+        # return reports owned by user
+        data = []
+        i = 0
+        reports.each do |r|
+            report = get_report(r.id)
+            if report
+                data[i] = report
+                i = i + 1
+            end
+        end
+        return data.to_json
+    end
+
+    return data
+end
+
+# returns finding based on report id, requires Session Key
+post '/v1/findings' do
+    return "Please provide the API session" unless params[:session]
+    return "Session is not valid" unless Sessions.is_valid?(params[:session])
+    return "Please provide a report_id" unless params[:report_id]
+
+    # use implicit session methods
+    session[:session_id] = params[:session]
+
+    report = get_report(params[:report_id])
+
+    if report == nil
+        return "|-| Access rejected to report or report_id does not exist"
+    end
+
+    # Query for the findings that match the report_id
+    findings = Findings.all(:report_id => params[:report_id])
+
+    return findings.to_json
+end
+
+### API --------
+
 
 # Helper Functions
 
@@ -2065,6 +2150,46 @@ end
 def is_administrator?
     return true if Sessions.type(session[:session_id]) == "Administrator"
 end
+
+# authentication method used by API, returns Session Key
+def auth(username,password)
+    user = User.first(:username => username)
+
+    if user and user.auth_type == "Local"
+        usern = User.authenticate(username,password)
+
+        if usern
+            # TODO : This needs an expiration, session fixation
+            @del_session = Sessions.first(:username => "#{usern}")
+            @del_session.destroy if @del_session
+            @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
+            @curr_session.save
+            return @curr_session.session_key
+        end
+    elsif user
+        if options.ldap
+            #try AD authentication
+            usern = username
+            if usern == "" or password == ""
+                return ""
+            end
+
+            user = "#{options.domain}\\#{username}"
+            ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => password}
+
+            if ldap.bind
+               # replace the session in the session table
+               @del_session = Sessions.first(:username => "#{usern}")
+               @del_session.destroy if @del_session
+               @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
+               @curr_session.save
+               return @curr_session.session_key
+            end
+        end
+    end
+    return ""
+end
+
 
 # Grab a specific report
 def get_report(id)

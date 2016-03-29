@@ -74,27 +74,6 @@ end
 templates = Xslt.first
 
 if !templates
-	puts "Adding the Default DREAD Report Template"
-	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
-	docx = "./templates/Serpico - Report.docx"
-
-	xslt = generate_xslt(docx)
-	if xslt =~ /Error file DNE/
-		return "ERROR!!!!!!"
-	end
-
-	# open up a file handle and write the attachment
-	File.open(xslt_file, 'wb') {|f| f.write(xslt) }	
-
-	# delete the file data from the attachment
-	datax = Hash.new
-	datax["docx_location"] = "#{docx}"
-	datax["xslt_location"] = "#{xslt_file}"	
-	datax["description"] = 	"Default Serpico Report"
-	datax["report_type"] = "Default Template"
-	report = Xslt.new(datax)
-	report.save
-
     puts "Adding the Default Generic Risk Scoring Report Template"
     xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
     docx = "./templates/Serpico - GenericRiskScoring.docx"
@@ -105,34 +84,55 @@ if !templates
     end
 
     # open up a file handle and write the attachment
-    File.open(xslt_file, 'wb') {|f| f.write(xslt) } 
+    File.open(xslt_file, 'wb') {|f| f.write(xslt) }
 
     # delete the file data from the attachment
     datax = Hash.new
     datax["docx_location"] = "#{docx}"
-    datax["xslt_location"] = "#{xslt_file}" 
+    datax["xslt_location"] = "#{xslt_file}"
     datax["description"] =  "Generic Risk Scoring Report"
     datax["report_type"] = "Default Template - Generic Risk Scoring"
     report = Xslt.new(datax)
     report.save
 
-	puts "Adding the Serpico Default Finding Template"
-
+	puts "Adding the Default DREAD Report Template"
 	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
-	docx = "./templates/Serpico - Finding.docx"
-	
+	docx = "./templates/Serpico - Report.docx"
+
 	xslt = generate_xslt(docx)
 	if xslt =~ /Error file DNE/
 		return "ERROR!!!!!!"
 	end
 
 	# open up a file handle and write the attachment
-	File.open(xslt_file, 'wb') {|f| f.write(xslt) }	
-	
+	File.open(xslt_file, 'wb') {|f| f.write(xslt) }
+
 	# delete the file data from the attachment
 	datax = Hash.new
 	datax["docx_location"] = "#{docx}"
-	datax["xslt_location"] = "#{xslt_file}"	
+	datax["xslt_location"] = "#{xslt_file}"
+	datax["description"] = 	"Default Serpico Report"
+	datax["report_type"] = "Default Template"
+	report = Xslt.new(datax)
+	report.save
+
+	puts "Adding the Serpico Default Finding Template"
+
+	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
+	docx = "./templates/Serpico - Risk Finding.docx"
+
+	xslt = generate_xslt(docx)
+	if xslt =~ /Error file DNE/
+		return "ERROR!!!!!!"
+	end
+
+	# open up a file handle and write the attachment
+	File.open(xslt_file, 'wb') {|f| f.write(xslt) }
+
+	# delete the file data from the attachment
+	datax = Hash.new
+	datax["docx_location"] = "#{docx}"
+	datax["xslt_location"] = "#{xslt_file}"
 	datax["description"] = 	"Default Serpico Finding"
 	datax["report_type"] = "Default Finding"
 	datax["finding_template"] = true
@@ -143,27 +143,27 @@ if !templates
 
 	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
 	docx = "./templates/Serpico - Finding.docx"
-	
+
 	xslt = generate_xslt(docx)
 	if xslt =~ /Error file DNE/
 		return "ERROR!!!!!!"
 	end
 
 	# open up a file handle and write the attachment
-	File.open(xslt_file, 'wb') {|f| f.write(xslt) }	
-	
+	File.open(xslt_file, 'wb') {|f| f.write(xslt) }
+
 	# delete the file data from the attachment
 	datax = Hash.new
 	datax["docx_location"] = "#{docx}"
-	datax["xslt_location"] = "#{xslt_file}"	
+	datax["xslt_location"] = "#{xslt_file}"
 	datax["description"] = 	"Default Serpico Status"
 	datax["report_type"] = "Default Status"
 	datax["status_template"] = true
 	report = Xslt.new(datax)
-	report.save		
+	report.save
 
 else
-	puts "Skipping XSLT creation, templates exist." 
+	puts "Skipping XSLT creation, templates exist."
 end
 
 # create the SSL cert
