@@ -116,6 +116,28 @@ if !templates
 	report = Xslt.new(datax)
 	report.save
 
+	puts "Adding the Default CVSS Report Template"
+	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
+	docx = "./templates/CVSS_Template.docx"
+
+	xslt = generate_xslt(docx)
+	if xslt =~ /Error file DNE/
+		return "ERROR!!!!!!"
+	end
+
+	# open up a file handle and write the attachment
+	File.open(xslt_file, 'wb') {|f| f.write(xslt) }
+
+	# delete the file data from the attachment
+	datax = Hash.new
+	datax["docx_location"] = "#{docx}"
+	datax["xslt_location"] = "#{xslt_file}"
+	datax["description"] = 	"Default CVSS Report"
+	datax["report_type"] = "Default Template"
+	report = Xslt.new(datax)
+	report.save
+
+
 	puts "Adding the Serpico Default Finding Template"
 
 	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
