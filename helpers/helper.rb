@@ -123,20 +123,20 @@ end
 
 # CVSS helper, there is a lot of hardcoded stuff
 def cvss(data)
-	av = data["av"]
-	ac = data["ac"]
-	au = data["au"]
-	c = data["c"]
-	i = data["i"]
-	a = data["a"]
-	e = data["e"]
-	rl = data["rl"]
-	rc = data["rc"]
-	cdp = data["cdp"]
-	td = data["td"]
-	cr = data["cr"]
-	ir = data["ir"]
-	ar = data["ar"]
+	av = data["av"].downcase
+	ac = data["ac"].downcase
+	au = data["au"].downcase
+	c = data["c"].downcase
+	i = data["i"].downcase
+	a = data["a"].downcase
+	e = data["e"].downcase
+	rl = data["rl"].downcase
+	rc = data["rc"].downcase
+	cdp = data["cdp"].downcase
+	td = data["td"].downcase
+	cr = data["cr"].downcase
+	ir = data["ir"].downcase
+	ar = data["ar"].downcase
 	if ac == "high"
 	    cvss_ac = 0.35
 	elsif ac == "medium"

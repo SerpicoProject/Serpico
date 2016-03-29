@@ -42,13 +42,13 @@ class TemplateFindings
     property :cr, String, :required => false
     property :ir, String, :required => false
     property :ar, String, :required => false
-    property :cvss_base, String, :required => false
-    property :cvss_impact, String, :required => false
-    property :cvss_exploitability, String, :required => false
-    property :cvss_temporal, String, :required => false
-    property :cvss_environmental, String, :required => false
-    property :cvss_modified_impact, String, :required => false
-    property :cvss_total, String, :required => false
+    property :cvss_base, Float, :required => false
+    property :cvss_impact, Float, :required => false
+    property :cvss_exploitability, Float, :required => false
+    property :cvss_temporal, Float, :required => false
+    property :cvss_environmental, Float, :required => false
+    property :cvss_modified_impact, Float, :required => false
+    property :cvss_total, Float, :required => false
     property :ease, String, :required => false
 end
 
@@ -93,13 +93,13 @@ class Findings
     property :cr, String, :required => false
     property :ir, String, :required => false
     property :ar, String, :required => false
-    property :cvss_base, String, :required => false
-    property :cvss_impact, String, :required => false
-    property :cvss_exploitability, String, :required => false
-    property :cvss_temporal, String, :required => false
-    property :cvss_environmental, String, :required => false
-    property :cvss_modified_impact, String, :required => false
-    property :cvss_total, String, :required => false
+    property :cvss_base, Float, :required => false
+    property :cvss_impact, Float, :required => false
+    property :cvss_exploitability, Float, :required => false
+    property :cvss_temporal, Float, :required => false
+    property :cvss_environmental, Float, :required => false
+    property :cvss_modified_impact, Float, :required => false
+    property :cvss_total, Float, :required => false
     property :ease, String, :required => false
 
 end
