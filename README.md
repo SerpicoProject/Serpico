@@ -9,6 +9,12 @@ Video Demo of Functionality:
 [Additional Video Demos](https://github.com/MooseDojo/Serpico/wiki#online-demos)
 
 ## Installation
+
+### Docker
+Serpico has a supported Docker image if you wanted to get started quickly:
+[Running Serpico From Docker](https://github.com/MooseDojo/Serpico/wiki/Running-Serpico-From-Docker)
+
+### Building Serpico
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
 - You will need a copy of Ruby. RVM is suggested (https://rvm.io/rvm/install). ruby version 2.1.5 is supported.
