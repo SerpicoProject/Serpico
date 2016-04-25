@@ -111,8 +111,8 @@ if !templates
 	datax = Hash.new
 	datax["docx_location"] = "#{docx}"
 	datax["xslt_location"] = "#{xslt_file}"
-	datax["description"] = 	"Default Serpico Report"
-	datax["report_type"] = "Default Template"
+	datax["description"] = 	"Default Serpico Report - DREAD Scoring"
+	datax["report_type"] = "Default Template - DREAD Scoring"
 	report = Xslt.new(datax)
 	report.save
 
