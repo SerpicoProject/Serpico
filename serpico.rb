@@ -226,6 +226,27 @@ get '/admin/pull' do
 	end
 end
 
+#create DB backup
+get '/admin/dbbackup' do
+	redirect to("/no_access") if not is_administrator?
+	filename = [*('a'..'z')].sample(10).join
+	system ("sqlite3 db/master.db .dump > /tmp/#{filename}")
+  if not File.zero?("/tmp/#{filename}")
+    send_file "/tmp/#{filename}", :filename => "Master.bak", :type => 'Application/octet-stream'
+  else
+    "No copy of the database is available. Please try again."
+    sleep(5)
+    redirect to("/admin")
+  end
+
+  #delete temp backup file
+  if File.exists?("/tmp/#{filename}")
+    File.delete("/tmp/#{filename}")
+  else
+    "Unable to delete database backup: #{filename}"
+  end
+end
+
 # Create a new user
 post '/admin/add_user' do
     redirect to("/no_access") if not is_administrator?

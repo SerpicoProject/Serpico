@@ -96,6 +96,9 @@
                   %a{ :href => '/admin/templates/add' } Add Report Template
                 %li
                   %a{ :href => '/admin/templates' } List Report Templates
+                %li.nav-header Maintenance Menu
+                %li
+                  %a{ :href => '/admin/dbbackup' } Backup Master Database
             - else
               - if @report
                 %ul.nav.nav-list
