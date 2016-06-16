@@ -2225,9 +2225,9 @@ end
 # List out the reports
 def get_reports
     if is_administrator?
-        return Reports.all
+        return Reports.all( :order => [:id.desc])
     else
-        reports = Reports.all
+        reports = Reports.all( :order => [:id.desc])
         reports_array = []
         reports.each do |report|
             next unless report and get_username
