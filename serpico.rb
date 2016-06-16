@@ -226,6 +226,21 @@ get '/admin/pull' do
 	end
 end
 
+#create DB backup
+get '/admin/dbbackup' do
+	redirect to("/no_access") if not is_administrator?
+  bdate  = Time.now()
+  filename = "master" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".bak")
+	FileUtils::copy_file("./db/master.db", "./tmp/#{filename}")
+  	if not File.zero?("./tmp/#{filename}")
+    		send_file "./tmp/#{filename}", :filename => "#{filename}", :type => 'Application/octet-stream'
+  	else
+    		"No copy of the database is available. Please try again."
+    		sleep(5)
+    		redirect to("/admin/")
+  	end
+end
+
 # Create a new user
 post '/admin/add_user' do
     redirect to("/no_access") if not is_administrator?
