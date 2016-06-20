@@ -105,29 +105,29 @@
                 end
               - if @chart
                 %div{:id =>"chart"}
-                %h4
-                  Findings Chart:
-                %br
                 %br
                 //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
                 :plain
                   <script src= '/js/d3.js'></script>
                   <script type= "text/javascript">
                     var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
-                    var w = 400;
-                    var h = 400;
+                    var w = 250;
+                    var h = 250;
                     var r = h/2;
+                    var iw = 60;
                     var color = d3.scale.ordinal()
                       .range(['#FF2800', '#FFBF00', '#0000FF', '#008C00']);
                     var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
                     var pie = d3.layout.pie().value(function(d){return d.value;});
-                    var arc = d3.svg.arc().outerRadius(r);
+                    var arc = d3.svg.arc().innerRadius(r - iw).outerRadius(r);
                     var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
 
                     arcs.append("svg:path")
                       .attr("fill", function(d, i){
                         return color(i);
                         })
+                      .attr("stroke", "white")
+                      .attr("stroke-width", 2.0)
                       .attr("d", function (d) {
                         console.log(arc(d));
                         return arc(d);
