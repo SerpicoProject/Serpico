@@ -116,7 +116,7 @@
                     var r = h/2;
                     var iw = 60;
                     var color = d3.scale.ordinal()
-                      .range(['#FF2800', '#FFBF00', '#0000FF', '#008C00']);
+                      .range(['#7030A0', '#DC322F', '#F89406', '#0088CC']);
                     var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
                     var pie = d3.layout.pie().value(function(d){return d.value;});
                     var arc = d3.svg.arc().innerRadius(r - iw).outerRadius(r);
