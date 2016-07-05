@@ -364,6 +364,42 @@ get '/admin/del_user_report/:id/:author' do
     redirect to("/reports/list")
 end
 
+get '/admin/config' do
+    redirect to("/no_access") if not is_administrator?
+
+    @config = config_options
+    haml :config, :encode_html => true
+end
+
+post '/admin/config' do
+    redirect to("/no_access") if not is_administrator?
+
+    ft = params["finding_types"].split(",")
+    udv = params["user_defined_variables"].split(",")
+
+    config_options["finding_types"] = ft
+    config_options["user_defined_variables"] = udv
+    config_options["port"] = params["port"]
+    config_options["use_ssl"] = params["use_ssl"] ? true : false
+    config_options["bind_address"] = params["bind_address"]
+    config_options["ldap"] = params["ldap"] ? true : false
+    config_options["ldap_domain"] = params["ldap_domain"]
+    config_options["ldap_dc"] = params["ldap_dc"]
+    config_options["dread"] = params["dread"] ? true : false
+    config_options["cvss"] = params["cvss"] ? true : false
+    config_options["burpmap"] = params["burpmap"] ? true : false
+    config_options["logo"] = params["logo"]
+    config_options["auto_import"] = params["auto_import"] ? true : false
+    config_options["chart"] = params["chart"] ? true : false
+    config_options["threshold"] = params["threshold"]
+
+    File.open("./config.json","w") do |f|
+      f.write(JSON.pretty_generate(config_options))
+    end
+    redirect to("/admin/config")
+end
+
+
 ######
 # Template Document Routes
 ######
