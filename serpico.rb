@@ -49,7 +49,7 @@ set :ir, ["Not Defined","Low","Medium","High"]
 set :ar, ["Not Defined","Low","Medium","High"]
 
 ## LDAP Settings
-if config_options["ldap"].downcase == "true"
+if config_options["ldap"] == "true"
     set :ldap, true
 else
     set :ldap, false
