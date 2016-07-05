@@ -12,10 +12,9 @@
             %td
               #{k}
             %td
-              - if (v == false) or (v == true)
-                - if (v == true)
-                  %input{:type => 'checkbox', :name => "#{k}", :value => "checked"}
-                  %br
+              - if (v == false) or (v == true) or (v == "false") or (v == "true")
+                - if (v == true) or (v == "true")
+                  %input{:type => 'checkbox', :name => "#{k}", :checked => "checked"}
                 - else
                   %input{:type => 'checkbox', :name => "#{k}"}
               - elsif v.instance_of? Array
