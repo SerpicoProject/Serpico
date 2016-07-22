@@ -367,6 +367,7 @@ end
 get '/admin/config' do
     redirect to("/no_access") if not is_administrator?
 
+    p config_options
     @config = config_options
     haml :config, :encode_html => true
 end
@@ -374,6 +375,7 @@ end
 post '/admin/config' do
     redirect to("/no_access") if not is_administrator?
 
+    p params
     ft = params["finding_types"].split(",")
     udv = params["user_defined_variables"].split(",")
 
@@ -388,6 +390,7 @@ post '/admin/config' do
     config_options["dread"] = params["dread"] ? true : false
     config_options["cvss"] = params["cvss"] ? true : false
     config_options["burpmap"] = params["burpmap"] ? true : false
+    config_options["nessusmap"] = params["nessusmap"] ? true : false
     config_options["logo"] = params["logo"]
     config_options["auto_import"] = params["auto_import"] ? true : false
     config_options["chart"] = params["chart"] ? true : false
