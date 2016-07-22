@@ -1,0 +1,46 @@
+.span10
+  %br
+  %h2 Metasploit RPC Settings
+  %br
+  %h4
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify the metasploit RPC settings for this report.
+  %br
+  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+    .control-group
+      %label{ :class => "control-label", :for => "ip" } IP Address
+      .controls
+        - if @msfsettings and @msfsettings.ip
+          %input{ :type => 'text', :name => 'ip', :value => "#{@msfsettings.ip}"}
+        - else
+          %input{ :type => 'text', :name => 'ip', :value => ""}
+    .control-group
+      %label{ :class => "control-label", :for => "port" } Port
+      .controls
+        - if @msfsettings and @msfsettings.port
+          %input{ :type => 'text', :name => 'port', :value => "#{@msfsettings.port}"}
+        -else
+          %input{ :type => 'text', :name => 'port', :value => ""}
+    .control-group
+      %label{ :class => "control-label", :for => "user" } Username
+      .controls
+        - if @msfsettings and @msfsettings.user
+          %input{ :type => 'text', :name => 'user', :value => "#{@msfsettings.user}"}
+        - else
+          %input{ :type => 'text', :name => 'user', :value => ""}
+    .control-group
+      %label{ :class => "control-label", :for => "pass" } Password
+      .controls
+        - if @msfsettings and @msfsettings.pass
+          %input{ :type => 'password', :name => 'pass', :value => "#{@msfsettings.pass}"}
+        - else
+          %input{ :type => 'password', :name => 'pass', :value => ""}
+    .control-group
+      %label{ :class => "control-label", :for => "workspace" } Workspace
+      .controls
+        - if @msfsettings and @msfsettings.workspace
+          %input{ :type => 'text', :name => 'workspace', :value => "#{@msfsettings.workspace}"}
+        - else
+          %input{ :type => 'text', :name => 'workspace', :value => ""}
+    %input{:type => 'submit', :value => 'Save'}
+    %a{ :href => "/report/#{@report.id}/findings"}
+      %input{ :type => "button", :value => 'Cancel'}

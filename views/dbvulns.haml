@@ -1,0 +1,27 @@
+.span10
+  %h2 Vulnerabilities
+  %br
+  .table.table-hover
+    %table{:style => 'width: 90%'}
+      %thead
+        %tr
+          %td
+            %b Vulnerability
+          %td
+            %b Host
+          %td
+            %b Port
+          %td
+            %b References
+      %tbody
+        - if @vulns
+          - @vulns.each do |vuln|
+            %tr
+              %td{:style => 'width: 50%', :"data-index" => "#{vuln["name"]}", :class=>"searchable"}
+                #{vuln["name"]}
+              %td{:style => 'width: 10%', :"data-index" => "#{vuln["host"]}", :class=>"searchable"}
+                #{vuln["host"]}
+              %td{:style => 'width: 5%', :"data-index" => "#{vuln["port"]}", :class=>"searchable"}
+                #{vuln["port"]}
+              %td{:style => 'width: 35%', :"data-index" => "#{vuln["refs"]}", :class=>"searchable"}
+                #{vuln["refs"]}
