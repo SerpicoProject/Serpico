@@ -39,6 +39,11 @@
         %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
         .controls
           %input{ :type => 'text', :name => 'pluginid'}
+    - if @vulnmap
+      .control-group
+        %label{ :class => "control-label", :for => "msf_ref" } Add new Vuln ID mapping
+        .controls
+          %input{ :type => 'text', :name => 'msf_ref'}
     - if @dread
       .control-group
         %label{ :class => "control-label", :for => "damage" } Damage

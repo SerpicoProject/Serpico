@@ -28,6 +28,24 @@
             %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
           - else
             %input{ :type=>"checkbox", :name => 'approved'}
+      - if @vulnmap
+        .control-group
+          %label{ :class => "control-label", :for => "existingvulnmaps" } Vuln IDs mapped to this finding
+          .controls
+            .table
+            %table{ :style => 'width: 220px'}
+              - @vulnmaps.each do |vuln|
+                - if vuln.msf_ref
+                  %tr
+                    %td
+                      #{vuln.msf_ref}
+                    %td{ :align => "right"}
+                      %a{ :class => "btn btn-danger btn-sm", :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete"}
+                        %i{:class => 'icon-remove icon-white icon-sm', :value => "#{vuln.msf_ref}", :type => "submit", :title => 'Delete'}
+        .control-group
+          %label{ :class => "control-label", :for => "msf_ref" } Add new Vuln ID mapping
+          .controls
+            %input{ :type => 'text', :name => 'msf_ref'}
       - if @nessusmap
         .control-group
           %label{ :class => "control-label", :for => "existingnessusmaps" } Nessus IDs Mapped to this finding

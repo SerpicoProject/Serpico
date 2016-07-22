@@ -2,6 +2,8 @@ require 'rubygems'
 require 'nokogiri'
 require 'zipruby'
 require './model/master'
+require 'msfrpc-client'
+require 'rex/ui'
 
 # For now, we need this to clean up import text a bit
 def clean(text)
@@ -67,6 +69,32 @@ def uniq_findings(findings)
         end
     end
     return vfindings
+end
+
+def get_vulns_from_msf(rpc, workspace)
+    res = rpc.call('console.create')
+
+    vulns = Hash.new
+
+    rpc.call('db.set_workspace', workspace)
+
+    # get vulns TODO:find a better way to handle large amount of vulns
+    res = rpc.call('db.vulns', {:limit => 9000})
+    res.each do |v|
+        v[1].each do |item|
+            ids = []
+            item["refs"].split(',').each do |i|
+                ids << i
+            end
+            if !vulns[item["host"]]
+                vulns[item["host"]] = []
+            end
+            ids.each do |id|
+                vulns[item["host"]] << id
+            end
+        end
+    end
+    return vulns
 end
 
 def parse_nessus_xml(xml,threshold)

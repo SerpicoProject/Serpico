@@ -10,10 +10,16 @@
         %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments Not Included)
     %tr
       %td
+        %a{ :href => "/report/#{@report.id}/msfsettings" } Configure a Metasploit RPC Connection
+    %tr
+      %td
         &nbsp;
     %tr
       %td
-        %a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML
+        %a{ :href => "/report/#{@report.id}/import/vulns" } Auto Add Vulnerabilities from Metasploit DB
+    %tr
+      %td
+        %a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML (Deprecated - Use MSF RPC)
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/import_burp" } Auto Add Findings from a Burp XML scanner report
