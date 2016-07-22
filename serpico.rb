@@ -367,7 +367,6 @@ end
 get '/admin/config' do
     redirect to("/no_access") if not is_administrator?
 
-    p config_options
     @config = config_options
     haml :config, :encode_html => true
 end
@@ -375,7 +374,6 @@ end
 post '/admin/config' do
     redirect to("/no_access") if not is_administrator?
 
-    p params
     ft = params["finding_types"].split(",")
     udv = params["user_defined_variables"].split(",")
 
