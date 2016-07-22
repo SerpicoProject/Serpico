@@ -2,6 +2,11 @@
   %br
   %h2 #{@finding.title}
   %br
+  -if @finding.last_updated_by and @finding.updated_at
+    %font{:size => "2"}Last updated by #{@finding.last_updated_by} at #{@finding.updated_at.strftime("%H:%M")} on #{@finding.updated_at.strftime("%m/%d/%Y")}
+  -if @revisedfindings
+    %a{:size => "2", :href => "/master/findings/#{@finding.id}/history"} Revision History
+  %br
   %br
   %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
     .control-group
@@ -237,7 +242,7 @@
             - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
             - if !@finding.risk
               - @finding.risk = @finding.dread_total/10
-              - @finding.risk = 4 if dread_total == 50
+              - @finding.risk = 4 if @finding.dread_total == 50
             - [1,2,3,4].each do |r_type|
               - if r_type == @finding.risk
                 %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
