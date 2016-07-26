@@ -1,5 +1,26 @@
 .span10
   %h2 Vulnerabilities
+  This is a read-only view of vulnerabilities within Metasploits database.
+  %p
+  %label{:class => "control-label"}
+    %a{:href=> '#vulninfomodal', "data-toggle"=>'modal', :class => 'btn btn-info'}
+      More Info
+  .modal{:id=>'vulninfomodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+    .modal-header
+      %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+        x
+      %h3{:id=>"modal-label"}
+        Metasploit Auto Mapping Vulnerabilities
+    .modal-body
+      To automatically add vulnerabilities from the Metasploit database into your report, you'll need to have one of the reference codes mapped to an existing Serpico finding.
+      %p
+      A reference code can be added by editing the
+      %b Vuln ID
+      field of a finding in the Findings Database.
+      %p
+      %a{:href=> '/master/findings', :class=>'btn btn-default', }
+        Go to Findings Database
+      %p
   %br
   .table.table-hover
     %table{:style => 'width: 90%'}

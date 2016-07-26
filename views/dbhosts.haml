@@ -1,15 +1,16 @@
 .span10
   %h2 Hosts
+  This is a read-only view of hosts within Metasploits database.
   %br
   .table.table-hover
     %table{:style => 'width: 90%'}
       %thead
         %tr
-          %td 
+          %td
             %b IP Address
-          %td 
+          %td
             %b Hostname
-          %td 
+          %td
             %b Platform
           %td
             %b Info
@@ -22,8 +23,7 @@
               %td{:style => 'width: 20%', :"data-index" => "#{host["name"]}", :class=>"searchable"}
                 #{host["name"]}
               %td{:style => 'width: 20%', :"data-index" => "#{host["os_name"]}", :class=>"searchable"}
-                #{host["os_name"]} 
+                #{host["os_name"]}
                 #{host["os_sp"]}
               %td{:style => 'width: 40%', :"data-index" => "#{host["info"]}", :class=>"searchable"}
                 #{host["info"]}
-

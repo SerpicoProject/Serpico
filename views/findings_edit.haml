@@ -43,7 +43,44 @@
                         %a{ :class => "btn btn-danger btn-sm", :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete"}
                           %i{:class => 'icon-remove icon-white icon-sm', :value => "#{vuln.msf_ref}", :type => "submit", :title => 'Delete'}
         .control-group
-          %label{ :class => "control-label", :for => "msf_ref" } Add new Vuln ID mapping
+          %label{ :class => "control-label", :for => "msf_ref" }
+            %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+              Add new Vuln ID mapping
+          .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+            .modal-header
+              %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+                x
+              %h3{:id=>"modal-label"}
+                Vulnerability Importing
+            .modal-body
+              %p
+                The references field in Metasploits database contains various types of reference codes.
+              %p
+                When importing vulnerabilities from Metasploit, Serpico will split these reference codes by comma. Whatever is placed in the Vuln ID mapping field will be checked for a string comparison upon import. This allows Serpico to support any type of vendor/tool that Metasploit supports.
+              %h4 Big fat Warning
+              %p{:class=>"text-error"}
+                Metasploit doesn't do the best job at parsing these reference codes. Use CVEs over vendor specific IDs whenever possible. Burp is not support via this method. Instead, use the legacy Burp XML importer.
+              %br
+                %h4 Supported reference codes:
+                .table
+                  %table{:width => "70%"}
+                    %thead{:width => "20%"}
+                      %tr
+                        %td
+                          %b Type
+                        %td
+                          %b Format to use
+                    %tbody{:width => "50%"}
+                      %tr
+                        %td
+                          CVE
+                        %td
+                          CVE-2020-1234
+                      %tr
+                        %td
+                          Nessus
+                        %td
+                          NSS-1234
           .controls
             %input{ :type => 'text', :name => 'msf_ref'}
       - if @nessusmap
