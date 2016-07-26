@@ -3,7 +3,6 @@ require 'nokogiri'
 require 'zipruby'
 require './model/master'
 require 'msfrpc-client'
-require 'rex/ui'
 
 # For now, we need this to clean up import text a bit
 def clean(text)
