@@ -2132,6 +2132,7 @@ get '/report/:id/msfsettings' do
     # bail without a report
     redirect to("/") unless @report
 
+    @vulnmap = config_options["vulnmap"]
     @msfsettings = RemoteEndpoints.first(:report_id => id)
 
     haml :msfsettings, :encode_html => true
@@ -2144,6 +2145,10 @@ post '/report/:id/msfsettings' do
 
     # bail without a report
     redirect to("/") unless @report
+
+    if !config_options["vulnmap"]
+        return "Metasploit integration not enabled"
+    end
 
     msfsettings = RemoteEndpoints.first(:report_id => id)
 
@@ -2168,13 +2173,14 @@ end
 get '/report/:id/hosts' do
     id = params[:id]
     @report = get_report(id)
+    @vulnmap = config_options["vulnmap"]
 
     # bail without a report
     redirect to("/") unless @report
 
     msfsettings = RemoteEndpoints.first(:report_id => id)
     if !msfsettings
-      return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+        return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
     end
 
     #setup msfrpc handler
@@ -2196,13 +2202,14 @@ end
 get '/report/:id/vulns' do
     id = params[:id]
     @report = get_report(id)
+    @vulnmap = config_options["vulnmap"]
 
     # bail without a report
     redirect to("/") unless @report
 
     msfsettings = RemoteEndpoints.first(:report_id => id)
     if !msfsettings
-      return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+        return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
     end
 
     # setup msfrpc handler
@@ -2230,6 +2237,10 @@ get '/report/:id/import/vulns' do
 
     if @report == nil
         return "No Such Report"
+    end
+
+    if not config_options["vulnmap"]
+        return "Metasploit integration not enabled."
     end
 
     add_findings = Array.new
