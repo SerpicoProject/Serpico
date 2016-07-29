@@ -423,6 +423,7 @@ get '/master/findings/new' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @nessusmap = config_options["nessusmap"]
+    @vulnmap = config_options["vulnmap"]
 
     haml :create_finding, :encode_html => true
 end
@@ -440,19 +441,30 @@ post '/master/findings/new' do
     nessusdata["pluginid"] = data["pluginid"]
     data.delete("pluginid")
 
+    # split out any vuln mapping data
+    vulnmapdata = Hash.new()
+    vulnmapdata["msf_ref"] = data["msf_ref"]
+    data.delete("msf_ref")
+
     @finding = TemplateFindings.new(data)
     @finding.save
 
     # find the id of the newly created finding so we can link mappings to it
     @newfinding = TemplateFindings.first(:title => data["title"], :order => [:id.desc], :limit => 1)
 
-    # save nessus mapping
-    if(config_options["nessusmap"])
-        nessusdata["templatefindings_id"] = @newfinding.id
-
+    # save mapping data
+    if (config_options["nessusmap"] && nessusdata["pluginid"])
+        nessusdata["templatefindings_id"] = @finding.id
         @nessus = NessusMapping.new(nessusdata)
         @nessus.save
-    elsif(config_options["cvss"])
+    end
+    if (config_options["vulnmap"] && vulnmapdata["msf_ref"])
+        vulnmapdata["templatefindings_id"] = @finding.id
+        @vulnmappings = VulnMappings.new(vulnmapdata)
+        @vulnmappings.save
+    end
+
+    if (config_options["cvss"])
         data = cvss(data)
     end
 
@@ -466,13 +478,14 @@ get '/master/findings/:id/edit' do
     @cvss = config_options["cvss"]
     @nessusmap = config_options["nessusmap"]
     @burpmap = config_options["burpmap"]
+    @vulnmap = config_options["vulnmap"]
 
     # Check for kosher name in report name
     id = params[:id]
 
-    # Query for all Findings
+    # Query for Finding
     @finding = TemplateFindings.first(:id => id)
-	@templates = Xslt.all()
+	  @templates = Xslt.all()
 
     if (@nessusmap)
         @nessus = NessusMapping.all(:templatefindings_id => id)
@@ -480,6 +493,10 @@ get '/master/findings/:id/edit' do
 
     if (@burpmap)
         @burp = BurpMapping.all(:templatefindings_id => id)
+    end
+
+    if (@vulnmap)
+        @vulnmaps = VulnMappings.all(:templatefindings_id => id)
     end
 
     if @finding == nil
@@ -527,6 +544,12 @@ post '/master/findings/:id/edit' do
     data.delete("burp_pluginid")
     burpdata["templatefindings_id"] = id
 
+    # split out any vuln mapping data
+    vulnmappingdata = Hash.new()
+    vulnmappingdata["msf_ref"] = data["msf_ref"]
+    data.delete("msf_ref")
+    vulnmappingdata["templatefindings_id"] = id
+
     # Update the finding with templated finding stuff
     @finding.update(data)
 
@@ -540,6 +563,12 @@ post '/master/findings/:id/edit' do
     if(config_options["burpmap"])
         @burp = BurpMapping.new(burpdata)
         @burp.save
+    end
+
+    # save vuln mapping data to db
+    if(config_options["vulnmap"])
+        @vulnmappings = VulnMappings.new(vulnmappingdata)
+        @vulnmappings.save
     end
 
     redirect to("/master/findings")
@@ -571,6 +600,19 @@ get '/mapping/:id/burp/:mappingid/delete' do
     redirect to("/master/findings/#{id}/edit")
 end
 
+# Delete a vuln mapping from finding
+get '/mapping/:id/vulnmap/:mappingid/delete' do
+    # Check for kosher name in report name
+    id = params[:id]
+
+    mappingid = params[:mappingid]
+
+    @vulnmappings = VulnMappings.first(:templatefindings_id => id, :id => mappingid)
+
+    @vulnmappings.destroy
+    redirect to("/master/findings/#{id}/edit")
+end
+
 # Delete a template finding
 get '/master/findings/:id/delete' do
     # Check for kosher name in report name
@@ -582,6 +624,10 @@ get '/master/findings/:id/delete' do
     if @finding == nil
         return "No Such Finding"
     end
+
+    # delete associated vuln mappings
+    @vulnmappings = VulnMappings.all(:templatefindings_id => id)
+    @vulnmappings.destroy
 
     # Update the finding with templated finding stuff
     @finding.destroy
@@ -2073,23 +2119,23 @@ end
 # generate an asciidoc version of current findings
 get '/report/:id/asciidoc_status' do
     id = params[:id]
-	report = get_report(id)
+  	report = get_report(id)
 
-	# bail without a report
-	redirect to("/") unless report
+  	# bail without a report
+  	redirect to("/") unless report
 
-	# add the findings
+  	# add the findings
     findings = Findings.all(:report_id => id)
 
-	ascii_doc_ = ""
-	findings.each do |finding|
-		ascii_doc_ << gen_asciidoc(finding,config_options["dread"])
-	end
+  	ascii_doc_ = ""
+  	findings.each do |finding|
+  		ascii_doc_ << gen_asciidoc(finding,config_options["dread"])
+  	end
 
-	local_filename = "./tmp/#{rand(36**12).to_s(36)}.asd"
-    File.open(local_filename, 'w') {|f| f.write(ascii_doc_) }
+  	local_filename = "./tmp/#{rand(36**12).to_s(36)}.asd"
+      File.open(local_filename, 'w') {|f| f.write(ascii_doc_) }
 
-	send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
+  	send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
 end
 
 # generate a presentation of current report
@@ -2114,6 +2160,205 @@ get '/report/:id/presentation' do
 
     haml :presentation, :encode_html => true, :layout => false
 end
+
+# set msf rpc settings for report
+get '/report/:id/msfsettings' do
+    id = params[:id]
+    @report = get_report(id)
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    @vulnmap = config_options["vulnmap"]
+    @msfsettings = RemoteEndpoints.first(:report_id => id)
+
+    haml :msfsettings, :encode_html => true
+end
+
+# set msf rpc settings for report
+post '/report/:id/msfsettings' do
+    id = params[:id]
+    @report = get_report(id)
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    if !config_options["vulnmap"]
+        return "Metasploit integration not enabled"
+    end
+
+    msfsettings = RemoteEndpoints.first(:report_id => id)
+
+    if msfsettings
+        msfsettings.update(:ip => params[:ip], :port => params[:port], :workspace => params[:workspace], :user => params[:user], :pass => params[:pass])
+    else
+        msfsettings = RemoteEndpoints.new
+        msfsettings["report_id"] = @report.id
+        msfsettings["ip"] = params[:ip]
+        msfsettings["port"] = params[:port]
+        msfsettings["type"] = "msfrpc"
+        msfsettings["workspace"] = params[:workspace]
+        msfsettings["user"] = params[:user]
+        msfsettings["pass"] = params[:pass]
+        msfsettings.save
+    end
+
+    redirect to("/report/#{@report.id}/findings")
+end
+
+# display hosts from msf db
+get '/report/:id/hosts' do
+    id = params[:id]
+    @report = get_report(id)
+    @vulnmap = config_options["vulnmap"]
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    msfsettings = RemoteEndpoints.first(:report_id => id)
+    if !msfsettings
+        return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    end
+
+    #setup msfrpc handler
+    rpc = msfrpc(@report.id)
+    if rpc == false
+        return "ERROR: Connection to metasploit failed. Make sure you have msfprcd running and the settings in Serpico are correct."
+    end
+
+    # get hosts from msf db
+    res = rpc.call('console.create')
+    rpc.call('db.set_workspace', msfsettings.workspace)
+    res = rpc.call('db.hosts', {:limit => 10000})
+    @hosts = res["hosts"]
+
+    haml :dbhosts, :encode_html => true
+end
+
+# display vulns from msf db
+get '/report/:id/vulns' do
+    id = params[:id]
+    @report = get_report(id)
+    @vulnmap = config_options["vulnmap"]
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    msfsettings = RemoteEndpoints.first(:report_id => id)
+    if !msfsettings
+        return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    end
+
+    # setup msfrpc handler
+    rpc = msfrpc(@report.id)
+    if rpc == false
+        return "connection to MSF RPC deamon failed. Make sure you have msfprcd running and the settings in Serpico are correct."
+    end
+
+    # get vulns from msf db
+    res = rpc.call('console.create')
+    rpc.call('db.set_workspace', msfsettings.workspace)
+    res = rpc.call('db.vulns', {:limit => 10000})
+    @vulns = res["vulns"]
+
+    haml :dbvulns, :encode_html => true
+end
+
+# autoadd vulns from msf db
+get '/report/:id/import/vulns' do
+    id = params[:id]
+    @report = get_report(id)
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    if @report == nil
+        return "No Such Report"
+    end
+
+    if not config_options["vulnmap"]
+        return "Metasploit integration not enabled."
+    end
+
+    add_findings = Array.new
+    dup_findings = Array.new
+    autoadd_hosts = Hash.new
+
+    # load msf settings
+    msfsettings = RemoteEndpoints.first(:report_id => id)
+    if !msfsettings
+      return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    end
+
+    # setup msfrpc handler
+    rpc = msfrpc(@report.id)
+    if rpc == false
+        return "connection to MSF RPC deamon failed. Make sure you have msfprcd running and the settings in Serpico are correct."
+    end
+
+    # determine findings to add from vuln data
+    vulns = get_vulns_from_msf(rpc, msfsettings.workspace)
+
+    # load all findings
+    @findings = TemplateFindings.all(:order => [:title.asc])
+
+    # determine findings to add from vuln data
+    # host/ip is key, value is array of vuln ids
+    vulns.keys.each do |i|
+        vulns[i].each do |v|
+
+            # if serpico finding id maps to a ref from MSF vuln db, add to report
+            @mappings = VulnMappings.all(:msf_ref => v)
+            # add affected hosts for each finding
+            if (@mappings)
+                @mappings.each do |m|
+                    if autoadd_hosts[m.templatefindings_id]
+                        # only one host/url per finding (regardless of ports and urls). this should change in the future
+                        if not autoadd_hosts[m.templatefindings_id].include?(i)
+                            autoadd_hosts[m.templatefindings_id] << i
+                        end
+                    else
+                        autoadd_hosts[m.templatefindings_id] = []
+                        autoadd_hosts[m.templatefindings_id] << i
+                    end
+                    add_findings << m.templatefindings_id
+                end
+            end
+        end
+    end
+
+    add_findings = add_findings.uniq
+
+    # create new findings from an import
+    # TODO: This will duplicate if the user already has a nessus id mapped
+    if config_options["auto_import"]
+        p "auto_import function not supported with MSF intergration"
+    end
+
+    if add_findings.size == 0
+        redirect to("/report/#{id}/findings")
+    else
+        @autoadd = true
+
+        add_findings.each do |finding|
+            # if the finding already exists in the report dont add
+            currentfindings = Findings.all(:report_id => id)
+            currentfindings.each do |cf|
+                if cf.master_id == finding.to_i
+                    if not dup_findings.include?(finding.to_i)
+                        dup_findings << finding.to_i
+                    end
+                    add_findings.delete(finding.to_i)
+                end
+            end
+        end
+        @autoadd_hosts = autoadd_hosts
+        @dup_findings = dup_findings.uniq
+        @autoadd_findings = add_findings
+    end
+    haml :findings_add, :encode_html => true
+end
+
 
 ##### Simple API Components - Read-Only for now
 
@@ -2182,6 +2427,26 @@ end
 
 
 # Helper Functions
+
+# msfrpc handler
+def msfrpc(report_id)
+    @msfoptions = RemoteEndpoints.first(:report_id => report_id)
+
+    opts = {
+        :host => @msfoptions.ip,
+        :port => @msfoptions.port,
+        :user => @msfoptions.user,
+        :pass => @msfoptions.pass
+    }
+    begin
+      rpc = Msf::RPC::Client.new(opts)
+    rescue Exception => log
+      puts "[!] MSF CONNECTION FAILED"
+      puts log.message
+      rpc = false
+    end
+    return rpc
+end
 
 # Return if the user has a valid session or not
 def valid_session?

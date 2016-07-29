@@ -121,6 +121,11 @@
                     %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
                   %li
                     %a{ :href => "/report/#{@report.id}/attachments" } List Current Attachments
+                  %li.nav-header Metasploit Data Management
+                  %li
+                    %a{ :href => "/report/#{@report.id}/hosts" } Hosts
+                  %li
+                    %a{ :href => "/report/#{@report.id}/vulns" } Vulnerabilities
                   %li.nav-header <a href="/report/#{@report.id}/additional_features">Additional Features</a>
 
           =yield

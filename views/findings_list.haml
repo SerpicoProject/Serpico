@@ -60,7 +60,7 @@
                                       - if finding.risk
                                         - finding.risk = 1 if finding.risk == 0
                                         #{risk_t[finding.risk]}
-                                      - else
+                                      - if @dread
                                         - scr = finding.dread_total/10
                                         - scr = 4 if dread_total == 50
                                         #{risk_t[scr]}
