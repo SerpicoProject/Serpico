@@ -43,10 +43,10 @@ body {
   color: #ffffff;
 }
 .btn-signin:hover, .btn-signin:focus, .btn-sigin:active, .btn-sigin.active, .open > .dropdown-toggle.btn-signin {
-    background: #384557;
-    color: #ffffff;
+  background: #384557;
+  color: #ffffff;
 }
 .btn-signin:active, .btn-signin.active {
-    background: #47586f;
-    box-shadow: none;
+  background: #47586f;
+  box-shadow: none;
 }
