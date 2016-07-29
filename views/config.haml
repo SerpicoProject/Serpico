@@ -5,9 +5,28 @@
     %br
     %form
       %table
+        %tr
+          %td
+            Risk Scoring Algorithm
+          %td
+            %select{ :name => "risk_scoring" }
+              - if @scoring == "default"
+                %option{ :selected => "selected" } Default
+              - else
+                %option Default Scoring
+              - if @scoring == "dread"
+                %option{ :selected => "selected" } DREAD
+              - else
+                %option DREAD
+              - if @scoring == "cvss"
+                %option{ :selected => "selected" } CVSS
+              - else
+                %option CVSS
+
         - @config.each do |k,v|
           - next if k =~ /ssl_certificate/
           - next if k =~ /ssl_key/
+          - next if k == "cvss" or k == "dread"
           %tr
             %td
               #{k}
