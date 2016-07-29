@@ -10,11 +10,14 @@ Video Demo of Functionality:
 
 ## Installation
 
-### Docker
-Serpico has a supported Docker image if you wanted to get started quickly:
-[Running Serpico From Docker](https://github.com/MooseDojo/Serpico/wiki/Running-Serpico-From-Docker)
+### Kali/Ubuntu/Debian
 
-### Building Serpico
+Installation is easy; download the updated deb package from the releases tab and install with:
+```
+dpkg -i [release-installer-version].deb
+```
+
+### Developer Builds and OS X
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
 - You will need a copy of Ruby. RVM is suggested (https://rvm.io/rvm/install). ruby version 2.1.5 is supported.
@@ -49,6 +52,10 @@ ruby serpico.rb
 Note: A new cert is created on first use. To add your own, just add it to the root directory.
 
 Point your browser to https://127.0.0.1:8443 (or whatever port you assigned) to start using.
+
+### Docker
+Serpico has a supported Docker image if you wanted to get started quickly:
+[Running Serpico From Docker](https://github.com/MooseDojo/Serpico/wiki/Running-Serpico-From-Docker)
 
 
 ## About Serpico
