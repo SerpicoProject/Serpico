@@ -395,6 +395,7 @@ post '/admin/config' do
     config_options["ldap_dc"] = params["ldap_dc"]
     config_options["burpmap"] = params["burpmap"] ? true : false
     config_options["nessusmap"] = params["nessusmap"] ? true : false
+    config_options["vulnmap"] = params["vulnmap"] ? true : false
     config_options["logo"] = params["logo"]
     config_options["auto_import"] = params["auto_import"] ? true : false
     config_options["chart"] = params["chart"] ? true : false
