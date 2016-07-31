@@ -17,6 +17,16 @@ Installation is easy; download the updated deb package from the releases tab and
 dpkg -i [release-installer-version].deb
 ```
 
+Initialize the database:
+```
+/opt/Serpico/init_serpico.sh
+```
+
+And then start Serpico:
+```
+/opt/Serpico/start_serpico.sh
+```
+
 ### Developer Builds and OS X
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
