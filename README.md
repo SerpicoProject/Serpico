@@ -6,7 +6,7 @@ Video Demo of Functionality:
 
 [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
 
-[Additional Video Demos](https://github.com/MooseDojo/Serpico/wiki#online-demos)
+[Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
 
 ## Installation
 
@@ -65,7 +65,7 @@ Point your browser to https://127.0.0.1:8443 (or whatever port you assigned) to 
 
 ### Docker
 Serpico has a supported Docker image if you wanted to get started quickly:
-[Running Serpico From Docker](https://github.com/MooseDojo/Serpico/wiki/Running-Serpico-From-Docker)
+[Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
 
 
 ## About Serpico
@@ -89,11 +89,11 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - No DREAD.docx" and editing these rather than working from scratch.
 
 Inserting Screenshots
-https://github.com/MooseDojo/Serpico/wiki/Inserting-Screenshots
+https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots
 
 This is an area we know needs development so e-mail me with any ideas.
 
-See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/MooseDojo/Serpico/wiki/Serpico-Meta-Language-In-Depth)
+See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
 ## Support
 - As questions come up we try to add them to the [Wiki](https://github.com/MooseDojo/Serpico/wiki)
