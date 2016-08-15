@@ -15,10 +15,9 @@
       var link = document.createElement( 'link' );
       link.rel = 'stylesheet';
       link.type = 'text/css';
-      link.href = window.location.search.match( /reveal.js/print-pdf/gi ) ? '/reveal.js/css/print/pdf.css' : '/reveal.js/css/print/paper.css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? '/reveal.js/css/print/pdf.css' : '/reveal.js/css/print/paper.css';
       document.getElementsByTagName( 'head' )[0].appendChild( link );
 
-    %script{:src=>"/reveal.js/lib/js/html5shiv.js"}
   %div{:class=>"reveal"}
     %div{:class=>"slides"}
       %section
@@ -159,4 +158,5 @@
         { src: '/reveal.js/plugin/notes/notes.js', async: true }
       ]
     });
+    Reveal.configure({ slideNumber: 'c/t' });
 

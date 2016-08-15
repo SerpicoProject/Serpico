@@ -38,4 +38,6 @@
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/presentation" }
-          Generate Presentation from Report
+          Generate Presentation from Report (Simple)
+        %a{ :href => "/report/#{@report.id}/presentation?print-pdf" }
+          &nbsp;(PDF)
