@@ -48,6 +48,11 @@ set :cr, ["Not Defined","Low","Medium","High"]
 set :ir, ["Not Defined","Low","Medium","High"]
 set :ar, ["Not Defined","Low","Medium","High"]
 
+#Risk Matrix
+set :severity, ["Low","Medium","High"]
+set :likelihood, ["Low","Medium","High"]
+
+
 ## LDAP Settings
 if config_options["ldap"] == "true"
     set :ldap, true
@@ -372,6 +377,8 @@ get '/admin/config' do
         @scoring = "cvss"
     elsif config_options["dread"]
         @scoring = "dread"
+    elsif config_options["riskmatrix"]
+        @scoring = "riskmatrix"
     else
         @scoring = "default"
     end
@@ -404,12 +411,19 @@ post '/admin/config' do
     if params["risk_scoring"] == "CVSS"
         config_options["dread"] = false
         config_options["cvss"] = true
+        config_options["riskmatrix"] = false
     elsif params["risk_scoring"] == "DREAD"
         config_options["dread"] = true
         config_options["cvss"] = false
+        config_options["riskmatrix"] = false
+    elsif params["risk_scoring"] == "Risk Matrix"
+        config_options["dread"] = false
+        config_options["cvss"] = false
+        config_options["riskmatrix"] = true
     else
         config_options["dread"] = false
         config_options["cvss"] = false
+        config_options["riskmatrix"] = false
     end
 
     File.open("./config.json","w") do |f|
@@ -431,6 +445,7 @@ get '/master/findings' do
     @master = true
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -440,6 +455,7 @@ get '/master/findings/new' do
     @master = true
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
     @nessusmap = config_options["nessusmap"]
     @vulnmap = config_options["vulnmap"]
 
@@ -452,6 +468,26 @@ post '/master/findings/new' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    end
+
+    if(config_options["riskmatrix"] && data['risk'].to_i == -1)
+        if data["severity"] == "Low"
+          severity_val = 0
+        elsif data["severity"] == "Medium"
+            severity_val = 1
+        elsif data["severity"] == "High"
+            severity_val = 2
+        end
+
+        if data["likelihood"] == "Low"
+            likelihood_val = 0
+        elsif data["likelihood"] == "Medium"
+            likelihood_val = 1
+        elsif data["likelihood"] == "High"
+            likelihood_val = 2
+        end
+
+        data['risk'] = severity_val + likelihood_val
     end
 
     # split out any nessus mapping data
@@ -494,6 +530,7 @@ get '/master/findings/:id/edit' do
     @master = true
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
     @nessusmap = config_options["nessusmap"]
     @burpmap = config_options["burpmap"]
     @vulnmap = config_options["vulnmap"]
@@ -1375,6 +1412,7 @@ get '/report/:id/findings' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -1581,6 +1619,7 @@ post '/report/:id/findings_add' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -1589,6 +1628,7 @@ end
 get '/report/:id/findings/new' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :create_finding, :encode_html => true
 end
@@ -1603,6 +1643,27 @@ post '/report/:id/findings/new' do
         data = cvss(data)
     end
 
+    if(config_options["riskmatrix"] && data['risk'].to_i == -1)
+        if data["severity"] == "Low"
+            severity_val = 0
+        elsif data["severity"] == "Medium"
+            severity_val = 1
+        elsif data["severity"] == "High"
+            severity_val = 2
+        end
+
+        if data["likelihood"] == "Low"
+            likelihood_val = 0
+        elsif data["likelihood"] == "Medium"
+            likelihood_val = 1
+        elsif data["likelihood"] == "High"
+            likelihood_val = 2
+        end
+
+        data['risk'] = severity_val + likelihood_val
+    end
+
+    puts data
     id = params[:id]
 
     # Query for the first report matching the report_name
@@ -1650,6 +1711,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -1733,6 +1795,8 @@ get '/report/:id/findings/:finding_id/upload' do
                     :cvss_environmental => @finding.cvss_environmental,
                     :cvss_modified_impact => @finding.cvss_modified_impact,
                     :cvss_total => @finding.cvss_total,
+                    :severity => @finding.severity,
+                    :likelihood => @finding.likelihood,
                     :effort => @finding.effort,
                     :type => @finding.type,
                     :overview => @finding.overview,

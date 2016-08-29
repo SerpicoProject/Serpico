@@ -170,6 +170,37 @@
             %option QUICK
             %option PLANNED
             %option INVOLVED
+    - if @riskmatrix
+      .control-group
+        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        .controls
+          %select{ :name => "risk" }
+            %option{:value => -1}= "Calculate automatically"
+            %option{:value => 0}= "None"
+            %option{:value => 1}= "Low"
+            %option{:value => 2}= "Moderate"
+            %option{:value => 3}= "High"
+            %option{:value => 4}= "Critical"
+      .control-group
+        %label{ :class => "control-label", :for => "severity" } Severity
+        .controls
+          %select{ :name => "severity" }
+            - options.severity.each do |severity|
+              %option #{severity}
+      .control-group
+        %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
+        .controls
+          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'severity_rationale', :name => 'severity_rationale'}
+      .control-group
+        %label{ :class => "control-label", :for => "likelihood" } Likelihood
+        .controls
+          %select{ :name => "likelihood" }
+            - options.likelihood.each do |likelihood|
+              %option #{likelihood}
+      .control-group
+        %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
+        .controls
+          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}
     - else
       .control-group
         %label{ :class => "control-label", :for => "effort" } Remediation Effort

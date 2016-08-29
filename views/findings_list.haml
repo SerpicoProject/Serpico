@@ -181,6 +181,10 @@
                   - if @dread
                     %td{:style => 'width: 10%'}
                       #{finding.dread_total}
+                  - elsif @riskmatrix
+                    %td{:style => 'width: 10%'}
+                      - risk_t = ["None","Low","Moderate","High","Critical"]
+                      #{risk_t[finding.risk]}
                   - elsif @cvss
                     %td{:style => 'width: 10%'}
                       #{finding.cvss_total}
