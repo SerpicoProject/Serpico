@@ -250,7 +250,7 @@ get '/admin/attacments_backup' do
       zipfile.add_file(name)
     end
   end
-  send_file zip_file, :type => 'zip', :filename => "attachments-backup.zip"
+  send_file zip_file, :type => 'zip', :filename => zip_file
   #File.delete(rand_zip) should the temp file be deleted?
 end
 
@@ -268,7 +268,8 @@ post '/admin/restore_attachments' do
     n.times do |i|
       entry_name = file.get_name(i)
       file.fopen(entry_name) do |f|
-        File.open("./attachments/#{f.name}", "wb") do |data|
+        clean_name = f.name.split(".")[0]
+        File.open("./attachments/#{clean_name}", "wb") do |data|
           data << f.read
         end
       end
