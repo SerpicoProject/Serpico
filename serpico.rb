@@ -256,17 +256,26 @@ end
 
 # Restore Attachments menu
 get '/admin/restore_attachments' do
-
   haml :restore_attachments, :encode_html => true
 end
 
 post '/admin/restore_attachments' do
-  foo = params[:file]
-  rand_file = "./tmp/#{rand(36**36).to_s(36)}.zip"
-  puts "merp"
-  puts foo
+  #Not sure this is the best way to do this.
+  rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
+  File.open(rand_zip, 'wb') {|f| f.write(params[:file][:tempfile].read) }
+  Zip::Archive.open(rand_zip) do |file|
+    n = file.num_files
+    n.times do |i|
+      entry_name = file.get_name(i)
+      file.fopen(entry_name) do |f|
+        File.open("./attachments/#{f.name}", "wb") do |data|
+          data << f.read
+        end
+      end
+    end
+  end
+  #File.delete(rand_zip) should the temp file be deleted?
   redirect to("/reports/list")
-
 end
 
 # Create a new user
