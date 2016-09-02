@@ -32,6 +32,11 @@ set :assessment_types, ["External", "Internal", "Internal/External", "Wireless",
 set :status, ["EXPLOITED"]
 set :show_exceptions, false
 
+#Set Logging
+log = File.new("/var/log/serpico.log", "a+")
+$stdout.reopen(log)
+$stderr.reopen(log)
+
 # CVSS
 set :av, ["Local","Local Network","Network"]
 set :ac, ["High","Medium","Low"]
