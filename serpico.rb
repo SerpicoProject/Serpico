@@ -263,17 +263,21 @@ post '/admin/restore_attachments' do
   #Not sure this is the best way to do this.
   rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
   File.open(rand_zip, 'wb') {|f| f.write(params[:file][:tempfile].read) }
-  Zip::Archive.open(rand_zip) do |file|
-    n = file.num_files
-    n.times do |i|
-      entry_name = file.get_name(i)
-      file.fopen(entry_name) do |f|
-        clean_name = f.name.split(".")[0]
-        File.open("./attachments/#{clean_name}", "wb") do |data|
-          data << f.read
+  begin
+    Zip::Archive.open(rand_zip) do |file|
+      n = file.num_files
+      n.times do |i|
+        entry_name = file.get_name(i)
+        file.fopen(entry_name) do |f|
+          clean_name = f.name.split(".")[0]
+          File.open("./attachments/#{clean_name}", "wb") do |data|
+            data << f.read
+          end
         end
       end
     end
+  rescue
+    puts "Not a Zip file. Please try again"
   end
   #File.delete(rand_zip) should the temp file be deleted?
   redirect to("/reports/list")
