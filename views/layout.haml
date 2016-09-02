@@ -27,7 +27,7 @@
       body {
         padding-top: 60px;
         padding-bottom: 40px;
-      } 
+      }
       .padded {
         padding-top: 20px;
         padding-bottom: 5px;
@@ -47,7 +47,7 @@
         .navbar-inner
           %ul.nav{"class" => "padded"}
             %li
-              %a.fa.fa-file-word-o{:href => "/reports/list"} &nbsp;List Reports 
+              %a.fa.fa-file-word-o{:href => "/reports/list"} &nbsp;List Reports
             %li
               %a.fa.fa-pencil-square-o{:href => "/report/new"} &nbsp;New Report
           .nav-collapse
@@ -99,6 +99,8 @@
                 %li.nav-header Maintenance Menu
                 %li
                   %a{ :href => '/admin/dbbackup' } Backup Master Database
+                  %a{ :href => '/admin/attacments_backup' } Backup All Attachments
+                  %a{ :href => '/admin/restore_attachments' } Restore All Attachments  
             - else
               - if @report
                 %ul.nav.nav-list
@@ -120,6 +122,8 @@
                     %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
                   %li
                     %a{ :href => "/report/#{@report.id}/attachments" } List Current Attachments
+                  %li
+                    %a{ :href => "/report/#{@report.id}/export_attachments" } Export All Attachments
                   %li.nav-header <a href="/report/#{@report.id}/additional_features">Additional Features</a>
 
           =yield
