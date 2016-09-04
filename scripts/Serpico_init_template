@@ -1,28 +1,17 @@
-#!/lib/init/init-d-script
-### BEGIN INIT INFO
-# Provides:          Serpico
-# Required-Start:    $network $syslog
-# Required-Stop:     $network $syslog
-# Default-Start:     3  5
-# Default-Stop:      1
-# Short-Description: Serpico
-# Description:      dDebian init script to start Serpico
-#
-### END INIT INFO
-
+#!/bin/bash
 SERPDIR=/opt/Serpico #Update this to point to your Serpico install
 PATH=$SCRIPTDIR:$PATH
 
 case "$1" in
-start) log_daemon_msg "Staring Serpico....."
+start) echo "Staring Serpico....."
       cd $SERPDIR
       echo `/usr/local/bin/ruby  serpico.rb &` #If you're using RVM you may need to update this to the RVM version of ruby
       ;;
 
-stop) log_daemon_msg "Stopping Serpico...."
+stop) echo "Stopping Serpico...."
       pkill -f serpico.rb
       ;;
-restart) log_daemon_msg "Restarting Serpico....."
+restart) echo "Restarting Serpico....."
         $0 stop
         $0 start
         ;;
