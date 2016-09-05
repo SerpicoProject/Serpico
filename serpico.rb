@@ -1227,7 +1227,6 @@ get '/report/:id/export_attachments' do
     end
     send_file rand_zip, :type => 'zip', :filename => "attachments.zip"
     #File.delete(rand_zip) should the temp file be deleted?
-    redirect to("/reports/list")
 end
 
 # display attachment
