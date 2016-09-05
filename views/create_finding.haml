@@ -16,19 +16,6 @@
             - options.assessment_types.each do |type|
               %option #{type}
     .control-group
-      %label{ :class => "control-label", :for => "effort" } Remediation Effort
-      .controls
-        %select{ :name => "effort" }
-          - if @finding
-            - options.effort.each do |effort|
-              - if effort == @finding.effort
-                %option{ :selected => "selected" } #{effort}
-              - else
-                %option #{effort}
-          - else
-            - options.effort.each do |effort|
-              %option #{effort}
-    .control-group
       %label{ :class => "control-label", :for => "type" } Finding Type
       .controls
         %select{ :name => "type" }
@@ -39,6 +26,11 @@
         %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
         .controls
           %input{ :type => 'text', :name => 'pluginid'}
+    - if @vulnmap
+      .control-group
+        %label{ :class => "control-label", :for => "msf_ref" } Add new Vuln ID mapping
+        .controls
+          %input{ :type => 'text', :name => 'msf_ref'}
     - if @dread
       .control-group
         %label{ :class => "control-label", :for => "damage" } Damage
@@ -179,6 +171,19 @@
             %option PLANNED
             %option INVOLVED
     - else
+      .control-group
+        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        .controls
+          %select{ :name => "effort" }
+            - if @finding
+              - options.effort.each do |effort|
+                - if effort == @finding.effort
+                  %option{ :selected => "selected" } #{effort}
+                - else
+                  %option #{effort}
+            - else
+              - options.effort.each do |effort|
+                %option #{effort}
       .control-group
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
         .controls

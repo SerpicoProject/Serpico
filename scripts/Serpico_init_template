@@ -1,0 +1,19 @@
+#!/bin/bash
+SERPDIR=/opt/Serpico #Update this to point to your Serpico install
+PATH=$SCRIPTDIR:$PATH
+
+case "$1" in
+start) echo "Staring Serpico....."
+      cd $SERPDIR
+      echo `/usr/local/bin/ruby  serpico.rb &` #If you're using RVM you may need to update this to the RVM version of ruby
+      ;;
+
+stop) echo "Stopping Serpico...."
+      pkill -f serpico.rb
+      ;;
+restart) echo "Restarting Serpico....."
+        $0 stop
+        $0 start
+        ;;
+esac
+exit 0

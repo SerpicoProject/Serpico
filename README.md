@@ -6,15 +6,28 @@ Video Demo of Functionality:
 
 [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
 
-[Additional Video Demos](https://github.com/MooseDojo/Serpico/wiki#online-demos)
+[Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
 
 ## Installation
 
-### Docker
-Serpico has a supported Docker image if you wanted to get started quickly:
-[Running Serpico From Docker](https://github.com/MooseDojo/Serpico/wiki/Running-Serpico-From-Docker)
+### Kali/Ubuntu/Debian
 
-### Building Serpico
+Installation is easy; download the updated deb package from the releases tab and install with:
+```
+dpkg -i [release-installer-version].deb
+```
+
+Initialize the database:
+```
+/opt/Serpico/init_serpico.sh
+```
+
+And then start Serpico:
+```
+/opt/Serpico/start_serpico.sh
+```
+
+### Developer Builds and OS X
 Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
 
 - You will need a copy of Ruby. RVM is suggested (https://rvm.io/rvm/install). ruby version 2.1.5 is supported.
@@ -50,6 +63,10 @@ Note: A new cert is created on first use. To add your own, just add it to the ro
 
 Point your browser to https://127.0.0.1:8443 (or whatever port you assigned) to start using.
 
+### Docker
+Serpico has a supported Docker image if you wanted to get started quickly:
+[Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
+
 
 ## About Serpico
 Serpico is at its core a report generation tool but targeted at creating information security reports. When building a report the user adds "findings" from the template database to the report. When there are enough findings, click 'Generate Report' to create the docx with your findings. The docx design comes from a Report Template which can be added through the UI; a default one is included. The Report Templates use a custom Markup Language to stub the data from the UI (i.e. findings, customer name, etc) and put them into the report.
@@ -72,11 +89,11 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - No DREAD.docx" and editing these rather than working from scratch.
 
 Inserting Screenshots
-https://github.com/MooseDojo/Serpico/wiki/Inserting-Screenshots
+https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots
 
 This is an area we know needs development so e-mail me with any ideas.
 
-See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/MooseDojo/Serpico/wiki/Serpico-Meta-Language-In-Depth)
+See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
 ## Support
 - As questions come up we try to add them to the [Wiki](https://github.com/MooseDojo/Serpico/wiki)

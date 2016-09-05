@@ -4,7 +4,21 @@
       %table{:style => 'width: 80%'}
         %tbody
           - if @reports.size > 0
-            %tr
+            %input{:type => "text", :class=>"form-control", :placeholder=>"Report Name Search", :id=>"search"}
+            %style{:id => "search_style" }
+            %span{:class=>"input-group-btn"}
+            %script{:type=>"text/javascript"}
+              // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
+              var searchStyle = document.getElementById('search_style');
+              document.getElementById('search').addEventListener('input', function() {
+              if (!this.value) {
+              searchStyle.innerHTML = "";
+              return;
+              }
+              searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
+              });
+            %br
+            %trd
               %td{:style => 'width: 70%'}
                 %b
                   Report Name
@@ -16,11 +30,11 @@
                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Actions
             - @reports.each do |report|
               %tr
-                %td{:style => 'width: 70%'}
+                %td{:style => 'width: 70%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   #{report.report_name}
-                %td{:style => 'width: 10%'}
+                %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   #{report.owner}
-                %td{:style => 'width: 20%'}
+                %td{:style => 'width: 20%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   - if @master
                     %a{:class => 'button btn btn-warning', :href => "/master/reports/#{finding.id}"}
                       %i{:class => 'icon-pencil icon-white', :title => 'Edit'}

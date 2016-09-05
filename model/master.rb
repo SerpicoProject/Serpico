@@ -199,6 +199,23 @@ class RemoteEndpoints
 
     property :id, Serial
     property :ip, String
+    property :port, String
+    property :type, String
+    property :report_id, Integer
+    property :workspace, String
+    property :user, String
+    property :pass, String
+
+end
+
+class VulnMappings
+  include DataMapper::Resource
+
+  property :id, Serial
+  property :templatefindings_id, String, :required => true
+  property :msf_ref, String, :required => true
+  #property :type, String, :required => true
+
 end
 
 class NessusMapping
