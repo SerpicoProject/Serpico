@@ -17,5 +17,6 @@
     "auto_import":false, //Experimental, will automatically create new findings on import
     "chart":true, //Enabled or disable support,
     "user_defined_variables":[], //set your global UDV's here; ["client_start_date","client_abbreviated_name"],
-    "threshold":"2" // must be a string; "0","1","2"...
+    "threshold":"2", // must be a string; "0","1","2"...
+    "log_file":"./log/serpico.log" // set as "" output to the console or /var/log/serpico.log
 }

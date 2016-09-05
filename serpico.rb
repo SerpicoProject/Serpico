@@ -33,10 +33,11 @@ set :status, ["EXPLOITED"]
 set :show_exceptions, false
 
 #Set Logging
-log = File.new("/var/log/serpico.log", "a+")
-$stdout.reopen(log)
-$stderr.reopen(log)
-
+if(config_options["log_file"] != "")
+    log = File.new(config_options["log_file"], "a+")
+    $stdout.reopen(log)
+    $stderr.reopen(log)
+end
 # CVSS
 set :av, ["Local","Local Network","Network"]
 set :ac, ["High","Medium","Low"]
