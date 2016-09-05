@@ -1,0 +1,18 @@
+.span10
+  %form{:method => 'post', :enctype=>"multipart/form-data"}
+    %br
+    %h2 Upload the zip file to restore the attachments from.
+    %h4 Note: the restore file MUST be a zip file.
+    - if @no_file == "1"
+      You forgot to include a file, silly
+    %br
+    %br
+    %table
+      %tr
+        %td
+          Upload &nbsp;
+        %td
+          %input{:type => 'file', :name => 'file',}
+    %br
+    %input{:type => 'submit', :value => 'Upload' }
+      %input{ :type => "button", :value => 'Cancel'}

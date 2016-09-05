@@ -235,15 +235,57 @@ end
 get '/admin/dbbackup' do
 	redirect to("/no_access") if not is_administrator?
   bdate  = Time.now()
-  filename = "master" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".bak")
-	FileUtils::copy_file("./db/master.db", "./tmp/#{filename}")
-  	if not File.zero?("./tmp/#{filename}")
-    		send_file "./tmp/#{filename}", :filename => "#{filename}", :type => 'Application/octet-stream'
-  	else
-    		"No copy of the database is available. Please try again."
-    		sleep(5)
-    		redirect to("/admin/")
-  	end
+  filename = "./tmp/master" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".bak")
+	FileUtils::copy_file("./db/master.db", filename)
+  if not File.zero?(filename)
+    	send_file filename, :filename => "#{filename}", :type => 'Application/octet-stream'
+  else
+    	"No copy of the database is available. Please try again."
+    	sleep(5)
+    	redirect to("/admin/")
+	end
+end
+
+#create backup of all attachments
+get '/admin/attacments_backup' do
+  bdate  = Time.now()
+  zip_file = "./tmp/Attachments" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".zip")
+  Zip::Archive.open( zip_file, Zip::CREATE) do |zipfile|
+    Dir["./attachments/*" ].each do | name|
+      zipfile.add_file(name)
+    end
+  end
+  send_file zip_file, :type => 'zip', :filename => zip_file
+  #File.delete(rand_zip) should the temp file be deleted?
+end
+
+# Restore Attachments menu
+get '/admin/restore_attachments' do
+  haml :restore_attachments, :encode_html => true
+end
+
+post '/admin/restore_attachments' do
+  #Not sure this is the best way to do this.
+  rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
+  File.open(rand_zip, 'wb') {|f| f.write(params[:file][:tempfile].read) }
+  begin
+    Zip::Archive.open(rand_zip) do |file|
+      n = file.num_files
+      n.times do |i|
+        entry_name = file.get_name(i)
+        file.fopen(entry_name) do |f|
+          clean_name = f.name.split(".")[0]
+          File.open("./attachments/#{clean_name}", "wb") do |data|
+            data << f.read
+          end
+        end
+      end
+    end
+  rescue
+    puts "Not a Zip file. Please try again"
+  end
+  #File.delete(rand_zip) should the temp file be deleted?
+  redirect to("/reports/list")
 end
 
 # Create a new user
@@ -1172,6 +1214,20 @@ post '/report/:id/upload_attachments' do
 	@attachment = Attachments.new(data)
 	@attachment.save
 	redirect to("/report/#{id}/attachments")
+end
+
+get '/report/:id/export_attachments' do
+    id = params[:id]
+    rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
+    @attachments = Attachments.all(:report_id => id)
+    Zip::Archive.open(rand_zip, Zip::CREATE) do |zipfile|
+      @attachments.each do | attachment|
+       zipfile.add_file(attachment.filename, attachment.filename_location )
+     end
+    end
+    send_file rand_zip, :type => 'zip', :filename => "attachments.zip"
+    #File.delete(rand_zip) should the temp file be deleted?
+    redirect to("/reports/list")
 end
 
 # display attachment
