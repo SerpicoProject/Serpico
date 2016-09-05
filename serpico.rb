@@ -2208,8 +2208,12 @@ post '/report/import' do
             if attach["filename_location"] =~ /./
                 a = attach["filename_location"].split(".").last
                 loc = "./attachments/" + a.gsub("/attachments/","")
+                attach["filename_location"] = loc
+            else
+                loc = "./attachments/" + attach["filename_location"]
             end
             attach["filename_location"] = loc
+
             attach["report_id"] = f.id
             attach["description"] = "No description" if attach["description"] == nil
             g = Attachments.create(attach)
