@@ -101,7 +101,6 @@
                 %li
                   %a{ :href => '/admin/dbbackup' } Backup Master Database
                   %a{ :href => '/admin/attacments_backup' } Backup All Attachments
-                  %a{ :href => '/admin/restore_attachments' } Restore All Attachments
             - else
               - if @report
                 %ul.nav.nav-list
@@ -122,9 +121,11 @@
                   %li
                     %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
                   %li
-                    %a{ :href => "/report/#{@report.id}/attachments" } List Current Attachments
+                    %a{ :href => "/report/#{@report.id}/attachments" } List Attachments
                   %li
-                    %a{ :href => "/report/#{@report.id}/export_attachments" } Export All Attachments
+                    %a{ :href => "/report/#{@report.id}/export_attachments" } Export Attachments
+                  %li
+                    %a{ :href => "/report/#{@report.id}/restore_attachments" } Restore Attachments
                   %li.nav-header Metasploit Data Management
                   %li
                     %a{ :href => "/report/#{@report.id}/hosts" } Hosts

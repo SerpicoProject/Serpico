@@ -34,6 +34,8 @@ set :show_exceptions, false
 
 #Set Logging
 if(config_options["log_file"] != "")
+    puts "|+| Started serpico on https://"+config_options["bind_address"]+":"+config_options["port"]
+    puts "|+| Logging to "+config_options["log_file"]
     log = File.new(config_options["log_file"], "a+")
     $stdout.reopen(log)
     $stderr.reopen(log)
@@ -258,35 +260,6 @@ get '/admin/attacments_backup' do
   end
   send_file zip_file, :type => 'zip', :filename => zip_file
   #File.delete(rand_zip) should the temp file be deleted?
-end
-
-# Restore Attachments menu
-get '/admin/restore_attachments' do
-  haml :restore_attachments, :encode_html => true
-end
-
-post '/admin/restore_attachments' do
-  #Not sure this is the best way to do this.
-  rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
-  File.open(rand_zip, 'wb') {|f| f.write(params[:file][:tempfile].read) }
-  begin
-    Zip::Archive.open(rand_zip) do |file|
-      n = file.num_files
-      n.times do |i|
-        entry_name = file.get_name(i)
-        file.fopen(entry_name) do |f|
-          clean_name = f.name.split(".")[0]
-          File.open("./attachments/#{clean_name}", "wb") do |data|
-            data << f.read
-          end
-        end
-      end
-    end
-  rescue
-    puts "Not a Zip file. Please try again"
-  end
-  #File.delete(rand_zip) should the temp file be deleted?
-  redirect to("/reports/list")
 end
 
 # Create a new user
@@ -1032,6 +1005,49 @@ get '/report/:id/attachments' do
 
     @attachments = Attachments.all(:report_id => id)
     haml :list_attachments, :encode_html => true
+end
+
+get '/report/:id/export_attachments' do
+    id = params[:id]
+    rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
+    @attachments = Attachments.all(:report_id => id)
+    Zip::Archive.open(rand_zip, Zip::CREATE) do |zipfile|
+      @attachments.each do | attachment|
+       zipfile.add_file(attachment.filename_location.gsub("./attachments/",""), attachment.filename_location )
+     end
+    end
+    send_file rand_zip, :type => 'zip', :filename => "attachments.zip"
+    #File.delete(rand_zip) should the temp file be deleted?
+end
+
+# Restore Attachments menu
+get '/report/:id/restore_attachments' do
+  haml :restore_attachments, :encode_html => true
+end
+
+post '/report/:id/restore_attachments' do
+  id = params["id"]
+  #Not sure this is the best way to do this.
+  rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
+  File.open(rand_zip, 'wb') {|f| f.write(params[:file][:tempfile].read) }
+  begin
+    Zip::Archive.open(rand_zip) do |file|
+      n = file.num_files
+      n.times do |i|
+        entry_name = file.get_name(i)
+        file.fopen(entry_name) do |f|
+          clean_name = f.name.split(".")[0]
+          File.open("./attachments/#{clean_name}", "wb") do |data|
+            data << f.read
+          end
+        end
+      end
+    end
+  rescue
+    puts "Not a Zip file. Please try again"
+  end
+  #File.delete(rand_zip) should the temp file be deleted?
+  redirect to("/report/#{id}/edit")
 end
 
 # upload nessus xml files to be processed
@@ -2120,25 +2136,29 @@ end
 
 # Export a report
 get '/report/:id/export' do
-	json = {}
+    json = {}
 
     id = params[:id]
-	report = get_report(id)
+    report = get_report(id)
 
-	# bail without a report
-	redirect to("/") unless report
+    # bail without a report
+    redirect to("/") unless report
 
-	# add the report
-	json["report"] = report
+    # add the report
+    json["report"] = report
 
-	# add the findings
+    # add the findings
     findings = Findings.all(:report_id => id)
-	json["findings"] = findings
+    json["findings"] = findings
 
-	local_filename = "./tmp/#{rand(36**12).to_s(36)}.json"
+    # add the exports
+    attachments = Attachments.all(:report_id => id)
+    json["Attachments"] = attachments
+
+    local_filename = "./tmp/#{rand(36**12).to_s(36)}.json"
     File.open(local_filename, 'w') {|f| f.write(JSON.pretty_generate(json)) }
 
-	send_file local_filename, :type => 'json', :filename => "exported_report.json"
+    send_file local_filename, :type => 'json', :filename => "exported_report.json"
 end
 
 # Import a report
@@ -2150,38 +2170,56 @@ end
 post '/report/import' do
     redirect to("/report/import") unless params[:file]
 
-	# reject if the file is above a certain limit
-	if params[:file][:tempfile].size > 1000000
-		return "File too large. 1MB limit"
-	end
+    # reject if the file is above a certain limit
+    if params[:file][:tempfile].size > 1000000
+        return "File too large. 1MB limit"
+    end
 
-	json_file = params[:file][:tempfile].read
-	line = JSON.parse(json_file)
+    json_file = params[:file][:tempfile].read
+    line = JSON.parse(json_file)
 
-	line["report"]["id"] = nil
+    line["report"]["id"] = nil
 
-	f = Reports.create(line["report"])
-	f.save
+    f = Reports.create(line["report"])
+    f.save
 
-	# now add the findings
-	line["findings"].each do |finding|
-		finding["id"] = nil
-		finding["master_id"] = nil
-		finding["report_id"] = f.id
-		finding["finding_modified"] = nil
+    # now add the findings
+    line["findings"].each do |finding|
+        finding["id"] = nil
+        finding["master_id"] = nil
+        finding["report_id"] = f.id
+        finding["finding_modified"] = nil
 
         finding["dread_total"] = 0 if finding["dread_total"] == nil
         finding["cvss_total"] = 0 if finding["cvss_total"] == nil
         finding["risk"] = 1 if finding["risk"] == nil
 
-		g = Findings.create(finding)
-		g.save
-	end
+        g = Findings.create(finding)
+        g.save
+    end
 
-	# we should redirect to the newly imported report
-	redirect to("/report/#{f.id}/edit")
+    if line["Attachments"]
+        # now add the attachments
+        line["Attachments"].each do |attach|
+            puts "importing attachments"
+            attach["id"] = nil
+
+            attach["filename"] = "Unknown" if attach["filename"] == nil
+            if attach["filename_location"] =~ /./
+                a = attach["filename_location"].split(".").last
+                loc = "./attachments/" + a.gsub("/attachments/","")
+            end
+            attach["filename_location"] = loc
+            attach["report_id"] = f.id
+            attach["description"] = "No description" if attach["description"] == nil
+            g = Attachments.create(attach)
+            g.save
+        end
+    end
+
+    # we should redirect to the newly imported report
+    redirect to("/report/#{f.id}/edit")
 end
-
 get '/report/:id/text_status' do
     id = params[:id]
 	@report = get_report(id)
