@@ -11,4 +11,7 @@ gem 'nokogiri'
 gem 'do_sqlite3', '0.10.17'
 gem 'data_mapper', '1.2.0'
 gem 'dm-sqlite-adapter', '1.2.0'
-gem 'msfrpc-client', '1.0.3'
+gem 'msgpack', '0.6.2'
+gem 'msfrpc-client', '1.0.1'
+
+
