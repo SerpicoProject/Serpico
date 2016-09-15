@@ -1,8 +1,8 @@
 # encoding: ASCII-8BIT
 require 'rubygems'
-require 'zipruby'
 require './model/master.rb'
 require 'cgi'
+require './helpers/helper'
 
 # This does the heavy lifting for taking a report template and creating the resulting XSLT template.
 #   It needs a lot of love but it works for now.
@@ -32,13 +32,7 @@ def generate_xslt(docx)
 	document = ""
 	debug = false
 
-	# Read in the DOCX and grab the document.xml
-	Zip::Archive.open(docx, Zip::CREATE) do |zipfile|
-		# read in document.xml and store as var
-		zipfile.fopen("word/document.xml") do |f|
-			document = f.read # read entry content
-		end
-	end
+	document = read_rels(docx,"word/document.xml")
 
 	#add line breaks for easier reading, only use with debugging
 	#document = document.gsub('>',">\n")
