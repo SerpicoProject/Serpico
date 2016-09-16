@@ -1014,7 +1014,7 @@ get '/report/:id/export_attachments' do
        zipfile.add(attachment.filename_location.gsub("./attachments/",""), attachment.filename_location )
      end
     end
-    
+
     send_file rand_zip, :type => 'zip', :filename => "attachments.zip"
     #File.delete(rand_zip) should the temp file be deleted?
 end
@@ -2045,6 +2045,8 @@ get '/report/:id/generate' do
 
 	### IMAGE INSERT CODE
 	if docx_xml.to_s =~ /\[!!/
+        puts "|+| Trying to insert image --- "
+
 		# first we read in the current [Content_Types.xml]
 		content_types = read_rels(rand_file,"[Content_Types].xml")
 
@@ -2639,10 +2641,9 @@ def image_insert(docx, rand_file, image, end_xml)
 	img_data = ""
 
 	File.open(image.filename_location, 'rb') {|file| img_data << file.read }
-	Zip::File.open(rand_file, Zip::File::CREATE) do |zipfile|
+	Zip::File.open(rand_file) do |zipfile|
 		#iterate zipfile to see if it has media dir, this could be better
 		zipfile.each do	|file|
-            puts file.name
 			if file.name =~ /word\/media/
 				exists = true
 			end
@@ -2656,7 +2657,7 @@ def image_insert(docx, rand_file, image, end_xml)
 	end
 
 	# update document.xml.rels
-	docu_rels = read_rels(rand_file,"[Content_Types].xml")
+	docu_rels = read_rels(rand_file,"word/_rels/document.xml.rels")
 
 	if exists
 		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")
