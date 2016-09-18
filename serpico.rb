@@ -3,7 +3,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
 require 'haml'
-require 'zipruby'
+require 'zip'
 require 'net/ldap'
 require 'json'
 
@@ -236,7 +236,7 @@ end
 
 #create DB backup
 get '/admin/dbbackup' do
-	redirect to("/no_access") if not is_administrator?
+  redirect to("/no_access") if not is_administrator?
   bdate  = Time.now()
   filename = "./tmp/master" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".bak")
 	FileUtils::copy_file("./db/master.db", filename)
@@ -253,9 +253,9 @@ end
 get '/admin/attacments_backup' do
   bdate  = Time.now()
   zip_file = "./tmp/Attachments" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".zip")
-  Zip::Archive.open( zip_file, Zip::CREATE) do |zipfile|
+  Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
     Dir["./attachments/*" ].each do | name|
-      zipfile.add_file(name)
+      zipfile.add(name.split("/").last,name)
     end
   end
   send_file zip_file, :type => 'zip', :filename => zip_file
@@ -716,11 +716,8 @@ get '/master/findings/:id/preview' do
 		# Create a temporary copy of the finding_template
 		FileUtils::copy_file(xslt_elem.docx_location,rand_file)
 
-		# A better way would be to create the zip file in memory and return to the user, this is not ideal
-		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-			zipfile.add_or_replace_buffer('word/document.xml',
-										  docx_xml.to_s)
-		end
+        # modify docx
+        docx_modify(rand_file,docx_xml,'word/document.xml')
 
 		send_file rand_file, :type => 'docx', :filename => "#{@finding.title}.docx"
 
@@ -1011,11 +1008,13 @@ get '/report/:id/export_attachments' do
     id = params[:id]
     rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
     @attachments = Attachments.all(:report_id => id)
-    Zip::Archive.open(rand_zip, Zip::CREATE) do |zipfile|
+
+    Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
       @attachments.each do | attachment|
-       zipfile.add_file(attachment.filename_location.gsub("./attachments/",""), attachment.filename_location )
+       zipfile.add(attachment.filename_location.gsub("./attachments/",""), attachment.filename_location )
      end
     end
+
     send_file rand_zip, :type => 'zip', :filename => "attachments.zip"
     #File.delete(rand_zip) should the temp file be deleted?
 end
@@ -1031,7 +1030,7 @@ post '/report/:id/restore_attachments' do
   rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
   File.open(rand_zip, 'wb') {|f| f.write(params[:file][:tempfile].read) }
   begin
-    Zip::Archive.open(rand_zip) do |file|
+    Zip::File.open(rand_zip) do |file|
       n = file.num_files
       n.times do |i|
         entry_name = file.get_name(i)
@@ -1237,9 +1236,9 @@ get '/report/:id/export_attachments' do
     id = params[:id]
     rand_zip = "./tmp/#{rand(36**12).to_s(36)}.zip"
     @attachments = Attachments.all(:report_id => id)
-    Zip::Archive.open(rand_zip, Zip::CREATE) do |zipfile|
+    Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
       @attachments.each do | attachment|
-       zipfile.add_file(attachment.filename, attachment.filename_location )
+       zipfile.add(attachment.filename, attachment.filename_location )
      end
     end
     send_file rand_zip, :type => 'zip', :filename => "attachments.zip"
@@ -1509,12 +1508,7 @@ get '/report/:id/status' do
 		### IMAGE INSERT CODE
 		if docx_xml.to_s =~ /\[!!/
 			# first we read in the current [Content_Types.xml]
-			content_types = ""
-			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-				zipfile.fopen("[Content_Types].xml") do |f|
-					content_types = f.read # read entry content
-				end
-			end
+            content_types = read_rels(rand_file,"[Content_Types].xml")
 
 			# add the png and jpg handling to end of content types document
 			if !(content_types =~ /image\/jpg/)
@@ -1527,11 +1521,7 @@ get '/report/:id/status' do
 				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
 			end
 
-			# replace the content types to support images
-			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-				 zipfile.add_or_replace_buffer("[Content_Types].xml",
-				   content_types)
-			end
+            docx_modify(rand_file,content_types,"[Content_Types].xml")
 
 			# replace all [!! image !!] in the document
 			imgs = docx_xml.to_s.split("[!!")
@@ -1561,11 +1551,7 @@ get '/report/:id/status' do
 		end
 		#### END IMAGE INSERT CODE
 
-		# A better way would be to create the zip file in memory and return to the user, this is not ideal
-		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-			zipfile.add_or_replace_buffer('word/document.xml',
-										  docx)
-		end
+        docx_modify(rand_file,docx,'word/document.xml')
 
 		send_file rand_file, :type => 'docx', :filename => "status.docx"
 
@@ -1905,12 +1891,7 @@ get '/report/:id/findings/:finding_id/preview' do
 		### IMAGE INSERT CODE
 		if docx_xml.to_s =~ /\[!!/
 			# first we read in the current [Content_Types.xml]
-			content_types = ""
-			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-				zipfile.fopen("[Content_Types].xml") do |f|
-					content_types = f.read # read entry content
-				end
-			end
+			content_types = read_rels(rand_file,"[Content_Types].xml")
 
 			# add the png and jpg handling to end of content types document
 			if !(content_types =~ /image\/jpg/)
@@ -1923,11 +1904,7 @@ get '/report/:id/findings/:finding_id/preview' do
 				content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
 			end
 
-			# replace the content types to support images
-			Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-				 zipfile.add_or_replace_buffer("[Content_Types].xml",
-				   content_types)
-			end
+            docx_modify(rand_file,content_types,"[Content_Types].xml")
 
 			# replace all [!! image !!] in the document
 			imgs = docx_xml.to_s.split("[!!")
@@ -1958,13 +1935,9 @@ get '/report/:id/findings/:finding_id/preview' do
 		end
 		#### END IMAGE INSERT CODE
 
-		# A better way would be to create the zip file in memory and return to the user, this is not ideal
-		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-			 zipfile.add_or_replace_buffer('word/document.xml',
-				 docx)
-		end
-		send_file rand_file, :type => 'docx', :filename => "#{@finding.title}.docx"
+        docx_modify(rand_file, docx,'word/document.xml')
 
+		send_file rand_file, :type => 'docx', :filename => "#{@finding.title}.docx"
 	else
 
 		"You don't have a Finding Template (did you delete the default one?) -_- ... If you're an admin go to <a href='/admin/templates/add'>here</a> to add one."
@@ -2072,13 +2045,10 @@ get '/report/:id/generate' do
 
 	### IMAGE INSERT CODE
 	if docx_xml.to_s =~ /\[!!/
+        puts "|+| Trying to insert image --- "
+
 		# first we read in the current [Content_Types.xml]
-		content_types = ""
-		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-			zipfile.fopen("[Content_Types].xml") do |f|
-				content_types = f.read # read entry content
-			end
-		end
+		content_types = read_rels(rand_file,"[Content_Types].xml")
 
 		# add the png and jpg handling to end of content types document
 		if !(content_types =~ /image\/jpg/)
@@ -2091,11 +2061,7 @@ get '/report/:id/generate' do
 			content_types = content_types.sub("</Types>","<Default Extension=\"jpeg\" ContentType=\"image/jpeg\"/></Types>")
 		end
 
-		# replace the content types to support images
-		Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-			 zipfile.add_or_replace_buffer("[Content_Types].xml",
-			   content_types)
-		end
+        docx_modify(rand_file,content_types,"[Content_Types].xml")
 
 		# replace all [!! image !!] in the document
 		imgs = docx_xml.to_s.split("[!!")
@@ -2125,11 +2091,7 @@ get '/report/:id/generate' do
 	end
 	#### END IMAGE INSERT CODE
 
-    # Create the docx, would be better to create the zip file in memory and return to the user
-    Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-         zipfile.add_or_replace_buffer('word/document.xml',
-           docx)
-    end
+    docx_modify(rand_file, docx,'word/document.xml')
 
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"
 end
@@ -2679,7 +2641,7 @@ def image_insert(docx, rand_file, image, end_xml)
 	img_data = ""
 
 	File.open(image.filename_location, 'rb') {|file| img_data << file.read }
-	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+	Zip::File.open(rand_file) do |zipfile|
 		#iterate zipfile to see if it has media dir, this could be better
 		zipfile.each do	|file|
 			if file.name =~ /word\/media/
@@ -2688,19 +2650,14 @@ def image_insert(docx, rand_file, image, end_xml)
 		end
 
 		if exists
-			zipfile.add_or_replace_buffer("word/media/#{name}",img_data)
+            zipfile.get_output_stream("word/media/#{name}") {|f| f.write(img_data)}
 		else
-			zipfile.add_or_replace_buffer("word/#{name}",img_data)
+            zipfile.get_output_stream("word/#{name}") {|f| f.write(img_data)}
 		end
 	end
 
 	# update document.xml.rels
-	docu_rels = ""
-	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-		zipfile.fopen("word/_rels/document.xml.rels") do |f|
-			docu_rels = f.read # read entry content
-		end
-	end
+	docu_rels = read_rels(rand_file,"word/_rels/document.xml.rels")
 
 	if exists
 		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")
@@ -2708,10 +2665,7 @@ def image_insert(docx, rand_file, image, end_xml)
 		docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
 	end
 
-	Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-		zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
-			docu_rels)
-	end
+    docx_modify(rand_file,docu_rels,"word/_rels/document.xml.rels")
 
 	return docx
 end

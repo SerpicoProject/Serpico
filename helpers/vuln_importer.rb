@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'nokogiri'
-require 'zipruby'
 require './model/master'
 require 'msfrpc-client'
 

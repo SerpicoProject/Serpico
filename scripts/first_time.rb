@@ -1,10 +1,3 @@
-if not File.file?('./db/master.db')
-    puts "|+| Database does not exist, initializing a blank one."
-    out_file = File.new("./db/master.db", "w")
-    out_file.puts("")
-    out_file.close
-end
-
 require './model/master.rb'
 require './helpers/xslt_generation'
 require 'openssl'

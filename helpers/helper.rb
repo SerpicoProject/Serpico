@@ -1,7 +1,32 @@
 require 'rubygems'
+require 'zip'
+
+def docx_modify(rand_file,docx_xml,fil_r)
+	Zip::File.open(rand_file) do |zipfile|
+	  zipfile.get_output_stream(fil_r) {|f| f.write(docx_xml)}
+	end
+end
+
+def read_rels(zipfile,fil_r)
+	content_types = ""
+
+	Zip::File.open(zipfile) do |zipfile|
+	  content_types = zipfile.read(fil_r)
+	end
+
+	return content_types
+end
+
+def zip_attachments(zip_file)
+  Zip::Archive.open(zip_file, Zip::CREATE) do |zipfile|
+    Dir["../attachments/*" ].each do | name|
+      zipfile.add_file(name)
+    end
+  end
+end
+
 
 # The helper class exists to do string manipulation and heavy lifting
-
 def url_escape_hash(hash)
 	hash.each do |k,v|
 		v = CGI::escapeHTML(v)
