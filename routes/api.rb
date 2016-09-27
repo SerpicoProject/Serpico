@@ -1,3 +1,5 @@
+require 'sinatra'
+
 ##### Simple API Components - Read-Only for now
 
 config_options = JSON.parse(File.read('./config.json'))

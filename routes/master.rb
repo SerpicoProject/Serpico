@@ -1,3 +1,6 @@
+require 'zip'
+require 'sinatra'
+
 ######
 # Template Document Routes
 ######
@@ -236,11 +239,8 @@ get '/master/findings/:id/preview' do
         # Create a temporary copy of the finding_template
         FileUtils::copy_file(xslt_elem.docx_location,rand_file)
 
-        # A better way would be to create the zip file in memory and return to the user, this is not ideal
-        Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-            zipfile.add_or_replace_buffer('word/document.xml',
-                                          docx_xml.to_s)
-        end
+        # modify docx
+        docx_modify(rand_file,docx_xml,'word/document.xml')
 
         send_file rand_file, :type => 'docx', :filename => "#{@finding.title}.docx"
 

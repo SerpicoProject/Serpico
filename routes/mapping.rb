@@ -1,3 +1,5 @@
+require 'sinatra'
+
 config_options = JSON.parse(File.read('./config.json'))
 
 # Delete a mapping from finding

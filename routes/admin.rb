@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'zip'
 
 config_options = JSON.parse(File.read('./config.json'))
 
@@ -51,9 +52,9 @@ end
 get '/admin/attacments_backup' do
   bdate  = Time.now()
   zip_file = "./tmp/Attachments" + "-" + (bdate.strftime("%Y%m%d%H%M%S") +".zip")
-  Zip::Archive.open( zip_file, Zip::CREATE) do |zipfile|
+  Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
     Dir["./attachments/*" ].each do | name|
-      zipfile.add_file(name)
+      zipfile.add(name.split("/").last,name)
     end
   end
   send_file zip_file, :type => 'zip', :filename => zip_file

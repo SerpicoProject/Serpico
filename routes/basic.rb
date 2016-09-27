@@ -1,3 +1,4 @@
+require 'sinatra'
 ### Basic Routes
 
 config_options = JSON.parse(File.read('./config.json'))

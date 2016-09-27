@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'webrick/https'
 require 'openssl'
 require './model/master'
+require 'zip'
 
 class Server < Sinatra::Application
     # import config options
@@ -188,7 +189,7 @@ def image_insert(docx, rand_file, image, end_xml)
     img_data = ""
 
     File.open(image.filename_location, 'rb') {|file| img_data << file.read }
-    Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
+    Zip::File.open(rand_file) do |zipfile|
         #iterate zipfile to see if it has media dir, this could be better
         zipfile.each do |file|
             if file.name =~ /word\/media/
@@ -197,19 +198,14 @@ def image_insert(docx, rand_file, image, end_xml)
         end
 
         if exists
-            zipfile.add_or_replace_buffer("word/media/#{name}",img_data)
+            zipfile.get_output_stream("word/media/#{name}") {|f| f.write(img_data)}
         else
-            zipfile.add_or_replace_buffer("word/#{name}",img_data)
+            zipfile.get_output_stream("word/#{name}") {|f| f.write(img_data)}
         end
     end
 
     # update document.xml.rels
-    docu_rels = ""
-    Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-        zipfile.fopen("word/_rels/document.xml.rels") do |f|
-            docu_rels = f.read # read entry content
-        end
-    end
+    docu_rels = read_rels(rand_file,"word/_rels/document.xml.rels")
 
     if exists
         docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")
@@ -217,11 +213,7 @@ def image_insert(docx, rand_file, image, end_xml)
         docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
     end
 
-    Zip::Archive.open(rand_file, Zip::CREATE) do |zipfile|
-        zipfile.add_or_replace_buffer("word/_rels/document.xml.rels",
-            docu_rels)
-    end
+    docx_modify(rand_file,docu_rels,"word/_rels/document.xml.rels")
 
     return docx
 end
-
