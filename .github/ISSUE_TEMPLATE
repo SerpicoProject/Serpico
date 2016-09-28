@@ -1,20 +1,17 @@
-## If It's a Bug
+# Please fill out the Bug Form or Feature Request Below
 
-Describe the steps to reproduce
+-------------------
+## Bug
+Describe the issue and steps to reproduce
 
 1. ...
 2. ...
 
-### Expected behavior
 
-What should happen?
+## Feature Request
 
-### Current behavior
-
-What happens instead?
-
-## If it's a Feature Request
-
-Describe the feature
+Describe the feature and give an example use case
 
 ### Example Use Case
+
+"As a user ..."
