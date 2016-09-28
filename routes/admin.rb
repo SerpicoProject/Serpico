@@ -220,6 +220,7 @@ post '/admin/config' do
     config_options["auto_import"] = params["auto_import"] ? true : false
     config_options["chart"] = params["chart"] ? true : false
     config_options["threshold"] = params["threshold"]
+    config_options["show_exceptions"] = params["show_exceptions"] ? true : false
 
     if params["risk_scoring"] == "CVSS"
         config_options["dread"] = false

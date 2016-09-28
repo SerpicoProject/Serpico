@@ -14,7 +14,7 @@ class Server < Sinatra::Application
     set :effort, ["Quick","Planned","Involved"]
     set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
     set :status, ["EXPLOITED"]
-    set :show_exceptions, false
+    set :show_exceptions, config_options["show_exceptions"]
 
     #Set Logging
     if(config_options["log_file"] != "")

@@ -215,3 +215,10 @@ end
 File.open("./key.pem", "w") do |f|
   f.write key.to_pem
 end
+
+# Copying the default configurations over
+puts "Copying configuration settings over."
+File.open("./config.json", "w") do |f|
+	f.write File.open("./config.json.defaults", "rb").read
+end
+

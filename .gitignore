@@ -4,3 +4,4 @@ key.pem
 tmp/*
 templates/*
 attachments/*
+config.json
