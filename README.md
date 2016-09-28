@@ -10,12 +10,18 @@ Video Demo of Functionality:
 
 ## Installation
 
-### Kali/Ubuntu/Debian
+The prefered method of installation is from [Releases](https://github.com/SerpicoProject/Serpico/releases) which includes all dependencies in one package. 
 
-Installation is easy; download the updated deb package from the releases tab and install with:
-```
-dpkg -i [release-installer-version].deb
-```
+To build after cloning the project checkout the simple instructions in [Developer Builds](https://github.com/SerpicoProject/Serpico/wiki/Developer-Build)
+
+Serpico can also be built and run on Windows; [Windows Installation](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation)
+
+Or with Docker:
+[Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
+
+## Post-Installation Releases : Getting Started
+
+### Kali/Ubuntu/Debian 
 
 Initialize the database:
 ```
@@ -27,46 +33,17 @@ And then start Serpico:
 /opt/Serpico/start_serpico.sh
 ```
 
-### Developer Builds and OS X
-Serpico is written in Ruby using Sinatra, Bootstrap, and Haml. Installation should be easy:
+### OS X
 
-- You will need a copy of Ruby. RVM is suggested (https://rvm.io/rvm/install). ruby version 2.1.5 is supported.
-
+Initialize the database:
 ```
-rvm install 2.1.5
-rvm use 2.1.5
+/Users/Shared/Serpico/init_serpico.sh
 ```
 
-- If you are running Ubuntu (or also verified on Kali) you will need a couple of dependencies:
+Start Serpico:
 ```
-apt-get install libsqlite3-dev libxslt-dev libxml2-dev zlib1g-dev gcc
+/Users/Shared/Serpico/start_serpico.sh
 ```
-
-- Go into Serpico and install the proper gems:
-```
-cd Serpico
-gem install bundler
-bundle install
-```
-
-- Run the first time script to get setup:
-```
-ruby scripts/first_time.rb
-```
-
-To start using Serpico:
-```
-ruby serpico.rb
-```
-
-Note: A new cert is created on first use. To add your own, just add it to the root directory.
-
-Point your browser to https://127.0.0.1:8443 (or whatever port you assigned) to start using.
-
-### Docker
-Serpico has a supported Docker image if you wanted to get started quickly:
-[Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
-
 
 ## About Serpico
 Serpico is at its core a report generation tool but targeted at creating information security reports. When building a report the user adds "findings" from the template database to the report. When there are enough findings, click 'Generate Report' to create the docx with your findings. The docx design comes from a Report Template which can be added through the UI; a default one is included. The Report Templates use a custom Markup Language to stub the data from the UI (i.e. findings, customer name, etc) and put them into the report.
@@ -91,7 +68,7 @@ The Meta language used for Microsoft Word was designed to be as simple as possib
 Inserting Screenshots
 https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots
 
-This is an area we know needs development so e-mail me with any ideas.
+This is an area we know needs development so e-mail us with any ideas.
 
 See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
@@ -102,7 +79,3 @@ See the Wiki for more information, [Serpico Meta-Language In Depth](https://gith
 
 ## GOTCHAS
 - Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
-
-## Huge Thanks
-* Wouldn't exist without testing, support, and feature suggestion of the rest of the [Moosedojo team!](https://github.com/MooseDojo).
-* @d4rkd0s for the great logo work. Thanks!
