@@ -700,6 +700,12 @@ end
 
 # Create a new finding in the report
 get '/report/:id/findings/new' do
+    # Query for the first report matching the report_name
+    @report = get_report(params[:id])
+    if @report == nil
+        return "No Such Report"
+    end
+
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
 

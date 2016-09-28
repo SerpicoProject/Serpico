@@ -267,6 +267,7 @@
         .controls
           %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'notes', :name => 'notes'}
 
+    - id_r = @report ? "/report/#{@report.id}/findings" : "/master/findings"
     %input{:type => 'submit', :value => 'Save'}
-    %a{ :href => "/"}
+    %a{ :href => "#{id_r}"}
       %input{ :type => "button", :value => 'Cancel'}
