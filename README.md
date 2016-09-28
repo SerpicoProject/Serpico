@@ -4,20 +4,21 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 
 Video Demo of Functionality:
 
-[Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
+* [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
 
-[Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
+* [Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos
 
 ## Installation
 
-The prefered method of installation is from [Releases](https://github.com/SerpicoProject/Serpico/releases) which includes all dependencies in one package. 
+The installation options are:
 
-To build after cloning the project checkout the simple instructions in [Developer Builds](https://github.com/SerpicoProject/Serpico/wiki/Developer-Build)
+* [Install Official Release](https://github.com/SerpicoProject/Serpico/releases): The prefered method of installation which includes all dependencies in one package. 
+ 
+* [Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Developer-Build): Simple Instructions to build from clone
 
-Serpico can also be built and run on Windows; [Windows Installation](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation)
+* [Windows Installation](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation): Serpico can also be built and run on Windows
 
-Or with Docker:
-[Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
+* [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
 
 ## Post-Installation Releases : Getting Started
 
@@ -65,18 +66,18 @@ Use the 'Add Attachment' functionality to store a file (e.g. screenshots, nmap s
 ## Microsoft Word Meta-Language
 The Meta language used for Microsoft Word was designed to be as simple as possible while still serving enough features to create a basic penetration test report.  That being said it has a learning curve (and many bugs) and I _highly_ suggest looking at "Serpico - Report.docx" or "Serpico - No DREAD.docx" and editing these rather than working from scratch.
 
-Inserting Screenshots
-https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots
+See also:
 
-This is an area we know needs development so e-mail us with any ideas.
+* [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
-See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
+* [Inserting Screenshots](https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots): This is an area we know needs development so e-mail us with any ideas.
+
 
 ## Support
-- As questions come up we try to add them to the [Wiki](https://github.com/MooseDojo/Serpico/wiki).
-- IRC: [#therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
-- If you have found a bug or would like a new feature, please create an [Issue](https://github.com/SerpicoProject/Serpico/issues/new)
-- We offer Enterprise [E-mail Support](https://www.serpicoproject.com/purchase/) for teams of users or template related questions
+* [Wiki](https://github.com/MooseDojo/Serpico/wiki): We try to add most common questions to the wiki.
+* [IRC: #therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
+* [Issue](https://github.com/SerpicoProject/Serpico/issues/new) : If you have found a bug or would like a new feature
+* [E-mail Support](https://www.serpicoproject.com/purchase/): For teams of users or template related questions
 
 ## GOTCHAS
-- Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
+* Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
