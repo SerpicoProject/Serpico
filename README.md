@@ -73,9 +73,10 @@ This is an area we know needs development so e-mail us with any ideas.
 See the Wiki for more information, [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
 ## Support
-- As questions come up we try to add them to the [Wiki](https://github.com/MooseDojo/Serpico/wiki)
+- As questions come up we try to add them to the [Wiki](https://github.com/MooseDojo/Serpico/wiki).
 - IRC: [#therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
-- If all else fails create an issue and we will try to get it answered
+- If you have found a bug or would like a new feature, please create an [Issue](https://github.com/SerpicoProject/Serpico/issues/new)
+- We offer Enterprise [E-mail Support](https://www.serpicoproject.com/purchase/) for teams of users or template related questions
 
 ## GOTCHAS
 - Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
