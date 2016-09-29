@@ -2,7 +2,10 @@
   %form{:method => 'post', :enctype=>"multipart/form-data"}
     %br
     %h2 Upload Attachment
-    %h4 Note: Only jpg and png are supported for screenshots . Also, the file extension must be in the description below (e.g. sqli.png).
+    %h4 Note: 
+    %h4 &nbsp;&nbsp;&bullet;&nbsp;Only jpg and png are supported for screenshots
+    %h4 &nbsp;&nbsp;&bullet;&nbsp;The file name is inherited from the file.
+    %h4 &nbsp;&nbsp;&bullet;&nbsp;Multiple files can be uploaded at once.   
     - if @no_file == "1"
       You forgot to include a file, silly
     %br
@@ -10,14 +13,9 @@
     %table
       %tr
         %td
-          File Description &nbsp;
+          Upload Files &nbsp;
         %td
-          %input{:type => 'text', :name => 'description', :required=>true}
-      %tr
-        %td
-          Upload &nbsp;
-        %td
-          %input{:type => 'file', :name => 'file',}
+          %input{:type => 'file', :name => 'files[]', :multiple => true}
     %br
     %input{:type => 'submit', :value => 'Upload' }
     %a{ :href => "/report/#{@report.id}/edit"}

@@ -251,32 +251,34 @@ post '/report/:id/upload_attachments' do
         return "No Such Report"
     end
 
-    if params[:file] == nil
+    if params[:files] == nil
     	redirect to("/report/#{id}/upload_attachments?no_file=1")
     end
 
-    # We use a random filename
-    rand_file = "./attachments/#{rand(36**36).to_s(36)}"
+    params['files'].map{ |upf|
+        # We use a random filename
+        rand_file = "./attachments/#{rand(36**36).to_s(36)}"
 
-	# reject if the file is above a certain limit
-	if params[:file][:tempfile].size > 100000000
-		return "File too large. 100MB limit"
-	end
+    	# reject if the file is above a certain limit
+    	if upf[:tempfile].size > 100000000
+    		return "File too large. 100MB limit"
+    	end
 
-	# open up a file handle and write the attachment
-	File.open(rand_file, 'wb') {|f| f.write(params[:file][:tempfile].read) }
+    	# open up a file handle and write the attachment
+    	File.open(rand_file, 'wb') {|f| f.write(upf[:tempfile].read) }
 
-	# delete the file data from the attachment
-	datax = Hash.new
-	# to prevent traversal we hardcode this
-	datax["filename_location"] = "#{rand_file}"
-	datax["filename"] = params[:file][:filename]
-	datax["description"] = CGI::escapeHTML(params[:description]).gsub(" ","_").gsub("/","_")
-	datax["report_id"] = id
-	data = url_escape_hash(datax)
+    	# delete the file data from the attachment
+    	datax = Hash.new
+    	# to prevent traversal we hardcode this
+    	datax["filename_location"] = "#{rand_file}"
+    	datax["filename"] = upf[:filename]
+    	datax["description"] = CGI::escapeHTML(upf[:filename]).gsub(" ","_").gsub("/","_").gsub("\\","_").gsub("`","_")
+    	datax["report_id"] = id
+    	data = url_escape_hash(datax)
 
-	@attachment = Attachments.new(data)
-	@attachment.save
+    	@attachment = Attachments.new(data)
+    	@attachment.save
+    }
 	redirect to("/report/#{id}/attachments")
 end
 
