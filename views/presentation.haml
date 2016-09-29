@@ -8,16 +8,18 @@
     %meta{:name=>"viewport", :content=>"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"}
 
     %link{:rel=>"stylesheet", :href=>"/reveal.js/css/reveal.css"}
+    %link{:rel=>"stylesheet", :href=>"/reveal.js/css/print/paper.css"}
     %link{:rel=>"stylesheet", :href=>"/reveal.js/css/theme/beige.css", :id=>"theme"}
     %link{:rel=>"stylesheet", :href=>"/reveal.js/lib/css/zenburn.css"}
 
     :javascript
-      var link = document.createElement( 'link' );
-      link.rel = 'stylesheet';
-      link.type = 'text/css';
-      link.href = window.location.search.match( /reveal.js/print-pdf/gi ) ? '/reveal.js/css/print/pdf.css' : '/reveal.js/css/print/paper.css';
-      document.getElementsByTagName( 'head' )[0].appendChild( link );
-
+      if(window.location.search.match(/print-pdf/gi)){
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = '/reveal.js/css/print/pdf.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+      }
     %script{:src=>"/reveal.js/lib/js/html5shiv.js"}
   %div{:class=>"reveal"}
     %div{:class=>"slides"}
