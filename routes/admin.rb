@@ -68,7 +68,7 @@ post '/admin/add_user' do
     user = User.first(:username => params[:username])
 
     if user
-        if params[:password]
+        if params[:password] and params[:password].size > 1
             # we have to hardcode the input params to prevent param pollution
             user.update(:type => params[:type], :auth_type => params[:auth_type], :password => params[:password])
         else
