@@ -60,7 +60,7 @@ def url_escape_hash(hash)
 			end
 
 			v = new_v
-		elsif k == "remediation" or k == "overview" or k == "poc" or k == "affected_hosts"
+		elsif k == "remediation" or k == "overview" or k == "poc" or k == "affected_hosts" or k == "references"
 			new_v = "<paragraph>#{v}</paragraph>"
 			v = new_v
 		end
