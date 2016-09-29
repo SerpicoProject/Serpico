@@ -706,6 +706,14 @@ get '/report/:id/findings/new' do
         return "No Such Report"
     end
 
+    # attachments autocomplete work
+    temp_attaches = Attachments.all(:report_id => params[:id])
+    @attaches = []
+    temp_attaches.each do |ta|
+        next unless ta.description =~ /png/ or ta.description =~ /jpg/
+        @attaches.push(ta.description)
+    end
+
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
 
@@ -765,6 +773,14 @@ get '/report/:id/findings/:finding_id/edit' do
 
     if @finding == nil
         return "No Such Finding"
+    end
+
+    # attachments autocomplete work
+    temp_attaches = Attachments.all(:report_id => id)
+    @attaches = []
+    temp_attaches.each do |ta|
+        next unless ta.description =~ /png/ or ta.description =~ /jpg/
+        @attaches.push(ta.description)
     end
 
     @dread = config_options["dread"]

@@ -1,3 +1,6 @@
+%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
+%script{:src => "/js/bootstrap-suggest.js"}
+
 .span10
   %br
   %h2 New Finding
@@ -245,9 +248,31 @@
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
     .control-group
-      %label{ :class => "control-label", :for => "poc" } Proof of Concept
+      %label{ :class => "control-label", :for => "pocu" } Proof of Concept
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc', :id => 'pocu'}
+    - attachments=''
+    - if @attaches
+      - @attaches.each do |attach|
+        - attachments = attachments + "{name: '#{attach}'},"
+    / autosuggest code is care of bootstrap-suggest.js    
+    :javascript
+      var files = [
+        #{attachments}
+      ];
+        $('#pocu').suggest('[', {
+          data: files,
+          filter: {
+              casesensitive: true,
+              limit: 10
+            },
+          map: function(file) {
+            return {
+              value: '!!'+file.name+'!!]',
+              text: '<strong>'+file.name+'</strong>'
+            }
+          }
+        })
     - if !@master
       .control-group
         %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
