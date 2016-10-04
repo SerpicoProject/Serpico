@@ -1,0 +1,34 @@
+.span10
+  %form{:method => 'post'}
+    - if @message
+      - if @message == "success"
+        %br
+        %h2 Password Successfully Changed
+        %br
+    - else
+      %br
+      %h2 Change Password
+      %br
+      %table
+        %tr
+          %td
+            Old Password &nbsp;
+          %td
+            %input{:type => 'text', :name => 'old_pass', :value=> "", :type=>"password"}
+        %tr
+          %td
+            New Password &nbsp;
+          %td
+            %input{:type => 'text', :name => 'new_pass', :value=> "", :type=>"password"}
+        %tr
+          %td
+            Confirm New Password &nbsp;
+          %td
+            %input{:type => 'text', :name => 'new_pass_confirm', :value => "", :type=>"password"}
+
+      %br
+      %input{:type => 'submit', :value => 'Save' }
+      %a{ :href => "/reports/list"}
+        %input{ :type => "button", :value => 'Cancel'}
+
+
