@@ -239,6 +239,45 @@ post '/admin/config' do
     redirect to("/admin/config")
 end
 
+# get plugins available
+get '/admin/plugins' do
+    redirect to("/no_access") if not is_administrator?
+
+    @plugins = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        @plugins.push(JSON.parse(File.open(lib).read))
+    }
+
+    haml :plugins, :encode_html => true
+end
+
+# enable plugins
+post '/admin/plugins' do
+    redirect to("/no_access") if not is_administrator?
+
+    @plugins = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        @plugins.push(JSON.parse(File.open(lib).read))
+    }
+
+    @plugins.each do |plug|
+        if params[plug["description"]]
+            plug["enabled"] = true
+            File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|
+              f.write(JSON.pretty_generate(plug))
+            end
+        else
+            plug["enabled"] = false
+            File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|
+              f.write(JSON.pretty_generate(plug))
+            end
+        end
+    end
+
+    redirect to("/admin/plugins")
+end
+
+
 # Manage Templated Reports
 get '/admin/templates' do
     redirect to("/no_access") if not is_administrator?

@@ -53,6 +53,16 @@ class Server < Sinatra::Application
     enable :sessions
     set :session_secret, rand(36**12).to_s(36)
 
+    Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
+        pl = JSON.parse(File.open(lib).read)
+        if pl["enabled"]
+            puts "|+| Loaded #{pl['description']}"
+            # load the plugin
+            Dir[File.join(File.dirname(__FILE__), "plugins/TestPlugin/", "*.rb")].each { |lib| require lib }
+        end
+    }
+
+    # load the default stuff
  	Dir[File.join(File.dirname(__FILE__), "routes", "*.rb")].each { |lib| require lib }
  	Dir[File.join(File.dirname(__FILE__), "helpers", "*.rb")].each { |lib| require lib }
  	Dir[File.join(File.dirname(__FILE__), "lib", "*.rb")].each { |lib| require lib }
@@ -216,4 +226,9 @@ def image_insert(docx, rand_file, image, end_xml)
     docx_modify(rand_file,docu_rels,"word/_rels/document.xml.rels")
 
     return docx
+end
+
+# Check if the user is an administrator
+def get_plugins()
+    return plugins
 end

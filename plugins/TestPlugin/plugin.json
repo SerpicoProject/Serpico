@@ -1,0 +1,5 @@
+{
+  "name": "TestPlugin",
+  "description": "Test Plugin",
+  "enabled": true
+}
