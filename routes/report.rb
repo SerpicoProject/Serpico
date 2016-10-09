@@ -1528,7 +1528,7 @@ get '/report/:id/report_plugins' do
     Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
         pl = JSON.parse(File.open(lib).read)
         a = {}
-        if pl["enabled"] and pl["is_report"]
+        if pl["enabled"] and pl["report_view"]
             # add the plugin to the menu
             a["name"] = pl["name"]
             a["description"] = pl["description"]

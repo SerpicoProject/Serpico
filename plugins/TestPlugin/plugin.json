@@ -3,5 +3,6 @@
   "description": "Test Plugin is a test.",
   "link":"/TestPlugin/hello",
   "enabled": true,
-  "is_report": true
+  "report_view": true,
+  "admin_view": true
 }

@@ -451,3 +451,22 @@ post '/admin/templates/edit' do
 	    redirect to("/admin/templates")
     end
 end
+
+# get enabled plugins
+get '/admin/admin_plugins' do
+    @menu = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        pl = JSON.parse(File.open(lib).read)
+        a = {}
+        if pl["enabled"] and pl["admin_view"]
+            # add the plugin to the menu
+            a["name"] = pl["name"]
+            a["description"] = pl["description"]
+            a["link"] = pl["link"]
+            @menu.push(a)
+        end
+        p a
+    }
+    haml :enabled_plugins, :encode_html => true
+end
+
