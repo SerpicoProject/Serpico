@@ -1,0 +1,12 @@
+.span10
+  .table
+    %table{:style => 'width: 90%'}
+      %tbody
+        - @menu.each do |item|
+          %tr
+            %td
+              #{item["name"]}
+            %td
+              #{item["description"]}
+            %td
+              %a{ :href => "#{item["link"]}"} #{item["name"]}

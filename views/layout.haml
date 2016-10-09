@@ -104,6 +104,8 @@
                 %li
                   %a{ :href => '/admin/plugins' } Enable/Disable Plugins
                 %li
+                  %a{ :href => '/admin/admin_plugins' } Admin Plugins
+                %li
                   %a{ :href => '/admin/dbbackup' } Backup Master Database
                   %a{ :href => '/admin/attacments_backup' } Backup All Attachments
             - else
@@ -127,16 +129,16 @@
                     %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
                   %li
                     %a{ :href => "/report/#{@report.id}/attachments" } List Attachments
-                  %li
-                    %a{ :href => "/report/#{@report.id}/export_attachments" } Export Attachments
-                  %li
-                    %a{ :href => "/report/#{@report.id}/restore_attachments" } Restore Attachments
                   %li.nav-header Metasploit Data Management
                   %li
                     %a{ :href => "/report/#{@report.id}/hosts" } Hosts
                   %li
                     %a{ :href => "/report/#{@report.id}/vulns" } Vulnerabilities
-                  %li.nav-header <a href="/report/#{@report.id}/additional_features">Additional Features</a>
+                  %li.nav-header Additional
+                  %li
+                    %a{ :href => "/report/#{@report.id}/additional_features" } Additional Features
+                  %li
+                    %a{ :href => "/report/#{@report.id}/report_plugins" } Enabled Plugins
 
           =yield
   - else

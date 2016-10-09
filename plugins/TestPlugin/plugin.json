@@ -1,5 +1,7 @@
 {
   "name": "TestPlugin",
-  "description": "Test Plugin",
-  "enabled": true
+  "description": "Test Plugin is a test.",
+  "link":"/TestPlugin/hello",
+  "enabled": true,
+  "is_report": true
 }

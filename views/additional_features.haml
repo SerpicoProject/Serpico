@@ -10,6 +10,12 @@
         %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments must be exported separately)
     %tr
       %td
+        %a{ :href => "/report/#{@report.id}/export_attachments" } Export Attachments
+    %tr
+      %td
+        %a{ :href => "/report/#{@report.id}/restore_attachments" } Restore Attachments
+    %tr
+      %td
         %a{ :href => "/report/#{@report.id}/msfsettings" } Configure a Metasploit RPC Connection
     %tr
       %td

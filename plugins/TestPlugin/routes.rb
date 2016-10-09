@@ -1,6 +1,6 @@
 require 'sinatra'
 
 # List current reports
-get '/newroute' do
-	"hello world"
+get '/TestPlugin/hello' do
+	haml :'../plugins/TestPlugin/views/test_plugin', :encode_html => true
 end

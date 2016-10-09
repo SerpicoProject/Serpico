@@ -1515,3 +1515,28 @@ get '/report/:id/import/vulns' do
     end
     haml :findings_add, :encode_html => true
 end
+
+# get enabled plugins
+get '/report/:id/report_plugins' do
+    id = params[:id]
+    @report = get_report(id)
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    @menu = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        pl = JSON.parse(File.open(lib).read)
+        a = {}
+        if pl["enabled"] and pl["is_report"]
+            # add the plugin to the menu
+            a["name"] = pl["name"]
+            a["description"] = pl["description"]
+            a["link"] = pl["link"]
+            @menu.push(a)
+        end
+        p a
+    }
+    haml :enabled_plugins, :encode_html => true
+end
+
