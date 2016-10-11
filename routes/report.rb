@@ -538,7 +538,7 @@ get '/report/:id/status' do
     end
     findings_xml << "</findings_list>"
 
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+    findings_xml = meta_markup_unencode(findings_xml, @report)
 
     report_xml = "#{findings_xml}"
 
@@ -943,7 +943,7 @@ get '/report/:id/findings/:finding_id/preview' do
     findings_xml << @finding.to_xml
     findings_xml << "</findings_list>"
 
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+    findings_xml = meta_markup_unencode(findings_xml, @report)
 
     report_xml = "#{findings_xml}"
 
@@ -1084,7 +1084,7 @@ get '/report/:id/generate' do
     findings_xml << "</findings_list>"
 
     # Replace the stub elements with real XML elements
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+    findings_xml = meta_markup_unencode(findings_xml, @report)
 
     # check if the report has user_defined variables
     if @report.user_defined_variables
