@@ -261,7 +261,7 @@ post '/admin/plugins' do
     }
 
     @plugins.each do |plug|
-        if params[plug["description"]]
+        if params[plug["name"]]
             plug["enabled"] = true
             File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|
               f.write(JSON.pretty_generate(plug))
@@ -465,7 +465,6 @@ get '/admin/admin_plugins' do
             a["link"] = pl["link"]
             @menu.push(a)
         end
-        p a
     }
     haml :enabled_plugins, :encode_html => true
 end

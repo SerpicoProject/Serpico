@@ -1535,7 +1535,6 @@ get '/report/:id/report_plugins' do
             a["link"] = pl["link"]
             @menu.push(a)
         end
-        p a
     }
     haml :enabled_plugins, :encode_html => true
 end

@@ -56,9 +56,9 @@ class Server < Sinatra::Application
     Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
         pl = JSON.parse(File.open(lib).read)
         if pl["enabled"]
-            puts "|+| Loaded #{pl['description']}"
+            puts "|+| Loaded plugin #{pl['description']}"
             # load the plugin
-            Dir[File.join(File.dirname(__FILE__), "plugins/TestPlugin/", "*.rb")].each { |lib| require lib }
+            Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.rb")].each { |lib| require lib }
         end
     }
 

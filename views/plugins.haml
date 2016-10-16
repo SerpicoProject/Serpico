@@ -5,19 +5,22 @@
     %br
     %form
       %table
-        - @plugins.each do |p|
+        - @plugins.each do |plug|
+          - next unless plug["name"]
           %tr
             %td
-              #{p["description"]}&nbsp;&nbsp;&nbsp;
+              %h3
+                #{plug["name"]}&nbsp;&nbsp;&nbsp;
             %td
-              - if (p["enabled"] == false) or (p["enabled"] == true) or (p["enabled"] == "false") or (p["enabled"] == "true")
-                - if (p["enabled"] == true) or (p["enabled"] == "true")
-                  %input{:type => 'checkbox', :name => "#{p['description']}", :checked => "checked"}
+              #{plug["description"]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            %td
+              - if (plug["enabled"] == false) or (plug["enabled"] == true) or (plug["enabled"] == "false") or (plug["enabled"] == "true")
+                - if (plug["enabled"] == true) or (plug["enabled"] == "true")
+                  %input{:type => 'checkbox', :name => "#{plug['description']}", :checked => "checked"}
                 - else
-                  %input{:type => 'checkbox', :name => "#{p['description']}"}
+                  %input{:type => 'checkbox', :name => "#{plug['description']}"}
     %br
     %br
-
       %input{:type => 'submit', :value => 'Save' }
         %a{ :href => "/admin/plugins"}
       %input{ :type => "button", :value => 'Cancel'}
