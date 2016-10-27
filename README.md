@@ -6,14 +6,14 @@ Video Demo of Functionality:
 
 * [Serpico - Demo 1](https://www.youtube.com/watch?v=G_qYcL4ynSc)
 
-* [Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos
+* [Additional Video Demos](https://github.com/SerpicoProject/Serpico/wiki#online-demos)
 
 ## Installation
 
 The installation options are:
 
-* [Install Official Release](https://github.com/SerpicoProject/Serpico/releases): The prefered method of installation which includes all dependencies in one package. 
- 
+* [Install Official Release](https://github.com/SerpicoProject/Serpico/releases): The prefered method of installation which includes all dependencies in one package.
+
 * [Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Developer-Build): Simple Instructions to build from clone
 
 * [Windows Installation](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation): Serpico can also be built and run on Windows
@@ -22,7 +22,7 @@ The installation options are:
 
 ## Post-Installation Releases : Getting Started
 
-### Kali/Ubuntu/Debian 
+### Kali/Ubuntu/Debian
 
 Initialize the database:
 ```
