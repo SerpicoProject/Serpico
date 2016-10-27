@@ -261,6 +261,7 @@ post '/admin/plugins' do
     }
 
     @plugins.each do |plug|
+        p params
         if params[plug["name"]]
             plug["enabled"] = true
             File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|

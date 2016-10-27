@@ -16,9 +16,9 @@
             %td
               - if (plug["enabled"] == false) or (plug["enabled"] == true) or (plug["enabled"] == "false") or (plug["enabled"] == "true")
                 - if (plug["enabled"] == true) or (plug["enabled"] == "true")
-                  %input{:type => 'checkbox', :name => "#{plug['description']}", :checked => "checked"}
+                  %input{:type => 'checkbox', :name => "#{plug['name']}", :checked => "checked"}
                 - else
-                  %input{:type => 'checkbox', :name => "#{plug['description']}"}
+                  %input{:type => 'checkbox', :name => "#{plug['name']}"}
       %input{:type => 'submit', :value => 'Save' }
       %a{ :href => "/admin/plugins"}
       %input{ :type => "button", :value => 'Cancel'}
