@@ -85,7 +85,7 @@ get '/reset' do
     haml :reset, :encode_html => true
 end
 
-# Handles the consultant information settings
+# Handles the password reset
 post '/reset' do
     redirect '/reports/list' unless valid_session?
 

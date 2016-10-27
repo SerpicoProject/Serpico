@@ -239,6 +239,46 @@ post '/admin/config' do
     redirect to("/admin/config")
 end
 
+# get plugins available
+get '/admin/plugins' do
+    redirect to("/no_access") if not is_administrator?
+
+    @plugins = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        @plugins.push(JSON.parse(File.open(lib).read))
+    }
+
+    haml :plugins, :encode_html => true
+end
+
+# enable plugins
+post '/admin/plugins' do
+    redirect to("/no_access") if not is_administrator?
+
+    @plugins = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        @plugins.push(JSON.parse(File.open(lib).read))
+    }
+
+    @plugins.each do |plug|
+        p params
+        if params[plug["name"]]
+            plug["enabled"] = true
+            File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|
+              f.write(JSON.pretty_generate(plug))
+            end
+        else
+            plug["enabled"] = false
+            File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|
+              f.write(JSON.pretty_generate(plug))
+            end
+        end
+    end
+
+    redirect to("/admin/plugins")
+end
+
+
 # Manage Templated Reports
 get '/admin/templates' do
     redirect to("/no_access") if not is_administrator?
@@ -412,3 +452,21 @@ post '/admin/templates/edit' do
 	    redirect to("/admin/templates")
     end
 end
+
+# get enabled plugins
+get '/admin/admin_plugins' do
+    @menu = []
+    Dir[File.join(File.dirname(__FILE__), "../plugins/**/", "*.json")].each { |lib|
+        pl = JSON.parse(File.open(lib).read)
+        a = {}
+        if pl["enabled"] and pl["admin_view"]
+            # add the plugin to the menu
+            a["name"] = pl["name"]
+            a["description"] = pl["description"]
+            a["link"] = pl["link"]
+            @menu.push(a)
+        end
+    }
+    haml :enabled_plugins, :encode_html => true
+end
+

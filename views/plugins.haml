@@ -1,0 +1,26 @@
+.span10
+  %form{:method => 'post'}
+    %br
+    %h2 Available Plugins (Must Restart After Changes)
+    %br
+    %form
+      %table
+        - @plugins.each do |plug|
+          - next unless plug["name"]
+          %tr
+            %td
+              %h3
+                #{plug["name"]}&nbsp;&nbsp;&nbsp;
+            %td
+              #{plug["description"]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            %td
+              - if (plug["enabled"] == false) or (plug["enabled"] == true) or (plug["enabled"] == "false") or (plug["enabled"] == "true")
+                - if (plug["enabled"] == true) or (plug["enabled"] == "true")
+                  %input{:type => 'checkbox', :name => "#{plug['name']}", :checked => "checked"}
+                - else
+                  %input{:type => 'checkbox', :name => "#{plug['name']}"}
+      %input{:type => 'submit', :value => 'Save' }
+      %a{ :href => "/admin/plugins"}
+      %input{ :type => "button", :value => 'Cancel'}
+
+
