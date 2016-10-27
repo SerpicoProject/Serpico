@@ -168,7 +168,6 @@ def mm_verify(hash)
 			end
 
 			if text.include?("[[[")
-				p text
 				elem = text.split("[[[")
 				elem.shift
 				elem.each do |bl|
