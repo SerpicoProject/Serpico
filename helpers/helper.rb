@@ -128,6 +128,60 @@ def meta_markup_unencode(findings_xml, customer_name)
   return findings_xml
 end
 
+# verify that the markup is sane
+def mm_verify(hash)
+	error = ""
+
+	hash.each do |k,text|
+		text = CGI::escapeHTML(text)
+
+    	if text
+
+			if text.include?("*-")
+				elem = text.split("*-")
+				elem.shift
+				elem.each do |bl|
+					if !text.include?("-*")
+						error = "Markdown error, missing -* close tag."
+					end
+				end
+			end
+
+			if text.include?("[==")
+				elem = text.split("[==")
+				elem.shift
+				elem.each do |bl|
+					if !text.include?("==]")
+						error = "Markdown error, missing ==] close tag."
+					end
+				end
+			end
+
+			if text.include?("[~~")
+				elem = text.split("[~~")
+				elem.shift
+				elem.each do |bl|
+					if !text.include?("~~]")
+						error = "Markdown error, missing ~~] close tag."
+					end
+				end
+			end
+
+			if text.include?("[[[")
+				p text
+				elem = text.split("[[[")
+				elem.shift
+				elem.each do |bl|
+					if !text.include?("]]]")
+						error = "Markdown error, missing ]]] close tag."
+					end
+				end
+			end
+		end
+	end
+	return error
+end
+
 def compare_text(new_text, orig_text)
  if orig_text == nil
     # there is no master finding, must be new

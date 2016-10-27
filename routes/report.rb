@@ -724,6 +724,10 @@ end
 
 # Create the finding in the DB
 post '/report/:id/findings/new' do
+    error = mm_verify(request.POST)
+    if error.size > 1
+        return error
+    end
     data = url_escape_hash(request.POST)
 
     if(config_options["dread"])
@@ -812,6 +816,10 @@ post '/report/:id/findings/:finding_id/edit' do
         return "No Such Finding"
     end
 
+    error = mm_verify(request.POST)
+    if error.size > 1
+        return error
+    end
     data = url_escape_hash(request.POST)
 
     if(config_options["dread"])
