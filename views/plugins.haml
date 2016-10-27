@@ -1,5 +1,5 @@
 .span10
-  %form{:method => 'post', :action => '/admin/plugins'}
+  %form{:method => 'post'}
     %br
     %h2 Available Plugins (Must Restart After Changes)
     %br
@@ -19,10 +19,8 @@
                   %input{:type => 'checkbox', :name => "#{plug['description']}", :checked => "checked"}
                 - else
                   %input{:type => 'checkbox', :name => "#{plug['description']}"}
-    %br
-    %br
       %input{:type => 'submit', :value => 'Save' }
-        %a{ :href => "/admin/plugins"}
+      %a{ :href => "/admin/plugins"}
       %input{ :type => "button", :value => 'Cancel'}
 
 
