@@ -111,6 +111,7 @@
             - if finding.presentation_points
               %ul{:style=>"margin-left:10%"}
                 - finding.presentation_points.to_s.split("<paragraph>").each do |pp|
+                  - next if pp =~ /\[\!\!/
                   - if pp.gsub('</paragraph>','').size > 0
                     %li
                       #{pp.gsub('</paragraph>','')}
@@ -120,6 +121,15 @@
               #{finding.title}
             %h3
               Proof Of Concept
+          - if finding.presentation_points
+            - finding.presentation_points.to_s.split("<paragraph>").each do |pp|
+              - next unless pp =~ /\[\!\!/
+              - img = pp.split("[!!")[1].split("!!]").first
+              - @images.each do |imr|
+                - if imr["name"] == img
+                  %section{:style=>"vertical-align:top; text-align: left;"}
+                    %h2
+                      %img{ :src=> "#{imr['link']}" }
           %section{:style=>"vertical-align:top; text-align: left;"}
             %h2
               #{finding.title}

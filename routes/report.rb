@@ -1320,6 +1320,21 @@ get '/report/:id/presentation' do
     # add the findings
     @findings = Findings.all(:report_id => id)
 
+    # add images into presentations
+    @images = []
+    @findings.each do |find|
+        a = {}
+        if find.presentation_points
+            find.presentation_points.to_s.split("<paragraph>").each do |pp|
+                next unless pp =~ /\[\!\!/
+                img = pp.split("[!!")[1].split("!!]").first
+                a["name"] = img
+                img_p = Attachments.first( :description => img)
+                a["link"] = "/report/#{id}/attachments/#{img_p.id}"
+                @images.push(a)
+            end
+        end
+    end
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
 
