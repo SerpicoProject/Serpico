@@ -24,7 +24,12 @@
         %a{ :href => "/admin/plugins"}
         %input{ :type => "button", :value => 'Cancel'}
     - else
-      No plugins found. Run
-      <br><br>git clone https://github.com/SerpicoProject/SerpicoPlugins.git plugins<br><br>
-      from the Serpico root directory
-
+      No plugins found.
+  #{@plugin}
+  - if @admin == true and @plugin == true
+    %h2 Upload a plugin (Must Restart After Upload)
+    %form{:method => 'post', :enctype=>"multipart/form-data", :action => '/admin/plugin_upload'}
+      %br
+        %input{:type => 'file', :name => 'files[]', :multiple => true}
+      %br
+        %input{:type => 'submit', :value => 'Upload' }

@@ -58,7 +58,7 @@ class Server < Sinatra::Application
         if pl["enabled"]
             puts "|+| Loaded plugin #{pl['description']}"
             # load the plugin
-            Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.rb")].each { |lib| require lib }
+            Dir[File.join(File.dirname(__FILE__), "#{lib}/../**", "*.rb")].each { |libx| require libx }
         end
     }
 
@@ -107,6 +107,11 @@ end
 # Check if the user is an administrator
 def is_administrator?
     return true if Sessions.type(session[:session_id]) == "Administrator"
+end
+
+# Check if the user has plugin upload capability
+def is_plugin?
+    return true if (Sessions.type(session[:session_id]) == "Administrator" and Sessions.is_plugin?(session[:session_id]) == true)
 end
 
 # authentication method used by API, returns Session Key

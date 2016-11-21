@@ -91,6 +91,7 @@ get '/admin/list_user' do
     redirect to("/no_access") if not is_administrator?
     @admin = true
     @users = User.all
+    @plugin = is_plugin?
 
     haml :list_user, :encode_html => true
 end
@@ -248,6 +249,9 @@ get '/admin/plugins' do
         @plugins.push(JSON.parse(File.open(lib).read))
     }
 
+    @admin = true if is_administrator?
+    @plugin = true if is_plugin?
+
     haml :plugins, :encode_html => true
 end
 
@@ -278,6 +282,64 @@ post '/admin/plugins' do
     redirect to("/admin/plugins")
 end
 
+# upload plugin zip
+post '/admin/plugin_upload' do
+    redirect to("/no_access") if not is_administrator?
+    redirect to("/no_access") if not is_plugin?
+
+    # take each zip in turn
+    params['files'].map{ |upf|
+        # We use a random filename
+        rand_file = "./tmp/#{rand(36**36).to_s(36)}"
+
+        # reject if the file is above a certain limit
+        if upf[:tempfile].size > 100000000
+            return "File too large. 100MB limit"
+        end
+
+        # unzip the plugin and write it to the fs, writing the OS is possible but so is RCE
+        File.open(rand_file, 'wb') {|f| f.write(upf[:tempfile].read) }
+
+        # find the config.json file
+        config = ""
+        Zip::File.open(rand_file) do |zipfile|
+            # read the config file
+            zipfile.each do |entry|
+                if entry.name == "plugin.json"
+                    configj = entry.get_input_stream.read
+                    config = JSON.parse(configj)
+                end
+            end
+        end
+        if config == ""
+            return "plugin.json does not exist in zip."
+        end
+
+        Zip::File.open(rand_file) do |zipfile|
+            # read the config file
+            zipfile.each do |entry|
+                # Extract to file/directory/symlink
+                fn = "./plugins/#{config['name']}/"+entry.name
+
+                # Read into memory
+                content = entry.get_input_stream.read
+
+                # create the directory if dne
+                dirj = fn.split("/")
+                dirj.pop
+                unless File.directory?(dirj.join("/"))
+                    FileUtils.mkdir_p(dirj.join("/"))
+                end
+
+                File.open(fn, 'a') {|f|
+                    f.write(content)
+                }
+
+            end
+        end
+    }
+    redirect to("/admin/plugins")
+end
 
 # Manage Templated Reports
 get '/admin/templates' do

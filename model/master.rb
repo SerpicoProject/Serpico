@@ -133,6 +133,7 @@ class User
     property :hashed_password, String
     property :salt, String
     property :type, String
+    property :plugin, Boolean, :required => false, :default => false
     property :auth_type, String, :required => false
     property :created_at, DateTime, :default => DateTime.now
     property :consultant_name, String, :required => false
@@ -190,6 +191,15 @@ class Sessions
             return sess.username
         end
     end
+
+    def self.is_plugin?(session_key)
+        sess = Sessions.first(:session_key => session_key)
+
+        if sess
+            return User.first(:username => sess.username).plugin
+        end
+    end
+
 
 end
 
