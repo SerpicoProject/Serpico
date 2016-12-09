@@ -50,7 +50,7 @@ Start Serpico:
 
 Initialize the database:
 ```
-C:\Serpicop\init_serpico.bat
+C:\Serpico\init_serpico.bat
 ```
 
 Start Serpico:
