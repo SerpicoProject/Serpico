@@ -321,15 +321,16 @@ post '/admin/plugin_upload' do
                 # Extract to file/directory/symlink
                 fn = "./plugins/#{config['name']}/"+entry.name
 
-                # Read into memory
-                content = entry.get_input_stream.read
-
                 # create the directory if dne
                 dirj = fn.split("/")
                 dirj.pop
                 unless File.directory?(dirj.join("/"))
                     FileUtils.mkdir_p(dirj.join("/"))
                 end
+
+                next if fn[-1] == "/"
+                # Read into memory
+                content = entry.get_input_stream.read
 
                 File.open(fn, 'a') {|f|
                     f.write(content)
