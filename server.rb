@@ -53,6 +53,12 @@ class Server < Sinatra::Application
     enable :sessions
     set :session_secret, rand(36**12).to_s(36)
 
+    # load the default stuff
+ 	Dir[File.join(File.dirname(__FILE__), "routes", "*.rb")].each { |lib| require lib }
+ 	Dir[File.join(File.dirname(__FILE__), "helpers", "*.rb")].each { |lib| require lib }
+ 	Dir[File.join(File.dirname(__FILE__), "lib", "*.rb")].each { |lib| require lib }
+
+    # load plugins last, enables monkey patching
     Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
         pl = JSON.parse(File.open(lib).read)
         if pl["enabled"]
@@ -63,11 +69,6 @@ class Server < Sinatra::Application
             }
         end
     }
-
-    # load the default stuff
- 	Dir[File.join(File.dirname(__FILE__), "routes", "*.rb")].each { |lib| require lib }
- 	Dir[File.join(File.dirname(__FILE__), "helpers", "*.rb")].each { |lib| require lib }
- 	Dir[File.join(File.dirname(__FILE__), "lib", "*.rb")].each { |lib| require lib }
 end
 
 # Helper Functions
