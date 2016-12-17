@@ -5,3 +5,4 @@ tmp/*
 templates/*
 attachments/*
 config.json
+plugins/*
