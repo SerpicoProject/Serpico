@@ -27,4 +27,6 @@ if (use_ssl) then
     server_options[:SSLVerifyClient] = OpenSSL::SSL::VERIFY_NONE
 end
 
-Rack::Handler::WEBrick.run Server, server_options
+if ENV['RACK_ENV'] != 'test'
+  Rack::Handler::WEBrick.run Server, server_options
+end
