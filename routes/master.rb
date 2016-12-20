@@ -127,6 +127,9 @@ post '/master/findings/:id/edit' do
         data["approved"] = false
     end
 
+    # to prevent title's from degenerating with &gt;, etc. [issue 237]
+    data["title"] = data["title"].gsub('&amp;','&')
+
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     elsif(config_options["cvss"])
