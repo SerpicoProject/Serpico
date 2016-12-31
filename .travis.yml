@@ -1,0 +1,8 @@
+language: ruby
+
+rvm:
+  - 2.1.5
+
+script:
+  - ruby scripts/first_time.rb --quiet
+  - RACK_ENV=test rake test
