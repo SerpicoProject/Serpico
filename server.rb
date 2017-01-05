@@ -17,12 +17,14 @@ class Server < Sinatra::Application
     set :show_exceptions, config_options["show_exceptions"]
 
     #Set Logging
-    if(config_options["log_file"] != "")
+    if ENV['RACK_ENV'] != 'test'
+      if(config_options["log_file"] != "")
         puts "|+| Started serpico on https://"+config_options["bind_address"]+":"+config_options["port"]
         puts "|+| Logging to "+config_options["log_file"]
         log = File.new(config_options["log_file"], "a+")
         $stdout.reopen(log)
         $stderr.reopen(log)
+      end
     end
 
     # CVSS

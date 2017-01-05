@@ -1,0 +1,14 @@
+language: ruby
+
+rvm:
+  - 2.1.5
+
+branches:
+  only:
+    - master
+    - rake_tests
+    - dev
+
+script:
+  - ruby scripts/first_time.rb --quiet
+  - RACK_ENV=test rake test
