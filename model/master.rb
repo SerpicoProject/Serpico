@@ -28,28 +28,35 @@ class TemplateFindings
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 20000, :required => false
     # CVSS
-    property :av, String, :required => false
-    property :ac, String, :required => false
-    property :au, String, :required => false
-    property :c, String, :required => false
-    property :i, String, :required => false
-    property :a, String, :required => false
-    property :e, String, :required => false
-    property :rl, String, :required => false
-    property :rc, String, :required => false
-    property :cdp, String, :required => false
-    property :td, String, :required => false
-    property :cr, String, :required => false
-    property :ir, String, :required => false
-    property :ar, String, :required => false
-    property :cvss_base, Float, :required => false
-    property :cvss_impact, Float, :required => false
+    property :attack_vector, String, :required => false
+    property :attack_complexity, String, :required => false
+    property :privileges_required, String, :required => false
+    property :user_interaction, String, :required => false
+    property :scope_cvss, String, :required => false
+    property :confidentiality, String, :required => false
+    property :integrity, String, :required => false
+    property :availability, String, :required => false
+    property :exploit_maturity, String, :required => false
+    property :remeditation_level, String, :required => false
+    property :report_confidence, String, :required => false
+    property :confidentiality_requirement, String, :required => false
+    property :integrity_requirement, String, :required => false
+    property :availability_requirement, String, :required => false
+    property :mod_attack_vector, String, :required => false
+    property :mod_attack_complexity, String, :required => false
+    property :mod_privileges_required, String, :required => false
+    property :mod_user_interaction, String, :required => false
+    property :mod_scope, String, :required => false
+    property :mod_confidentiality, String, :required => false
+    property :mod_integrity, String, :required => false
+    property :mod_availability, String, :required => false
+    property :cvss_base_score, Float, :required => false
+    property :cvss_impact_score, Float, :required => false
     property :cvss_exploitability, Float, :required => false
+    property :cvss_mod_impact_score, Float, :required => false
     property :cvss_temporal, Float, :required => false
     property :cvss_environmental, Float, :required => false
-    property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
-    property :ease, String, :required => false
 end
 
 class Findings
@@ -78,29 +85,36 @@ class Findings
     property :affected_hosts, String, :length => 1000000, :required => false
     property :presentation_points, String, :length => 100000, :required => false
     property :presentation_rem_points, String, :length => 100000, :required => false
-    #CVSS
-    property :av, String, :required => false
-    property :ac, String, :required => false
-    property :au, String, :required => false
-    property :c, String, :required => false
-    property :i, String, :required => false
-    property :a, String, :required => false
-    property :e, String, :required => false
-    property :rl, String, :required => false
-    property :rc, String, :required => false
-    property :cdp, String, :required => false
-    property :td, String, :required => false
-    property :cr, String, :required => false
-    property :ir, String, :required => false
-    property :ar, String, :required => false
-    property :cvss_base, Float, :required => false
-    property :cvss_impact, Float, :required => false
+    # CVSS
+    property :attack_vector, String, :required => false
+    property :attack_complexity, String, :required => false
+    property :privileges_required, String, :required => false
+    property :user_interaction, String, :required => false
+    property :scope_cvss, String, :required => false
+    property :confidentiality, String, :required => false
+    property :integrity, String, :required => false
+    property :availability, String, :required => false
+    property :exploit_maturity, String, :required => false
+    property :remeditation_level, String, :required => false
+    property :report_confidence, String, :required => false
+    property :confidentiality_requirement, String, :required => false
+    property :integrity_requirement, String, :required => false
+    property :availability_requirement, String, :required => false
+    property :mod_attack_vector, String, :required => false
+    property :mod_attack_complexity, String, :required => false
+    property :mod_privileges_required, String, :required => false
+    property :mod_user_interaction, String, :required => false
+    property :mod_scope, String, :required => false
+    property :mod_confidentiality, String, :required => false
+    property :mod_integrity, String, :required => false
+    property :mod_availability, String, :required => false
+    property :cvss_base_score, Float, :required => false
+    property :cvss_impact_score, Float, :required => false
     property :cvss_exploitability, Float, :required => false
+    property :cvss_mod_impact_score, Float, :required => false
     property :cvss_temporal, Float, :required => false
     property :cvss_environmental, Float, :required => false
-    property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
-    property :ease, String, :required => false
 
 end
 
