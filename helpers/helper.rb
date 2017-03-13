@@ -284,16 +284,16 @@ def cvss(data)
 	if privileges_required == "none"
 		privileges_required_result = 0.85
 	elsif privileges_required == "high"
-		if scope_cvss == "unchanged"
+		if (scope_cvss == "changed" || mod_scope == "changed")
+			privileges_required_result = 0.50
+		else
 			privileges_required_result = 0.27
-		elsif scope_cvss == "changed"
-			privileges_required_result = 0.5
 		end
 	elsif privileges_required == "low"
-		if scope_cvss == "unchanged"
-			privileges_required_result = 0.62
-		elsif scope_cvss == "changed"
+		if (scope_cvss == "changed" || mod_scope == "changed")
 			privileges_required_result = 0.68
+		else
+			privileges_required_result = 0.62
 		end
 	end
 
@@ -516,7 +516,7 @@ def cvss(data)
 				end
 				cvss_environmental = ((mod_impact_exploit_add * exploit_maturity_result * remeditation_level_result * report_confidence_result * 10).ceil) / 10.0
 			elsif scope_cvss == "changed"
-				if mod_impact_exploit_add > 10
+				if (((1.08 * mod_impact_exploit_add * 10).ceil) / 10.0) > 10
 					mod_impact_exploit_add = 10
 				else
 					mod_impact_exploit_add = ((1.08 * mod_impact_exploit_add * 10).ceil) / 10.0
@@ -532,7 +532,7 @@ def cvss(data)
 			end
 			cvss_environmental = ((mod_impact_exploit_add * exploit_maturity_result * remeditation_level_result * report_confidence_result * 10).ceil) / 10.0
 		elsif mod_scope == "changed"
-			if mod_impact_exploit_add > 10
+			if (((1.08 * mod_impact_exploit_add * 10).ceil) / 10.0) > 10
 				mod_impact_exploit_add = 10
 			else
 				mod_impact_exploit_add = ((1.08 * mod_impact_exploit_add * 10).ceil) / 10.0
