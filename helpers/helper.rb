@@ -83,7 +83,7 @@ end
 
 # URL escaping messes up the inserted XML, this method switches it back to XML elements
 
-def meta_markup_unencode(findings_xml, customer_name)
+def meta_markup_unencode(findings_xml, report)
 
   # code tags get added in later
 	findings_xml = findings_xml.gsub("[[[","<code>")
@@ -108,10 +108,17 @@ def meta_markup_unencode(findings_xml, customer_name)
 	findings_xml = findings_xml.gsub("&lt;italics&gt;","<italics>")
 	findings_xml = findings_xml.gsub("&lt;/italics&gt;","</italics>")
 
-  # changes the <<CUSTOMER>> marks
-  if customer_name
-	  findings_xml = findings_xml.gsub("&amp;lt;&amp;lt;CUSTOMER&amp;gt;&amp;gt;","#{customer_name}")
-  end
+  # changes the <<any_var>> marks
+    for i in report.instance_variables
+        report_property = i[1..-1]
+        findings_xml = findings_xml.gsub("&amp;lt;&amp;lt;#{report_property}&amp;gt;&amp;gt;","#{report.instance_variable_get("@#{report_property}")}")
+    end
+    if report.user_defined_variables
+        udv_hash = JSON.parse(report.user_defined_variables)
+        udv_hash.each do |key,value|
+        findings_xml = findings_xml.gsub("&amp;lt;&amp;lt;#{key}&amp;gt;&amp;gt;","#{value}")
+        end
+    end
 
   #this is for re-upping the comment fields
   findings_xml = findings_xml.gsub("&lt;modified&gt;","<modified>")
