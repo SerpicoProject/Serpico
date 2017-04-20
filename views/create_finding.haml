@@ -191,6 +191,7 @@
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
+            %option{:value => 0}= "Informational"
             %option{:value => 1}= "Low"
             %option{:value => 2}= "Moderate"
             %option{:value => 3}= "High"
@@ -255,7 +256,7 @@
     - if @attaches
       - @attaches.each do |attach|
         - attachments = attachments + "{name: '#{attach}'},"
-    / autosuggest code is care of bootstrap-suggest.js    
+    / autosuggest code is care of bootstrap-suggest.js
     :javascript
       var files = [
         #{attachments}
