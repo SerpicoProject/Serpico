@@ -3,6 +3,7 @@ require 'webrick/https'
 require 'openssl'
 require './model/master'
 require 'zip'
+require 'net/ldap'
 
 class Server < Sinatra::Application
     # import config options
@@ -150,6 +151,9 @@ def auth(username,password)
                @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
                @curr_session.save
                return @curr_session.session_key
+            else
+                puts "|!| LDAP Authentication failed"
+
             end
         end
     end
