@@ -712,7 +712,7 @@ get '/report/:id/findings/new' do
     temp_attaches = Attachments.all(:report_id => params[:id])
     @attaches = []
     temp_attaches.each do |ta|
-        next unless ta.description =~ /png/ or ta.description =~ /jpg/
+        next unless ta.description =~ /png/i or ta.description =~ /jpg/i
         @attaches.push(ta.description)
     end
 
@@ -785,7 +785,7 @@ get '/report/:id/findings/:finding_id/edit' do
     temp_attaches = Attachments.all(:report_id => id)
     @attaches = []
     temp_attaches.each do |ta|
-        next unless ta.description =~ /png/ or ta.description =~ /jpg/
+        next unless ta.description =~ /png/i or ta.description =~ /jpg/i
         @attaches.push(ta.description)
     end
 
