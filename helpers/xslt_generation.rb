@@ -46,13 +46,13 @@ def generate_xslt(docx)
 	for_iffies = []
 ###########################
 
-# Ω - used as a normal substituion variable
+# Œ - used as a normal substituion variable
 
 # let's pull out variables
-	replace = document.split('Ω')
+	replace = document.split('Œ')
 
 	if (((replace.size-1) % 2) != 0)
-        raise ReportingError.new("Uneven number of Ω. This is usually caused by a mismatch in a variable.")
+        raise ReportingError.new("Uneven number of Œ. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
@@ -72,7 +72,7 @@ def generate_xslt(docx)
 		count = count + 1
 	end
 
-	# remove all the Ω and put the document back together
+	# remove all the Œ and put the document back together
 	document = replace.join("")
 
 ###########################
@@ -110,12 +110,12 @@ def generate_xslt(docx)
 
 ###########################
 
-# π - a replacement variable for for-each loops only
+#  Æ- a replacement variable for for-each loops only
 
-	replace = document.split('π')
+	replace = document.split('Æ')
 
 	if (((replace.size-1) % 2) != 0)
-	    raise ReportingError.new("Uneven number of π. This is usually caused by a mismatch in a variable.")
+	    raise ReportingError.new("Uneven number of Æ. This is usually caused by a mismatch in a variable.")
     end
 
 	count = 0
@@ -408,12 +408,12 @@ def generate_xslt(docx)
 	document = replace.join("")
 ###############################
 
-# µ - initiates choose/when structure
+# Ñ - initiates choose/when structure
 
-	replace = document.split('µ')
+	replace = document.split('Ñ')
 
 	if (((replace.size-1) % 2) != 0)
-        raise ReportingError.new("Uneven number of µ. This is usually caused by a mismatch in a variable.")
+        raise ReportingError.new("Uneven number of Ñ. This is usually caused by a mismatch in a variable.")
 	end
 
 	count = 0
