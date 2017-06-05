@@ -1306,6 +1306,33 @@ get '/report/:id/asciidoc_status' do
     send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
 end
 
+# generate a csv with the current report findings
+get '/report/:id/csv_export' do
+    id = params[:id]
+        @report = get_report(id)
+
+        # bail without a report
+        redirect to("/") unless @report
+
+        # add the findings
+    @findings = Findings.all(:report_id => id)
+        csv_doc_ = "Finding Title|Risk Rating|Remediation Effort|Type|Overview|Remediation\n"
+        @findings.each do |finding|
+            csv_doc_ << "#{finding.title}|#{finding.risk}|#{finding.effort}|#{finding.type}|#{finding.overview}|#{finding.remediation}\n"
+        end
+        # change some text around so the findings actually make sense and don't have a ton of garbage in them
+        csv_doc_ = csv_doc_.gsub(/<paragraph>/, "")
+        csv_doc_ = csv_doc_.gsub(/<\/paragraph>/, "")
+        csv_doc_ = csv_doc_.gsub(/\|0\|/, "|Informational|")
+        csv_doc_ = csv_doc_.gsub(/\|1\|/, "|Low|")
+        csv_doc_ = csv_doc_.gsub(/\|2\|/, "|Moderate|")
+        csv_doc_ = csv_doc_.gsub(/\|3\|/, "|High|")
+        csv_doc_ = csv_doc_.gsub(/\|4\|/, "|Critical|")
+        local_filename = "./tmp/#{rand(36**12).to_s(36)}.csv"
+    File.open(local_filename, 'w') {|f| f.write(csv_doc_) }
+        send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.csv"
+end
+
 # generate a presentation of current report
 get '/report/:id/presentation' do
     # check the user has installed reveal
@@ -1564,4 +1591,3 @@ get '/report/:id/report_plugins' do
     }
     haml :enabled_plugins, :encode_html => true
 end
-
