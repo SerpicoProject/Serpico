@@ -267,6 +267,8 @@ class Reports
     property :full_company_name, String, :length => 200
     property :short_company_name, String, :length => 200
     property :company_website, String, :length => 200
+    property :assessment_start_date, String, :length => 200
+    property :assessment_end_date, String, :length => 200
     property :owner, String, :length => 200
     property :authors, CommaSeparatedList, :required => false, :lazy => false
     property :user_defined_variables, String, :length => 10000

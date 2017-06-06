@@ -81,6 +81,16 @@
                 Contact Phone
               %td{:style => 'width: 70%'}
                 %input{:type => 'text', :style => 'width: 90%', :name => 'contact_phone', :value => "#{@report.contact_phone}"}
+            %tr
+              %td{:style => 'width: 30%'}
+                Assessment Start Date
+              %td{:style => 'width: 70%'}
+                %input{:type => 'text', :style => 'width: 90%', :name => 'assessment_start_date', :value => "#{@report.assessment_start_date}"}
+            %tr
+              %td{:style => 'width: 30%'}
+                Assessment End Date
+              %td{:style => 'width: 70%'}
+                %input{:type => 'text', :style => 'width: 90%', :name => 'assessment_end_date', :value => "#{@report.assessment_end_date}"}
       %br
       %input{:type => 'hidden', :name => 'id', :value => "#{@report.id}"}
       %input{:type => 'submit', :value => 'Save'}
