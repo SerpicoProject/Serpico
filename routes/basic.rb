@@ -133,7 +133,7 @@ post '/login' do
 
         end
     elsif user
-		if options.ldap
+		if config_options["ldap"].to_s == "true"
 			#try AD authentication
 			usern = params[:username]
 			data = url_escape_hash(request.POST)
@@ -141,8 +141,8 @@ post '/login' do
                 redirect to("/")
             end
 
-			user = "#{options.domain}\\#{data["username"]}"
-			ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => params[:password]}
+			user = "#{config_options["ldap_domain"]}\\#{data["username"]}"
+			ldap = Net::LDAP.new :host => "#{config_options["ldap_dc"]}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => params[:password]}
 
 			if ldap.bind
 			   # replace the session in the session table
