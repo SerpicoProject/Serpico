@@ -881,6 +881,8 @@ get '/report/:id/findings/:finding_id/upload' do
                     :cvss_environmental => @finding.cvss_environmental,
                     :cvss_modified_impact => @finding.cvss_modified_impact,
                     :cvss_total => @finding.cvss_total,
+		    :severity => @finding.severity,
+		    :likelihood => @finding.likelihood,
                     :effort => @finding.effort,
                     :type => @finding.type,
                     :overview => @finding.overview,

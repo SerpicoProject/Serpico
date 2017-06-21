@@ -193,6 +193,8 @@ get '/admin/config' do
         @scoring = "cvss"
     elsif config_options["dread"]
         @scoring = "dread"
+    elsif config_options["riskmatrix"]
+	@scoring = "riskmatrix"
     else
         @scoring = "default"
     end

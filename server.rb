@@ -41,6 +41,9 @@ class Server < Sinatra::Application
     set :cr, ["Not Defined","Low","Medium","High"]
     set :ir, ["Not Defined","Low","Medium","High"]
     set :ar, ["Not Defined","Low","Medium","High"]
+    #Risk Matrix
+    set :severity, ["Low","Medium","High"]
+    set :likelihood, ["Low","Medium","High"]
 
     ## LDAP Settings
     if config_options["ldap"] == "true"
