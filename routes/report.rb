@@ -503,6 +503,7 @@ get '/report/:id/findings' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -696,6 +697,7 @@ post '/report/:id/findings_add' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -718,6 +720,7 @@ get '/report/:id/findings/new' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :create_finding, :encode_html => true
 end
@@ -791,6 +794,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -1369,6 +1373,7 @@ get '/report/:id/presentation' do
     end
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :presentation, :encode_html => true, :layout => false
 end

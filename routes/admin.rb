@@ -228,12 +228,19 @@ post '/admin/config' do
     if params["risk_scoring"] == "CVSS"
         config_options["dread"] = false
         config_options["cvss"] = true
+	config_options["riskmatrix"] = false
     elsif params["risk_scoring"] == "DREAD"
         config_options["dread"] = true
         config_options["cvss"] = false
+	config_options["riskmatrix"] = false
+    elsif params["risk_scoring"] == "RISKMATRIX"
+	config_options["dread"] = false
+	config_options["cvss"] = false
+	config_options["riskmatrix"] = true
     else
         config_options["dread"] = false
         config_options["cvss"] = false
+	config_options["riskmatrix"] = false
     end
 
     File.open("./config.json","w") do |f|
