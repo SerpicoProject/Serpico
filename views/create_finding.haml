@@ -64,115 +64,138 @@
             %option HARD
     - elsif @cvss
       .control-group
-        %label{ :class => "control-label", :for => "av" } Access Vector
+        %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
         .controls
-          %select{ :name => "av" }
-            %option Local
-            %option Local Network
-            %option Network
+          %select{ :name => "attack_vector" }
+            - options.attack_vector.each do |attack_vector|
+              %option #{attack_vector}
       .control-group
-        %label{ :class => "control-label", :for => "ac" } Access Complexity
+        %label{ :class => "control-label", :for => "attack_complexity" } Attack Complexity
         .controls
-          %select{ :name => "ac" }
-            %option High
-            %option Medium
-            %option Low
+          %select{ :name => "attack_complexity" }
+            - options.attack_complexity.each do |attack_complexity|
+              %option #{attack_complexity}
       .control-group
-        %label{ :class => "control-label", :for => "au" } Authentication
+        %label{ :class => "control-label", :for => "privileges_required" } Privileges Required
         .controls
-          %select{ :name => "au" }
-            %option Multiple
-            %option Single
-            %option None
+          %select{ :name => "privileges_required" }
+            - options.privileges_required.each do |privileges_required|
+              %option #{privileges_required}
       .control-group
-        %label{ :class => "control-label", :for => "c" } Confidentiality Impact
+        %label{ :class => "control-label", :for => "user_interaction" } User Interaction
         .controls
-          %select{ :name => "c" }
-            %option None
-            %option Partial
-            %option Complete
+          %select{ :name => "user_interaction" }
+            - options.user_interaction.each do |user_interaction|
+              %option #{user_interaction}
       .control-group
-        %label{ :class => "control-label", :for => "i" } Integrity Impact
+        %label{ :class => "control-label", :for => "scope_cvss" } Scope
         .controls
-          %select{ :name => "i" }
-            %option None
-            %option Partial
-            %option Complete
+          %select{ :name => "scope_cvss" }
+            - options.scope_cvss.each do |scope_cvss|
+              %option #{scope_cvss}
       .control-group
-        %label{ :class => "control-label", :for => "a" } Availability Impact
+        %label{ :class => "control-label", :for => "confidentiality" } Confidentiality
         .controls
-          %select{ :name => "a" }
-            %option None
-            %option Partial
-            %option Complete
+          %select{ :name => "confidentiality" }
+            - options.confidentiality.each do |confidentiality|
+              %option #{confidentiality}
       .control-group
-        %label{ :class => "control-label", :for => "e" } Exploitability
+        %label{ :class => "control-label", :for => "integrity" } Integrity
         .controls
-          %select{ :name => "e" }
-            %option Unproven Exploit Exists
-            %option Proof-of-Concept Code
-            %option Functional Exploit Exists
-            %option High
+          %select{ :name => "integrity" }
+            - options.integrity.each do |integrity|
+              %option #{integrity}
       .control-group
-        %label{ :class => "control-label", :for => "rl" } Remediation Level
+        %label{ :class => "control-label", :for => "availability" } Availability
         .controls
-          %select{ :name => "rl" }
-            %option Official Fix
-            %option Temporary Fix
-            %option Workaround
-            %option Unavailable
+          %select{ :name => "availability" }
+            - options.availability.each do |availability|
+              %option #{availability}
       .control-group
-        %label{ :class => "control-label", :for => "rc" } Report Confidence
+        %label{ :class => "control-label", :for => "exploit_maturity" } Exploit Code Maturity
         .controls
-          %select{ :name => "rc" }
-            %option Unconfirmed
-            %option Uncorroborated
-            %option Confirmed
+          %select{ :name => "exploit_maturity" }
+            - options.exploit_maturity.each do |exploit_maturity|
+              %option #{exploit_maturity}
       .control-group
-        %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
+        %label{ :class => "control-label", :for => "remeditation_level" } Remediation Level
         .controls
-          %select{ :name => "cdp" }
-            %option None
-            %option Low
-            %option Low-Medium
-            %option Medium-High
-            %option High
+          %select{ :name => "remeditation_level" }
+            - options.remeditation_level.each do |remeditation_level|
+              %option #{remeditation_level}
       .control-group
-        %label{ :class => "control-label", :for => "td" } Target Distribution
+        %label{ :class => "control-label", :for => "report_confidence" } Report Confidence
         .controls
-          %select{ :name => "td" }
-            %option None
-            %option Low
-            %option Medium
-            %option High
+          %select{ :name => "report_confidence" }
+            - options.report_confidence.each do |report_confidence|
+              %option #{report_confidence}
       .control-group
-        %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
+        %label{ :class => "control-label", :for => "confidentiality_requirement" } Confidentiality Requirement
         .controls
-          %select{ :name => "cr" }
-            %option Low
-            %option Medium
-            %option High
+          %select{ :name => "confidentiality_requirement" }
+            - options.confidentiality_requirement.each do |confidentiality_requirement|
+              %option #{confidentiality_requirement}
       .control-group
-        %label{ :class => "control-label", :for => "ir" } Integrity Requirement
+        %label{ :class => "control-label", :for => "integrity_requirement" } Integrity Requirement
         .controls
-          %select{ :name => "ir" }
-            %option Low
-            %option Medium
-            %option High
+          %select{ :name => "integrity_requirement" }
+            - options.integrity_requirement.each do |integrity_requirement|
+              %option #{integrity_requirement}
       .control-group
-        %label{ :class => "control-label", :for => "ar" } Availability Requirement
+        %label{ :class => "control-label", :for => "availability_requirement" } Availability Requirement
         .controls
-          %select{ :name => "ar" }
-            %option Low
-            %option Medium
-            %option High
+          %select{ :name => "availability_requirement" }
+            - options.availability_requirement.each do |availability_requirement|
+              %option #{availability_requirement}
       .control-group
-        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        %label{ :class => "control-label", :for => "mod_attack_vector" } Modified Attack Vector
         .controls
-          %select{ :name => "effort" }
-            %option QUICK
-            %option PLANNED
-            %option INVOLVED
+          %select{ :name => "mod_attack_vector" }
+            - options.mod_attack_vector.each do |mod_attack_vector|
+              %option #{mod_attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_complexity" } Modified Attack Complexity
+        .controls
+          %select{ :name => "mod_attack_complexity" }
+            - options.mod_attack_complexity.each do |mod_attack_complexity|
+              %option #{mod_attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_privileges_required" } Modified Privileges Required
+        .controls
+          %select{ :name => "mod_privileges_required" }
+            - options.mod_privileges_required.each do |mod_privileges_required|
+              %option #{mod_privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_user_interaction" } Modified User Interaction
+        .controls
+          %select{ :name => "mod_user_interaction" }
+            - options.mod_user_interaction.each do |mod_user_interaction|
+              %option #{mod_user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_scope" } Modified Scope
+        .controls
+          %select{ :name => "mod_scope" }
+            - options.mod_scope.each do |mod_scope|
+              %option #{mod_scope}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_confidentiality" } Modified Confidentiality
+        .controls
+          %select{ :name => "mod_confidentiality" }
+            - options.mod_confidentiality.each do |mod_confidentiality|
+              %option #{mod_confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_integrity" } Modified Integrity
+        .controls
+          %select{ :name => "mod_integrity" }
+            - options.mod_integrity.each do |mod_integrity|
+              %option #{mod_integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_availability" } Modified Availability
+        .controls
+          %select{ :name => "mod_availability" }
+            - options.mod_availability.each do |mod_availability|
+              %option #{mod_availability}
+
     - else
       .control-group
         %label{ :class => "control-label", :for => "effort" } Remediation Effort
