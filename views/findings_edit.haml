@@ -286,6 +286,53 @@
                 %option{ :selected => "selected" } #{ar}
               - else
                 %option #{ar}
+    - if @riskmatrix
+      .control-group
+        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        .controls
+          %select{ :name => "risk" }
+            - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
+            - if !@finding.risk
+              - @finding.risk = @finding.dread_total/10
+              - @finding.risk = 4 if dread_total == 50
+            - [0,1,2,3,4].each do |r_type|
+              - if r_type == @finding.risk
+                %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
+              - else
+                %option{ :value => "#{r_type}"} #{risk_types[r_type]}
+      .control-group
+        %label{ :class => "control-label", :for => "severity" } Severity
+        .controls
+          %select{ :name => "severity" }
+            - options.severity.each do |severity|
+              - if severity == @finding.severity
+                %option{ :selected => "selected" } #{severity}
+              - else
+                %option #{severity}
+      .control-group
+        %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
+        .controls
+          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'severity_rationale', :name => 'severity_rationale'}
+            - if @finding
+              - if @finding.severity_rationale
+                #{meta_markup(@finding.severity_rationale)}
+      .control-group
+        %label{ :class => "control-label", :for => "likelihood" } Likelihood
+        .controls
+          %select{ :name => "likelihood" }
+            - options.likelihood.each do |likelihood|
+              - if likelihood == @finding.likelihood
+                %option{ :selected => "selected" } #{likelihood}
+              - else
+                %option #{likelihood}
+      .control-group
+        %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
+        .controls
+          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}
+            - if @finding
+              - if @finding.likelihood_rationale
+                #{meta_markup(@finding.likelihood_rationale)}
+
 
     - else
       .control-group

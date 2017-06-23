@@ -392,7 +392,7 @@ def cvss(data)
 	return data
 end
 
-# there are three scoring types; risk, dread and cvss
+# there are three scoring types; risk, dread, riskmatrix and cvss
 #    this sets a score for all three in case the user switches later
 
 def convert_score(finding)

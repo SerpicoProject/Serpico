@@ -22,12 +22,16 @@
                 %option{ :selected => "selected" } CVSS
               - else
                 %option CVSS
+              - if @scoring == "riskmatrix"
+                %option{ :selected => "selected" } RISKMATRIX
+              - else
+                %option RISKMATRIX
 
         - @config.each do |k,v|
           - next if k =~ /ssl_certificate/
           - next if k =~ /ssl_key/
           - next if k =~ /log_file/
-          - next if k == "cvss" or k == "dread"
+          - next if k == "cvss" or k == "dread" or k == "riskmatrix"
           %tr
             %td
               #{k}
