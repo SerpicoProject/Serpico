@@ -27,7 +27,7 @@ class TemplateFindings
     property :approved, Boolean, :required => false, :default => true
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 20000, :required => false
-    # CVSS
+    # CVSSv2
     property :av, String, :required => false
     property :ac, String, :required => false
     property :au, String, :required => false
@@ -50,6 +50,34 @@ class TemplateFindings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
+
+    #CVSSv3
+    property :attack_vector, String, :required => false
+    property :attack_complexity, String, :required => false
+    property :privileges_required, String, :required => false
+    property :user_interaction, String, :required => false
+    property :scope_cvss, String, :required => false
+    property :confidentiality, String, :required => false
+    property :integrity, String, :required => false
+    property :availability, String, :required => false
+    property :exploit_maturity, String, :required => false
+    property :remeditation_level, String, :required => false
+    property :report_confidence, String, :required => false
+    property :confidentiality_requirement, String, :required => false
+    property :integrity_requirement, String, :required => false
+    property :availability_requirement, String, :required => false
+    property :mod_attack_vector, String, :required => false
+    property :mod_attack_complexity, String, :required => false
+    property :mod_privileges_required, String, :required => false
+    property :mod_user_interaction, String, :required => false
+    property :mod_scope, String, :required => false
+    property :mod_confidentiality, String, :required => false
+    property :mod_integrity, String, :required => false
+    property :mod_availability, String, :required => false
+    property :cvss_base_score, Float, :required => false
+    property :cvss_impact_score, Float, :required => false
+    property :cvss_mod_impact_score, Float, :required => false
+
 end
 
 class Findings
@@ -78,7 +106,8 @@ class Findings
     property :affected_hosts, String, :length => 1000000, :required => false
     property :presentation_points, String, :length => 100000, :required => false
     property :presentation_rem_points, String, :length => 100000, :required => false
-    #CVSS
+
+    #CVSSv2
     property :av, String, :required => false
     property :ac, String, :required => false
     property :au, String, :required => false
@@ -102,6 +131,32 @@ class Findings
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
 
+    # CVSSv3
+    property :attack_vector, String, :required => false
+    property :attack_complexity, String, :required => false
+    property :privileges_required, String, :required => false
+    property :user_interaction, String, :required => false
+    property :scope_cvss, String, :required => false
+    property :confidentiality, String, :required => false
+    property :integrity, String, :required => false
+    property :availability, String, :required => false
+    property :exploit_maturity, String, :required => false
+    property :remeditation_level, String, :required => false
+    property :report_confidence, String, :required => false
+    property :confidentiality_requirement, String, :required => false
+    property :integrity_requirement, String, :required => false
+    property :availability_requirement, String, :required => false
+    property :mod_attack_vector, String, :required => false
+    property :mod_attack_complexity, String, :required => false
+    property :mod_privileges_required, String, :required => false
+    property :mod_user_interaction, String, :required => false
+    property :mod_scope, String, :required => false
+    property :mod_confidentiality, String, :required => false
+    property :mod_integrity, String, :required => false
+    property :mod_availability, String, :required => false
+    property :cvss_base_score, Float, :required => false
+    property :cvss_impact_score, Float, :required => false
+    property :cvss_mod_impact_score, Float, :required => false
 end
 
 class TemplateReports

@@ -286,7 +286,205 @@
                 %option{ :selected => "selected" } #{ar}
               - else
                 %option #{ar}
-
+    - elsif @cvssv3
+      .control-group
+        %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
+        .controls
+          %select{ :name => "attack_vector" }
+            - options.attack_vector.each do |attack_vector|
+              - if attack_vector == @finding.attack_vector
+                %option{ :selected => "selected" } #{attack_vector}
+              - else
+                %option #{attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "attack_complexity" } Attack Complexity
+        .controls
+          %select{ :name => "attack_complexity" }
+            - options.attack_complexity.each do |attack_complexity|
+              - if attack_complexity == @finding.attack_complexity
+                %option{ :selected => "selected" } #{attack_complexity}
+              - else
+                %option #{attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "privileges_required" } Privileges Required
+        .controls
+          %select{ :name => "privileges_required" }
+            - options.privileges_required.each do |privileges_required|
+              - if privileges_required == @finding.privileges_required
+                %option{ :selected => "selected" } #{privileges_required}
+              - else
+                %option #{privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "user_interaction" } User Interaction
+        .controls
+          %select{ :name => "user_interaction" }
+            - options.user_interaction.each do |user_interaction|
+              - if user_interaction == @finding.user_interaction
+                %option{ :selected => "selected" } #{user_interaction}
+              - else
+                %option #{user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "scope_cvss" } Scope
+        .controls
+          %select{ :name => "scope_cvss" }
+            - options.scope_cvss.each do |scope_cvss|
+              - if scope_cvss == @finding.scope_cvss
+                %option{ :selected => "selected" } #{scope_cvss}
+              - else
+                %option #{scope_cvss}
+      .control-group
+        %label{ :class => "control-label", :for => "confidentiality" } Confidentiality Impact
+        .controls
+          %select{ :name => "confidentiality" }
+            - options.confidentiality.each do |confidentiality|
+              - if confidentiality == @finding.confidentiality
+                %option{ :selected => "selected" } #{confidentiality}
+              - else
+                %option #{confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "integrity" } Integrity Impact
+        .controls
+          %select{ :name => "integrity" }
+            - options.integrity.each do |integrity|
+              - if integrity == @finding.integrity
+                %option{ :selected => "selected" } #{integrity}
+              - else
+                %option #{integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "availability" } Availability Impact
+        .controls
+          %select{ :name => "availability" }
+            - options.availability.each do |availability|
+              - if availability == @finding.availability
+                %option{ :selected => "selected" } #{availability}
+              - else
+                %option #{availability}
+      .control-group
+        %label{ :class => "control-label", :for => "exploit_maturity" } Exploit Code Maturity
+        .controls
+          %select{ :name => "exploit_maturity" }
+            - options.exploit_maturity.each do |exploit_maturity|
+              - if exploit_maturity == @finding.exploit_maturity
+                %option{ :selected => "selected" } #{exploit_maturity}
+              - else
+                %option #{exploit_maturity}
+      .control-group
+        %label{ :class => "control-label", :for => "remeditation_level" } Remediation Level
+        .controls
+          %select{ :name => "remeditation_level" }
+            - options.remeditation_level.each do |remeditation_level|
+              - if remeditation_level == @finding.remeditation_level
+                %option{ :selected => "selected" } #{remeditation_level}
+              - else
+                %option #{remeditation_level}
+      .control-group
+        %label{ :class => "control-label", :for => "report_confidence" } Report Confidence
+        .controls
+          %select{ :name => "report_confidence" }
+            - options.report_confidence.each do |report_confidence|
+              - if report_confidence == @finding.report_confidence
+                %option{ :selected => "selected" } #{report_confidence}
+              - else
+                %option #{report_confidence}
+      .control-group
+        %label{ :class => "control-label", :for => "confidentiality_requirement" } Confidentiality Requirement
+        .controls
+          %select{ :name => "confidentiality_requirement" }
+            - options.confidentiality_requirement.each do |confidentiality_requirement|
+              - if confidentiality_requirement == @finding.confidentiality_requirement
+                %option{ :selected => "selected" } #{confidentiality_requirement}
+              - else
+                %option #{confidentiality_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "integrity_requirement" } Integrity Requirement
+        .controls
+          %select{ :name => "integrity_requirement" }
+            - options.integrity_requirement.each do |integrity_requirement|
+              - if integrity_requirement == @finding.integrity_requirement
+                %option{ :selected => "selected" } #{integrity_requirement}
+              - else
+                %option #{integrity_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "availability_requirement" } Availability Requirement
+        .controls
+          %select{ :name => "availability_requirement" }
+            - options.availability_requirement.each do |availability_requirement|
+              - if availability_requirement == @finding.availability_requirement
+                %option{ :selected => "selected" } #{availability_requirement}
+              - else
+                %option #{availability_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_vector" } Modified Attack Vector
+        .controls
+          %select{ :name => "mod_attack_vector" }
+            - options.mod_attack_vector.each do |mod_attack_vector|
+              - if mod_attack_vector == @finding.mod_attack_vector
+                %option{ :selected => "selected" } #{mod_attack_vector}
+              - else
+                %option #{mod_attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_complexity" } Modified Attack Complexity
+        .controls
+          %select{ :name => "mod_attack_complexity" }
+            - options.mod_attack_complexity.each do |mod_attack_complexity|
+              - if mod_attack_complexity == @finding.mod_attack_complexity
+                %option{ :selected => "selected" } #{mod_attack_complexity}
+              - else
+                %option #{mod_attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_privileges_required" } Modified Privileges Required
+        .controls
+          %select{ :name => "mod_privileges_required" }
+            - options.mod_privileges_required.each do |mod_privileges_required|
+              - if mod_privileges_required == @finding.mod_privileges_required
+                %option{ :selected => "selected" } #{mod_privileges_required}
+              - else
+                %option #{mod_privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_user_interaction" } Modified User Interaction
+        .controls
+          %select{ :name => "mod_user_interaction" }
+            - options.mod_user_interaction.each do |mod_user_interaction|
+              - if mod_user_interaction == @finding.mod_user_interaction
+                %option{ :selected => "selected" } #{mod_user_interaction}
+              - else
+                %option #{mod_user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_scope" } Modified Scope
+        .controls
+          %select{ :name => "mod_scope" }
+            - options.mod_scope.each do |mod_scope|
+              - if mod_scope == @finding.mod_scope
+                %option{ :selected => "selected" } #{mod_scope}
+              - else
+                %option #{mod_scope}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_confidentiality" } Modified Confidentiality
+        .controls
+          %select{ :name => "mod_confidentiality" }
+            - options.mod_confidentiality.each do |mod_confidentiality|
+              - if mod_confidentiality == @finding.mod_confidentiality
+                %option{ :selected => "selected" } #{mod_confidentiality}
+              - else
+                %option #{mod_confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_integrity" } Modified Integrity
+        .controls
+          %select{ :name => "mod_integrity" }
+            - options.mod_integrity.each do |mod_integrity|
+              - if mod_integrity == @finding.mod_integrity
+                %option{ :selected => "selected" } #{mod_integrity}
+              - else
+                %option #{mod_integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_availability" } Modified Availability
+        .controls
+          %select{ :name => "mod_availability" }
+            - options.mod_availability.each do |mod_availability|
+              - if mod_availability == @finding.mod_availability
+                %option{ :selected => "selected" } #{mod_availability}
+              - else
+                %option #{mod_availability}
     - else
       .control-group
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level

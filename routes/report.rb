@@ -503,6 +503,7 @@ get '/report/:id/findings' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
 
     haml :findings_list, :encode_html => true
 end
@@ -696,6 +697,7 @@ post '/report/:id/findings_add' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
 
     haml :findings_list, :encode_html => true
 end
@@ -718,6 +720,7 @@ get '/report/:id/findings/new' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
 
     haml :create_finding, :encode_html => true
 end
@@ -733,7 +736,9 @@ post '/report/:id/findings/new' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     elsif(config_options["cvss"])
-        data = cvss(data)
+        data = cvss(data, false)
+    elsif(config_options["cvssv3"])
+        data = cvss(data, true)
     end
 
     id = params[:id]
@@ -791,6 +796,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -828,7 +834,9 @@ post '/report/:id/findings/:finding_id/edit' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     elsif(config_options["cvss"])
-        data = cvss(data)
+        data = cvss(data, false)
+    elsif(config_options["cvssv3"])
+        data = cvss(data, true)
     end
     # Update the finding with templated finding stuff
     @finding.update(data)
@@ -888,8 +896,33 @@ get '/report/:id/findings/:finding_id/upload' do
                     :remediation => @finding.remediation,
                     :approved => false,
                     :references => @finding.references,
-                    :risk => @finding.risk
-                    }
+                    :risk => @finding.risk,
+                    :attack_vector => @finding.attack_vector,
+                    :attack_complexity => @finding.attack_complexity,
+                    :privileges_required => @finding.privileges_required,
+                    :user_interaction => @finding.user_interaction,
+                    :scope_cvss => @finding.scope_cvss,
+                    :confidentiality => @finding.confidentiality,
+                    :integrity => @finding.integrity,
+                    :availability => @finding.availability,
+                    :exploit_maturity => @finding.exploit_maturity,
+                    :remeditation_level => @finding.remeditation_level,
+                    :report_confidence => @finding.report_confidence,
+                    :confidentiality_requirement => @finding.confidentiality_requirement,
+                    :integrity_requirement => @finding.integrity_requirement,
+                    :availability_requirement => @finding.availability_requirement,
+                    :mod_attack_vector => @finding.mod_attack_vector,
+                    :mod_attack_complexity => @finding.mod_attack_complexity,
+                    :mod_privileges_required => @finding.mod_privileges_required,
+                    :mod_user_interaction => @finding.mod_user_interaction,
+                    :mod_scope => @finding.mod_scope,
+                    :mod_confidentiality => @finding.mod_confidentiality,
+                    :mod_integrity => @finding.mod_integrity,
+                    :mod_availability => @finding.mod_availability,
+                    :cvss_base_score => @finding.cvss_base_score,
+                    :cvss_impact_score => @finding.cvss_impact_score,
+                   :cvss_mod_impact_score => @finding.cvss_mod_impact_score,
+                }
 
     @new_finding = TemplateFindings.new(attr)
     @new_finding.save
@@ -1367,6 +1400,7 @@ get '/report/:id/presentation' do
     end
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
 
     haml :presentation, :encode_html => true, :layout => false
 end
