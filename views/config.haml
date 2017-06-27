@@ -19,15 +19,19 @@
               - else
                 %option DREAD
               - if @scoring == "cvss"
-                %option{ :selected => "selected" } CVSS
+                %option{ :selected => "selected" } CVSSv2
               - else
-                %option CVSS
+                %option CVSSv2
+              - if @scoring == "cvssv3"
+                %option{ :selected => "selected" } CVSSv3
+              - else
+                %option CVSSv3
 
         - @config.each do |k,v|
           - next if k =~ /ssl_certificate/
           - next if k =~ /ssl_key/
           - next if k =~ /log_file/
-          - next if k == "cvss" or k == "dread"
+          - next if k == "cvss" or k == "dread" or k == "cvssv3"
           %tr
             %td
               #{k}

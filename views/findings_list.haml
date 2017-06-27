@@ -54,6 +54,9 @@
                                   - elsif @cvss
                                     %td{:style => 'width: 10%'}
                                       #{finding.cvss_total}
+                                  - elsif @cvssv3
+                                    %td{:style => 'width: 10%'}
+                                      #{finding.cvss_total}
                                   - else
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       - risk_t = ["Informational","Low","Moderate","High","Critical"]
@@ -181,6 +184,9 @@
                     %td{:style => 'width: 10%'}
                       #{finding.dread_total}
                   - elsif @cvss
+                    %td{:style => 'width: 10%'}
+                      #{finding.cvss_total}
+                  - elsif @cvssv3
                     %td{:style => 'width: 10%'}
                       #{finding.cvss_total}
                   - else

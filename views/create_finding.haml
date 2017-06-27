@@ -173,6 +173,461 @@
             %option QUICK
             %option PLANNED
             %option INVOLVED
+    - elsif @cvssv3
+      .control-group
+        %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
+        .controls
+          %select{ :name => "attack_vector" }
+            - options.attack_vector.each do |attack_vector|
+              %option #{attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "attack_complexity" } Attack Complexity
+        .controls
+          %select{ :name => "attack_complexity" }
+            - options.attack_complexity.each do |attack_complexity|
+              %option #{attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "privileges_required" } Privileges Required
+        .controls
+          %select{ :name => "privileges_required" }
+            - options.privileges_required.each do |privileges_required|
+              %option #{privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "user_interaction" } User Interaction
+        .controls
+          %select{ :name => "user_interaction" }
+            - options.user_interaction.each do |user_interaction|
+              %option #{user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "scope_cvss" } Scope
+        .controls
+          %select{ :name => "scope_cvss" }
+            - options.scope_cvss.each do |scope_cvss|
+              %option #{scope_cvss}
+      .control-group
+        %label{ :class => "control-label", :for => "confidentiality" } Confidentiality
+        .controls
+          %select{ :name => "confidentiality" }
+            - options.confidentiality.each do |confidentiality|
+              %option #{confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "integrity" } Integrity
+        .controls
+          %select{ :name => "integrity" }
+            - options.integrity.each do |integrity|
+              %option #{integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "availability" } Availability
+        .controls
+          %select{ :name => "availability" }
+            - options.availability.each do |availability|
+              %option #{availability}
+      .control-group
+        %label{ :class => "control-label", :for => "exploit_maturity" } Exploit Code Maturity
+        .controls
+          %select{ :name => "exploit_maturity" }
+            - options.exploit_maturity.each do |exploit_maturity|
+              %option #{exploit_maturity}
+      .control-group
+        %label{ :class => "control-label", :for => "remeditation_level" } Remediation Level
+        .controls
+          %select{ :name => "remeditation_level" }
+            - options.remeditation_level.each do |remeditation_level|
+              %option #{remeditation_level}
+      .control-group
+        %label{ :class => "control-label", :for => "report_confidence" } Report Confidence
+        .controls
+          %select{ :name => "report_confidence" }
+            - options.report_confidence.each do |report_confidence|
+              %option #{report_confidence}
+      .control-group
+        %label{ :class => "control-label", :for => "confidentiality_requirement" } Confidentiality Requirement
+        .controls
+          %select{ :name => "confidentiality_requirement" }
+            - options.confidentiality_requirement.each do |confidentiality_requirement|
+              %option #{confidentiality_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "integrity_requirement" } Integrity Requirement
+        .controls
+          %select{ :name => "integrity_requirement" }
+            - options.integrity_requirement.each do |integrity_requirement|
+              %option #{integrity_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "availability_requirement" } Availability Requirement
+        .controls
+          %select{ :name => "availability_requirement" }
+            - options.availability_requirement.each do |availability_requirement|
+              %option #{availability_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_vector" } Modified Attack Vector
+        .controls
+          %select{ :name => "mod_attack_vector" }
+            - options.mod_attack_vector.each do |mod_attack_vector|
+              %option #{mod_attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_complexity" } Modified Attack Complexity
+        .controls
+          %select{ :name => "mod_attack_complexity" }
+            - options.mod_attack_complexity.each do |mod_attack_complexity|
+              %option #{mod_attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_privileges_required" } Modified Privileges Required
+        .controls
+          %select{ :name => "mod_privileges_required" }
+            - options.mod_privileges_required.each do |mod_privileges_required|
+              %option #{mod_privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_user_interaction" } Modified User Interaction
+        .controls
+          %select{ :name => "mod_user_interaction" }
+            - options.mod_user_interaction.each do |mod_user_interaction|
+              %option #{mod_user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_scope" } Modified Scope
+        .controls
+          %select{ :name => "mod_scope" }
+            - options.mod_scope.each do |mod_scope|
+              %option #{mod_scope}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_confidentiality" } Modified Confidentiality
+        .controls
+          %select{ :name => "mod_confidentiality" }
+            - options.mod_confidentiality.each do |mod_confidentiality|
+              %option #{mod_confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_integrity" } Modified Integrity
+        .controls
+          %select{ :name => "mod_integrity" }
+            - options.mod_integrity.each do |mod_integrity|
+              %option #{mod_integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_availability" } Modified Availability
+        .controls
+          %select{ :name => "mod_availability" }
+            - options.mod_availability.each do |mod_availability|
+              %option #{mod_availability}
+    
+%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
+%script{:src => "/js/bootstrap-suggest.js"}
+
+.span10
+  %br
+  %h2 New Finding
+  %br
+  %br
+  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+    .control-group
+      %label{ :class => "control-label", :for => "title" } Title
+      .controls
+        %input{ :type => 'text', :name => 'title', :value => ""}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
+        .controls
+          %select{ :name => "assessment_type" }
+            - options.assessment_types.each do |type|
+              %option #{type}
+    .control-group
+      %label{ :class => "control-label", :for => "type" } Finding Type
+      .controls
+        %select{ :name => "type" }
+          - options.finding_types.each do |type|
+            %option #{type}
+    - if @nessusmap
+      .control-group
+        %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
+        .controls
+          %input{ :type => 'text', :name => 'pluginid'}
+    - if @vulnmap
+      .control-group
+        %label{ :class => "control-label", :for => "msf_ref" } Add new Vuln ID mapping
+        .controls
+          %input{ :type => 'text', :name => 'msf_ref'}
+    - if @dread
+      .control-group
+        %label{ :class => "control-label", :for => "damage" } Damage
+        .controls
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'damage', :value => "0", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+        .controls
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'reproducability', :value => "0", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "exploitability" } Exploitability
+        .controls
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'exploitability', :value => "0", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "affected_users" } Affected Users
+        .controls
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'affected_users', :value => "0", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "discoverability" } Discoverability
+        .controls
+          %input{ :type => 'number', :min => '0', :max => '10', :name => 'discoverability', :value => "0", :required => true}
+      .control-group
+        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        .controls
+          %select{ :name => "effort" }
+            %option LOW
+            %option MODERATE
+            %option HARD
+    - elsif @cvss
+      .control-group
+        %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
+        .controls
+          %select{ :name => "attack_vector" }
+            - options.attack_vector.each do |attack_vector|
+              %option #{attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "attack_complexity" } Attack Complexity
+        .controls
+          %select{ :name => "attack_complexity" }
+            - options.attack_complexity.each do |attack_complexity|
+              %option #{attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "privileges_required" } Privileges Required
+        .controls
+          %select{ :name => "privileges_required" }
+            - options.privileges_required.each do |privileges_required|
+              %option #{privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "user_interaction" } User Interaction
+        .controls
+          %select{ :name => "user_interaction" }
+            - options.user_interaction.each do |user_interaction|
+              %option #{user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "scope_cvss" } Scope
+        .controls
+          %select{ :name => "scope_cvss" }
+            - options.scope_cvss.each do |scope_cvss|
+              %option #{scope_cvss}
+      .control-group
+        %label{ :class => "control-label", :for => "confidentiality" } Confidentiality
+        .controls
+          %select{ :name => "confidentiality" }
+            - options.confidentiality.each do |confidentiality|
+              %option #{confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "integrity" } Integrity
+        .controls
+          %select{ :name => "integrity" }
+            - options.integrity.each do |integrity|
+              %option #{integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "availability" } Availability
+        .controls
+          %select{ :name => "availability" }
+            - options.availability.each do |availability|
+              %option #{availability}
+      .control-group
+        %label{ :class => "control-label", :for => "exploit_maturity" } Exploit Code Maturity
+        .controls
+          %select{ :name => "exploit_maturity" }
+            - options.exploit_maturity.each do |exploit_maturity|
+              %option #{exploit_maturity}
+      .control-group
+        %label{ :class => "control-label", :for => "remeditation_level" } Remediation Level
+        .controls
+          %select{ :name => "remeditation_level" }
+            - options.remeditation_level.each do |remeditation_level|
+              %option #{remeditation_level}
+      .control-group
+        %label{ :class => "control-label", :for => "report_confidence" } Report Confidence
+        .controls
+          %select{ :name => "report_confidence" }
+            - options.report_confidence.each do |report_confidence|
+              %option #{report_confidence}
+      .control-group
+        %label{ :class => "control-label", :for => "confidentiality_requirement" } Confidentiality Requirement
+        .controls
+          %select{ :name => "confidentiality_requirement" }
+            - options.confidentiality_requirement.each do |confidentiality_requirement|
+              %option #{confidentiality_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "integrity_requirement" } Integrity Requirement
+        .controls
+          %select{ :name => "integrity_requirement" }
+            - options.integrity_requirement.each do |integrity_requirement|
+              %option #{integrity_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "availability_requirement" } Availability Requirement
+        .controls
+          %select{ :name => "availability_requirement" }
+            - options.availability_requirement.each do |availability_requirement|
+              %option #{availability_requirement}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_vector" } Modified Attack Vector
+        .controls
+          %select{ :name => "mod_attack_vector" }
+            - options.mod_attack_vector.each do |mod_attack_vector|
+              %option #{mod_attack_vector}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_attack_complexity" } Modified Attack Complexity
+        .controls
+          %select{ :name => "mod_attack_complexity" }
+            - options.mod_attack_complexity.each do |mod_attack_complexity|
+              %option #{mod_attack_complexity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_privileges_required" } Modified Privileges Required
+        .controls
+          %select{ :name => "mod_privileges_required" }
+            - options.mod_privileges_required.each do |mod_privileges_required|
+              %option #{mod_privileges_required}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_user_interaction" } Modified User Interaction
+        .controls
+          %select{ :name => "mod_user_interaction" }
+            - options.mod_user_interaction.each do |mod_user_interaction|
+              %option #{mod_user_interaction}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_scope" } Modified Scope
+        .controls
+          %select{ :name => "mod_scope" }
+            - options.mod_scope.each do |mod_scope|
+              %option #{mod_scope}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_confidentiality" } Modified Confidentiality
+        .controls
+          %select{ :name => "mod_confidentiality" }
+            - options.mod_confidentiality.each do |mod_confidentiality|
+              %option #{mod_confidentiality}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_integrity" } Modified Integrity
+        .controls
+          %select{ :name => "mod_integrity" }
+            - options.mod_integrity.each do |mod_integrity|
+              %option #{mod_integrity}
+      .control-group
+        %label{ :class => "control-label", :for => "mod_availability" } Modified Availability
+        .controls
+          %select{ :name => "mod_availability" }
+            - options.mod_availability.each do |mod_availability|
+              %option #{mod_availability}
+
+    - else
+      .control-group
+        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        .controls
+          %select{ :name => "effort" }
+            - if @finding
+              - options.effort.each do |effort|
+                - if effort == @finding.effort
+                  %option{ :selected => "selected" } #{effort}
+                - else
+                  %option #{effort}
+            - else
+              - options.effort.each do |effort|
+                %option #{effort}
+      .control-group
+        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        .controls
+          %select{ :name => "risk" }
+            %option{:value => 1}= "Low"
+            %option{:value => 2}= "Moderate"
+            %option{:value => 3}= "High"
+            %option{:value => 4}= "Critical"
+    .control-group
+      %label{ :class => "control-label", :for => "overview" }
+        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+          Overview
+      .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+        .modal-header
+          %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+            x
+          %h3{:id=>"modal-label"}
+            Meta Markup
+        .modal-body
+          %p
+            There are four markup sets you can use in the Overview and the Remediation summary. This text is converted inside of Microsoft Word.
+            %p{:class=>"text-error"}
+              YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+            %b
+              Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+          %h2
+            Bullets
+          %p
+            Place the bulleted text inbetween a *- and a -* like so:
+            %br
+            %br
+            %code
+              *- Bulleted text goes here -*
+          %h2
+            Paragraph Heading Text
+          %p
+            Place the heading inbetween a [== and a ==] like so:
+            %br
+            %br
+            %code
+              [== Heading text goes here ==]
+          %h2
+            Italics
+          %p
+            Place italicized inbetween a [~~ and a ~~] like so:
+            %br
+            %br
+            %code
+              [~~ Italics ~~]
+          %h2
+            Code
+          %p
+            Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+            %br
+            %br
+            %code
+              [[[ code, code goes here ]]]
+
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
+    .control-group
+      %label{ :class => "control-label", :for => "pocu" } Proof of Concept
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc', :id => 'pocu'}
+    - attachments=''
+    - if @attaches
+      - @attaches.each do |attach|
+        - attachments = attachments + "{name: '#{attach}'},"
+    / autosuggest code is care of bootstrap-suggest.js    
+    :javascript
+      var files = [
+        #{attachments}
+      ];
+        $('#pocu').suggest('[', {
+          data: files,
+          filter: {
+              casesensitive: true,
+              limit: 10
+            },
+          map: function(file) {
+            return {
+              value: '!!'+file.name+'!!]',
+              text: '<strong>'+file.name+'</strong>'
+            }
+          }
+        })
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
+        .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'affected_hosts', :name => 'affected_hosts'}
+    .control-group
+      %label{ :class => "control-label", :for => "remediation" } Remediation
+      .controls
+        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
+    .control-group
+      %label{ :class => "control-label", :for => "references" } References (One Per Line)
+      .controls
+        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
+    - if !@master
+      .control-group
+        %label{ :class => "control-label", :for => "notes" } Notes
+        .controls
+          %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'notes', :name => 'notes'}
+
+    - id_r = @report ? "/report/#{@report.id}/findings" : "/master/findings"
+    %input{:type => 'submit', :value => 'Save'}
+    %a{ :href => "#{id_r}"}
+      %input{ :type => "button", :value => 'Cancel'}
     - else
       .control-group
         %label{ :class => "control-label", :for => "effort" } Remediation Effort

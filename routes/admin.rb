@@ -191,6 +191,8 @@ get '/admin/config' do
     @config = config_options
     if config_options["cvss"]
         @scoring = "cvss"
+    elsif config_options["cvssv3"]
+        @scoring = "cvssv3"
     elsif config_options["dread"]
         @scoring = "dread"
     else
@@ -226,12 +228,19 @@ post '/admin/config' do
     if params["risk_scoring"] == "CVSS"
         config_options["dread"] = false
         config_options["cvss"] = true
+        config_options["cvssv3"] = false
+    elsif params["risk_scoring"] == "CVSSv3"
+        config_options["dread"] = false
+        config_options["cvss"] = false
+        config_options["cvssv3"] = true
     elsif params["risk_scoring"] == "DREAD"
         config_options["dread"] = true
         config_options["cvss"] = false
+        config_options["cvssv3"] = false
     else
         config_options["dread"] = false
         config_options["cvss"] = false
+        config_options["cvssv3"] = false
     end
 
     File.open("./config.json","w") do |f|
