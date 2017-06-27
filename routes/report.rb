@@ -497,6 +497,8 @@ get '/report/:id/findings' do
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -523,6 +525,8 @@ get '/report/:id/status' do
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
@@ -690,6 +694,8 @@ post '/report/:id/findings_add' do
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
@@ -1097,6 +1103,8 @@ get '/report/:id/generate' do
     if(config_options["dread"])
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
