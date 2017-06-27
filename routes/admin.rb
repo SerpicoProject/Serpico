@@ -225,7 +225,7 @@ post '/admin/config' do
     config_options["threshold"] = params["threshold"]
     config_options["show_exceptions"] = params["show_exceptions"] ? true : false
 
-    if params["risk_scoring"] == "CVSS"
+    if params["risk_scoring"] == "CVSSv2"
         config_options["dread"] = false
         config_options["cvss"] = true
         config_options["cvssv3"] = false
