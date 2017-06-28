@@ -189,6 +189,10 @@
                   - elsif @cvssv3
                     %td{:style => 'width: 10%'}
                       #{finding.cvss_total}
+                  - elsif @riskmatrix
+                    %td{:style => 'width: 10%'}
+                      - risk_t = ["None","Low","Moderate","High","Critical"]
+                      #{risk_t[finding.risk]}
                   - else
                     %td{:style => 'width: 10%' }
                       - risk_t = ["Informational","Low","Moderate","High","Critical"]

@@ -506,6 +506,7 @@ get '/report/:id/findings' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -704,6 +705,7 @@ post '/report/:id/findings_add' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -727,6 +729,7 @@ get '/report/:id/findings/new' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :create_finding, :encode_html => true
 end
@@ -803,6 +806,7 @@ get '/report/:id/findings/:finding_id/edit' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -927,7 +931,9 @@ get '/report/:id/findings/:finding_id/upload' do
                     :mod_availability => @finding.mod_availability,
                     :cvss_base_score => @finding.cvss_base_score,
                     :cvss_impact_score => @finding.cvss_impact_score,
-                   :cvss_mod_impact_score => @finding.cvss_mod_impact_score,
+                    :cvss_mod_impact_score => @finding.cvss_mod_impact_score,
+                    :severity => @finding.severity,
+		            :likelihood => @finding.likelihood,
                 }
 
     @new_finding = TemplateFindings.new(attr)
@@ -1409,6 +1415,7 @@ get '/report/:id/presentation' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :presentation, :encode_html => true, :layout => false
 end

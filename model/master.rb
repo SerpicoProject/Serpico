@@ -78,6 +78,12 @@ class TemplateFindings
     property :cvss_impact_score, Float, :required => false
     property :cvss_mod_impact_score, Float, :required => false
 
+    # Risk Matrix
+    property :severity, String, :required => false
+    property :likelihood, String, :required => false
+    property :severity_rationale, String, :length => 20000, :required => false
+    property :likelihood_rationale, String, :length => 20000, :required => false
+
 end
 
 class Findings
@@ -157,6 +163,13 @@ class Findings
     property :cvss_base_score, Float, :required => false
     property :cvss_impact_score, Float, :required => false
     property :cvss_mod_impact_score, Float, :required => false
+
+    # Risk Matrix
+    property :severity, String, :required => false
+    property :likelihood, String, :required => false
+    property :severity_rationale, String, :length => 20000, :required => false
+    property :likelihood_rationale, String, :length => 20000, :required => false
+
 end
 
 class TemplateReports
