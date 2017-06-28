@@ -288,7 +288,24 @@
                 %option #{ar}
     - elsif @cvssv3
       .control-group
-        %label{ :class => "control-label", :for => "attack_vector" } CVSS Vector String
+        %label{ :class => "control-label", :for => "attack_vector" }
+          %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+            CVSS Vector String
+        .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+          .modal-header
+            %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+              x
+            %h3{:id=>"modal-label"}
+              CVSS Vector String
+          .modal-body
+            %br
+              Entering a CVSS Vector String into the box automatically updates all drop down values.
+            %br
+              For example:
+            %br
+              CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:H
+            %br
+              CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O
         .controls
           %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}  
       %span{:class=>"input-group-btn"}
@@ -493,7 +510,7 @@
                 %option #{mod_availability}
       %script
         document.getElementById('vs').addEventListener('input', function() {
-        var output = CVSS.generateXMLFromVector(this.value);
+        var output = CVSS.generateXMLFromVector(this.value.trim());
         if(output.success === true){
 
         xmlDoc = $.parseXML( output.xmlString );
