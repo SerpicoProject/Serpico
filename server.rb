@@ -65,6 +65,10 @@ class Server < Sinatra::Application
     set :mod_confidentiality, ["Not Defined","None","Low","High"]
     set :mod_integrity, ["Not Defined","None","Low","High"]
     set :mod_availability, ["Not Defined","None","Low","High"]
+    
+    #Risk Matrix
+    set :severity, ["Low","Medium","High"]
+    set :likelihood, ["Low","Medium","High"]
 
     ## LDAP Settings
     if config_options["ldap"] == "true"
