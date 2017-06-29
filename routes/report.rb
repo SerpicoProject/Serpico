@@ -1406,6 +1406,11 @@ get '/report/:id/presentation' do
                 next unless pp =~ /\[\!\!/
                 img = pp.split("[!!")[1].split("!!]").first
                 a["name"] = img
+                if Attachments.first( :description => img)
+                    img_p = Attachments.first( :description => img)
+                else
+                    return "#attachment {img} doesn't exist. Did you mistype something?"
+                end
                 img_p = Attachments.first( :description => img)
                 a["link"] = "/report/#{id}/attachments/#{img_p.id}"
                 @images.push(a)
