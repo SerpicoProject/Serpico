@@ -497,12 +497,16 @@ get '/report/:id/findings' do
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -523,6 +527,8 @@ get '/report/:id/status' do
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -538,7 +544,7 @@ get '/report/:id/status' do
     end
     findings_xml << "</findings_list>"
 
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+    findings_xml = meta_markup_unencode(findings_xml, @report)
 
     report_xml = "#{findings_xml}"
 
@@ -690,12 +696,16 @@ post '/report/:id/findings_add' do
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -712,12 +722,14 @@ get '/report/:id/findings/new' do
     temp_attaches = Attachments.all(:report_id => params[:id])
     @attaches = []
     temp_attaches.each do |ta|
-        next unless ta.description =~ /png/ or ta.description =~ /jpg/
+        next unless ta.description =~ /png/i or ta.description =~ /jpg/i
         @attaches.push(ta.description)
     end
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :create_finding, :encode_html => true
 end
@@ -733,7 +745,9 @@ post '/report/:id/findings/new' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     elsif(config_options["cvss"])
-        data = cvss(data)
+        data = cvss(data, false)
+    elsif(config_options["cvssv3"])
+        data = cvss(data, true)
     end
 
     id = params[:id]
@@ -785,12 +799,14 @@ get '/report/:id/findings/:finding_id/edit' do
     temp_attaches = Attachments.all(:report_id => id)
     @attaches = []
     temp_attaches.each do |ta|
-        next unless ta.description =~ /png/ or ta.description =~ /jpg/
+        next unless ta.description =~ /png/i or ta.description =~ /jpg/i
         @attaches.push(ta.description)
     end
 
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_edit, :encode_html => true
 end
@@ -828,7 +844,9 @@ post '/report/:id/findings/:finding_id/edit' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     elsif(config_options["cvss"])
-        data = cvss(data)
+        data = cvss(data, false)
+    elsif(config_options["cvssv3"])
+        data = cvss(data, true)
     end
     # Update the finding with templated finding stuff
     @finding.update(data)
@@ -888,8 +906,35 @@ get '/report/:id/findings/:finding_id/upload' do
                     :remediation => @finding.remediation,
                     :approved => false,
                     :references => @finding.references,
-                    :risk => @finding.risk
-                    }
+                    :risk => @finding.risk,
+                    :attack_vector => @finding.attack_vector,
+                    :attack_complexity => @finding.attack_complexity,
+                    :privileges_required => @finding.privileges_required,
+                    :user_interaction => @finding.user_interaction,
+                    :scope_cvss => @finding.scope_cvss,
+                    :confidentiality => @finding.confidentiality,
+                    :integrity => @finding.integrity,
+                    :availability => @finding.availability,
+                    :exploit_maturity => @finding.exploit_maturity,
+                    :remeditation_level => @finding.remeditation_level,
+                    :report_confidence => @finding.report_confidence,
+                    :confidentiality_requirement => @finding.confidentiality_requirement,
+                    :integrity_requirement => @finding.integrity_requirement,
+                    :availability_requirement => @finding.availability_requirement,
+                    :mod_attack_vector => @finding.mod_attack_vector,
+                    :mod_attack_complexity => @finding.mod_attack_complexity,
+                    :mod_privileges_required => @finding.mod_privileges_required,
+                    :mod_user_interaction => @finding.mod_user_interaction,
+                    :mod_scope => @finding.mod_scope,
+                    :mod_confidentiality => @finding.mod_confidentiality,
+                    :mod_integrity => @finding.mod_integrity,
+                    :mod_availability => @finding.mod_availability,
+                    :cvss_base_score => @finding.cvss_base_score,
+                    :cvss_impact_score => @finding.cvss_impact_score,
+                    :cvss_mod_impact_score => @finding.cvss_mod_impact_score,
+                    :severity => @finding.severity,
+		            :likelihood => @finding.likelihood,
+                }
 
     @new_finding = TemplateFindings.new(attr)
     @new_finding.save
@@ -954,7 +999,7 @@ get '/report/:id/findings/:finding_id/preview' do
     findings_xml << @finding.to_xml
     findings_xml << "</findings_list>"
 
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+    findings_xml = meta_markup_unencode(findings_xml, @report)
 
     report_xml = "#{findings_xml}"
 
@@ -1065,6 +1110,8 @@ get '/report/:id/generate' do
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["cvssv3"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -1095,7 +1142,7 @@ get '/report/:id/generate' do
     findings_xml << "</findings_list>"
 
     # Replace the stub elements with real XML elements
-    findings_xml = meta_markup_unencode(findings_xml, @report.short_company_name)
+    findings_xml = meta_markup_unencode(findings_xml, @report)
 
     # check if the report has user_defined variables
     if @report.user_defined_variables
@@ -1306,6 +1353,33 @@ get '/report/:id/asciidoc_status' do
     send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.asd"
 end
 
+# generate a csv with the current report findings
+get '/report/:id/csv_export' do
+    id = params[:id]
+        @report = get_report(id)
+
+        # bail without a report
+        redirect to("/") unless @report
+
+        # add the findings
+    @findings = Findings.all(:report_id => id)
+        csv_doc_ = "Finding Title|Risk Rating|Remediation Effort|Type|Overview|Remediation\n"
+        @findings.each do |finding|
+            csv_doc_ << "#{finding.title}|#{finding.risk}|#{finding.effort}|#{finding.type}|#{finding.overview}|#{finding.remediation}\n"
+        end
+        # change some text around so the findings actually make sense and don't have a ton of garbage in them
+        csv_doc_ = csv_doc_.gsub(/<paragraph>/, "")
+        csv_doc_ = csv_doc_.gsub(/<\/paragraph>/, "")
+        csv_doc_ = csv_doc_.gsub(/\|0\|/, "|Informational|")
+        csv_doc_ = csv_doc_.gsub(/\|1\|/, "|Low|")
+        csv_doc_ = csv_doc_.gsub(/\|2\|/, "|Moderate|")
+        csv_doc_ = csv_doc_.gsub(/\|3\|/, "|High|")
+        csv_doc_ = csv_doc_.gsub(/\|4\|/, "|Critical|")
+        local_filename = "./tmp/#{rand(36**12).to_s(36)}.csv"
+    File.open(local_filename, 'w') {|f| f.write(csv_doc_) }
+        send_file local_filename, :type => 'txt', :filename => "report_#{id}_findings.csv"
+end
+
 # generate a presentation of current report
 get '/report/:id/presentation' do
     # check the user has installed reveal
@@ -1340,6 +1414,8 @@ get '/report/:id/presentation' do
     end
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :presentation, :encode_html => true, :layout => false
 end
@@ -1564,4 +1640,3 @@ get '/report/:id/report_plugins' do
     }
     haml :enabled_plugins, :encode_html => true
 end
-

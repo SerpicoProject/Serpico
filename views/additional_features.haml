@@ -40,6 +40,9 @@
         %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report
     %tr
       %td
+        %a{ :href => "/report/#{@report.id}/csv_export" } Generate Findings CSV (Pipe Delimited)
+    %tr
+      %td
         %a{ :href => "/report/#{@report.id}/asciidoc_status" } Generate AsciiDoc of Current Findings
     %tr
       %td

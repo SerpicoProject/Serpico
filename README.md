@@ -89,7 +89,7 @@ See also:
 * [Wiki](https://github.com/MooseDojo/Serpico/wiki): We try to add most common questions to the wiki.
 * [IRC: #therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
 * [Issue](https://github.com/SerpicoProject/Serpico/issues/new) : If you have found a bug or would like a new feature
-* [E-mail Support](https://www.serpicoproject.com/purchase/): For teams of users or template related questions
+* [E-mail Support](https://www.serpicoproject.com/support/): For teams of users or template related questions
 
 ## GOTCHAS
 * Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language

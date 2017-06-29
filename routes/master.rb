@@ -14,6 +14,8 @@ get '/master/findings' do
     @master = true
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
 
     haml :findings_list, :encode_html => true
 end
@@ -23,6 +25,8 @@ get '/master/findings/new' do
     @master = true
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
     @nessusmap = config_options["nessusmap"]
     @vulnmap = config_options["vulnmap"]
 
@@ -35,6 +39,26 @@ post '/master/findings/new' do
 
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    end
+     
+    if(config_options["riskmatrix"])
+        if data["severity"] == "Low"
+            severity_val = 0
+        elsif data["severity"] == "Medium"
+            severity_val = 1
+        elsif data["severity"] == "High"
+            severity_val = 2
+        end
+ 
+        if data["likelihood"] == "Low"
+            likelihood_val = 0
+        elsif data["likelihood"] == "Medium"
+            likelihood_val = 1
+        elsif data["likelihood"] == "High"
+            likelihood_val = 2
+        end
+ 
+        data['risk'] = severity_val + likelihood_val
     end
 
     # split out any nessus mapping data
@@ -66,7 +90,9 @@ post '/master/findings/new' do
     end
 
     if (config_options["cvss"])
-        data = cvss(data)
+        data = cvss(data, false)
+    elsif (config_options["cvssv3"])
+        data = cvss(data, true)
     end
 
     redirect to('/master/findings')
@@ -77,6 +103,8 @@ get '/master/findings/:id/edit' do
     @master = true
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+    @riskmatrix = config_options["riskmatrix"]
     @nessusmap = config_options["nessusmap"]
     @burpmap = config_options["burpmap"]
     @vulnmap = config_options["vulnmap"]
@@ -133,7 +161,29 @@ post '/master/findings/:id/edit' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     elsif(config_options["cvss"])
-        data = cvss(data)
+        data = cvss(data, false)
+    elsif(config_options["cvssv3"])
+        data = cvss(data, true)
+    end
+    
+    if(config_options["riskmatrix"])
+        if data["severity"] == "Low"
+            severity_val = 0
+        elsif data["severity"] == "Medium"
+            severity_val = 1
+        elsif data["severity"] == "High"
+            severity_val = 2
+        end
+ 
+        if data["likelihood"] == "Low"
+            likelihood_val = 0
+        elsif data["likelihood"] == "Medium"
+            likelihood_val = 1
+        elsif data["likelihood"] == "High"
+            likelihood_val = 2
+        end
+ 
+        data['risk'] = severity_val + likelihood_val
     end
 
     # split out any nessus mapping data

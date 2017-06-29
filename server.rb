@@ -3,6 +3,7 @@ require 'webrick/https'
 require 'openssl'
 require './model/master'
 require 'zip'
+require 'net/ldap'
 
 class Server < Sinatra::Application
     # import config options
@@ -42,6 +43,34 @@ class Server < Sinatra::Application
     set :cr, ["Not Defined","Low","Medium","High"]
     set :ir, ["Not Defined","Low","Medium","High"]
     set :ar, ["Not Defined","Low","Medium","High"]
+
+    # CVSSv3
+    set :attack_vector, ["Local","Adjacent","Network","Physical"]
+    set :attack_complexity, ["Low","High"]
+    set :privileges_required, ["None","Low", "High"]
+    set :user_interaction, ["None", "Required"]
+    set :scope_cvss, ["Unchanged", "Changed"]
+    set :confidentiality, ["None","Low","High"]
+    set :integrity, ["None","Low","High"]
+    set :availability, ["None","Low","High"]
+    set :exploit_maturity, ["Not Defined","Unproven Exploit Exists","Proof-of-Concept Code","Functional Exploit Exists","High"]
+    set :remeditation_level, ["Not Defined","Official Fix","Temporary Fix","Workaround","Unavailable"]
+    set :report_confidence, ["Not Defined","Unknown","Reasonable","Confirmed"]
+    set :confidentiality_requirement, ["Not Defined","Low","Medium","High"]
+    set :integrity_requirement, ["Not Defined","Low","Medium","High"]
+    set :availability_requirement, ["Not Defined","Low","Medium","High"]
+    set :mod_attack_vector, ["Not Defined","Local","Adjacent","Network","Physical"]
+    set :mod_attack_complexity, ["Not Defined","Low","High"]
+    set :mod_privileges_required, ["Not Defined","None","Low","High"]
+    set :mod_user_interaction, ["Not Defined","None","Required"]
+    set :mod_scope, ["Not Defined","Unchanged","Changed"]
+    set :mod_confidentiality, ["Not Defined","None","Low","High"]
+    set :mod_integrity, ["Not Defined","None","Low","High"]
+    set :mod_availability, ["Not Defined","None","Low","High"]
+    
+    #Risk Matrix
+    set :severity, ["Low","Medium","High"]
+    set :likelihood, ["Low","Medium","High"]
 
     ## LDAP Settings
     if config_options["ldap"] == "true"
@@ -152,6 +181,9 @@ def auth(username,password)
                @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
                @curr_session.save
                return @curr_session.session_key
+            else
+                puts "|!| LDAP Authentication failed"
+
             end
         end
     end
