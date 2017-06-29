@@ -1400,9 +1400,9 @@ get '/report/:id/presentation' do
     # add images into presentations
     @images = []
     @findings.each do |find|
-        a = {}
         if find.presentation_points
             find.presentation_points.to_s.split("<paragraph>").each do |pp|
+		a = {}
                 next unless pp =~ /\[\!\!/
                 img = pp.split("[!!")[1].split("!!]").first
                 a["name"] = img
