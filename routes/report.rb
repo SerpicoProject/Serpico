@@ -1402,17 +1402,16 @@ get '/report/:id/presentation' do
     @findings.each do |find|
         if find.presentation_points
             find.presentation_points.to_s.split("<paragraph>").each do |pp|
-		a = {}
+                a = {}
                 next unless pp =~ /\[\!\!/
                 img = pp.split("[!!")[1].split("!!]").first
                 a["name"] = img
                 if Attachments.first( :description => img)
                     img_p = Attachments.first( :description => img)
                 else
-                    return "#attachment {img} doesn't exist. Did you mistype something?"
+                    return "attachment #{img} from vulnerability \" #{find.title} \" doesn't exist. Did you mistype something?"
                 end
-                img_p = Attachments.first( :description => img)
-                a["link"] = "/report/#{id}/attachments/#{img_p.id}"
+                a["link"] = "/report/#{id}/attachments/"+img_p.id.to_s
                 @images.push(a)
             end
         end
