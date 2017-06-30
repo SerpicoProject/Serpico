@@ -1467,7 +1467,8 @@ get '/report/:id/presentation_export' do
     @dread = config_options["dread"]
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
-
+    @riskmatrix = config_options["riskmatrix"]
+	
     # create html file from haml template
     template = File.read(Dir.pwd+"/views/presentation.haml")
     haml_engine = Haml::Engine.new(template)
