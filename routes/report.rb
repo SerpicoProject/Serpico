@@ -1424,7 +1424,7 @@ get '/report/:id/presentation' do
     haml :presentation, :encode_html => true, :layout => false
 end
 
-# export presentation of current report in html format
+# export presentation of current report in html format, inside a zip
 get '/report/:id/presentation_export' do
     # check the user has installed reveal
     if !(File.directory?(Dir.pwd+"/public/reveal.js"))
@@ -1475,10 +1475,10 @@ get '/report/:id/presentation_export' do
 	rand_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.html"
 	newHTML = Nokogiri::HTML(output)
 	
-	# Each link inside the HTML file is considered as a dependency that will be exported
+	# Each link inside the HTML file is considered as a dependency that will need to be fixed to a relative local path
 	dependencies = []
 	
-	# fix links in order to keep them working after the export.
+	# fix href and src based links in the html to relative local URL. This should cover most of the use cases.
 	newHTML.css('[href]').each do |el|
 		if el.attribute('href').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('href').to_s[1..-1])
 			dependencies.push(el.attribute('href').to_s[1..-1])
@@ -1493,8 +1493,9 @@ get '/report/:id/presentation_export' do
 		el.set_attribute('src', '.' + el.attribute('src'))
 	end
 	
-	# fix other links with a regex
+	# *slightly ugly* way to fix links in the HTML that aren't in a href or src (for exemple in javascript)
 	htmlDoc = newHTML.to_html
+	# the regex match stuff like '/img/reveal.js/foo/lib.js', "/css/reveal.js/theme/special.css" 
 	link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
 	while link != nil do
 		if !dependencies.include? link[1..-1]
@@ -1504,7 +1505,7 @@ get '/report/:id/presentation_export' do
 		link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
 	end
 	
-	# save modified html file
+	# save html with links fixed to a relative local path
 	File.open(rand_file, 'w') do |f|
 		f.write htmlDoc
 	end
@@ -1512,7 +1513,7 @@ get '/report/:id/presentation_export' do
 	
 	rand_zip = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.zip"
 	
-	# put the presentation and its dependencies in a zip file
+	# put the presentation and its dependencies (links, images, libraries...) in a zip file
 	Zip.setup do |c|
 		c.on_exists_proc = true
 		c.continue_on_exists_proc = true
@@ -1520,12 +1521,12 @@ get '/report/:id/presentation_export' do
 	Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
 		zipfile.add("presentation.html", rand_file)
 		
-		# put the public directory in the zip file
+		# put the public directory in the zip file.
 		list_public_file = Dir.glob(Dir.pwd+"/public/**/*")
 		list_public_file.each do |file|
-			# don't add direcotry or .git files in the zip
+			# don't add directory or .git files in the zip
 			if file[".git"] == nil && File.file?(file)
-				# if file is .js or .css, check if it has dependencies
+				# if file is .js or .css, check if it has dependencies that needs to be fixed to relative local path
 				if file[/\.(js|css)$/] != nil
 					file_content = File.read(file)
 					while link != nil
