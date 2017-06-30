@@ -1443,7 +1443,7 @@ get '/report/:id/presentation_export' do
         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
     elsif(config_options["cvss"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-	elsif(config_options["cvssv3"])
+    elsif(config_options["cvssv3"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
@@ -1454,7 +1454,7 @@ get '/report/:id/presentation_export' do
     @findings.each do |find|
         if find.presentation_points
             find.presentation_points.to_s.split("<paragraph>").each do |pp|
-			    a = {}
+                a = {}
                 next unless pp =~ /\[\!\!/
                 img = pp.split("[!!")[1].split("!!]").first
                 a["name"] = img
@@ -1468,91 +1468,91 @@ get '/report/:id/presentation_export' do
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
 
-	# create html file from haml template
-	template = File.read(Dir.pwd+"/views/presentation.haml")
-	haml_engine = Haml::Engine.new(template)
-	output = haml_engine.render(Object.new, {:@report => @report, :@findings => @findings, :@dread => @dread, :@cvss => @cvss, :@cvss3 => @cvss3, :@images => @images})
-	rand_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.html"
-	newHTML = Nokogiri::HTML(output)
-	
-	# Each link inside the HTML file is considered as a dependency that will need to be fixed to a relative local path
-	dependencies = []
-	
-	# fix href and src based links in the html to relative local URL. This should cover most of the use cases.
-	newHTML.css('[href]').each do |el|
-		if el.attribute('href').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('href').to_s[1..-1])
-			dependencies.push(el.attribute('href').to_s[1..-1])
-		end
-		el.set_attribute('href', '.' + el.attribute('href'))
-	end
-	
-	newHTML.css('[src]').each do |el|
-		if el.attribute('src').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('src').to_s[1..-1])
-			dependencies.push(el.attribute('src').to_s[1..-1])
-		end
-		el.set_attribute('src', '.' + el.attribute('src'))
-	end
-	
-	# *slightly ugly* way to fix links in the HTML that aren't in a href or src (for exemple in javascript)
-	htmlDoc = newHTML.to_html
-	# the regex match stuff like '/img/reveal.js/foo/lib.js', "/css/reveal.js/theme/special.css" 
-	link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
-	while link != nil do
-		if !dependencies.include? link[1..-1]
-			dependencies.push(link[1..-1])
-		end
-		htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
-		link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
-	end
-	
-	# save html with links fixed to a relative local path
-	File.open(rand_file, 'w') do |f|
-		f.write htmlDoc
-	end
-	
-	
-	rand_zip = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.zip"
-	
-	# put the presentation and its dependencies (links, images, libraries...) in a zip file
-	Zip.setup do |c|
-		c.on_exists_proc = true
-		c.continue_on_exists_proc = true
-	end
-	Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
-		zipfile.add("presentation.html", rand_file)
-		
-		# put the public directory in the zip file.
-		list_public_file = Dir.glob(Dir.pwd+"/public/**/*")
-		list_public_file.each do |file|
-			# don't add directory or .git files in the zip
-			if file[".git"] == nil && File.file?(file)
-				# if file is .js or .css, check if it has dependencies that needs to be fixed to relative local path
-				if file[/\.(js|css)$/] != nil
-					file_content = File.read(file)
-					while link != nil
-						file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
-						link = file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
-					end
-					rand_temp_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.tmp"
-					File.open(rand_temp_file, 'w') do |f|
-						f.write file_content
-					end
-					# remove Serpico/public from the file path and put it in the zip
-					zipfile.add(file[(Dir.pwd+"/public/").length..-1], rand_temp_file)
-				else
-					# remove Serpico/public from the file path and put it in the zip
-					zipfile.add(file[(Dir.pwd+"/public/").length..-1], file)
-				end
-			end
-		end
-		# put attachements in the zip 
-		@images.each do | images|
-			img_p = Attachments.first( :description => images["name"])
-			zipfile.add("report/#{id}/attachments/#{img_p.id}" , img_p.filename_location)
-		end
+    # create html file from haml template
+    template = File.read(Dir.pwd+"/views/presentation.haml")
+    haml_engine = Haml::Engine.new(template)
+    output = haml_engine.render(Object.new, {:@report => @report, :@findings => @findings, :@dread => @dread, :@cvss => @cvss, :@cvss3 => @cvss3, :@images => @images})
+    rand_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.html"
+    newHTML = Nokogiri::HTML(output)
+    
+    # Each link inside the HTML file is considered as a dependency that will need to be fixed to a relative local path
+    dependencies = []
+    
+    # fix href and src based links in the html to relative local URL. This should cover most of the use cases.
+    newHTML.css('[href]').each do |el|
+        if el.attribute('href').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('href').to_s[1..-1])
+            dependencies.push(el.attribute('href').to_s[1..-1])
+        end
+        el.set_attribute('href', '.' + el.attribute('href'))
     end
-	
-	send_file rand_zip, :type => 'zip', :filename => "#{@report.report_name}.zip"
+    
+    newHTML.css('[src]').each do |el|
+        if el.attribute('src').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('src').to_s[1..-1])
+            dependencies.push(el.attribute('src').to_s[1..-1])
+        end
+        el.set_attribute('src', '.' + el.attribute('src'))
+    end
+    
+    # *slightly ugly* way to fix links in the HTML that aren't in a href or src (for exemple in javascript)
+    htmlDoc = newHTML.to_html
+    # the regex match stuff like '/img/reveal.js/foo/lib.js', "/css/reveal.js/theme/special.css" 
+    link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+    while link != nil do
+        if !dependencies.include? link[1..-1]
+            dependencies.push(link[1..-1])
+        end
+        htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
+        link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+    end
+    
+    # save html with links fixed to a relative local path
+    File.open(rand_file, 'w') do |f|
+        f.write htmlDoc
+    end
+    
+    
+    rand_zip = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.zip"
+    
+    # put the presentation and its dependencies (links, images, libraries...) in a zip file
+    Zip.setup do |c|
+        c.on_exists_proc = true
+        c.continue_on_exists_proc = true
+    end
+    Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
+        zipfile.add("presentation.html", rand_file)
+        
+        # put the public directory in the zip file.
+        list_public_file = Dir.glob(Dir.pwd+"/public/**/*")
+        list_public_file.each do |file|
+            # don't add directory or .git files in the zip
+            if file[".git"] == nil && File.file?(file)
+                # if file is .js or .css, check if it has dependencies that needs to be fixed to relative local path
+                if file[/\.(js|css)$/] != nil
+                    file_content = File.read(file)
+                    while link != nil
+                        file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
+                        link = file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+                    end
+                    rand_temp_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.tmp"
+                    File.open(rand_temp_file, 'w') do |f|
+                        f.write file_content
+                    end
+                    # remove Serpico/public from the file path and put it in the zip
+                    zipfile.add(file[(Dir.pwd+"/public/").length..-1], rand_temp_file)
+                else
+                    # remove Serpico/public from the file path and put it in the zip
+                    zipfile.add(file[(Dir.pwd+"/public/").length..-1], file)
+                end
+            end
+        end
+        # put attachements in the zip 
+        @images.each do | images|
+            img_p = Attachments.first( :description => images["name"])
+            zipfile.add("report/#{id}/attachments/#{img_p.id}" , img_p.filename_location)
+        end
+    end
+    
+    send_file rand_zip, :type => 'zip', :filename => "#{@report.report_name}.zip"
 end
 
 # set msf rpc settings for report
