@@ -1424,6 +1424,136 @@ get '/report/:id/presentation' do
     haml :presentation, :encode_html => true, :layout => false
 end
 
+# export presentation of current report in html format
+get '/report/:id/presentation_export' do
+    # check the user has installed reveal
+    if !(File.directory?(Dir.pwd+"/public/reveal.js"))
+        return "reveal.js not found in /public/ directory. To install:<br><br> 1. Goto [INSTALL_DIR]/public/ <br>2.run 'git clone https://github.com/hakimel/reveal.js.git'<br>3. Restart Serpico"
+    end
+
+    id = params[:id]
+
+    @report = get_report(id)
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    # add the findings
+    if(config_options["dread"])
+        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+    elsif(config_options["cvss"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+	elsif(config_options["cvssv3"])
+        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    else
+        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+    end
+
+    # add images into presentations
+    @images = []
+    @findings.each do |find|
+        if find.presentation_points
+            find.presentation_points.to_s.split("<paragraph>").each do |pp|
+			    a = {}
+                next unless pp =~ /\[\!\!/
+                img = pp.split("[!!")[1].split("!!]").first
+                a["name"] = img
+                img_p = Attachments.first( :description => img)
+                a["link"] = "/report/#{id}/attachments/#{img_p.id}"
+                @images.push(a)
+            end
+        end
+    end
+    @dread = config_options["dread"]
+    @cvss = config_options["cvss"]
+    @cvssv3 = config_options["cvssv3"]
+
+	# create html file from haml template
+	template = File.read(Dir.pwd+"/views/presentation.haml")
+	haml_engine = Haml::Engine.new(template)
+	output = haml_engine.render(Object.new, {:@report => @report, :@findings => @findings, :@dread => @dread, :@cvss => @cvss, :@cvss3 => @cvss3, :@images => @images})
+	rand_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.html"
+	newHTML = Nokogiri::HTML(output)
+	
+	# Each link inside the HTML file is considered as a dependency that will be exported
+	dependencies = []
+	
+	# fix links in order to keep them working after the export.
+	newHTML.css('[href]').each do |el|
+		if el.attribute('href').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('href').to_s[1..-1])
+			dependencies.push(el.attribute('href').to_s[1..-1])
+		end
+		el.set_attribute('href', '.' + el.attribute('href'))
+	end
+	
+	newHTML.css('[src]').each do |el|
+		if el.attribute('src').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('src').to_s[1..-1])
+			dependencies.push(el.attribute('src').to_s[1..-1])
+		end
+		el.set_attribute('src', '.' + el.attribute('src'))
+	end
+	
+	# fix other links with a regex
+	htmlDoc = newHTML.to_html
+	link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+	while link != nil do
+		if !dependencies.include? link[1..-1]
+			dependencies.push(link[1..-1])
+		end
+		htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
+		link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+	end
+	
+	# save modified html file
+	File.open(rand_file, 'w') do |f|
+		f.write htmlDoc
+	end
+	
+	
+	rand_zip = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.zip"
+	
+	# put the presentation and its dependencies in a zip file
+	Zip.setup do |c|
+		c.on_exists_proc = true
+		c.continue_on_exists_proc = true
+	end
+	Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
+		zipfile.add("presentation.html", rand_file)
+		
+		# put the public directory in the zip file
+		list_public_file = Dir.glob(Dir.pwd+"/public/**/*")
+		list_public_file.each do |file|
+			# don't add direcotry or .git files in the zip
+			if file[".git"] == nil && File.file?(file)
+				# if file is .js or .css, check if it has dependencies
+				if file[/\.(js|css)$/] != nil
+					file_content = File.read(file)
+					while link != nil
+						file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
+						link = file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+					end
+					rand_temp_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.tmp"
+					File.open(rand_temp_file, 'w') do |f|
+						f.write file_content
+					end
+					# remove Serpico/public from the file path and put it in the zip
+					zipfile.add(file[(Dir.pwd+"/public/").length..-1], rand_temp_file)
+				else
+					# remove Serpico/public from the file path and put it in the zip
+					zipfile.add(file[(Dir.pwd+"/public/").length..-1], file)
+				end
+			end
+		end
+		# put attachements in the zip 
+		@images.each do | images|
+			img_p = Attachments.first( :description => images["name"])
+			zipfile.add("report/#{id}/attachments/#{img_p.id}" , img_p.filename_location)
+		end
+    end
+	
+	send_file rand_zip, :type => 'zip', :filename => "#{@report.report_name}.zip"
+end
+
 # set msf rpc settings for report
 get '/report/:id/msfsettings' do
     id = params[:id]
