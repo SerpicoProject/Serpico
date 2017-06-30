@@ -1458,7 +1458,11 @@ get '/report/:id/presentation_export' do
                 next unless pp =~ /\[\!\!/
                 img = pp.split("[!!")[1].split("!!]").first
                 a["name"] = img
-                img_p = Attachments.first( :description => img)
+                if Attachments.first( :description => img)
+                    img_p = Attachments.first( :description => img)
+                else
+                    return "attachment #{img} from vulnerability \" #{find.title} \" doesn't exist. Did you mistype something?"
+                end
                 a["link"] = "/report/#{id}/attachments/#{img_p.id}"
                 @images.push(a)
             end
