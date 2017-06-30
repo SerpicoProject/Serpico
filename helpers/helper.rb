@@ -424,7 +424,7 @@ def cvss(data, is_cvssv3)
 
 		if scope_cvss == "unchanged"
 	 		scope_cvss_result = 6.42
-		elif scope_cvss == "changed"
+		elsif scope_cvss == "changed"
 			scope_cvss_result = 7.52
 	 	end
 
