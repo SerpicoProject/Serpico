@@ -52,10 +52,10 @@
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.dread_total}
                                   - elsif @cvss
-                                    %td{:style => 'width: 10%'}
+                                    %td{:style => 'width: 10%',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.cvss_total}
                                   - elsif @cvssv3
-                                    %td{:style => 'width: 10%'}
+                                    %td{:style => 'width: 10%',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       #{finding.cvss_total}
                                   - else
                                     %td{:style => 'width: 10%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
@@ -184,10 +184,10 @@
                     %td{:style => 'width: 10%'}
                       #{finding.dread_total}
                   - elsif @cvss
-                    %td{:style => 'width: 10%'}
+                    %td{:style => 'width: 10%',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                       #{finding.cvss_total}
                   - elsif @cvssv3
-                    %td{:style => 'width: 10%'}
+                    %td{:style => 'width: 10%',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                       #{finding.cvss_total}
                   - elsif @riskmatrix
                     %td{:style => 'width: 10%'}
