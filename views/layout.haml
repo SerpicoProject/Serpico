@@ -109,6 +109,9 @@
                 %li
                   %a{ :href => '/admin/dbbackup' } Backup Master Database
                   %a{ :href => '/admin/attacments_backup' } Backup All Attachments
+                - @version = File.open("VERSION.txt").read()
+                %li.nav-header Serpico Version: #{@version}
+
             - else
               - if @report
                 %ul.nav.nav-list
