@@ -230,15 +230,34 @@ def image_insert(docx, rand_file, image, end_xml)
     p_id = "d#{rand(36**7).to_s(36)}"
     name = image.description
 
+    image_file = File.open(image.filename_location,'rb') 
+    img_data = image_file.read()              
+    
+    #resize picture to fit into word if it's too big
+    if jpeg?(img_data)
+      jpeg_dimension = JPEG.new(image.filename_location)
+      width = jpeg_dimension.width
+      height = jpeg_dimension.height
+    elsif png?(img_data)
+      width = IO.read(image.filename_location)[0x10..0x18].unpack('NN')[0]
+      height = IO.read(image.filename_location)[0x10..0x18].unpack('NN')[1]
+    #we don't want to break everything if another format is supported
+    else
+      width = 400
+      height = 200
+    end
+    while width > 740 do #fits nicely into word
+        width = width - (width/5)
+        height = height - (height/5)
+    end
+    image_file.close
     # insert picture into xml
-    docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:400; height:200\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+    docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
     docx << end_xml
 
     # insert picture into zip
     exists = false
-    img_data = ""
 
-    File.open(image.filename_location, 'rb') {|file| img_data << file.read }
     Zip::File.open(rand_file) do |zipfile|
         #iterate zipfile to see if it has media dir, this could be better
         zipfile.each do |file|
