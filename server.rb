@@ -247,7 +247,7 @@ def image_insert(docx, rand_file, image, end_xml)
       width = 400
       height = 200
     end
-    while width > 740 do #fits nicely into word
+    while width > 720 do #fits nicely into word
         width = width - (width/20)
         height = height - (height/20)
     end
