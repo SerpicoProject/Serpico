@@ -366,6 +366,7 @@ get '/report/:id/edit' do
     # Query for the first report matching the report_name
     @report = get_report(id)
 	@templates = Xslt.all(:order => [:report_type.asc])
+    @plugin_side_menu = get_plugin_list
 
     if @report == nil
         return "No Such Report"
@@ -481,12 +482,12 @@ end
 # Findings List Menu
 get '/report/:id/findings' do
     @chart = config_options["chart"]
-
     @report = true
     id = params[:id]
 
     # Query for the first report matching the report_name
     @report = get_report(id)
+    @plugin_side_menu = get_plugin_list
 
     if @report == nil
         return "No Such Report"
