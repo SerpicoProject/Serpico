@@ -118,8 +118,8 @@ class SerpicoTests < MiniTest::Test
     get '/admin/templates/:id/edit'
     assert_equal 302,last_response.status
 
-    get '/reports/list'
-    assert_equal last_response.status,200
+    get '/report/list'
+    assert_equal 302,last_response.status
 
     get '/report/new'
     assert_equal 302,last_response.status
