@@ -4,7 +4,11 @@ require 'digest/sha1'
 require 'dm-migrations'
 
 # Initialize the Master DB
-DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/master.db")
+if ENV['RACK_ENV'] == 'test'
+  DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/test.db")
+else
+  DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/master.db")
+end
 
 
 class TemplateFindings
