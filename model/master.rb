@@ -384,4 +384,6 @@ DataMapper.finalize
 
 # any differences between the data store and the data model should be fixed by this
 #   As discussed in http://datamapper.org/why.html it is limited. Hopefully we never create conflicts.
-DataMapper.auto_upgrade!
+if ENV['RACK_ENV'] != 'test'
+    DataMapper.auto_upgrade!
+end
