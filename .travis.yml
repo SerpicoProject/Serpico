@@ -1,0 +1,22 @@
+language: ruby
+
+rvm:
+  - 2.1.5
+
+branches:
+  only:
+    - master
+    - rack_tests
+    - dev
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libsqlite3-dev libxslt-dev libxml2-dev zlib1g-dev gcc
+
+install:
+  - bundle install
+
+script:
+  - export RACK_ENV=test
+  - ruby scripts/first_time.rb --quiet
+  - rake test
