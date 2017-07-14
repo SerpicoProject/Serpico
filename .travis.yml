@@ -20,3 +20,4 @@ script:
   - export RACK_ENV=test
   - ruby scripts/first_time.rb --quiet
   - rake test
+
