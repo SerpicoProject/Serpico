@@ -412,7 +412,9 @@ get '/report/:id/user_defined_variables' do
 
         # add in the global UDV from config
         if config_options["user_defined_variables"].size > 0 and !@user_variables.include?(config_options["user_defined_variables"][0])
-            @user_variables = @user_variables + config_options["user_defined_variables"]
+            config_options["user_defined_variables"].each do |key,value|
+                @user_variables.store(key,"")               
+            end
         end
 
         @user_variables.each do |k,v|
