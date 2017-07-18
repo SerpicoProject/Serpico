@@ -658,6 +658,8 @@
         %label{ :class => "control-label", :for => "attack_vector" }
           %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
             CVSS Vector String
+        .controls
+          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}  
         .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
           .modal-header
             %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
@@ -678,7 +680,7 @@
                 //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
                 // AV
                 // LANP
-                if(part.includes("AV:")){
+                if(part.includes("AV:") && !part.includes("MAV:")){
                 if(part.includes(":L")){
                 document.getElementById('attack_vector').selectedIndex=0;        
                 }
@@ -694,7 +696,7 @@
                 }        
 
                 // AC
-                if(part.includes("AC:")){
+                if(part.includes("AC:")  && !part.includes("MAC:")){
                 if(part.includes(":L")){
                 document.getElementById('attack_complexity').selectedIndex=0;        
                 }
@@ -704,7 +706,7 @@
                 }        
 
                 // PR NLH
-                if(part.includes("PR:")){
+                if(part.includes("PR:")  && !part.includes("MPR:")){
                 if(part.includes(":N")){
                 document.getElementById('privileges_required').selectedIndex=0;        
                 }
@@ -727,7 +729,7 @@
                 }        
 
                 // S
-                if(part.includes("S:")){
+                if(part.includes("S:")  && !part.includes("MS:")){
                 if(part.includes(":U")){
                 document.getElementById('scope').selectedIndex=0;        
                 }
@@ -737,7 +739,7 @@
                 }        
 
                 // I
-                if(part.includes("I:")){
+                if(part.includes("I:")  && !part.includes("MI:")){
                 if(part.includes(":N")){
                 document.getElementById('integrity').selectedIndex=0;        
                 }
@@ -750,21 +752,20 @@
                 }        
 
                 // C
-                if(part.includes("C:")){
-                var d = document.getElementById('confidentiality-impact');
+                if(part.includes("C:") && !part.includes("MC:") && !part.includes("MAC:")){
                 if(part.includes(":N")){
-                d.selectedIndex=0;        
+                document.getElementById('confidentiality-impact').selectedIndex=0;        
                 }
                 if(part.includes(":L")){
-                d.selectedIndex=1;        
+                document.getElementById('confidentiality-impact').selectedIndex=1;        
                 }
                 if(part.includes(":H")){
-                d.selectedIndex=2;        
+                document.getElementById('confidentiality-impact').selectedIndex=2;        
                 }
                 }        
 
                 // A
-                if(part.includes("A:")){
+                if(part.includes("A:")  && !part.includes("MA:")){
                 if(part.includes(":N")){
                 document.getElementById('availability').selectedIndex=0;        
                 }
@@ -883,13 +884,13 @@
                 if(part.includes(":X")){
                 document.getElementById('mod_attack_vector').selectedIndex=0;        
                 }
-                if(part.includes(":N")){
+                if(part.includes(":L")){
                 document.getElementById('mod_attack_vector').selectedIndex=1;        
                 }
                 if(part.includes(":A")){
                 document.getElementById('mod_attack_vector').selectedIndex=2;        
                 }
-                if(part.includes(":L")){
+                if(part.includes(":N")){
                 document.getElementById('mod_attack_vector').selectedIndex=3;        
                 }
                 if(part.includes(":P")){
@@ -1013,10 +1014,7 @@
                 $("#vs").on('change keydown paste input', function(){               
                 updateDropdown(this.value);                
                 });
-        .controls
-          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}  
       %span{:class=>"input-group-btn"}
-      %script{:src => "/js/cvsscalc30.js"}
       .control-group
         %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
         .controls
@@ -1149,252 +1147,6 @@
           %select{ :name => "mod_availability", :id => "mod_availability" }
             - options.mod_availability.each do |mod_availability|
               %option #{mod_availability}
-
-      %script
-        document.getElementById('vs').addEventListener('input', function() {
-        var output = CVSS.generateXMLFromVector(this.value.trim());
-        if(output.success === true){
-
-        xmlDoc = $.parseXML( output.xmlString );
-        $xml = $(xmlDoc);
-        //document.getElementById("base-score").innerHTML=$xml.find("base-score").text();
-        //document.getElementById("base-severity").innerHTML=$xml.find("base-severity").text();
-        //document.getElementById("temporal-score").innerHTML=$xml.find("temporal-score").text();
-        //document.getElementById("temporal-severity").innerHTML=$xml.find("temporal-severity").text();
-        //document.getElementById("enivornmental-score").innerHTML=$xml.find("enivornmental-score").text();
-        //document.getElementById("enivornmental-severity").innerHTML=$xml.find("enivornmental-severity").text();
-
-        //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
-        // AV
-        if($xml.find("attack-vector").text() === "LOCAL"){
-        document.getElementById('attack_vector').selectedIndex=0;        
-        }        
-        if($xml.find("attack-vector").text() === "ADJACENT_NETWORK"){
-        document.getElementById('attack_vector').selectedIndex=1;        
-        }        
-        if($xml.find("attack-vector").text() === "NETWORK"){
-        document.getElementById('attack_vector').selectedIndex=2;        
-        }
-        if($xml.find("attack-vector").text() === "PHYSICAL"){
-        document.getElementById('attack_vector').selectedIndex=3;        
-        }
-
-        // AC
-        if($xml.find("attack-complexity").text() === "LOW"){
-        document.getElementById('attack_complexity').selectedIndex=0;        
-        }        
-        if($xml.find("attack-complexity").text() === "HIGH"){
-        document.getElementById('attack_complexity').selectedIndex=1;        
-        }        
-
-        // PR
-        if($xml.find("privileges-required").text() === "NONE"){
-        document.getElementById('privileges_required').selectedIndex=0;        
-        }        
-        if($xml.find("privileges-required").text() === "LOW"){
-        document.getElementById('privileges_required').selectedIndex=1;        
-        }        
-        if($xml.find("privileges-required").text() === "HIGH"){
-        document.getElementById('privileges_required').selectedIndex=2;        
-        }        
-
-        // UI
-        if($xml.find("user-interaction").text() === "UNCHANGED"){
-        document.getElementById('user_interaction').selectedIndex=0;        
-        }        
-        if($xml.find("user-interaction").text() === "REQUIRED"){
-        document.getElementById('user_interaction').selectedIndex=1;        
-        }        
-
-        // S
-        if($xml.find("scope").text() === "UNCHANGED"){
-        document.getElementById('scope').selectedIndex=0;        
-        }        
-        if($xml.find("scope").text() === "CHANGED"){
-        document.getElementById('scope').selectedIndex=1;        
-        }        
-
-        // CI
-        if($xml.find("confidentiality-impact").text() === "NONE"){
-        document.getElementById('confidentiality-impact').selectedIndex=0;        
-        }        
-        if($xml.find("confidentiality-impact").text() === "LOW"){
-        document.getElementById('confidentiality-impact').selectedIndex=1;        
-        }        
-        if($xml.find("confidentiality-impact").text() === "HIGH"){
-        document.getElementById('confidentiality-impact').selectedIndex=2;        
-        }        
-
-        // Integrity
-        if($xml.find("integrity").text() === "NONE"){
-        document.getElementById('integrity').selectedIndex=0;        
-        }        
-        if($xml.find("integrity").text() === "LOW"){
-        document.getElementById('integrity').selectedIndex=1;        
-        }        
-        if($xml.find("integrity").text() === "HIGH"){
-        document.getElementById('integrity').selectedIndex=2;        
-        }        
-
-        // Availability
-        if($xml.find("availability").text() === "NONE"){
-        document.getElementById('availability').selectedIndex=0;        
-        }        
-        if($xml.find("availability").text() === "LOW"){
-        document.getElementById('availability').selectedIndex=1;        
-        }        
-        if($xml.find("availability").text() === "HIGH"){
-        document.getElementById('availability').selectedIndex=2;        
-        }        
-
-        // Availability
-        if($xml.find("exploit-code-maturity").text() === "UNPROVEN"){
-        document.getElementById('exploit_maturity').selectedIndex=1;        
-        }        
-        if($xml.find("exploit-code-maturity").text() === "PROOF_OF_CONCEPT"){
-        document.getElementById('exploit_maturity').selectedIndex=2;        
-        }        
-        if($xml.find("exploit-code-maturity").text() === "FUNCTIONAL"){
-        document.getElementById('exploit_maturity').selectedIndex=3;        
-        }        
-        if($xml.find("exploit-code-maturity").text() === "HIGH"){
-        document.getElementById('exploit_maturity').selectedIndex=4;        
-        }        
-
-        // Remediation Level
-        if($xml.find("remediation-level").text() === "OFFICIAL_FIX"){
-        document.getElementById('remeditation_level').selectedIndex=1;        
-        }        
-        if($xml.find("remediation-level").text() === "TEMPORARY_FIX"){
-        document.getElementById('remeditation_level').selectedIndex=2;        
-        }        
-        if($xml.find("remediation-level").text() === "WORKAROUND"){
-        document.getElementById('remeditation_level').selectedIndex=3;        
-        }        
-        if($xml.find("remediation-level").text() === "UNAVAILABLE"){
-        document.getElementById('remeditation_level').selectedIndex=4;        
-        }        
-
-        // report-confidence
-        if($xml.find("report-confidence").text() === "UNKNOWN"){
-        document.getElementById('report_confidence').selectedIndex=1;        
-        }        
-        if($xml.find("report-confidence").text() === "REASONABLE"){
-        document.getElementById('report_confidence').selectedIndex=2;        
-        }        
-        if($xml.find("report-confidence").text() === "CONFIRMED"){
-        document.getElementById('report_confidence').selectedIndex=3;        
-        }        
-
-        // confidentiality-requirement
-        if($xml.find("confidentiality-requirement").text() === "LOW"){
-        document.getElementById('confidentiality_requirement').selectedIndex=1;        
-        }        
-        if($xml.find("confidentiality-requirement").text() === "MEDIUM"){
-        document.getElementById('confidentiality_requirement').selectedIndex=2;        
-        }        
-        if($xml.find("confidentiality-requirement").text() === "HIGH"){
-        document.getElementById('confidentiality_requirement').selectedIndex=3;        
-        }        
-
-        // integrity-requirement
-        if($xml.find("integrity-requirement").text() === "LOW"){
-        document.getElementById('integrity_requirement').selectedIndex=1;        
-        }        
-        if($xml.find("integrity-requirement").text() === "MEDIUM"){
-        document.getElementById('integrity_requirement').selectedIndex=2;        
-        }        
-        if($xml.find("integrity-requirement").text() === "HIGH"){
-        document.getElementById('integrity_requirement').selectedIndex=3;        
-        }        
-
-        // availability-requirement
-        if($xml.find("availability-requirement").text() === "LOW"){
-        document.getElementById('availability_requirement').selectedIndex=1;        
-        }        
-        if($xml.find("availability-requirement").text() === "MEDIUM"){
-        document.getElementById('availability_requirement').selectedIndex=2;        
-        }        
-        if($xml.find("availability-requirement").text() === "HIGH"){
-        document.getElementById('availability_requirement').selectedIndex=3;        
-        }        
-
-        // modified-attack-complexity
-        if($xml.find("modified-attack-complexity").text() === "LOCAL"){
-        document.getElementById('mod_attack_vector').selectedIndex=0;        
-        }        
-        if($xml.find("modified-attack-complexity").text() === "ADJACENT_NETWORK"){
-        document.getElementById('mod_attack_vector').selectedIndex=1;        
-        }        
-        if($xml.find("modified-attack-complexity").text() === "NETWORK"){
-        document.getElementById('mod_attack_vector').selectedIndex=2;        
-        }
-        if($xml.find("modified-attack-complexity").text() === "PHYSICAL"){
-        document.getElementById('mod_attack_vector').selectedIndex=3;        
-        }
-
-        // mod_privileges_required
-        if($xml.find("modified-privileges-required").text() === "LOW"){
-        document.getElementById('mod_privileges_required').selectedIndex=1;        
-        }        
-        if($xml.find("modified-privileges-required").text() === "MEDIUM"){
-        document.getElementById('mod_privileges_required').selectedIndex=2;        
-        }        
-        if($xml.find("modified-privileges-required").text() === "HIGH"){
-        document.getElementById('mod_privileges_required').selectedIndex=3;        
-        }        
-
-        // mod_user_interaction
-        if($xml.find("modified-user-interaction").text() === "NONE"){
-        document.getElementById('mod_user_interaction').selectedIndex=1;        
-        }        
-        if($xml.find("modified-user-interaction").text() === "REQUIRED"){
-        document.getElementById('mod_user_interaction').selectedIndex=2;        
-        }        
-
-        // mod_scope
-        if($xml.find("modified-scope").text() === "UNCHANGED"){
-        document.getElementById('mod_scope').selectedIndex=1;        
-        }        
-        if($xml.find("modified-scope").text() === "CHANGED"){
-        document.getElementById('mod_scope').selectedIndex=2;        
-        }        
-
-        // confidentiality
-        if($xml.find("modified-confidentiality-impact").text() === "NONE"){
-        document.getElementById('mod_confidentiality').selectedIndex=1;        
-        }        
-        if($xml.find("modified-confidentiality-impact").text() === "LOW"){
-        document.getElementById('mod_confidentiality').selectedIndex=2;        
-        }        
-        if($xml.find("modified-confidentiality-impact").text() === "HIGH"){
-        document.getElementById('mod_confidentiality').selectedIndex=3;        
-        }        
-
-        // modified integrity
-        if($xml.find("modified-integrity-impact").text() === "NONE"){
-        document.getElementById('mod_integrity').selectedIndex=1;        
-        }        
-        if($xml.find("modified-integrity-impact").text() === "LOW"){
-        document.getElementById('mod_integrity').selectedIndex=2;        
-        }        
-        if($xml.find("modified-integrity-impact").text() === "HIGH"){
-        document.getElementById('mod_integrity').selectedIndex=3;        
-        }        
-
-        //modified-availability-impact
-        if($xml.find("modified-availability-impact").text() === "NONE"){
-        document.getElementById('mod_availability').selectedIndex=1;        
-        }        
-        if($xml.find("modified-availability-impact").text() === "LOW"){
-        document.getElementById('mod_availability').selectedIndex=2;        
-        }        
-        if($xml.find("modified-availability-impact").text() === "HIGH"){
-        document.getElementById('mod_availability').selectedIndex=3;        
-        }        
-
-        }        
-        });
     - elsif @riskmatrix
       .control-group
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level

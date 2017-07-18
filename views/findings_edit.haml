@@ -561,10 +561,11 @@
                 for(var i in vector){
                 var part = vector[i];
 
+                console.log(part);
                 //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
                 // AV
                 // LANP
-                if(part.includes("AV:")){
+                if(part.includes("AV:") && !part.includes("MAV:")){
                 if(part.includes(":L")){
                 document.getElementById('attack_vector').selectedIndex=0;        
                 }
@@ -580,7 +581,7 @@
                 }        
 
                 // AC
-                if(part.includes("AC:")){
+                if(part.includes("AC:")  && !part.includes("MAC:")){
                 if(part.includes(":L")){
                 document.getElementById('attack_complexity').selectedIndex=0;        
                 }
@@ -590,7 +591,7 @@
                 }        
 
                 // PR NLH
-                if(part.includes("PR:")){
+                if(part.includes("PR:")  && !part.includes("MPR:")){
                 if(part.includes(":N")){
                 document.getElementById('privileges_required').selectedIndex=0;        
                 }
@@ -613,7 +614,7 @@
                 }        
 
                 // S
-                if(part.includes("S:")){
+                if(part.includes("S:")  && !part.includes("MS:")){
                 if(part.includes(":U")){
                 document.getElementById('scope').selectedIndex=0;        
                 }
@@ -623,7 +624,7 @@
                 }        
 
                 // I
-                if(part.includes("I:")){
+                if(part.includes("I:")  && !part.includes("MI:")){
                 if(part.includes(":N")){
                 document.getElementById('integrity').selectedIndex=0;        
                 }
@@ -636,21 +637,20 @@
                 }        
 
                 // C
-                if(part.includes("C:")){
-                var d = document.getElementById('confidentiality-impact');
+                if(part.includes("C:") && !part.includes("MC:") && !part.includes("MAC:")){
                 if(part.includes(":N")){
-                d.selectedIndex=0;        
+                document.getElementById('confidentiality-impact').selectedIndex=0;        
                 }
                 if(part.includes(":L")){
-                d.selectedIndex=1;        
+                document.getElementById('confidentiality-impact').selectedIndex=1;        
                 }
                 if(part.includes(":H")){
-                d.selectedIndex=2;        
+                document.getElementById('confidentiality-impact').selectedIndex=2;        
                 }
                 }        
 
                 // A
-                if(part.includes("A:")){
+                if(part.includes("A:")  && !part.includes("MA:")){
                 if(part.includes(":N")){
                 document.getElementById('availability').selectedIndex=0;        
                 }
@@ -769,13 +769,13 @@
                 if(part.includes(":X")){
                 document.getElementById('mod_attack_vector').selectedIndex=0;        
                 }
-                if(part.includes(":N")){
+                if(part.includes(":L")){
                 document.getElementById('mod_attack_vector').selectedIndex=1;        
                 }
                 if(part.includes(":A")){
                 document.getElementById('mod_attack_vector').selectedIndex=2;        
                 }
-                if(part.includes(":L")){
+                if(part.includes(":N")){
                 document.getElementById('mod_attack_vector').selectedIndex=3;        
                 }
                 if(part.includes(":P")){
