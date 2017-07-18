@@ -113,10 +113,11 @@ def meta_markup_unencode(findings_xml, report)
         report_property = i[1..-1]
         findings_xml = findings_xml.gsub("&amp;lt;&amp;lt;#{report_property}&amp;gt;&amp;gt;","#{report.instance_variable_get("@#{report_property}")}")
     end
-    if report.user_defined_variables
+
+    if report and report.user_defined_variables
         udv_hash = JSON.parse(report.user_defined_variables)
         udv_hash.each do |key,value|
-        findings_xml = findings_xml.gsub("&amp;lt;&amp;lt;#{key}&amp;gt;&amp;gt;","#{value}")
+        	findings_xml = findings_xml.gsub("&amp;lt;&amp;lt;#{key}&amp;gt;&amp;gt;","#{value}")
         end
     end
 
