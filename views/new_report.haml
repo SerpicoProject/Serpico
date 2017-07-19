@@ -25,7 +25,9 @@
           %td
             Assessment Type &nbsp;
           %td
-            %input{:type => 'text', :name => 'assessment_type'}
+            %select{ :name => "assessment_type" }
+              - @assessment_types.each do |assessment_type|
+                %option #{assessment_type}
         %tr
           %td{:style => 'width: 30%'}
             Report Type
