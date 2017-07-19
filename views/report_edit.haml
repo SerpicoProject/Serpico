@@ -30,7 +30,12 @@
               %td{:style => 'width: 30%'}
                 Assessment Type
               %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'assessment_type', :value => "#{@report.assessment_type}"}
+                %select{ :name => "assessment_type" }
+                  - @assessment_types.each do |assessment_type|
+                    - if assessment_type == @report.assessment_type
+                      %option{ :selected => "selected" } #{assessment_type}
+                    - else
+                      %option #{assessment_type}
             %tr
               %td{:style => 'width: 30%'}
                 Full Company Name
