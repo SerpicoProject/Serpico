@@ -13,7 +13,7 @@
     "burpmap":false, //maps burp findings to serpico findings
     "vulnmap":false, //maps vuln ids from MSF vuln db
     "finding_types": ["Web Application","Business Logic","Network Services", "Best Practice", "Compliance", "Database", "Network Internal", "Router Configuration","Social Engineering", "Physical", "Wireless", "Network Security", "System Security", "Logging and Auditing", "Imported"],
-    "report_assessment_types": ["Interne","Externe","Applicatif"],
+    "report_assessment_types": ["Network Internal","External","Web application","Physical","Social engineering","Configuration audit"],
     "logo":"/img/logo_1.svg",
     "auto_import":false, //Experimental, will automatically create new findings on import
     "chart":true, //Enabled or disable support,
