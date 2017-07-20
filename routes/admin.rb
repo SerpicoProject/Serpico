@@ -156,7 +156,7 @@ post '/admin/add_user/:id' do
     report.authors = authors
     report.save
 
-    redirect to("/reports/list")
+    redirect to("/admin/add_user/#{params[:id]}")
 end
 
 get '/admin/del_user_report/:id/:author' do
@@ -182,7 +182,7 @@ get '/admin/del_user_report/:id/:author' do
     report.authors = authors
     report.save
 
-    redirect to("/reports/list")
+    redirect to("/admin/add_user/#{params[:id]}")
 end
 
 get '/admin/config' do
