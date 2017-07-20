@@ -50,7 +50,8 @@ class TemplateFindings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
-
+    property :c2_vs, String, :length => 300, :required => false
+    
     #CVSSv3
     property :attack_vector, String, :required => false
     property :attack_complexity, String, :required => false
@@ -77,6 +78,8 @@ class TemplateFindings
     property :cvss_base_score, Float, :required => false
     property :cvss_impact_score, Float, :required => false
     property :cvss_mod_impact_score, Float, :required => false
+    property :c3_vs, String, :length => 300, :required => false
+
 
     # Risk Matrix
     property :severity, String, :required => false
@@ -136,6 +139,7 @@ class Findings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
+    property :c2_vs, String, :length => 300, :required => false
 
     # CVSSv3
     property :attack_vector, String, :required => false
@@ -163,6 +167,7 @@ class Findings
     property :cvss_base_score, Float, :required => false
     property :cvss_impact_score, Float, :required => false
     property :cvss_mod_impact_score, Float, :required => false
+    property :c3_vs, String, :length => 300, :required => false
 
     # Risk Matrix
     property :severity, String, :required => false

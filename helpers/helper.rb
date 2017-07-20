@@ -285,7 +285,6 @@ end
 def cvss(data, is_cvssv3)
 
 	# todo this needs to be refactored, cvss2 is calculated everytime
-
 	if not is_cvssv3
 		av = data["av"].downcase
 		ac = data["ac"].downcase
@@ -303,117 +302,176 @@ def cvss(data, is_cvssv3)
 		ar = data["ar"].downcase
 	end
 
+	# vector string
+	c2_vs = "CVSS:2.0/"
+
 	# cvssV2
 	if ac == "high"
 	    cvss_ac = 0.35
+		c2_vs += "AC:H/"
 	elsif ac == "medium"
 	    cvss_ac = 0.61
+		c2_vs += "AC:M/"
 	else
 	    cvss_ac = 0.71
+		c2_vs += "AC:L/"
 	end
+
 	if au == "none"
 	    cvss_au = 0.704
+		c2_vs += "AU:N/"
 	elsif au == "single"
 	    cvss_au = 0.56
+		c2_vs += "AU:S/"
 	else
 	    cvss_au = 0.45
+		c2_vs += "AU:M/"
 	end
+
 	if av == "local"
 	    cvss_av = 0.395
+		c2_vs += "AV:L/"
 	elsif av == "local network"
 	    cvss_av = 0.646
+		c2_vs += "AV:A/"
 	else
 	    cvss_av = 1
+		c2_vs += "AV:N/"
 	end
+
 	if c == "none"
 	    cvss_c = 0
+		c2_vs += "C:N/"
 	elsif c == "partial"
 	    cvss_c = 0.275
+		c2_vs += "C:P/"
 	else
 	    cvss_c = 0.660
+		c2_vs += "C:C"
 	end
 	if i == "none"
 	    cvss_i = 00
+		c2_vs += "I:N/"
 	elsif i == "partial"
 	    cvss_i = 0.275
+		c2_vs += "I:P/"
 	else
 	    cvss_i = 0.660
+		c2_vs += "I:C/"
 	end
+
 	if a == "none"
 	    cvss_a = 0
+		c2_vs += "A:N/"
 	elsif a == "partial"
 	    cvss_a = 0.275
+		c2_vs += "I:P/"	    
 	else
 	    cvss_a = 0.660
+		c2_vs += "I:C/"
 	end
 
 	# temporal score calculations
 	if e == "unproven exploit exists"
 	    cvss_e = 0.85
+		c2_vs += "E:U/"
 	elsif e == "proof-of-concept code"
 	    cvss_e = 0.90
+		c2_vs += "E:POC/"
 	elsif e == "functional exploit exists"
 	    cvss_e = 0.95
+		c2_vs += "E:F/"
 	else
 	    cvss_e = 1
+		c2_vs += "E:H/"
 	end
+
 	if rl == "official fix"
 	    cvss_rl = 0.87
+		c2_vs += "RL:OF/"
 	elsif rl == "temporary fix"
 	    cvss_rl = 0.90
+		c2_vs += "RL:TF/"
 	elsif rl == "workaround"
 	    cvss_rl = 0.95
+		c2_vs += "RL:W/"
 	else
 	    cvss_rl = 1
+		c2_vs += "RL:U/"
 	end
+
 	if rc == "unconfirmed"
 	    cvss_rc = 0.90
+		c2_vs += "RC:UC/"
 	elsif rc == "uncorroborated"
 	    cvss_rc = 0.95
+		c2_vs += "RC:UR/"
 	else
 	    cvss_rc = 1
+		c2_vs += "RC:C/"
 	end
 
 	#environemental
 	if cdp == "low"
 	    cvss_cdp = 0.1
+		c2_vs += "CDP:L/"
 	elsif cdp == "low-medium"
 	    cvss_cdp = 0.3
+		c2_vs += "CDP:LM/"
 	elsif cdp == "medium-high"
 	    cvss_cdp = 0.4
+		c2_vs += "CDP:MH/"
 	elsif cdp == "high"
 	    cvss_cdp = 0.5
+		c2_vs += "CDP:H/"
 	else
 	    cvss_cdp = 0
 	end
+
 	if td == "none"
+		c2_vs += "TD:N/"
 	    cvss_td = 0
 	elsif td == "low"
+		c2_vs += "TD:L/"
 	    cvss_td = 0.25
 	elsif td == "medium"
+		c2_vs += "TD:M/"
 	    cvss_td = 0.75
 	else
+		c2_vs += "TD:H/"
 	    cvss_td = 1
 	end
+
 	if cr == "low"
+		c2_vs += "CR:L/"
 	    cvss_cr = 0.5
 	elsif cr == "high"
+		c2_vs += "CR:H/"
 	    cvss_cr = 1.51
 	else
+		c2_vs += "CR:M/"
 	    cvss_cr = 1
 	end
+
 	if ir == "low"
 	    cvss_ir = 0.5
+		c2_vs += "IR:L/"
 	elsif ir == "high"
 	    cvss_ir = 1.51
+		c2_vs += "IR:H/"
 	else
+		c2_vs += "IR:M/"
 	    cvss_ir = 1
 	end
+
 	if ar == "low"
+		c2_vs += "AR:L/"
 	    cvss_ar = 0.5
 	elsif ar == "high"
+		c2_vs += "AR:H/"
 	    cvss_ar = 1.51
 	else
+		c2_vs += "AR:M/"
 	    cvss_ar = 1
 	end
 
@@ -443,6 +501,8 @@ def cvss(data, is_cvssv3)
 	    cvss_total = cvss_base
 	end
 
+ 	c3_vs = "CVSS3.0:/"
+	
 	# cvssV3
 	if is_cvssv3
 		attack_vector = data["attack_vector"].downcase
@@ -474,66 +534,88 @@ def cvss(data, is_cvssv3)
 	 
 	 	#Base
 	 	if confidentiality == "none"
+			c3_vs += "C:N/"
 	 		confidentiality_result = 0.0
 	 	elsif confidentiality == "high"
+			c3_vs += "C:H/"
 	 		confidentiality_result = 0.56
 	 	elsif confidentiality == "low"
+			c3_vs += "C:L/"
 	 		confidentiality_result = 0.22
 	 	end
 
 		if integrity == "none"
+			c3_vs += "I:N/"
 	 		integrity_result = 0.0
 	 	elsif integrity == "high"
+			c3_vs += "I:H/"
 	 		integrity_result = 0.56
 	 	elsif integrity == "low"
+			c3_vs += "I:L/"
 	 		integrity_result = 0.22
 	 	end
 
 	 	if availability == "none"
+			c3_vs += "A:N/"
 	 		availability_result = 0.0
 	 	elsif availability == "high"
+			c3_vs += "A:H/"
 	 		availability_result = 0.56
 	 	elsif availability == "low"
+			c3_vs += "A:L/"
 	 		availability_result = 0.22
 	 	end
 
 		if scope_cvss == "unchanged"
+			c3_vs += "S:U/"
 	 		scope_cvss_result = 6.42
 	 	else
+			c3_vs += "S:C/"
 	 		scope_cvss_result = 7.52
 	 	end
 
 		if attack_vector == "network"
+			c3_vs += "AV:N/"
 			attack_vector_result = 0.85
 	 	elsif attack_vector == "adjacent"
+			c3_vs += "AV:A/"
 	 		attack_vector_result = 0.62
 	 	elsif attack_vector == "local"
+			c3_vs += "AV:L/"
 	 		attack_vector_result = 0.55
 	 	elsif attack_vector == "physical"
+			c3_vs += "AV:P/"
 	 		attack_vector_result = 0.2
 	 	end
 
 	 	if attack_complexity == "high"
+			c3_vs += "AC:H/"
 	 		attack_complexity_result = 0.44
 	 	elsif attack_complexity == "low"
+			c3_vs += "AC:L/"
 	 		attack_complexity_result = 0.77
 	 	end
 
 	 	if user_interaction == "none"
+			c3_vs += "UI:N/"
 	 		user_interaction_result = 0.85
 	 	elsif user_interaction == "required"
+			c3_vs += "UI:R/"
 	 		user_interaction_result = 0.62
 	 	end
 
 		if privileges_required == "none"
+			c3_vs += "PR:N/"
 	 		privileges_required_result = 0.85
 	 	elsif privileges_required == "high"
+			c3_vs += "PR:H/"
 	 		if (scope_cvss == "changed" || mod_scope == "changed")
 	 			privileges_required_result = 0.50
 	 		else
 	 			privileges_required_result = 0.27
 	 		end
 	 	elsif privileges_required == "low"
+			c3_vs += "PR:L/"
 	 		if (scope_cvss == "changed" || mod_scope == "changed")
 	 			privileges_required_result = 0.68
 	 		else
@@ -543,152 +625,208 @@ def cvss(data, is_cvssv3)
 
 		#Temporal
 	 	if exploit_maturity == "not defined"
+			c3_vs += "E:X/"
 	 		exploit_maturity_result = 1
 	 	elsif exploit_maturity == "high"
+			c3_vs += "E:H/"
 	 		exploit_maturity_result = 1
 	 	elsif exploit_maturity == "functional exploit exists"
+			c3_vs += "E:F/"
 	 		exploit_maturity_result = 0.97
 	 	elsif exploit_maturity == "proof-of-concept code"
+			c3_vs += "E:POC/"
 	 		exploit_maturity_result = 0.94
 	 	elsif exploit_maturity == "unproven exploit exists"
+			c3_vs += "E:U/"
 	 		exploit_maturity_result = 0.91
 	 	end
 
 	 	if remeditation_level == "not defined"
+			c3_vs += "RL:X/"
 	 		remeditation_level_result = 1
 	 	elsif remeditation_level == "unavailable"
+			c3_vs += "RL:U/"
 	 		remeditation_level_result = 1
 	 	elsif remeditation_level == "workaround"
+			c3_vs += "RL:W/"
 	 		remeditation_level_result = 0.97
 	 	elsif remeditation_level == "temporary fix"
+			c3_vs += "RL:T/"
 	 		remeditation_level_result = 0.96
 	 	elsif remeditation_level == "official fix"
+			c3_vs += "RL:O/"
 	 		remeditation_level_result = 0.95
 	 	end
 
 		if report_confidence == "not defined"
+			c3_vs += "RC:X/"
 	 		report_confidence_result = 1
 	 	elsif report_confidence == "confirmed"
+			c3_vs += "RC:C/"
 	 		report_confidence_result = 1
 	 	elsif report_confidence == "reasonable"
 	 		report_confidence_result = 0.96
+			c3_vs += "RC:R/"
 	 	elsif report_confidence == "unknown"
 	 		report_confidence_result = 0.92
+			c3_vs += "RC:U/"
 	 	end
 
 	 	#Enviromental
 	 	if confidentiality_requirement == "not defined"
+			c3_vs += "CR:X/"
 	 		confidentiality_requirement_result = 1
 	 	elsif confidentiality_requirement == "high"
+			c3_vs += "CR:H/"
 	 		confidentiality_requirement_result = 1.5
 	 	elsif confidentiality_requirement == "medium"
+			c3_vs += "CR:M/"
 	 		confidentiality_requirement_result = 1
 	 	elsif confidentiality_requirement == "low"
+			c3_vs += "CR:L/"
 	 		confidentiality_requirement_result = 0.5
 	 	end
 
 	 	if integrity_requirement == "not defined"
+			c3_vs += "IR:X/"
 	 		integrity_requirement_result = 1
 	 	elsif integrity_requirement == "high"
+			c3_vs += "IR:H/"
 	 		integrity_requirement_result = 1.5
 	 	elsif integrity_requirement == "medium"
+			c3_vs += "IR:M/"
 	 		integrity_requirement_result = 1
 	 	elsif integrity_requirement == "low"
+			c3_vs += "IR:L/"
 	 		integrity_requirement_result = 0.5
 	 	end
 
 	 	if availability_requirement == "not defined"
+			c3_vs += "AR:X/"
 	 		availability_requirement_result = 1
 	 	elsif availability_requirement == "high"
+			c3_vs += "AR:H/"
 	 		availability_requirement_result = 1.5
 	 	elsif availability_requirement == "medium"
+			c3_vs += "AR:M/"
 	 		availability_requirement_result = 1
 	 	elsif availability_requirement == "low"
+			c3_vs += "AR:L/"
 	 		availability_requirement_result = 0.5
 	 	end
 	 	
 	 	if mod_confidentiality == "none"
+			c3_vs += "MAC:N/"
 	 		mod_confidentiality_result = 0.0
 	 	elsif mod_confidentiality == "high"
+			c3_vs += "MAC:H/"
 	 		mod_confidentiality_result = 0.56
 	 	elsif mod_confidentiality == "low"
+			c3_vs += "MAC:L/"
 	 		mod_confidentiality_result = 0.22
 	 	elsif mod_confidentiality == "not defined"
+			c3_vs += "MAC:X/"
 	 		mod_confidentiality_result = confidentiality_result
 	 	end
 
 
 	 	if mod_integrity == "none"
+			c3_vs += "MI:N/"
 	 		mod_integrity_result = 0.0
 	 	elsif mod_integrity == "high"
+			c3_vs += "MI:H/"
 	 		mod_integrity_result = 0.56
 	 	elsif mod_integrity == "low"
+			c3_vs += "MI:L/"
 	 		mod_integrity_result = 0.22
 	 	elsif mod_integrity == "not defined"
+			c3_vs += "MI:X/"
 	 		mod_integrity_result = integrity_result
 	 	end
 
 		if mod_availability == "none"
+			c3_vs += "MA:N/"
 	 		mod_availability_result = 0.0
 	 	elsif mod_availability == "high"
+			c3_vs += "MA:H/"
 	 		mod_availability_result = 0.56
 	 	elsif mod_availability == "low"
+			c3_vs += "MA:L/"
 	 		mod_availability_result = 0.22
 	 	elsif mod_availability == "not defined"
+			c3_vs += "MA:X/"
 	 		mod_availability_result = availability_result
 	 	end
 
 	 	if mod_scope == "unchanged"
+			c3_vs += "MS:X/"
 	 		mod_scope_result = 6.42
 	 	elsif mod_scope == "changed"
+			c3_vs += "MS:N/"
 	 		mod_scope_result = 7.52
 	 	elsif mod_scope == "not defined"
+	 		c3_vs += "MS:X/"	 		
 	 		mod_scope_result = scope_cvss_result
 	 	end
 
 		if mod_attack_vector == "network"
+			c3_vs += "MAV:N/"
 	 		mod_attack_vector_result = 0.85
 	 	elsif mod_attack_vector == "adjacent"
+			c3_vs += "MAV:A/"
 	 		mod_attack_vector_result = 0.62
 	 	elsif mod_attack_vector == "local"
+			c3_vs += "MAV:L/"
 	 		mod_attack_vector_result = 0.55
 	 	elsif mod_attack_vector == "physical"
+			c3_vs += "MAV:P/"
 	 		mod_attack_vector_result = 0.2
 	 	elsif mod_attack_vector == "not defined"
+			c3_vs += "MAV:X/"
 	 		mod_attack_vector_result = attack_vector_result
 	 	end
 	 
 	 	if mod_attack_complexity == "high"
+			c3_vs += "MAC:H/"
 	 		mod_attack_complexity_result = 0.44
 	 	elsif mod_attack_complexity == "low"
+			c3_vs += "MAC:L/"
 	 		mod_attack_complexity_result = 0.77
 	 	elsif mod_attack_complexity == "not defined"
+			c3_vs += "MAC:X/"
 	 		mod_attack_complexity_result = attack_complexity_result
 	 	end
 
 	 	if mod_user_interaction == "none"
+			c3_vs += "MUI:N/"
 	 		mod_user_interaction_result = 0.85
 	 	elsif mod_user_interaction == "required"
+			c3_vs += "MUI:R/"
 	 		mod_user_interaction_result = 0.62
 	 	elsif mod_user_interaction == "not defined"
+			c3_vs += "MUI:X/"
 	 		mod_user_interaction_result = user_interaction_result
 	 	end
 	 
 	 	if mod_privileges_required == "none"
+			c3_vs += "MPR:N/"
 	 		mod_privileges_required_result = 0.85
 	 	elsif mod_privileges_required == "low"
+			c3_vs += "MPR:L/"
 	 		if (scope_cvss == "changed" || mod_scope == "changed")
 	 			mod_privileges_required_result = 0.68
 	 		else
 	 			mod_privileges_required_result = 0.62
 	 		end
 	 	elsif mod_privileges_required == "high"
+			c3_vs += "MPR:H/"
 	 		if (scope_cvss == "changed" || mod_scope == "changed")
 	 			mod_privileges_required_result = 0.5
 	 		else
 	 			mod_privileges_required_result = 0.27
 	 		end
 	 	elsif mod_privileges_required == "not defined"
+			c3_vs += "MPR:X/"
 	 		mod_privileges_required_result = privileges_required_result
 	 	end
 
@@ -802,6 +940,9 @@ def cvss(data, is_cvssv3)
 	else
 		data["cvss_total"] = sprintf("%0.1f" % cvss_total)
 	end
+
+	data["c2_vs"] = c2_vs.chop
+	data["c3_vs"] = c3_vs.chop
 
 	return data
 end
