@@ -42,7 +42,7 @@ def add_findings_totals(udv, findings, config_options)
     	findings.each do |finding|
     		if finding.dread_total >= 40
     			critical += 1
-    		elsif finding.dread_total >= 30 and finding.dread_total <= 40
+    		elsif finding.dread_total >= 30 and finding.dread_total < 40
     			high += 1
     		elsif finding.dread_total >= 20 and finding.dread_total <= 30
     			moderate += 1
