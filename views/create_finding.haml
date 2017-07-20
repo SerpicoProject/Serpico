@@ -124,7 +124,7 @@
                 }        
 
                 // C
-                if(part.includes("C:")){
+                if(part.includes("C:") && && !part.includes("AC:")){
                 if(part.includes(":N")){
                 document.getElementById('c').selectedIndex=0;        
                 }
@@ -361,6 +361,7 @@
         %label{ :class => "control-label", :for => "e" } Exploitability
         .controls
           %select{ :name => "e", :id => "e" }
+            %option Not Defined
             %option Unproven Exploit Exists
             %option Proof-of-Concept Code
             %option Functional Exploit Exists
@@ -369,6 +370,7 @@
         %label{ :class => "control-label", :for => "rl" } Remediation Level
         .controls
           %select{ :name => "rl", :id => "rl" }
+            %option Not Defined
             %option Official Fix
             %option Temporary Fix
             %option Workaround
@@ -377,6 +379,7 @@
         %label{ :class => "control-label", :for => "rc" } Report Confidence
         .controls
           %select{ :name => "rc", :id => "rc" }
+            %option Not Defined
             %option Unconfirmed
             %option Uncorroborated
             %option Confirmed
@@ -384,6 +387,7 @@
         %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
         .controls
           %select{ :name => "cdp", :id => "cdp" }
+            %option Not Defined
             %option None
             %option Low
             %option Low-Medium
@@ -393,6 +397,7 @@
         %label{ :class => "control-label", :for => "td" } Target Distribution
         .controls
           %select{ :name => "td", :id => "td" }
+            %option Not Defined
             %option None
             %option Low
             %option Medium
@@ -401,6 +406,7 @@
         %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
         .controls
           %select{ :name => "cr", :id => "cr" }
+            %option Not Defined
             %option Low
             %option Medium
             %option High
@@ -408,6 +414,7 @@
         %label{ :class => "control-label", :for => "ir" } Integrity Requirement
         .controls
           %select{ :name => "ir", :id => "ir" }
+            %option Not Defined
             %option Low
             %option Medium
             %option High
@@ -415,6 +422,7 @@
         %label{ :class => "control-label", :for => "ar" } Availability Requirement
         .controls
           %select{ :name => "ar", :id => "ar" }
+            %option Not Defined
             %option Low
             %option Medium
             %option High
