@@ -25,6 +25,80 @@ def zip_attachments(zip_file)
   end
 end
 
+# this tallies the findings by criticality and sets them as a udv
+def add_findings_totals(udv, findings, config_options)
+	critical = 0
+	high = 0
+	moderate = 0
+	low = 0
+	informational = 0
+
+	unless udv
+		udv = {}
+	end
+
+    # Query for the findings that match the report_id
+    if(config_options["dread"])
+    	findings.each do |finding|
+    		if finding.dread_total >= 40
+    			critical += 1
+    		elsif finding.dread_total >= 30 and finding.dread_total <= 40
+    			high += 1
+    		elsif finding.dread_total >= 20 and finding.dread_total <= 30
+    			moderate += 1
+    		elsif finding.dread_total >= 10 and finding.dread_total <= 20
+    			low += 1
+    		elsif finding.dread_total >= 0 and finding.dread_total <= 10
+    			informational += 1
+    		end
+	    end
+    elsif(config_options["cvss"])
+    	findings.each do |finding|
+    		if finding.cvss_total >= 7
+    			high += 1
+    		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
+    			moderate += 1
+    		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
+    			low += 1
+    		end
+	    end
+    elsif(config_options["cvssv3"])
+    	findings.each do |finding|
+    		if finding.cvss_total >= 9
+    			critical += 1
+    		elsif finding.cvss_total >= 7 and finding.cvss_total <= 8.9
+    			high += 1
+    		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
+    			moderate += 1
+    		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
+    			low += 1
+    		end
+	    end
+    else
+    	findings.each do |finding|
+    		if finding.risk == 4
+    			critical += 1
+    		elsif finding.risk == 3
+    			high += 1
+    		elsif finding.risk == 2
+    			moderate += 1
+    		elsif finding.risk == 1
+    			low += 1
+    		elsif finding.risk == 0
+    			informational += 1
+    		end
+	    end
+    end
+
+    udv["critical_tally"] = critical
+    udv["high_tally"] = high
+    udv["moderate_tally"] = moderate
+    udv["low_tally"] = low
+    udv["informational_tally"] = informational
+
+    return udv
+end
+
 
 # The helper class exists to do string manipulation and heavy lifting
 def url_escape_hash(hash)

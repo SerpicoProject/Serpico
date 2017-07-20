@@ -1115,6 +1115,8 @@ get '/report/:id/generate' do
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     elsif(config_options["cvssv3"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+    elsif(config_options["riskmatrix"])
+        @findings = Findings.all(:report_id => id, :order => [:riskmatrix.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
@@ -1149,19 +1151,21 @@ get '/report/:id/generate' do
 
     # check if the report has user_defined variables
     if @report.user_defined_variables
-
         # we need the user defined variables in xml
         udv_hash = JSON.parse(@report.user_defined_variables)
-        udv = "<udv>"
-        udv_hash.each do |key,value|
-            udv << "<#{key}>"
-            udv << "#{value}"
-            udv << "</#{key}>\n"
-        end
-        udv << "</udv>"
-    else
-        udv = ""
     end
+    
+    # update udv_hash with findings totals
+    udv_hash = add_findings_totals(udv_hash, @findings, config_options)
+
+    udv = "<udv>"
+    udv_hash.each do |key,value|
+        udv << "<#{key}>"
+        udv << "#{value}"
+        udv << "</#{key}>\n"
+    end
+
+    udv << "</udv>"
 
     report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}</report>"
 
