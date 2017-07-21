@@ -84,6 +84,10 @@
                 for(var i in vector){
                 var part = vector[i];
 
+                if (part.length > 0){
+                part = part.toUpperCase();
+                }
+
                 // AV
                 if(part.includes("AV:")){
                 if(part.includes(":L")){
@@ -684,6 +688,10 @@
                 var vector = score.trim().split("/");
                 for(var i in vector){
                 var part = vector[i];
+
+                if (part.length > 0){
+                part = part.toUpperCase();
+                }
 
                 //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
                 // AV
