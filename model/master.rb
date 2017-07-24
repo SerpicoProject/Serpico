@@ -357,6 +357,7 @@ class Attachments
     property :filename_location, String, :length => 400
     property :report_id, String, :length => 30
     property :description, String, :length => 500
+    property :caption, String, :length => 500
 
 end
 

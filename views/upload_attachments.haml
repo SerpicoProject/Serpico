@@ -16,6 +16,11 @@
           Upload Files &nbsp;
         %td
           %input{:type => 'file', :name => 'files[]', :multiple => true}
+      %tr
+        %td
+          Caption &nbsp;
+        %td
+          %input{ :type => 'text', :name => 'caption'}
     %br
     %input{:type => 'submit', :value => 'Upload' }
     %a{ :href => "/report/#{@report.id}/edit"}

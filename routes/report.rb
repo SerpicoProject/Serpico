@@ -274,6 +274,7 @@ post '/report/:id/upload_attachments' do
     	datax["filename"] = upf[:filename]
     	datax["description"] = CGI::escapeHTML(upf[:filename]).gsub(" ","_").gsub("/","_").gsub("\\","_").gsub("`","_")
     	datax["report_id"] = id
+        datax["caption"] = params[:caption]
     	data = url_escape_hash(datax)
 
     	@attachment = Attachments.new(data)
@@ -733,6 +734,7 @@ get '/report/:id/findings/new' do
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
     @riskmatrix = config_options["riskmatrix"]
+    @vulnmap = config_options["vulnmap"]
 
     haml :create_finding, :encode_html => true
 end
