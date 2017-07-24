@@ -1125,8 +1125,10 @@ get '/report/:id/generate' do
     findings_xml = ""
     findings_xml << "<findings_list>"
 
-    @findings.each do |finding|
+    finding_number = 1
 
+    @findings.each do |finding|
+        finding.finding_number = finding_number
         # This flags new or edited findings
         if finding.master_id
             master = TemplateFindings.first(:id => finding.master_id)
@@ -1142,6 +1144,7 @@ get '/report/:id/generate' do
             finding.remediation = compare_text(finding.remediation, nil)
         end
         findings_xml << finding.to_xml
+        finding_number += 1
     end
 
     findings_xml << "</findings_list>"

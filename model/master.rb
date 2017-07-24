@@ -93,6 +93,7 @@ class Findings
     include DataMapper::Resource
 
     property :id, Serial
+    property :finding_number, Integer, :required => false
     property :report_id, Integer, :required => true
     property :master_id, Integer, :required => false
     property :finding_modified, Boolean, :required => false
