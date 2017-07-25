@@ -21,6 +21,7 @@ end
 # Create a report
 get '/report/new' do
     @templates = Xslt.all
+	@assessment_types = config_options["report_assessment_types"]
     haml :new_report, :encode_html => true
 end
 
@@ -367,7 +368,8 @@ get '/report/:id/edit' do
     @report = get_report(id)
 	@templates = Xslt.all(:order => [:report_type.asc])
     @plugin_side_menu = get_plugin_list
-
+	@assessment_types = config_options["report_assessment_types"]
+	
     if @report == nil
         return "No Such Report"
     end

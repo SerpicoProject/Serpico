@@ -324,6 +324,7 @@ class Reports
     property :date, String, :length => 20
     property :report_type, String, :length => 200
     property :report_name, String, :length => 200
+	property :assessment_type, String, :length => 200
     property :consultant_name, String, :length => 200
     property :consultant_company, String, :length => 200
     property :consultant_phone, String
