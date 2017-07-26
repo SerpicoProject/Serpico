@@ -18,16 +18,18 @@ end
 
 def generate_xslt(docx)
 
-# hardcoded stuff
+# Initialize the xsl
 @top = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsl:stylesheet
   version="1.0"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="xml" indent="yes"/>
   <xsl:template match="/">
+  <xsl:variable name="low" select="\'abcdefghijklmnopqrstuvwxyz\'" /><xsl:variable name="up" select="\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'" />
     <xsl:processing-instruction name="mso-application">
       <xsl:text>progid="Word.Document"</xsl:text>
     </xsl:processing-instruction>'
+@bottom = '</xsl:template></xsl:stylesheet>'
 
 	document = ""
 	debug = false
@@ -61,12 +63,13 @@ def generate_xslt(docx)
 			count = count + 1
 			next
 		end
-
+		
+		# Execute when between two Ω
 		omega = compress(omega)
 
 		# now, we replace omega with the real deal
 		#<xsl:for-each select="report/reports">
-		#<w:t xml:space="preserve"> <xsl:value-of select="contact_name"/> </w:t>
+		#<xsl:value-of select="contact_name"/>
 		#</xsl:for-each>
 		replace[count] = "<xsl:for-each select=\"report/reports\"><xsl:value-of select=\"#{omega.downcase}\"/></xsl:for-each>"
 		count = count + 1
@@ -93,17 +96,18 @@ def generate_xslt(docx)
             next
         end
 
+		# Execute when between two §
         omega = compress(omega)
 
         # now, we replace omega with the real deal
-        #<xsl:for-each select="report/reports">
-        #<w:t xml:space="preserve"> <xsl:value-of select="contact_name"/> </w:t>
+        #<xsl:for-each select="report/udv">
+        #<xsl:value-of select="contact_name"/>
         #</xsl:for-each>
         replace[count] = "<xsl:for-each select=\"report/udv\"><xsl:value-of select=\"#{omega.downcase}\"/></xsl:for-each>"
         count = count + 1
     end
 
-    # remove all the Ω and put the document back together
+    # remove all the § and put the document back together
     document = replace.join("")
 
 
@@ -125,12 +129,14 @@ def generate_xslt(docx)
 			next
 		end
 
+		# Execute when between two π
 		omega = compress(omega)
 
 		replace[count] = "<xsl:value-of select=\"#{omega.downcase}\"/>"
 		count = count + 1
 	end
 
+    # remove all the π and put the document back together
 	document = replace.join("")
 ###########################
 
@@ -149,14 +155,15 @@ def generate_xslt(docx)
 			count = count + 1
 			next
 		end
-
+		
+		# Execute when between two ∞
 		omega = compress(omega)
 
 		replace[count] = "<xsl:value-of select=\"#{omega.downcase}\"/>"
-
 		count = count + 1
 	end
 
+	# remove all the π and put the document back together
 	document = replace.join("")
 
 ###############################
@@ -181,6 +188,7 @@ def generate_xslt(docx)
 			next
 		end
 
+		# Execute when between two æ
 		omega = compress(omega)
 
 		if omega =~ /:::/
@@ -194,11 +202,11 @@ def generate_xslt(docx)
 				q = ""
 
 				conditions.each do |condition|
-					# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-					q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 					q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 				end
 				q << "<w:tr "
+				# replace the last occurences of <w:tr in replace[count-1] by <xsl:for-each select=\"value\">
+				# and every necessary <xsl:if>
 				x = replace[count-1].reverse.sub("<w:tr ".reverse,"<xsl:for-each select=\"#{omega.downcase}\">#{q}".reverse).reverse
 				replace[count-1] = x
 			end
@@ -216,6 +224,7 @@ def generate_xslt(docx)
 		else
 			#skip back to the previous TABLEROW <w:tr
 			if replace[count-1] =~ /\<w:tr /
+				# replace the last occurences of <w:tr in replace[count-1] by <xsl:for-each select=\"value\">
 				x = replace[count-1].reverse.sub("<w:tr ".reverse,"<xsl:for-each select=\"#{omega.downcase}\"><w:tr ".reverse).reverse
 				replace[count-1] = x
 			end
@@ -232,6 +241,7 @@ def generate_xslt(docx)
 		count = count + 1
 	end
 
+	# remove all the æ and put the document back together
 	document = replace.join("")
 
 ###########################
@@ -254,42 +264,45 @@ def generate_xslt(docx)
 			next
 		end
 
+		# Execute when between two ¬
 		omega = compress(omega)
 
 		q = ""
 		if omega =~ /:::/
 			conditions = omega.split(":::")
+			# push the number of condition for the current loop
 			for_iffies.push(conditions.size-1)
 			omega = conditions[0]
 
 			conditions.shift
 			conditions.each do |condition|
-				# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-				q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
         else
 			for_iffies.push(0)
 		end
-
-		# we need to search backwards for '<w:p>' or '<w:p ')
-		woutspace = replace[count-1].rindex("<w:p>")
-		space = replace[count-1].rindex("<w:p ")
-		woutspace = 0 unless woutspace
-		space = 0 unless space
-
-		if woutspace > space
-			x = replace[count-1].reverse.sub("<w:p>".reverse,"<xsl:for-each select=\"#{omega.downcase}\">#{q}<w:p>".reverse).reverse
-			replace[count-1] = x
+		
+		# Replace everything behind ¬ in the current paragraph for <xsl:for-each select=\"value\">
+		# and every necessary <xsl:if>
+		x = replace[count-1].sub(/<w:p[^\>]*?>((?<!<w:p[ |>]).)*$/,"<xsl:for-each select=\"#{omega.downcase}\">#{q}")
+		replace[count-1] = x
+		
+		tagIndex = replace[count+1].rindex("</w:p>")
+		chooseIndex = replace[count+1].rindex("µ")
+		if chooseIndex.nil? or tagIndex < chooseIndex
+			# if there isn't any µ before the end of the paragraph, delete the rest of the paragraph
+		    replace[count+1] = replace[count+1].sub(/^<\/w:t>.*?<\/w:r>.*?<\/w:p>/, '')
 		else
-			x = replace[count-1].reverse.sub("<w:p ".reverse,"<xsl:for-each select=\"#{omega.downcase}\">#{q}<w:p ".reverse).reverse
-			replace[count-1] = x
+			# if there is an µ before the end of the paragraph, delete everything behind the µ
+			replace[count+1] = replace[count+1].sub(/^.*?µ/, 'µ')
 		end
+	
 		replace[count]=''
 
 		count = count + 1
 	end
 
+	# remove all the ¬ and put the document back together
 	document = replace.join("")
 
 ###############################
@@ -311,26 +324,38 @@ def generate_xslt(docx)
 			next
 		end
 
+		# Execute when between two †
 		omega = compress(omega)
-		# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-		cs = "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />"
-		if document.include?("<xsl:variable name=\"up\"") or replace[count-1].include?("<xsl:variable name=\"up\"")
-			cs = ""
-		end
 
-		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p>#{cs}<xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
+		# Replace everything behind the first † in the current paragraph for <xsl:if test=\"condition\">
+		x = replace[count-1].sub(/<w:p[^\>]*?>((?<!<w:p[ |>]).)*$/,"<xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">")
 		replace[count-1] = x
-
+		# Remove the rest of the paragraph		
+        replace[count+1] = replace[count+1].sub(/^<\/w:t>.*?<\/w:r>.*?<\/w:p>/, '')
+		
 		replace[count]=''
 
 		count = count + 1
 	end
+	
+	# remove all the † and put the document back together
 	document = replace.join("")
 
 
 ###########################
 # ÷ - otherwise . Used in XSLT choose loops
-	document = document.gsub('÷',"</w:t></w:r></w:p></xsl:when><xsl:otherwise><w:p><w:r><w:t>")
+
+	q = ""
+	document.each_line("÷"){ |a|
+		if a =~ /÷/
+			# replace the first </w:p> before a ÷ for </w:p></xsl:when><xsl:otherwise>
+			x = a.reverse.sub("</w:p>".reverse,"</w:p></xsl:when><xsl:otherwise>".reverse).reverse
+			a = x.gsub('÷','')
+		end
+
+		q << a
+	}
+	document = q
 
 ###########################
 # ¥ - ends an if statement
@@ -340,7 +365,7 @@ def generate_xslt(docx)
 	document.each_line("¥"){ |a|
 		if subst
 			x = ""
-			# we need to search forwards for '</w:p>'
+			# Replace the first </w:t></w:r></w:p> after a ¥ for </xsl:if>
 			x = a.sub("</w:t></w:r></w:p>","</xsl:if>")
 			a = x
 			subst = false
@@ -385,9 +410,10 @@ def generate_xslt(docx)
 			next
 		end
 
+		# Execute when between two ƒ
 		omega = compress(omega)
 
-		# we need to search backwards for '<w:p>' or '<w:p ')
+		# Replace the first </w:p> behind the first ƒ in the current paragraph for </w:p></xsl:when><xsl:when test=\"conditon\">
 		woutspace = replace[count-1].rindex("<w:p>")
 		space = replace[count-1].rindex("<w:p ")
 		woutspace = 0 unless woutspace
@@ -405,7 +431,9 @@ def generate_xslt(docx)
 		count = count + 1
 	end
 
+	# remove all the ƒ and put the document back together
 	document = replace.join("")
+	
 ###############################
 
 # µ - initiates choose/when structure
@@ -423,26 +451,15 @@ def generate_xslt(docx)
 			next
 		end
 
+		# Execute when between two µ
 		omega = compress(omega)
 
-		# we need to search backwards for '<w:p>' or '<w:p ')
-		woutspace = replace[count-1].rindex("<w:p>")
-		space = replace[count-1].rindex("<w:p ")
-		woutspace = 0 unless woutspace
-		space = 0 unless space
-		x = ""
-		if woutspace > space
-			x = replace[count-1].reverse.sub("<w:p>".reverse,"<xsl:choose><xsl:when test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\"><w:p>".reverse).reverse
-			replace[count-1] = x
-		else
-			x = replace[count-1].reverse.sub("<w:p ".reverse,"<xsl:choose><xsl:when test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\"><w:p ".reverse).reverse
-			replace[count-1] = x
-		end
-		replace[count]=''
-
+		replace[count]="<xsl:choose><xsl:when test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\"><w:p><w:r><w:t>"
+		
 		count = count + 1
 	end
 
+	# remove all the µ and put the document back together
 	document = replace.join("")
 
 ###############################
@@ -455,7 +472,7 @@ def generate_xslt(docx)
 	document.each_line("å"){ |a|
 		if subst
 			x = ""
-			# we need to search forwards for '</w:p>'
+			# Replace the first </w:p> after a å for </w:p></xsl:otherwise></xsl:choose>
 			x = a.sub("</w:p>","</w:p></xsl:otherwise></xsl:choose>")
 			a = x
 			subst = false
@@ -506,7 +523,7 @@ def generate_xslt(docx)
 	document.each_line("≠"){ |a|
 		if subst
 			x = ""
-			# we need to search forwards for '</w:p>'
+			# Replace the first </w:p> after a ≠ for </w:p></xsl:otherwise></xsl:choose></xsl:for-each>
 			x = a.sub("</w:p>","</w:p></xsl:otherwise></xsl:choose></xsl:for-each>")
 			a = x
 			subst = false
@@ -520,15 +537,15 @@ def generate_xslt(docx)
 	}
 	document = q
 
-
 ###############################
 # ∆ - end for-each
 
     # add end if's
 	end_ifs = ''
 	r_for_iffies.each do |fi|
+		# Replace each paragraph containing a ∆ by the appropritate number of </xsl:if> and a </xsl:for-each>
 		end_ifs = "</xsl:if>"*fi
-		document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
+		document = document.sub(/<w:p[^\>]*?>((?<!<w:p[ |>]).)*∆<\/w:t>.*?<\/w:r>.*?<\/w:p>/,"#{end_ifs}</xsl:for-each>")
 	end
 
 ###########################
@@ -542,6 +559,9 @@ def generate_xslt(docx)
 	# final changes placed here
 	document = white_space(document)
 
+	# add in xslt footer
+	document = document + @bottom
+	
 	#return the xslt
 	return document
 end
