@@ -1123,8 +1123,6 @@ get '/report/:id/generate' do
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
     elsif(config_options["cvssv3"])
         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["riskmatrix"])
-        @findings = Findings.all(:report_id => id, :order => [:riskmatrix.desc])
     else
         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
     end
