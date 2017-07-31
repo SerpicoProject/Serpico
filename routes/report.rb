@@ -6,6 +6,12 @@ require 'sinatra'
 
 config_options = JSON.parse(File.read('./config.json'))
 
+# set the report_assessment_types for <1.2 versions of Serpico
+unless config_options["report_assessment_types"]
+    config_options["report_assessment_types"] = ["Network Internal","External","Web application","Physical","Social engineering","Configuration audit"]
+end
+
+
 # List current reports
 get '/reports/list' do
     @reports = get_reports
@@ -21,6 +27,7 @@ end
 # Create a report
 get '/report/new' do
     @templates = Xslt.all
+    @assessment_types = config_options["report_assessment_types"]
     haml :new_report, :encode_html => true
 end
 
@@ -367,6 +374,7 @@ get '/report/:id/edit' do
     @report = get_report(id)
 	@templates = Xslt.all(:order => [:report_type.asc])
     @plugin_side_menu = get_plugin_list
+    @assessment_types = config_options["report_assessment_types"]
 
     if @report == nil
         return "No Such Report"

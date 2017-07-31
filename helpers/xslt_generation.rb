@@ -25,6 +25,7 @@ def generate_xslt(docx)
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="xml" indent="yes"/>
   <xsl:template match="/">
+  <xsl:variable name="low" select="\'abcdefghijklmnopqrstuvwxyz\'" /><xsl:variable name="up" select="\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'" />
     <xsl:processing-instruction name="mso-application">
       <xsl:text>progid="Word.Document"</xsl:text>
     </xsl:processing-instruction>'
@@ -195,7 +196,6 @@ def generate_xslt(docx)
 
 				conditions.each do |condition|
 					# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-					q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 					q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 				end
 				q << "<w:tr "
@@ -265,7 +265,6 @@ def generate_xslt(docx)
 			conditions.shift
 			conditions.each do |condition|
 				# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-				q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
         else
@@ -312,13 +311,8 @@ def generate_xslt(docx)
 		end
 
 		omega = compress(omega)
-		# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-		cs = "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />"
-		if document.include?("<xsl:variable name=\"up\"") or replace[count-1].include?("<xsl:variable name=\"up\"")
-			cs = ""
-		end
 
-		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p>#{cs}<xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
+		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p><xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
 		replace[count-1] = x
 
 		replace[count]=''
