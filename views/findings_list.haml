@@ -101,7 +101,7 @@
                     elsif finding.cvss_total <= 3.9
                       vulns["low"] += 1
                     end
-                  end                
+                  end
                   labels = {"label_1" => "Critical (N/A)", "label_2" => "Severe", "label_3" => "Moderate",  "label_4" => "Low"}
                 elsif @cvssv3
                   @findings.each do |finding|
@@ -115,7 +115,7 @@
                     elsif finding.cvss_total <= 3.9
                       vulns["low"] += 1
                     end
-                  end                
+                  end
                   labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
                 else
                   @findings.each do |finding|
@@ -132,7 +132,7 @@
                   end
                   labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
                 end
-              - if @chart 
+              - if @chart
                 %div{:id =>"chart"}
                 %br
                 //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
@@ -241,3 +241,15 @@
                       %i{:class => 'icon-arrow-up icon-white', :title => 'Add to the findings database'}
           - else
             No Findings Available
+
+:javascript
+  function confirmDelete(evt) {
+    if (!confirm('Are you sure you want to permanently delete the select element ?')) {
+      evt.preventDefault();
+    }
+  }
+
+  var deleteElements = $('a.btn-danger');
+  for (var index = 0, length = deleteElements.length; index < length; index++) {
+    deleteElements[index].addEventListener('click', confirmDelete, false);
+  }

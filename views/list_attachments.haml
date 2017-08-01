@@ -3,7 +3,7 @@
   - if @attachments
     %br
       %h3 Current Attachments
-      %br  
+      %br
       .table.table-striped
         %table{:style => 'width: 90%'}
           %tbody
@@ -15,7 +15,19 @@
                   %a{ :class => "btn btn-info", :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}"}
                     %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                   %a{ :class => "btn btn-danger", :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}"}
-                    %i{:class => 'icon-remove icon-white', :title => 'Delete'} 
+                    %i{:class => 'icon-remove icon-white', :title => 'Delete'}
 
   - else
     No Attachments Available.
+
+:javascript
+  function confirmDelete(evt) {
+    if (!confirm('Are you sure you want to permanently delete the select element ?')) {
+      evt.preventDefault();
+    }
+  }
+
+  var deleteElements = $('a.btn-danger');
+  for (var index = 0, length = deleteElements.length; index < length; index++) {
+    deleteElements[index].addEventListener('click', confirmDelete, false);
+  }
