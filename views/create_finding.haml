@@ -1182,7 +1182,7 @@
       .control-group
         %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'severity_rationale', :name => 'severity_rationale'}
+          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :id => 'severity_rationale', :name => 'severity_rationale'}
       .control-group
         %label{ :class => "control-label", :for => "likelihood" } Likelihood
         .controls
@@ -1192,7 +1192,7 @@
       .control-group
         %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}       
+          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}       
              
     - else
       .control-group
@@ -1219,9 +1219,9 @@
             %option{:value => 4}= "Critical"
     .control-group
       %label{ :class => "control-label", :for => "overview" }
-        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+        %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
-      .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+      .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
         .modal-header
           %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
             x
@@ -1237,6 +1237,8 @@
           %h2
             Bullets
           %p
+            Shortcut : CTRL + ALT + w
+            %br
             Place the bulleted text inbetween a *- and a -* like so:
             %br
             %br
@@ -1245,6 +1247,8 @@
           %h2
             Paragraph Heading Text
           %p
+            Shortcut : CTRL + ALT + q
+            %br
             Place the heading inbetween a [== and a ==] like so:
             %br
             %br
@@ -1253,6 +1257,8 @@
           %h2
             Italics
           %p
+            Shortcut : CTRL + ALT + x
+            %br
             Italicize the paragraph containing [~~ and a ~~]:
             %br
             %br
@@ -1261,6 +1267,8 @@
           %h2
             Code
           %p
+            Shortcut : CTRL + ALT + c
+            %br
             Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
             %br
             %br
@@ -1268,11 +1276,11 @@
               [[[ code, code goes here ]]]
 
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'overview', :name => 'overview'}
     .control-group
       %label{ :class => "control-label", :for => "pocu" } Proof of Concept
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc', :id => 'pocu'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'poc', :name => 'poc', :id => 'pocu'}
     - attachments=''
     - if @attaches
       - @attaches.each do |attach|
@@ -1299,15 +1307,15 @@
       .control-group
         %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
         .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'affected_hosts', :name => 'affected_hosts'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'affected_hosts', :name => 'affected_hosts'}
     .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'remediation'}
     .control-group
       %label{ :class => "control-label", :for => "references" } References (One Per Line)
       .controls
-        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
+        %textarea{ :rows => '5', :class => 'input-xxlarge udvListSwitcherField', :name => 'references'}
     - if !@master
       .control-group
         %label{ :class => "control-label", :for => "notes" } Notes Data
@@ -1316,7 +1324,7 @@
           %label
             Notes
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'notes'}
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
@@ -1328,14 +1336,14 @@
           %label
             Presentation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'presentation_points'}
             - if @finding
               - if @finding.presentation_points
                 #{meta_markup(@finding.presentation_points)}
           %label
             Presentation Remediation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_rem_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'presentation_rem_points'}
             - if @finding
               - if @finding.presentation_rem_points
                 #{meta_markup(@finding.presentation_rem_points)}      
