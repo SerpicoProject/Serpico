@@ -1184,9 +1184,9 @@
               %option #{type}
     .control-group
       %label{ :class => "control-label", :for => "overview" }
-        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+        %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
-      .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+      .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
         .modal-header
           %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
             x
@@ -1217,6 +1217,8 @@
           %h2
             Bullets
           %p
+            Shortcut : CTRL + ALT + w
+            %br
             Place the bulleted text inbetween a *- and a -* like so:
             %br
             %br
@@ -1225,6 +1227,8 @@
           %h2
             Paragraph Heading Text
           %p
+            Shortcut : CTRL + ALT + q
+            %br
             Place the heading inbetween a [== and a ==] like so:
             %br
             %br
@@ -1233,6 +1237,8 @@
           %h2
             Italics
           %p
+            Shortcut : CTRL + ALT + x
+            %br
             Italicize the paragraph containing [~~ and a ~~]:
             %br
             %br
@@ -1241,6 +1247,8 @@
           %h2
             Code
           %p
+            Shortcut : CTRL + ALT + c
+            %br
             Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
             %br
             %br
