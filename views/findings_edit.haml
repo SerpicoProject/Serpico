@@ -1130,7 +1130,7 @@
       .control-group
         %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'severity_rationale', :name => 'severity_rationale'}
+          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :id => 'severity_rationale', :name => 'severity_rationale'}
             - if @finding
               - if @finding.severity_rationale
                 #{meta_markup(@finding.severity_rationale)}
@@ -1146,7 +1146,7 @@
       .control-group
         %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}
+          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}
             - if @finding
               - if @finding.likelihood_rationale
                 #{meta_markup(@finding.likelihood_rationale)}
@@ -1255,14 +1255,14 @@
             %code
               [[[ code, code goes here ]]]
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'overview', :name => 'overview'}
           - if @finding
             - if @finding.overview
               #{meta_markup(@finding.overview)}
     .control-group
       %label{ :class => "control-label", :for => "pocu" } Proof of Concept
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'poc', :id => "pocu"}
+        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'poc', :id => "pocu"}
           - if @finding
             - if @finding.poc
               #{meta_markup(@finding.poc)}
@@ -1293,21 +1293,21 @@
       .control-group
         %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts/URLs
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :name => 'affected_hosts'}
+          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :name => 'affected_hosts'}
             - if @finding
               - if @finding.affected_hosts
                 #{meta_markup(@finding.affected_hosts)}
     .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'remediation'}
           - if @finding
             - if @finding.remediation
               #{meta_markup(@finding.remediation)}
     .control-group
       %label{ :class => "control-label", :for => "references" } References (One Per Line)
       .controls
-        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
+        %textarea{ :rows => '5', :class => 'input-xxlarge udvListSwitcherField', :name => 'references'}
           - if @finding
             - if @finding.references
               #{meta_markup(@finding.references)}
@@ -1319,7 +1319,7 @@
           %label
             Notes
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'notes'}
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
@@ -1331,14 +1331,14 @@
           %label
             Presentation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'presentation_points'}
             - if @finding
               - if @finding.presentation_points
                 #{meta_markup(@finding.presentation_points)}
           %label
             Presentation Remediation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_rem_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'presentation_rem_points'}
             - if @finding
               - if @finding.presentation_rem_points
                 #{meta_markup(@finding.presentation_rem_points)}
