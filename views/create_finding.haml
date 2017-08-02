@@ -1182,7 +1182,7 @@
       .control-group
         %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :id => 'severity_rationale', :name => 'severity_rationale'}
+          %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'severity_rationale', :name => 'severity_rationale'}
       .control-group
         %label{ :class => "control-label", :for => "likelihood" } Likelihood
         .controls
@@ -1192,7 +1192,7 @@
       .control-group
         %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge udvListSwitcherField', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}       
+          %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}       
              
     - else
       .control-group
@@ -1276,11 +1276,11 @@
               [[[ code, code goes here ]]]
 
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'overview', :name => 'overview'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'overview', :name => 'overview'}
     .control-group
       %label{ :class => "control-label", :for => "pocu" } Proof of Concept
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'poc', :name => 'poc', :id => 'pocu'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'poc', :name => 'poc', :id => 'pocu'}
     - attachments=''
     - if @attaches
       - @attaches.each do |attach|
@@ -1307,15 +1307,15 @@
       .control-group
         %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
         .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :id => 'affected_hosts', :name => 'affected_hosts'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'affected_hosts', :name => 'affected_hosts'}
     .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'remediation'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'remediation'}
     .control-group
       %label{ :class => "control-label", :for => "references" } References (One Per Line)
       .controls
-        %textarea{ :rows => '5', :class => 'input-xxlarge udvListSwitcherField', :name => 'references'}
+        %textarea{ :rows => '5', :class => 'input-xxlarge allowMarkupShortcut', :name => 'references'}
     - if !@master
       .control-group
         %label{ :class => "control-label", :for => "notes" } Notes Data
@@ -1324,7 +1324,7 @@
           %label
             Notes
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'notes'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'notes'}
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
@@ -1336,14 +1336,14 @@
           %label
             Presentation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'presentation_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'presentation_points'}
             - if @finding
               - if @finding.presentation_points
                 #{meta_markup(@finding.presentation_points)}
           %label
             Presentation Remediation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge udvListSwitcherField', :name => 'presentation_rem_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'presentation_rem_points'}
             - if @finding
               - if @finding.presentation_rem_points
                 #{meta_markup(@finding.presentation_rem_points)}      
