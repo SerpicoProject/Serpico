@@ -6,9 +6,9 @@ function escapeRegExp(str) {
 }
 
 
-/* add event listener for each texterea with udvListSwitcherField class */
+/* add event listener for each texterea with allowMarkupShortcut class */
 function setConvertToListListener(event){
-	var elements = document.querySelectorAll("textarea.udvListSwitcherField");
+	var elements = document.querySelectorAll("textarea.allowMarkupShortcut");
 	for(var i=0; i<elements.length;i++)
 		elements[i].addEventListener("keydown",ConvertToList);
 }
