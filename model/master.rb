@@ -93,6 +93,7 @@ class Findings
     include DataMapper::Resource
 
     property :id, Serial
+    property :finding_number, Integer, :required => false
     property :report_id, Integer, :required => true
     property :master_id, Integer, :required => false
     property :finding_modified, Boolean, :required => false
@@ -357,6 +358,7 @@ class Attachments
     property :filename_location, String, :length => 400
     property :report_id, String, :length => 30
     property :description, String, :length => 500
+    property :caption, String, :length => 500
 
 end
 

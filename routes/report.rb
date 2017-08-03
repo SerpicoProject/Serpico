@@ -281,6 +281,7 @@ post '/report/:id/upload_attachments' do
     	datax["filename"] = upf[:filename]
     	datax["description"] = CGI::escapeHTML(upf[:filename]).gsub(" ","_").gsub("/","_").gsub("\\","_").gsub("`","_")
     	datax["report_id"] = id
+        datax["caption"] = params[:caption]
     	data = url_escape_hash(datax)
 
     	@attachment = Attachments.new(data)
@@ -741,6 +742,7 @@ get '/report/:id/findings/new' do
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
     @riskmatrix = config_options["riskmatrix"]
+    @vulnmap = config_options["vulnmap"]
 
     haml :create_finding, :encode_html => true
 end
@@ -1131,8 +1133,10 @@ get '/report/:id/generate' do
     findings_xml = ""
     findings_xml << "<findings_list>"
 
-    @findings.each do |finding|
+    finding_number = 1
 
+    @findings.each do |finding|
+        finding.finding_number = finding_number
         # This flags new or edited findings
         if finding.master_id
             master = TemplateFindings.first(:id => finding.master_id)
@@ -1148,6 +1152,7 @@ get '/report/:id/generate' do
             finding.remediation = compare_text(finding.remediation, nil)
         end
         findings_xml << finding.to_xml
+        finding_number += 1
     end
 
     findings_xml << "</findings_list>"

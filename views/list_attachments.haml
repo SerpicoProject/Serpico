@@ -9,8 +9,10 @@
           %tbody
             - @attachments.each do |attachment|
               %tr
-                %td{:style => 'width: 70%'}
+                %td{:style => 'width: 30%'}
                   #{attachment.description}
+                %td{:style => 'width: 40%' }
+                  #{attachment.caption}
                 %td{:style => 'width: 30%'}
                   %a{ :class => "btn btn-info", :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}"}
                     %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
