@@ -45,6 +45,9 @@ def generate_xslt(docx)
 	document = @top + document
 
 	for_iffies = []
+
+
+
 ###########################
 
 # Ω - used as a normal substituion variable
@@ -108,7 +111,6 @@ def generate_xslt(docx)
     document = replace.join("")
 
 
-
 ###########################
 
 # π - a replacement variable for for-each loops only
@@ -160,7 +162,46 @@ def generate_xslt(docx)
 
 	document = replace.join("")
 
+
+
 ###############################
+
+# √ - string comparison
+
+# For example, '√ short_company_name:::serpico testing √' is read as "compare short_company_name to 'serpico test' (case_insensitive) and return the result as true or false;  ..."
+
+	replace = document.split('√')
+
+	if (((replace.size-1) % 2) != 0)
+        raise ReportingError.new("Uneven number of √. This is usually caused by a mismatch in a variable.")
+	end
+
+	count = 0
+	replace.each do |omega|
+		if (count % 2) == 0
+			count = count + 1
+			next
+		end
+
+		omega = compress(omega)
+
+		left = omega.split(":::").first.strip
+		if left =~ /:/
+			left = "report/udv/"+left.gsub(":","")
+		elsif left =~ /\+/
+			left = left.gsub("+","")
+		else
+			left = "report/reports/"+left
+		end
+		right = omega.split(":::").last.strip
+
+		replace[count]="translate(#{left},$up,$low)=translate('#{right}',$up,$low)"
+
+		count = count + 1
+
+	end
+	document = replace.join("")
+
 
 ###########################
 
@@ -525,12 +566,13 @@ def generate_xslt(docx)
 		document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
 	end
 
+
+
+
 ###########################
 
 # UNUSED
 #	≠
-#   √
-#	§
 ###############################
 
 	# final changes placed here
@@ -544,7 +586,7 @@ end
 # http://answers.microsoft.com/en-us/office/forum/office_2010-word/word-2010-randomly-deleting-spaces-between-words/34682f6f-7be2-4835-9c18-907b0abd5615?page=6
 # Basically we replace space with alt-255 space; go figure
 def white_space(document)
-	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>")
+	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>").gsub(0xE2.chr, "\'").gsub("&#39;", "\'").gsub(/[\x80-\xff]/, "")
 	return document
 end
 
