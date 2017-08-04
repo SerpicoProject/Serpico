@@ -586,7 +586,7 @@ end
 # http://answers.microsoft.com/en-us/office/forum/office_2010-word/word-2010-randomly-deleting-spaces-between-words/34682f6f-7be2-4835-9c18-907b0abd5615?page=6
 # Basically we replace space with alt-255 space; go figure
 def white_space(document)
-	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>").gsub(0xE2.chr, "\'").gsub("&#39;", "\'").gsub(/[\x80-\xff]/, "")
+	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>").gsub(0xE2.chr, "\'").gsub("&#39;", "\'")
 	return document
 end
 
