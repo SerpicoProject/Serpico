@@ -382,7 +382,7 @@ class Xslt
     property :finding_template, Boolean, :required => false, :default => false
     property :status_template, Boolean, :required => false, :default => false
 	
-	has n, :components, 'Xslt_component',
+    has n, :components, 'Xslt_component',
         :parent_key => [ :id ], 
         :child_key  => [ :xslt_id ] 
 end
@@ -390,14 +390,14 @@ end
 class Xslt_component
     include DataMapper::Resource
 
-	property :id, Serial
+    property :id, Serial
     property :xslt_location, String, :length => 400
     property :name, String, :length => 400
 	
-	belongs_to :xslt, 'Xslt',
-		:parent_key => [ :id ],
-		:child_key  => [ :xslt_id ],
-		:required   => true
+    belongs_to :xslt, 'Xslt',
+        :parent_key => [ :id ],
+        :child_key  => [ :xslt_id ],
+	:required   => true
 end
 
 DataMapper.finalize
