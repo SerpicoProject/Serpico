@@ -1193,6 +1193,11 @@ get '/report/:id/generate' do
     # Create a temporary copy of the word doc
     FileUtils::copy_file(xslt_elem.docx_location,rand_file)
 
+	list_components = {}
+	xslt_elem.components.each do |component|
+		xslt = Nokogiri::XSLT(File.read(component.xslt_location))
+		list_components[component.name] = xslt.transform(Nokogiri::XML(report_xml))
+	end
     ### IMAGE INSERT CODE
     if docx_xml.to_s =~ /\[!!/
         puts "|+| Trying to insert image --- "
@@ -1242,7 +1247,10 @@ get '/report/:id/generate' do
     #### END IMAGE INSERT CODE
 
     docx_modify(rand_file, docx,'word/document.xml')
-
+	
+	list_components.each do |name, xml|
+		docx_modify(rand_file, xml.to_s,name)
+	end
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"
 end
 

@@ -7,6 +7,25 @@ def docx_modify(rand_file,docx_xml,fil_r)
 	end
 end
 
+def find_headers_footers(docx)
+	header_footer = []
+	
+	Zip::File.open(docx) do |zip|
+		i = 1
+		while zip.find_entry("word/header#{i}.xml") != nil do
+			header_footer.push("word/header#{i}.xml")
+			i = i+1
+		end
+
+		i = 1
+		while zip.find_entry("word/footer#{i}.xml") != nil do
+			header_footer.push("word/footer#{i}.xml")
+			i = i+1
+		end
+	end
+	return header_footer
+end
+
 def read_rels(zipfile,fil_r)
 	content_types = ""
 
