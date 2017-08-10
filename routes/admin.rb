@@ -3,6 +3,11 @@ require 'zip'
 
 config_options = JSON.parse(File.read('./config.json'))
 
+# set the report_assessment_types for <1.2 versions of Serpico
+unless config_options["report_assessment_types"]
+    config_options["report_assessment_types"] = ["Network Internal","External","Web application","Physical","Social engineering","Configuration audit"]
+end
+
 ######
 # Admin Interfaces
 ######
@@ -156,7 +161,7 @@ post '/admin/add_user/:id' do
     report.authors = authors
     report.save
 
-    redirect to("/reports/list")
+    redirect to("/admin/add_user/#{params[:id]}")
 end
 
 get '/admin/del_user_report/:id/:author' do
@@ -182,7 +187,7 @@ get '/admin/del_user_report/:id/:author' do
     report.authors = authors
     report.save
 
-    redirect to("/reports/list")
+    redirect to("/admin/add_user/#{params[:id]}")
 end
 
 get '/admin/config' do
@@ -209,10 +214,12 @@ post '/admin/config' do
 
     ft = params["finding_types"].split(",")
     udv = params["user_defined_variables"].split(",")
+    rat = params["report_assessment_types"].split(",")
 
     config_options["finding_types"] = ft
     config_options["user_defined_variables"] = udv
     config_options["port"] = params["port"]
+    config_options["report_assessment_types"] = rat
     config_options["use_ssl"] = params["use_ssl"] ? true : false
     config_options["bind_address"] = params["bind_address"]
     config_options["ldap"] = params["ldap"] ? true : false
@@ -400,6 +407,7 @@ get '/admin/delete/templates/:id' do
     @xslt = Xslt.first(:id => params[:id])
 
 	if @xslt
+		@xslt.components.destroy
 		@xslt.destroy
 		File.delete(@xslt.xslt_location)
 		File.delete(@xslt.docx_location)
@@ -430,6 +438,7 @@ post '/admin/templates/add' do
     detail = ""
     begin
 	    xslt = generate_xslt(docx)
+		xslt_components = generate_xslt_components(docx)
     rescue ReportingError => detail
         error = true
     end
@@ -453,15 +462,32 @@ post '/admin/templates/add' do
 	    data["finding_template"] = params[:finding_template] ? true : false
 	    data["status_template"] = params[:status_template] ? true : false
 
-	    @current = Xslt.first(:report_type => data["report_type"])
+	    @template = Xslt.first(:report_type => data["report_type"])
 
-	    if @current
-		    @current.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"])
+	    if @template
+		    @template.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"])
+			@template.components.destroy
 	    else
 		    @template = Xslt.new(data)
 		    @template.save
 	    end
 
+		# create a xslt file for each component
+		list_components_files = []
+		xslt_components.each do |component_name, component_xslt|
+			componentHash = Hash.new
+			componentHash['xslt_location'] = "./templates/#{rand(36**36).to_s(36)}.xslt"
+			componentHash['name'] = component_name
+			componentHash['xslt'] = @template
+			File.open(componentHash['xslt_location'], 'wb') {|f| f.write(component_xslt) }
+			list_components_files.push(componentHash)
+		end
+		
+		# insert components into the db
+		list_components_files.each do |component|
+			@component = Xslt_component.new(component)
+			@component.save
+		end
 	    redirect to("/admin/templates")
 
         haml :add_template, :encode_html => true
@@ -501,6 +527,7 @@ post '/admin/templates/edit' do
     detail = ""
     begin
 	    xslt = generate_xslt(docx)
+		xslt_components = generate_xslt_components(docx)
     rescue ReportingError => detail
         error = true
     end
@@ -523,15 +550,32 @@ post '/admin/templates/edit' do
 	    data["finding_template"] = params[:finding_template] ? true : false
 	    data["status_template"] = params[:status_template] ? true : false
 
-	    @current = Xslt.first(:report_type => data["report_type"])
+	    @template = Xslt.first(:report_type => data["report_type"])
 
-	    if @current
-		    @current.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"])
+	    if @template
+		    @template.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"])
+			@template.components.destroy
 	    else
 		    @template = Xslt.new(data)
 		    @template.save
 	    end
 
+		# create a xslt file for each component
+		list_components_files = []
+		xslt_components.each do |component_name, component_xslt|
+			componentHash = Hash.new
+			componentHash['xslt_location'] = "./templates/#{rand(36**36).to_s(36)}.xslt"
+			componentHash['name'] = component_name
+			componentHash['xslt'] = @template
+			File.open(componentHash['xslt_location'], 'wb') {|f| f.write(component_xslt) }
+			list_components_files.push(componentHash)
+		end
+		
+		# insert components into the db
+		list_components_files.each do |component|
+			@component = Xslt_component.new(component)
+			@component.save
+		end
 	    redirect to("/admin/templates")
     end
 end

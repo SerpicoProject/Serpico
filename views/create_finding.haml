@@ -64,51 +64,308 @@
             %option HARD
     - elsif @cvss
       .control-group
+        %label{ :class => "control-label", :for => "attack_vector" }
+          %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+            CVSS Vector String
+        .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+          .modal-header
+            %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+              x
+            %h3{:id=>"modal-label"}
+              CVSS Vector String
+          .modal-body
+          .modal-body
+            %link{ :rel=>"stylesheet", :type=>"text/css", :media=>"all", :href=>"/css/cvss.css"}
+            %script{ :src => "/js/cvss.js"}
+            %div{ :id=>"cvssboard"}
+              %script
+                function updateDropdown(score){
+                var vector = score.trim().split("/");
+                for(var i in vector){
+                var part = vector[i];
+
+                if (part.length > 0){
+                part = part.toUpperCase();
+                }
+
+                // AV
+                if(part.includes("AV:")){
+                if(part.includes(":L")){
+                document.getElementById('av').selectedIndex=0;        
+                }
+                if(part.includes(":A")){
+                document.getElementById('av').selectedIndex=1;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('av').selectedIndex=2;        
+                }
+                }        
+
+                // AC
+                if(part.includes("AC:")){
+                if(part.includes(":H")){
+                document.getElementById('ac').selectedIndex=0;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('ac').selectedIndex=1;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('ac').selectedIndex=2;        
+                }
+                }        
+
+                // AU
+                if(part.includes("AU:")){
+                if(part.includes(":M")){
+                document.getElementById('au').selectedIndex=0;        
+                }
+                if(part.includes(":S")){
+                document.getElementById('au').selectedIndex=1;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('au').selectedIndex=2;        
+                }
+                }        
+
+                // C
+                if(part.includes("C:") && && !part.includes("AC:")){
+                if(part.includes(":N")){
+                document.getElementById('c').selectedIndex=0;        
+                }
+                if(part.includes(":P")){
+                document.getElementById('c').selectedIndex=1;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('c').selectedIndex=2;        
+                }
+                }        
+
+                // I
+                if(part.includes("I:")){
+                if(part.includes(":N")){
+                document.getElementById('i').selectedIndex=0;        
+                }
+                if(part.includes(":P")){
+                document.getElementById('i').selectedIndex=1;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('i').selectedIndex=2;        
+                }
+                }        
+
+                // A
+                if(part.includes("A:")){
+                if(part.includes(":N")){
+                document.getElementById('a').selectedIndex=0;        
+                }
+                if(part.includes(":P")){
+                document.getElementById('a').selectedIndex=1;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('a').selectedIndex=2;        
+                }
+                }        
+
+                // E
+                if(part.includes("E:")){
+                if(part.includes(":ND")){
+                document.getElementById('e').selectedIndex=0;        
+                }
+                if(part.includes(":U")){
+                document.getElementById('e').selectedIndex=1;        
+                }
+                if(part.includes(":POC")){
+                document.getElementById('e').selectedIndex=2;        
+                }
+                if(part.includes(":F")){
+                document.getElementById('e').selectedIndex=3;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('e').selectedIndex=4;        
+                }
+                }        
+
+                // RL
+                if(part.includes("RL:")){
+                if(part.includes(":ND")){
+                document.getElementById('rl').selectedIndex=0;        
+                }
+                if(part.includes(":OF")){
+                document.getElementById('rl').selectedIndex=1;        
+                }
+                if(part.includes(":TF")){
+                document.getElementById('rl').selectedIndex=2;        
+                }
+                if(part.includes(":W")){
+                document.getElementById('rl').selectedIndex=3;        
+                }
+                if(part.includes(":U")){
+                document.getElementById('rl').selectedIndex=4;        
+                }
+                }        
+
+                // RC
+                if(part.includes("RC:")){
+                if(part.includes(":ND")){
+                document.getElementById('rc').selectedIndex=0;        
+                }
+                if(part.includes(":UC")){
+                document.getElementById('rc').selectedIndex=1;        
+                }
+                if(part.includes(":UR")){
+                document.getElementById('rc').selectedIndex=2;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('rc').selectedIndex=3;        
+                }
+                }        
+
+                // CDP
+                if(part.includes("CDP:")){
+                if(part.includes(":ND")){
+                document.getElementById('cdp').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('cdp').selectedIndex=1;        
+                }
+                if(part.includes(":LM")){
+                document.getElementById('cdp').selectedIndex=2;        
+                }
+                if(part.includes(":MH")){
+                document.getElementById('cdp').selectedIndex=3;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('cdp').selectedIndex=4;        
+                }
+                }        
+
+                // TD
+                if(part.includes("TD:")){
+                if(part.includes(":ND")){
+                document.getElementById('td').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('td').selectedIndex=1;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('td').selectedIndex=2;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('td').selectedIndex=3;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('td').selectedIndex=4;        
+                }
+                }        
+
+                // CD
+                if(part.includes("CR:")){
+                if(part.includes(":ND")){
+                document.getElementById('cd').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('cd').selectedIndex=1;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('cd').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('cd').selectedIndex=3;        
+                }
+                }        
+
+                // IR
+                if(part.includes("IR:")){
+                if(part.includes(":ND")){
+                document.getElementById('ir').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('ir').selectedIndex=1;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('ir').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('ir').selectedIndex=3;        
+                }
+                }        
+
+                // AR
+                if(part.includes("AR:")){
+                if(part.includes(":ND")){
+                document.getElementById('ar').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('ar').selectedIndex=1;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('ar').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('ar').selectedIndex=3;        
+                }
+                }        
+                }}
+                var c = new CVSS("cvssboard", {
+                onchange: function() {
+                window.location.hash = c.get().vector;
+                document.getElementById('vs').value = c.get().vector;
+                updateDropdown(c.get().vector);
+                }
+                });
+
+                $("#vs").on('change keydown paste input', function(){               
+                updateDropdown(this.value);                
+                });
+        .controls
+          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}  
+      .control-group
         %label{ :class => "control-label", :for => "av" } Access Vector
         .controls
-          %select{ :name => "av" }
+          %select{ :name => "av", :id => "av" }
             %option Local
             %option Local Network
             %option Network
       .control-group
         %label{ :class => "control-label", :for => "ac" } Access Complexity
         .controls
-          %select{ :name => "ac" }
+          %select{ :name => "ac", :id => "ac" }
             %option High
             %option Medium
             %option Low
       .control-group
         %label{ :class => "control-label", :for => "au" } Authentication
         .controls
-          %select{ :name => "au" }
+          %select{ :name => "au", :id => "au" }
             %option Multiple
             %option Single
             %option None
       .control-group
         %label{ :class => "control-label", :for => "c" } Confidentiality Impact
         .controls
-          %select{ :name => "c" }
+          %select{ :name => "c", :id => "c" }
             %option None
             %option Partial
             %option Complete
       .control-group
         %label{ :class => "control-label", :for => "i" } Integrity Impact
         .controls
-          %select{ :name => "i" }
+          %select{ :name => "i", :id => "i" }
             %option None
             %option Partial
             %option Complete
       .control-group
         %label{ :class => "control-label", :for => "a" } Availability Impact
         .controls
-          %select{ :name => "a" }
+          %select{ :name => "a", :id => "a" }
             %option None
             %option Partial
             %option Complete
       .control-group
         %label{ :class => "control-label", :for => "e" } Exploitability
         .controls
-          %select{ :name => "e" }
+          %select{ :name => "e", :id => "e" }
+            %option Not Defined
             %option Unproven Exploit Exists
             %option Proof-of-Concept Code
             %option Functional Exploit Exists
@@ -116,7 +373,8 @@
       .control-group
         %label{ :class => "control-label", :for => "rl" } Remediation Level
         .controls
-          %select{ :name => "rl" }
+          %select{ :name => "rl", :id => "rl" }
+            %option Not Defined
             %option Official Fix
             %option Temporary Fix
             %option Workaround
@@ -124,14 +382,16 @@
       .control-group
         %label{ :class => "control-label", :for => "rc" } Report Confidence
         .controls
-          %select{ :name => "rc" }
+          %select{ :name => "rc", :id => "rc" }
+            %option Not Defined
             %option Unconfirmed
             %option Uncorroborated
             %option Confirmed
       .control-group
         %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
         .controls
-          %select{ :name => "cdp" }
+          %select{ :name => "cdp", :id => "cdp" }
+            %option Not Defined
             %option None
             %option Low
             %option Low-Medium
@@ -140,7 +400,8 @@
       .control-group
         %label{ :class => "control-label", :for => "td" } Target Distribution
         .controls
-          %select{ :name => "td" }
+          %select{ :name => "td", :id => "td" }
+            %option Not Defined
             %option None
             %option Low
             %option Medium
@@ -148,24 +409,255 @@
       .control-group
         %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
         .controls
-          %select{ :name => "cr" }
+          %select{ :name => "cr", :id => "cr" }
+            %option Not Defined
             %option Low
             %option Medium
             %option High
       .control-group
         %label{ :class => "control-label", :for => "ir" } Integrity Requirement
         .controls
-          %select{ :name => "ir" }
+          %select{ :name => "ir", :id => "ir" }
+            %option Not Defined
             %option Low
             %option Medium
             %option High
       .control-group
         %label{ :class => "control-label", :for => "ar" } Availability Requirement
         .controls
-          %select{ :name => "ar" }
+          %select{ :name => "ar", :id => "ar" }
+            %option Not Defined
             %option Low
             %option Medium
             %option High
+      %script
+        document.getElementById('vs').addEventListener('input', function() {
+        var vector = this.value.trim().split("/");
+
+        for(var i in vector){
+        var part = vector[i];
+        //CVSS:2.0/AV:N/AC:L/AU:N/C:H/I:N/A:N
+
+        // AV
+        if(part.includes("AV:")){
+        if(part.includes(":L")){
+        document.getElementById('av').selectedIndex=0;        
+        }
+        if(part.includes(":A")){
+        document.getElementById('av').selectedIndex=1;        
+        }
+        if(part.includes(":N")){
+        document.getElementById('av').selectedIndex=2;        
+        }
+        }        
+
+        // AC
+        if(part.includes("AC:")){
+        if(part.includes(":H")){
+        document.getElementById('ac').selectedIndex=0;        
+        }
+        if(part.includes(":M")){
+        document.getElementById('ac').selectedIndex=1;        
+        }
+        if(part.includes(":L")){
+        document.getElementById('ac').selectedIndex=2;        
+        }
+        }        
+
+        // AU
+        if(part.includes("AU:")){
+        if(part.includes(":M")){
+        document.getElementById('au').selectedIndex=0;        
+        }
+        if(part.includes(":S")){
+        document.getElementById('au').selectedIndex=1;        
+        }
+        if(part.includes(":N")){
+        document.getElementById('au').selectedIndex=2;        
+        }
+        }        
+
+        // C
+        if(part.includes("C:")){
+        if(part.includes(":N")){
+        document.getElementById('c').selectedIndex=0;        
+        }
+        if(part.includes(":P")){
+        document.getElementById('c').selectedIndex=1;        
+        }
+        if(part.includes(":C")){
+        document.getElementById('c').selectedIndex=2;        
+        }
+        }        
+
+        // I
+        if(part.includes("I:")){
+        if(part.includes(":N")){
+        document.getElementById('i').selectedIndex=0;        
+        }
+        if(part.includes(":P")){
+        document.getElementById('i').selectedIndex=1;        
+        }
+        if(part.includes(":C")){
+        document.getElementById('i').selectedIndex=2;        
+        }
+        }        
+
+        // A
+        if(part.includes("A:")){
+        if(part.includes(":N")){
+        document.getElementById('a').selectedIndex=0;        
+        }
+        if(part.includes(":P")){
+        document.getElementById('a').selectedIndex=1;        
+        }
+        if(part.includes(":C")){
+        document.getElementById('a').selectedIndex=2;        
+        }
+        }        
+
+        // E
+        if(part.includes("E:")){
+        if(part.includes(":ND")){
+        document.getElementById('e').selectedIndex=0;        
+        }
+        if(part.includes(":U")){
+        document.getElementById('e').selectedIndex=1;        
+        }
+        if(part.includes(":POC")){
+        document.getElementById('e').selectedIndex=2;        
+        }
+        if(part.includes(":F")){
+        document.getElementById('e').selectedIndex=3;        
+        }
+        if(part.includes(":H")){
+        document.getElementById('e').selectedIndex=4;        
+        }
+        }        
+
+        // RL
+        if(part.includes("RL:")){
+        if(part.includes(":ND")){
+        document.getElementById('rl').selectedIndex=0;        
+        }
+        if(part.includes(":OF")){
+        document.getElementById('rl').selectedIndex=1;        
+        }
+        if(part.includes(":TF")){
+        document.getElementById('rl').selectedIndex=2;        
+        }
+        if(part.includes(":W")){
+        document.getElementById('rl').selectedIndex=3;        
+        }
+        if(part.includes(":U")){
+        document.getElementById('rl').selectedIndex=4;        
+        }
+        }        
+
+        // RC
+        if(part.includes("RC:")){
+        if(part.includes(":ND")){
+        document.getElementById('rc').selectedIndex=0;        
+        }
+        if(part.includes(":UC")){
+        document.getElementById('rc').selectedIndex=1;        
+        }
+        if(part.includes(":UR")){
+        document.getElementById('rc').selectedIndex=2;        
+        }
+        if(part.includes(":C")){
+        document.getElementById('rc').selectedIndex=3;        
+        }
+        }        
+
+        // CDP
+        if(part.includes("CDP:")){
+        if(part.includes(":ND")){
+        document.getElementById('cdp').selectedIndex=0;        
+        }
+        if(part.includes(":N")){
+        document.getElementById('cdp').selectedIndex=1;        
+        }
+        if(part.includes(":LM")){
+        document.getElementById('cdp').selectedIndex=2;        
+        }
+        if(part.includes(":MH")){
+        document.getElementById('cdp').selectedIndex=3;        
+        }
+        if(part.includes(":H")){
+        document.getElementById('cdp').selectedIndex=4;        
+        }
+        }        
+
+        // TD
+        if(part.includes("TD:")){
+        if(part.includes(":ND")){
+        document.getElementById('td').selectedIndex=0;        
+        }
+        if(part.includes(":N")){
+        document.getElementById('td').selectedIndex=1;        
+        }
+        if(part.includes(":L")){
+        document.getElementById('td').selectedIndex=2;        
+        }
+        if(part.includes(":M")){
+        document.getElementById('td').selectedIndex=3;        
+        }
+        if(part.includes(":H")){
+        document.getElementById('td').selectedIndex=4;        
+        }
+        }        
+
+        // CD
+        if(part.includes("CR:")){
+        if(part.includes(":ND")){
+        document.getElementById('cd').selectedIndex=0;        
+        }
+        if(part.includes(":L")){
+        document.getElementById('cd').selectedIndex=1;        
+        }
+        if(part.includes(":M")){
+        document.getElementById('cd').selectedIndex=2;        
+        }
+        if(part.includes(":H")){
+        document.getElementById('cd').selectedIndex=3;        
+        }
+        }        
+
+        // IR
+        if(part.includes("IR:")){
+        if(part.includes(":ND")){
+        document.getElementById('ir').selectedIndex=0;        
+        }
+        if(part.includes(":L")){
+        document.getElementById('ir').selectedIndex=1;        
+        }
+        if(part.includes(":M")){
+        document.getElementById('ir').selectedIndex=2;        
+        }
+        if(part.includes(":H")){
+        document.getElementById('ir').selectedIndex=3;        
+        }
+        }        
+
+        // AR
+        if(part.includes("AR:")){
+        if(part.includes(":ND")){
+        document.getElementById('ar').selectedIndex=0;        
+        }
+        if(part.includes(":L")){
+        document.getElementById('ar').selectedIndex=1;        
+        }
+        if(part.includes(":M")){
+        document.getElementById('ar').selectedIndex=2;        
+        }
+        if(part.includes(":H")){
+        document.getElementById('ar').selectedIndex=3;        
+        }
+        }        
+
+        }
+        });
       .control-group
         %label{ :class => "control-label", :for => "effort" } Remediation Effort
         .controls
@@ -178,6 +670,8 @@
         %label{ :class => "control-label", :for => "attack_vector" }
           %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
             CVSS Vector String
+        .controls
+          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}  
         .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
           .modal-header
             %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
@@ -185,18 +679,358 @@
             %h3{:id=>"modal-label"}
               CVSS Vector String
           .modal-body
-            %br
-              Entering a CVSS Vector String into the box automatically updates all drop down values.
-            %br
-              For example:
-            %br
-              CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:H
-            %br
-              CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O
-        .controls
-          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}  
+            %link{ :rel=>"stylesheet", :type=>"text/css", :media=>"all", :href=>"/css/cvss.css"}
+            %script{ :src => "/js/cvss3.js"}
+            %div{ :id=>"cvssboard"}
+              %script
+                function updateDropdown(score){
+                
+                var vector = score.trim().split("/");
+                for(var i in vector){
+                var part = vector[i];
+
+                if (part.length > 0){
+                part = part.toUpperCase();
+                }
+
+                //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
+                // AV
+                // LANP
+                if(part.includes("AV:") && !part.includes("MAV:")){
+                if(part.includes(":L")){
+                document.getElementById('attack_vector').selectedIndex=0;        
+                }
+                if(part.includes(":A")){
+                document.getElementById('attack_vector').selectedIndex=1;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('attack_vector').selectedIndex=2;        
+                }
+                if(part.includes(":P")){
+                document.getElementById('attack_vector').selectedIndex=3;        
+                }
+                }        
+
+                // AC
+                if(part.includes("AC:")  && !part.includes("MAC:")){
+                if(part.includes(":L")){
+                document.getElementById('attack_complexity').selectedIndex=0;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('attack_complexity').selectedIndex=1;        
+                }
+                }        
+
+                // PR NLH
+                if(part.includes("PR:")  && !part.includes("MPR:")){
+                if(part.includes(":N")){
+                document.getElementById('privileges_required').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('privileges_required').selectedIndex=1;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('privileges_required').selectedIndex=2;        
+                }
+                }        
+
+                // UI
+                if(part.includes("UI:")){
+                if(part.includes(":N")){
+                document.getElementById('user_interaction').selectedIndex=0;        
+                }
+                if(part.includes(":R")){
+                document.getElementById('user_interaction').selectedIndex=1;        
+                }
+                }        
+
+                // S
+                if(part.includes("S:")  && !part.includes("MS:")){
+                if(part.includes(":U")){
+                document.getElementById('scope').selectedIndex=0;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('scope').selectedIndex=1;        
+                }
+                }        
+
+                // I
+                if(part.includes("I:")  && !part.includes("MI:")){
+                if(part.includes(":N")){
+                document.getElementById('integrity').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('integrity').selectedIndex=1;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('integrity').selectedIndex=2;        
+                }
+                }        
+
+                // C
+                if(part.includes("C:") && !part.includes("MC:") && !part.includes("MAC:")){
+                if(part.includes(":N")){
+                document.getElementById('confidentiality-impact').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('confidentiality-impact').selectedIndex=1;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('confidentiality-impact').selectedIndex=2;        
+                }
+                }        
+
+                // A
+                if(part.includes("A:")  && !part.includes("MA:")){
+                if(part.includes(":N")){
+                document.getElementById('availability').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('availability').selectedIndex=1;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('availability').selectedIndex=2;        
+                }
+                }        
+
+                // Exploit Code Maturity
+                if(part.includes("E:")){
+                if(part.includes(":X")){
+                document.getElementById('exploit_maturity').selectedIndex=0;        
+                }
+                if(part.includes(":U")){
+                document.getElementById('exploit_maturity').selectedIndex=1;        
+                }
+                if(part.includes(":P")){
+                document.getElementById('exploit_maturity').selectedIndex=2;        
+                }
+                if(part.includes(":F")){
+                document.getElementById('exploit_maturity').selectedIndex=3;        
+                }
+                }        
+
+
+                // Remediation Level
+                if(part.includes("RL:")){
+                if(part.includes(":X")){
+                document.getElementById('remeditation_level').selectedIndex=0;        
+                }
+                if(part.includes(":O")){
+                document.getElementById('remeditation_level').selectedIndex=1;        
+                }
+                if(part.includes(":T")){
+                document.getElementById('remeditation_level').selectedIndex=2;        
+                }
+                if(part.includes(":W")){
+                document.getElementById('remeditation_level').selectedIndex=3;        
+                }
+                if(part.includes(":U")){
+                document.getElementById('remeditation_level').selectedIndex=4;        
+                }
+                }        
+
+
+                // report confidence
+                if(part.includes("RC:")){
+                if(part.includes(":X")){
+                document.getElementById('report_confidence').selectedIndex=0;        
+                }
+                if(part.includes(":U")){
+                document.getElementById('report_confidence').selectedIndex=1;        
+                }
+                if(part.includes(":R")){
+                document.getElementById('report_confidence').selectedIndex=2;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('report_confidence').selectedIndex=3;        
+                }
+                }        
+
+                // confidentiality-requirement
+                if(part.includes("CR:")){
+                if(part.includes(":X")){
+                document.getElementById('confidentiality_requirement').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('confidentiality_requirement').selectedIndex=1;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('confidentiality_requirement').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('confidentiality_requirement').selectedIndex=3;        
+                }
+                }        
+
+                // integrity-requirement
+                if(part.includes("IR:")){
+                if(part.includes(":X")){
+                document.getElementById('integrity_requirement').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('integrity_requirement').selectedIndex=1;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('integrity_requirement').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('integrity_requirement').selectedIndex=3;        
+                }
+                }        
+
+
+                // integrity-requirement
+                if(part.includes("AR:")){
+                if(part.includes(":X")){
+                document.getElementById('availability_requirement').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('availability_requirement').selectedIndex=1;        
+                }
+                if(part.includes(":M")){
+                document.getElementById('availability_requirement').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('availability_requirement').selectedIndex=3;        
+                }
+                }        
+
+                // modified-attack-vector
+                if(part.includes("MAV:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_attack_vector').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('mod_attack_vector').selectedIndex=1;        
+                }
+                if(part.includes(":A")){
+                document.getElementById('mod_attack_vector').selectedIndex=2;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('mod_attack_vector').selectedIndex=3;        
+                }
+                if(part.includes(":P")){
+                document.getElementById('mod_attack_vector').selectedIndex=4;        
+                }
+                }        
+
+                // modified-attack-vector
+                if(part.includes("MAC:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_attack_complexity').selectedIndex=0;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('mod_attack_complexity').selectedIndex=1;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('mod_attack_complexity').selectedIndex=2;        
+                }
+                }        
+
+                // modified-privileges-Required
+                if(part.includes("MPR:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_privileges_required').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('mod_privileges_required').selectedIndex=1;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('mod_privileges_required').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('mod_privileges_required').selectedIndex=3;        
+                }
+                }        
+
+                // modified-user-interaction
+                if(part.includes("MUI:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_user_interaction').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('mod_user_interaction').selectedIndex=1;        
+                }
+                if(part.includes(":R")){
+                document.getElementById('mod_user_interaction').selectedIndex=2;        
+                }
+                }        
+
+
+                // modified-scope
+                if(part.includes("MS:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_scope').selectedIndex=0;        
+                }
+                if(part.includes(":U")){
+                document.getElementById('mod_scope').selectedIndex=1;        
+                }
+                if(part.includes(":C")){
+                document.getElementById('mod_scope').selectedIndex=2;        
+                }
+                }        
+
+                // modified-confidentiality
+                if(part.includes("MC:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_confidentiality').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('mod_confidentiality').selectedIndex=1;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('mod_confidentiality').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('mod_confidentiality').selectedIndex=3;        
+                }
+                }        
+
+                // modified-integrity
+                if(part.includes("MI:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_integrity').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('mod_integrity').selectedIndex=1;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('mod_integrity').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('mod_integrity').selectedIndex=3;        
+                }
+                }        
+
+
+                // modified-availability
+                if(part.includes("MA:")){
+                if(part.includes(":X")){
+                document.getElementById('mod_availability').selectedIndex=0;        
+                }
+                if(part.includes(":N")){
+                document.getElementById('mod_availability').selectedIndex=1;        
+                }
+                if(part.includes(":L")){
+                document.getElementById('mod_availability').selectedIndex=2;        
+                }
+                if(part.includes(":H")){
+                document.getElementById('mod_availability').selectedIndex=3;        
+                }
+                }        
+                }}
+
+                var c = new CVSS("cvssboard", {
+                onchange: function() {
+                document.getElementById('vs').value = c.get().vector;
+                updateDropdown(c.get().vector);
+                }
+                });
+
+                $("#vs").on('change keydown paste input', function(){               
+                updateDropdown(this.value);                
+                });
       %span{:class=>"input-group-btn"}
-      %script{:src => "/js/cvsscalc30.js"}
       .control-group
         %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
         .controls
@@ -329,252 +1163,6 @@
           %select{ :name => "mod_availability", :id => "mod_availability" }
             - options.mod_availability.each do |mod_availability|
               %option #{mod_availability}
-
-      %script
-        document.getElementById('vs').addEventListener('input', function() {
-        var output = CVSS.generateXMLFromVector(this.value.trim());
-        if(output.success === true){
-
-        xmlDoc = $.parseXML( output.xmlString );
-        $xml = $(xmlDoc);
-        //document.getElementById("base-score").innerHTML=$xml.find("base-score").text();
-        //document.getElementById("base-severity").innerHTML=$xml.find("base-severity").text();
-        //document.getElementById("temporal-score").innerHTML=$xml.find("temporal-score").text();
-        //document.getElementById("temporal-severity").innerHTML=$xml.find("temporal-severity").text();
-        //document.getElementById("enivornmental-score").innerHTML=$xml.find("enivornmental-score").text();
-        //document.getElementById("enivornmental-severity").innerHTML=$xml.find("enivornmental-severity").text();
-
-        //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
-        // AV
-        if($xml.find("attack-vector").text() === "LOCAL"){
-        document.getElementById('attack_vector').selectedIndex=0;        
-        }        
-        if($xml.find("attack-vector").text() === "ADJACENT_NETWORK"){
-        document.getElementById('attack_vector').selectedIndex=1;        
-        }        
-        if($xml.find("attack-vector").text() === "NETWORK"){
-        document.getElementById('attack_vector').selectedIndex=2;        
-        }
-        if($xml.find("attack-vector").text() === "PHYSICAL"){
-        document.getElementById('attack_vector').selectedIndex=3;        
-        }
-
-        // AC
-        if($xml.find("attack-complexity").text() === "LOW"){
-        document.getElementById('attack_complexity').selectedIndex=0;        
-        }        
-        if($xml.find("attack-complexity").text() === "HIGH"){
-        document.getElementById('attack_complexity').selectedIndex=1;        
-        }        
-
-        // PR
-        if($xml.find("privileges-required").text() === "NONE"){
-        document.getElementById('privileges_required').selectedIndex=0;        
-        }        
-        if($xml.find("privileges-required").text() === "LOW"){
-        document.getElementById('privileges_required').selectedIndex=1;        
-        }        
-        if($xml.find("privileges-required").text() === "HIGH"){
-        document.getElementById('privileges_required').selectedIndex=2;        
-        }        
-
-        // UI
-        if($xml.find("user-interaction").text() === "UNCHANGED"){
-        document.getElementById('user_interaction').selectedIndex=0;        
-        }        
-        if($xml.find("user-interaction").text() === "REQUIRED"){
-        document.getElementById('user_interaction').selectedIndex=1;        
-        }        
-
-        // S
-        if($xml.find("scope").text() === "UNCHANGED"){
-        document.getElementById('scope').selectedIndex=0;        
-        }        
-        if($xml.find("scope").text() === "CHANGED"){
-        document.getElementById('scope').selectedIndex=1;        
-        }        
-
-        // CI
-        if($xml.find("confidentiality-impact").text() === "NONE"){
-        document.getElementById('confidentiality-impact').selectedIndex=0;        
-        }        
-        if($xml.find("confidentiality-impact").text() === "LOW"){
-        document.getElementById('confidentiality-impact').selectedIndex=1;        
-        }        
-        if($xml.find("confidentiality-impact").text() === "HIGH"){
-        document.getElementById('confidentiality-impact').selectedIndex=2;        
-        }        
-
-        // Integrity
-        if($xml.find("integrity").text() === "NONE"){
-        document.getElementById('integrity').selectedIndex=0;        
-        }        
-        if($xml.find("integrity").text() === "LOW"){
-        document.getElementById('integrity').selectedIndex=1;        
-        }        
-        if($xml.find("integrity").text() === "HIGH"){
-        document.getElementById('integrity').selectedIndex=2;        
-        }        
-
-        // Availability
-        if($xml.find("availability").text() === "NONE"){
-        document.getElementById('availability').selectedIndex=0;        
-        }        
-        if($xml.find("availability").text() === "LOW"){
-        document.getElementById('availability').selectedIndex=1;        
-        }        
-        if($xml.find("availability").text() === "HIGH"){
-        document.getElementById('availability').selectedIndex=2;        
-        }        
-
-        // Availability
-        if($xml.find("exploit-code-maturity").text() === "UNPROVEN"){
-        document.getElementById('exploit_maturity').selectedIndex=1;        
-        }        
-        if($xml.find("exploit-code-maturity").text() === "PROOF_OF_CONCEPT"){
-        document.getElementById('exploit_maturity').selectedIndex=2;        
-        }        
-        if($xml.find("exploit-code-maturity").text() === "FUNCTIONAL"){
-        document.getElementById('exploit_maturity').selectedIndex=3;        
-        }        
-        if($xml.find("exploit-code-maturity").text() === "HIGH"){
-        document.getElementById('exploit_maturity').selectedIndex=4;        
-        }        
-
-        // Remediation Level
-        if($xml.find("remediation-level").text() === "OFFICIAL_FIX"){
-        document.getElementById('remeditation_level').selectedIndex=1;        
-        }        
-        if($xml.find("remediation-level").text() === "TEMPORARY_FIX"){
-        document.getElementById('remeditation_level').selectedIndex=2;        
-        }        
-        if($xml.find("remediation-level").text() === "WORKAROUND"){
-        document.getElementById('remeditation_level').selectedIndex=3;        
-        }        
-        if($xml.find("remediation-level").text() === "UNAVAILABLE"){
-        document.getElementById('remeditation_level').selectedIndex=4;        
-        }        
-
-        // report-confidence
-        if($xml.find("report-confidence").text() === "UNKNOWN"){
-        document.getElementById('report_confidence').selectedIndex=1;        
-        }        
-        if($xml.find("report-confidence").text() === "REASONABLE"){
-        document.getElementById('report_confidence').selectedIndex=2;        
-        }        
-        if($xml.find("report-confidence").text() === "CONFIRMED"){
-        document.getElementById('report_confidence').selectedIndex=3;        
-        }        
-
-        // confidentiality-requirement
-        if($xml.find("confidentiality-requirement").text() === "LOW"){
-        document.getElementById('confidentiality_requirement').selectedIndex=1;        
-        }        
-        if($xml.find("confidentiality-requirement").text() === "MEDIUM"){
-        document.getElementById('confidentiality_requirement').selectedIndex=2;        
-        }        
-        if($xml.find("confidentiality-requirement").text() === "HIGH"){
-        document.getElementById('confidentiality_requirement').selectedIndex=3;        
-        }        
-
-        // integrity-requirement
-        if($xml.find("integrity-requirement").text() === "LOW"){
-        document.getElementById('integrity_requirement').selectedIndex=1;        
-        }        
-        if($xml.find("integrity-requirement").text() === "MEDIUM"){
-        document.getElementById('integrity_requirement').selectedIndex=2;        
-        }        
-        if($xml.find("integrity-requirement").text() === "HIGH"){
-        document.getElementById('integrity_requirement').selectedIndex=3;        
-        }        
-
-        // availability-requirement
-        if($xml.find("availability-requirement").text() === "LOW"){
-        document.getElementById('availability_requirement').selectedIndex=1;        
-        }        
-        if($xml.find("availability-requirement").text() === "MEDIUM"){
-        document.getElementById('availability_requirement').selectedIndex=2;        
-        }        
-        if($xml.find("availability-requirement").text() === "HIGH"){
-        document.getElementById('availability_requirement').selectedIndex=3;        
-        }        
-
-        // modified-attack-complexity
-        if($xml.find("modified-attack-complexity").text() === "LOCAL"){
-        document.getElementById('mod_attack_vector').selectedIndex=0;        
-        }        
-        if($xml.find("modified-attack-complexity").text() === "ADJACENT_NETWORK"){
-        document.getElementById('mod_attack_vector').selectedIndex=1;        
-        }        
-        if($xml.find("modified-attack-complexity").text() === "NETWORK"){
-        document.getElementById('mod_attack_vector').selectedIndex=2;        
-        }
-        if($xml.find("modified-attack-complexity").text() === "PHYSICAL"){
-        document.getElementById('mod_attack_vector').selectedIndex=3;        
-        }
-
-        // mod_privileges_required
-        if($xml.find("modified-privileges-required").text() === "LOW"){
-        document.getElementById('mod_privileges_required').selectedIndex=1;        
-        }        
-        if($xml.find("modified-privileges-required").text() === "MEDIUM"){
-        document.getElementById('mod_privileges_required').selectedIndex=2;        
-        }        
-        if($xml.find("modified-privileges-required").text() === "HIGH"){
-        document.getElementById('mod_privileges_required').selectedIndex=3;        
-        }        
-
-        // mod_user_interaction
-        if($xml.find("modified-user-interaction").text() === "NONE"){
-        document.getElementById('mod_user_interaction').selectedIndex=1;        
-        }        
-        if($xml.find("modified-user-interaction").text() === "REQUIRED"){
-        document.getElementById('mod_user_interaction').selectedIndex=2;        
-        }        
-
-        // mod_scope
-        if($xml.find("modified-scope").text() === "UNCHANGED"){
-        document.getElementById('mod_scope').selectedIndex=1;        
-        }        
-        if($xml.find("modified-scope").text() === "CHANGED"){
-        document.getElementById('mod_scope').selectedIndex=2;        
-        }        
-
-        // confidentiality
-        if($xml.find("modified-confidentiality-impact").text() === "NONE"){
-        document.getElementById('mod_confidentiality').selectedIndex=1;        
-        }        
-        if($xml.find("modified-confidentiality-impact").text() === "LOW"){
-        document.getElementById('mod_confidentiality').selectedIndex=2;        
-        }        
-        if($xml.find("modified-confidentiality-impact").text() === "HIGH"){
-        document.getElementById('mod_confidentiality').selectedIndex=3;        
-        }        
-
-        // modified integrity
-        if($xml.find("modified-integrity-impact").text() === "NONE"){
-        document.getElementById('mod_integrity').selectedIndex=1;        
-        }        
-        if($xml.find("modified-integrity-impact").text() === "LOW"){
-        document.getElementById('mod_integrity').selectedIndex=2;        
-        }        
-        if($xml.find("modified-integrity-impact").text() === "HIGH"){
-        document.getElementById('mod_integrity').selectedIndex=3;        
-        }        
-
-        //modified-availability-impact
-        if($xml.find("modified-availability-impact").text() === "NONE"){
-        document.getElementById('mod_availability').selectedIndex=1;        
-        }        
-        if($xml.find("modified-availability-impact").text() === "LOW"){
-        document.getElementById('mod_availability').selectedIndex=2;        
-        }        
-        if($xml.find("modified-availability-impact").text() === "HIGH"){
-        document.getElementById('mod_availability').selectedIndex=3;        
-        }        
-
-        }        
-        });
     - elsif @riskmatrix
       .control-group
         %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
@@ -594,7 +1182,7 @@
       .control-group
         %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'severity_rationale', :name => 'severity_rationale'}
+          %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'severity_rationale', :name => 'severity_rationale'}
       .control-group
         %label{ :class => "control-label", :for => "likelihood" } Likelihood
         .controls
@@ -604,7 +1192,7 @@
       .control-group
         %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
         .controls
-          %textarea{ :rows => '3', :class => 'input-xxlarge', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}       
+          %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}       
              
     - else
       .control-group
@@ -631,9 +1219,9 @@
             %option{:value => 4}= "Critical"
     .control-group
       %label{ :class => "control-label", :for => "overview" }
-        %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+        %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
-      .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+      .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
         .modal-header
           %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
             x
@@ -649,6 +1237,8 @@
           %h2
             Bullets
           %p
+            Shortcut : CTRL + ALT + w
+            %br
             Place the bulleted text inbetween a *- and a -* like so:
             %br
             %br
@@ -657,6 +1247,8 @@
           %h2
             Paragraph Heading Text
           %p
+            Shortcut : CTRL + ALT + q
+            %br
             Place the heading inbetween a [== and a ==] like so:
             %br
             %br
@@ -665,7 +1257,9 @@
           %h2
             Italics
           %p
-            Place italicized inbetween a [~~ and a ~~] like so:
+            Shortcut : CTRL + ALT + x
+            %br
+            Italicize the paragraph containing [~~ and a ~~]:
             %br
             %br
             %code
@@ -673,6 +1267,8 @@
           %h2
             Code
           %p
+            Shortcut : CTRL + ALT + c
+            %br
             Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
             %br
             %br
@@ -680,11 +1276,11 @@
               [[[ code, code goes here ]]]
 
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'overview', :name => 'overview'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'overview', :name => 'overview'}
     .control-group
       %label{ :class => "control-label", :for => "pocu" } Proof of Concept
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'poc', :name => 'poc', :id => 'pocu'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'poc', :name => 'poc', :id => 'pocu'}
     - attachments=''
     - if @attaches
       - @attaches.each do |attach|
@@ -711,15 +1307,15 @@
       .control-group
         %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
         .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'affected_hosts', :name => 'affected_hosts'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'affected_hosts', :name => 'affected_hosts'}
     .control-group
       %label{ :class => "control-label", :for => "remediation" } Remediation
       .controls
-        %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'remediation'}
+        %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'remediation'}
     .control-group
       %label{ :class => "control-label", :for => "references" } References (One Per Line)
       .controls
-        %textarea{ :rows => '5', :class => 'input-xxlarge', :name => 'references'}
+        %textarea{ :rows => '5', :class => 'input-xxlarge allowMarkupShortcut', :name => 'references'}
     - if !@master
       .control-group
         %label{ :class => "control-label", :for => "notes" } Notes Data
@@ -728,7 +1324,7 @@
           %label
             Notes
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'notes'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'notes'}
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
@@ -740,14 +1336,14 @@
           %label
             Presentation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'presentation_points'}
             - if @finding
               - if @finding.presentation_points
                 #{meta_markup(@finding.presentation_points)}
           %label
             Presentation Remediation Points (One Per Line)
           .controls
-          %textarea{ :rows => '10', :class => 'input-xxlarge', :name => 'presentation_rem_points'}
+          %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'presentation_rem_points'}
             - if @finding
               - if @finding.presentation_rem_points
                 #{meta_markup(@finding.presentation_rem_points)}      

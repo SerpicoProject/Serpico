@@ -69,6 +69,21 @@ def uniq_findings(findings)
     return vfindings
 end
 
+# when a finding is imported the score, must be nulled for CVSS/CVSS3/DREAD
+def provide_null_score(finding)
+	finding.damage = 1
+        finding.reproducability = 1
+        finding.exploitability = 1
+        finding.affected_users = 1
+        finding.discoverability = 1
+        finding.dread_total = 1
+
+	finding.cvss_total = 0
+
+	return finding
+end
+
+
 def get_vulns_from_msf(rpc, workspace)
     res = rpc.call('console.create')
 
@@ -120,13 +135,7 @@ def parse_nessus_xml(xml,threshold)
 
                 finding.risk = itemnode["severity"]
 
-                # hardcode the DREAD score, the user should fix this
-                finding.damage = 1
-                finding.reproducability = 1
-                finding.exploitability = 1
-                finding.affected_users = 1
-                finding.discoverability = 1
-                finding.dread_total = 1
+		finding = provide_null_score(finding)
 
                 finding.affected_hosts = hostnode["name"]
 
@@ -172,13 +181,8 @@ def parse_burp_xml(xml)
                 finding.risk = 1
             end
 
-            # hardcode the DREAD score, the user assign the risk
-            finding.damage = 1
-            finding.reproducability = 1
-            finding.exploitability = 1
-            finding.affected_users = 1
-            finding.discoverability = 1
-            finding.dread_total = 1
+	    finding = provide_null_score(finding)	
+
             finding.type = "Web Application"
 
             findings << finding

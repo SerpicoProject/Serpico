@@ -64,3 +64,15 @@
           - else
             %h4
               You have no reports, how about <a href="/report/new">creating</a> or <a href="/report/import">importing</a> one...
+
+:javascript
+  function confirmDelete(evt) {
+    if (!confirm('Are you sure you want to permanently delete the select element ?')) {
+      evt.preventDefault();
+    }
+  }
+
+  var deleteElements = $('a.btn-danger');
+  for (var index = 0, length = deleteElements.length; index < length; index++) {
+    deleteElements[index].addEventListener('click', confirmDelete, false);
+  }

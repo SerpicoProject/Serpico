@@ -50,7 +50,8 @@ class TemplateFindings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
-
+    property :c2_vs, String, :length => 300, :required => false
+    
     #CVSSv3
     property :attack_vector, String, :required => false
     property :attack_complexity, String, :required => false
@@ -77,6 +78,8 @@ class TemplateFindings
     property :cvss_base_score, Float, :required => false
     property :cvss_impact_score, Float, :required => false
     property :cvss_mod_impact_score, Float, :required => false
+    property :c3_vs, String, :length => 300, :required => false
+
 
     # Risk Matrix
     property :severity, String, :required => false
@@ -90,6 +93,7 @@ class Findings
     include DataMapper::Resource
 
     property :id, Serial
+    property :finding_number, Integer, :required => false
     property :report_id, Integer, :required => true
     property :master_id, Integer, :required => false
     property :finding_modified, Boolean, :required => false
@@ -136,6 +140,7 @@ class Findings
     property :cvss_modified_impact, Float, :required => false
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
+    property :c2_vs, String, :length => 300, :required => false
 
     # CVSSv3
     property :attack_vector, String, :required => false
@@ -163,6 +168,7 @@ class Findings
     property :cvss_base_score, Float, :required => false
     property :cvss_impact_score, Float, :required => false
     property :cvss_mod_impact_score, Float, :required => false
+    property :c3_vs, String, :length => 300, :required => false
 
     # Risk Matrix
     property :severity, String, :required => false
@@ -319,6 +325,7 @@ class Reports
     property :date, String, :length => 20
     property :report_type, String, :length => 200
     property :report_name, String, :length => 200
+    property :assessment_type, String, :length => 200
     property :consultant_name, String, :length => 200
     property :consultant_company, String, :length => 200
     property :consultant_phone, String
@@ -351,6 +358,7 @@ class Attachments
     property :filename_location, String, :length => 400
     property :report_id, String, :length => 30
     property :description, String, :length => 500
+    property :caption, String, :length => 500
 
 end
 
@@ -373,7 +381,23 @@ class Xslt
     property :report_type, String, :length => 400
     property :finding_template, Boolean, :required => false, :default => false
     property :status_template, Boolean, :required => false, :default => false
+	
+    has n, :components, 'Xslt_component',
+        :parent_key => [ :id ], 
+        :child_key  => [ :xslt_id ] 
+end
 
+class Xslt_component
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :xslt_location, String, :length => 400
+    property :name, String, :length => 400
+	
+    belongs_to :xslt, 'Xslt',
+        :parent_key => [ :id ],
+        :child_key  => [ :xslt_id ],
+	:required   => true
 end
 
 DataMapper.finalize

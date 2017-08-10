@@ -25,6 +25,7 @@ def generate_xslt(docx)
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:output method="xml" indent="yes"/>
   <xsl:template match="/">
+  <xsl:variable name="low" select="\'abcdefghijklmnopqrstuvwxyz\'" /><xsl:variable name="up" select="\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'" />
     <xsl:processing-instruction name="mso-application">
       <xsl:text>progid="Word.Document"</xsl:text>
     </xsl:processing-instruction>'
@@ -44,6 +45,9 @@ def generate_xslt(docx)
 	document = @top + document
 
 	for_iffies = []
+
+
+
 ###########################
 
 # Ω - used as a normal substituion variable
@@ -107,7 +111,6 @@ def generate_xslt(docx)
     document = replace.join("")
 
 
-
 ###########################
 
 # π - a replacement variable for for-each loops only
@@ -159,7 +162,46 @@ def generate_xslt(docx)
 
 	document = replace.join("")
 
+
+
 ###############################
+
+# √ - string comparison
+
+# For example, '√ short_company_name:::serpico testing √' is read as "compare short_company_name to 'serpico test' (case_insensitive) and return the result as true or false;  ..."
+
+	replace = document.split('√')
+
+	if (((replace.size-1) % 2) != 0)
+        raise ReportingError.new("Uneven number of √. This is usually caused by a mismatch in a variable.")
+	end
+
+	count = 0
+	replace.each do |omega|
+		if (count % 2) == 0
+			count = count + 1
+			next
+		end
+
+		omega = compress(omega)
+
+		left = omega.split(":::").first.strip
+		if left =~ /:/
+			left = "report/udv/"+left.gsub(":","")
+		elsif left =~ /\+/
+			left = left.gsub("+","")
+		else
+			left = "report/reports/"+left
+		end
+		right = omega.split(":::").last.strip
+
+		replace[count]="translate(#{left},$up,$low)=translate('#{right}',$up,$low)"
+
+		count = count + 1
+
+	end
+	document = replace.join("")
+
 
 ###########################
 
@@ -195,7 +237,6 @@ def generate_xslt(docx)
 
 				conditions.each do |condition|
 					# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-					q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 					q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 				end
 				q << "<w:tr "
@@ -265,7 +306,6 @@ def generate_xslt(docx)
 			conditions.shift
 			conditions.each do |condition|
 				# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-				q << "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />" unless q.include?("<xsl:variable name=\"up\"")
 				q << "<xsl:if test=\"#{CGI.escapeHTML(condition.downcase).gsub("&amp;","&")}\">"
 			end
         else
@@ -312,13 +352,8 @@ def generate_xslt(docx)
 		end
 
 		omega = compress(omega)
-		# add uppercase/lowercase to allow users to test for string matches (e.g. type='Database')
-		cs = "<xsl:variable name=\"low\" select=\"'abcdefghijklmnopqrstuvwxyz'\" /><xsl:variable name=\"up\" select=\"'ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" />"
-		if document.include?("<xsl:variable name=\"up\"") or replace[count-1].include?("<xsl:variable name=\"up\"")
-			cs = ""
-		end
 
-		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p>#{cs}<xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
+		x = replace[count-1].reverse.sub("</w:p>".reverse,"</w:p><xsl:if test=\"#{CGI.escapeHTML(omega.downcase).gsub("&amp;","&")}\">".reverse).reverse
 		replace[count-1] = x
 
 		replace[count]=''
@@ -531,12 +566,13 @@ def generate_xslt(docx)
 		document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
 	end
 
+
+
+
 ###########################
 
 # UNUSED
 #	≠
-#   √
-#	§
 ###############################
 
 	# final changes placed here
@@ -550,10 +586,114 @@ end
 # http://answers.microsoft.com/en-us/office/forum/office_2010-word/word-2010-randomly-deleting-spaces-between-words/34682f6f-7be2-4835-9c18-907b0abd5615?page=6
 # Basically we replace space with alt-255 space; go figure
 def white_space(document)
-	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>")
+	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>").gsub(0xE2.chr, "\'").gsub("&#39;", "\'")
 	return document
 end
 
+def generate_xslt_components(docx)
+	# Initialize the xsl
+	@top = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<xsl:stylesheet
+	  version="1.0"
+	  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	  <xsl:output method="xml" indent="yes"/>
+	  <xsl:template match="/">
+	  <xsl:variable name="low" select="\'abcdefghijklmnopqrstuvwxyz\'" /><xsl:variable name="up" select="\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'" />
+		<xsl:processing-instruction name="mso-application">
+		  <xsl:text>progid="Word.Document"</xsl:text>
+		</xsl:processing-instruction>'
+	@bottom = '</xsl:template></xsl:stylesheet>'
+	document = ""
+	debug = false
+
+	list_components_xslt = {}
+	
+	#add line breaks for easier reading, only use with debugging
+	#document = document.gsub('>',">\n")
+
+	components = find_headers_footers(docx)
+	
+	components.each do |component|
+		document = read_rels(docx,component)
+		
+		# replace {} for the sake of XSL
+		document = document.gsub("{","{{").gsub("}","}}")
+		
+		# add in xslt header
+		document = @top + document
+		
+		# Ω - used as a normal substituion variable
+		# let's pull out variables
+		replace = document.split('Ω')
+
+		if (((replace.size-1) % 2) != 0)
+			raise ReportingError.new("Uneven number of Ω. This is usually caused by a mismatch in a variable.")
+		end
+
+		count = 0
+		replace.each do |omega|
+			if (count % 2) == 0
+				count = count + 1
+				next
+			end
+				
+			# Execute when between two Ω
+			omega = compress(omega)
+
+			# now, we replace omega with the real deal
+			#<xsl:for-each select="report/reports">
+			#<xsl:value-of select="contact_name"/>
+			#</xsl:for-each>
+			replace[count] = "<xsl:for-each select=\"report/reports\"><xsl:value-of select=\"#{omega.downcase}\"/></xsl:for-each>"
+			count = count + 1
+		end
+
+		# remove all the Ω and put the document back together
+		document = replace.join("")
+
+		###########################
+
+		# § - used as a user defined variable substituion variable
+
+		# let's pull out variables
+		replace = document.split('§')
+
+		if (((replace.size-1) % 2) != 0)
+			raise ReportingError.new("Uneven number of §. This is usually caused by a mismatch in a variable.")
+		end
+
+		count = 0
+		replace.each do |omega|
+			if (count % 2) == 0
+				count = count + 1
+				next
+			end
+
+			# Execute when between two §
+			omega = compress(omega)
+
+			# now, we replace omega with the real deal
+			#<xsl:for-each select="report/udv">
+			#<xsl:value-of select="contact_name"/>
+			#</xsl:for-each>
+			replace[count] = "<xsl:for-each select=\"report/udv\"><xsl:value-of select=\"#{omega.downcase}\"/></xsl:for-each>"
+			count = count + 1
+		end
+
+		# remove all the § and put the document back together
+		document = replace.join("")
+
+		# final changes placed here
+		document = white_space(document)
+
+		# add in xslt footer
+		document = document + @bottom
+		
+		list_components_xslt[component] = document
+	end
+
+	return list_components_xslt
+end
 
 def compress(omega)
 	replacement = ""

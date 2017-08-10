@@ -15,6 +15,7 @@
     %script{:src => "/js/bootstrap-button.js"}
     %script{:src => "/js/bootstrap-carousel.js"}
     %script{:src => "/js/bootstrap-typeahead.js"}
+    %script{:src => "/js/format_shortcut.js"}
 
     %meta{:charset => "utf-8"}/
     %title Serpico
@@ -109,6 +110,9 @@
                 %li
                   %a{ :href => '/admin/dbbackup' } Backup Master Database
                   %a{ :href => '/admin/attacments_backup' } Backup All Attachments
+                - @version = File.open("VERSION.txt").read()
+                %li.nav-header Serpico Version: #{@version}
+
             - else
               - if @report
                 %ul.nav.nav-list
@@ -138,9 +142,13 @@
                   %li.nav-header Additional
                   %li
                     %a{ :href => "/report/#{@report.id}/additional_features" } Additional Features
-                  %li
-                    %a{ :href => "/report/#{@report.id}/report_plugins" } Enabled Plugins
-
+              - if @plugin_side_menu 
+                %ul.nav.nav-list
+                  %li.nav-header Enabled Plugins 
+                  -@plugin_side_menu.each do |item|
+                    %li
+                    %a{ :href => "#{item["link"]}?report_id=#{@report.id}"} #{item["name"]}
+                    
           =yield
   - else
     %body

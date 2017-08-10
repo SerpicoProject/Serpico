@@ -6,6 +6,12 @@ require 'sinatra'
 
 config_options = JSON.parse(File.read('./config.json'))
 
+# set the report_assessment_types for <1.2 versions of Serpico
+unless config_options["report_assessment_types"]
+    config_options["report_assessment_types"] = ["Network Internal","External","Web application","Physical","Social engineering","Configuration audit"]
+end
+
+
 # List current reports
 get '/reports/list' do
     @reports = get_reports
@@ -21,6 +27,7 @@ end
 # Create a report
 get '/report/new' do
     @templates = Xslt.all
+    @assessment_types = config_options["report_assessment_types"]
     haml :new_report, :encode_html => true
 end
 
@@ -274,6 +281,7 @@ post '/report/:id/upload_attachments' do
     	datax["filename"] = upf[:filename]
     	datax["description"] = CGI::escapeHTML(upf[:filename]).gsub(" ","_").gsub("/","_").gsub("\\","_").gsub("`","_")
     	datax["report_id"] = id
+        datax["caption"] = params[:caption]
     	data = url_escape_hash(datax)
 
     	@attachment = Attachments.new(data)
@@ -366,6 +374,8 @@ get '/report/:id/edit' do
     # Query for the first report matching the report_name
     @report = get_report(id)
 	@templates = Xslt.all(:order => [:report_type.asc])
+    @plugin_side_menu = get_plugin_list
+    @assessment_types = config_options["report_assessment_types"]
 
     if @report == nil
         return "No Such Report"
@@ -411,7 +421,9 @@ get '/report/:id/user_defined_variables' do
 
         # add in the global UDV from config
         if config_options["user_defined_variables"].size > 0 and !@user_variables.include?(config_options["user_defined_variables"][0])
-            @user_variables = @user_variables + config_options["user_defined_variables"]
+            config_options["user_defined_variables"].each do |key,value|
+                @user_variables.store(key,"")               
+            end
         end
 
         @user_variables.each do |k,v|
@@ -481,12 +493,12 @@ end
 # Findings List Menu
 get '/report/:id/findings' do
     @chart = config_options["chart"]
-
     @report = true
     id = params[:id]
 
     # Query for the first report matching the report_name
     @report = get_report(id)
+    @plugin_side_menu = get_plugin_list
 
     if @report == nil
         return "No Such Report"
@@ -730,6 +742,7 @@ get '/report/:id/findings/new' do
     @cvss = config_options["cvss"]
     @cvssv3 = config_options["cvssv3"]
     @riskmatrix = config_options["riskmatrix"]
+    @vulnmap = config_options["vulnmap"]
 
     haml :create_finding, :encode_html => true
 end
@@ -1120,8 +1133,10 @@ get '/report/:id/generate' do
     findings_xml = ""
     findings_xml << "<findings_list>"
 
-    @findings.each do |finding|
+    finding_number = 1
 
+    @findings.each do |finding|
+        finding.finding_number = finding_number
         # This flags new or edited findings
         if finding.master_id
             master = TemplateFindings.first(:id => finding.master_id)
@@ -1137,6 +1152,7 @@ get '/report/:id/generate' do
             finding.remediation = compare_text(finding.remediation, nil)
         end
         findings_xml << finding.to_xml
+        finding_number += 1
     end
 
     findings_xml << "</findings_list>"
@@ -1146,19 +1162,21 @@ get '/report/:id/generate' do
 
     # check if the report has user_defined variables
     if @report.user_defined_variables
-
         # we need the user defined variables in xml
         udv_hash = JSON.parse(@report.user_defined_variables)
-        udv = "<udv>"
-        udv_hash.each do |key,value|
-            udv << "<#{key}>"
-            udv << "#{value}"
-            udv << "</#{key}>\n"
-        end
-        udv << "</udv>"
-    else
-        udv = ""
     end
+    
+    # update udv_hash with findings totals
+    udv_hash = add_findings_totals(udv_hash, @findings, config_options)
+
+    udv = "<udv>"
+    udv_hash.each do |key,value|
+        udv << "<#{key}>"
+        udv << "#{value}"
+        udv << "</#{key}>\n"
+    end
+
+    udv << "</udv>"
 
     report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}</report>"
 
@@ -1175,6 +1193,11 @@ get '/report/:id/generate' do
     # Create a temporary copy of the word doc
     FileUtils::copy_file(xslt_elem.docx_location,rand_file)
 
+	list_components = {}
+	xslt_elem.components.each do |component|
+		xslt = Nokogiri::XSLT(File.read(component.xslt_location))
+		list_components[component.name] = xslt.transform(Nokogiri::XML(report_xml))
+	end
     ### IMAGE INSERT CODE
     if docx_xml.to_s =~ /\[!!/
         puts "|+| Trying to insert image --- "
@@ -1224,7 +1247,10 @@ get '/report/:id/generate' do
     #### END IMAGE INSERT CODE
 
     docx_modify(rand_file, docx,'word/document.xml')
-
+	
+	list_components.each do |name, xml|
+		docx_modify(rand_file, xml.to_s,name)
+	end
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"
 end
 
@@ -1423,6 +1449,146 @@ get '/report/:id/presentation' do
 
     haml :presentation, :encode_html => true, :layout => false
 end
+
+# export presentation of current report in html format, inside a zip
+ get '/report/:id/presentation_export' do
+     # check the user has installed reveal
+     if !(File.directory?(Dir.pwd+"/public/reveal.js"))
+        return "reveal.js not found in /public/ directory. To install:<br><br> 1. Goto [INSTALL_DIR]/public/ <br>2.run 'git clone https://github.com/hakimel/reveal.js.git'<br>3. Restart Serpico"
+        sleep(30)
+        redirect to("/") 
+    end
+ 
+     id = params[:id]
+ 
+     @report = get_report(id)
+ 
+     # bail without a report
+     redirect to("/") unless @report
+ 
+     # add the findings
+     if(config_options["dread"])
+         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
+     elsif(config_options["cvss"])
+         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+     elsif(config_options["cvssv3"])
+         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
+     elsif(config_options["riskmatrix"])
+         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+     else
+         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+     end
+ 
+     # add images into presentations
+     @images = []
+     @findings.each do |find|
+         if find.presentation_points
+            find.presentation_points.to_s.split("<paragraph>").each do |pp|
+                a = {}
+                next unless pp =~ /\[\!\!/
+                img = pp.split("[!!")[1].split("!!]").first
+                a["name"] = img
+                if Attachments.first( :description => img)
+                     img_p = Attachments.first( :description => img)
+                else
+                    return "attachment #{img} from vulnerability \" #{find.title} \" doesn't exist. Did you mistype something?"
+                end
+                 a["link"] = "/report/#{id}/attachments/#{img_p.id}"
+                @images.push(a)
+             end
+         end
+     end
+     @dread = config_options["dread"]
+     @cvss = config_options["cvss"]
+     @cvssv3 = config_options["cvssv3"]
+     @riskmatrix = config_options["riskmatrix"]
+ 	
+     # create html file from haml template
+     template = File.read(Dir.pwd+"/views/presentation.haml")
+     haml_engine = Haml::Engine.new(template)
+     output = haml_engine.render(Object.new, {:@report => @report, :@findings => @findings, :@dread => @dread, :@cvss => @cvss, :@cvss3 => @cvss3, :@riskmatrix => @riskmatrix, :@images => @images})
+     rand_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.html"
+     newHTML = Nokogiri::HTML(output)
+     
+     # Each link inside the HTML file is considered as a dependency that will need to be fixed to a relative local path
+     dependencies = []
+     
+     # fix href and src based links in the html to relative local URL. This should cover most of the use cases.
+     newHTML.css('[href]').each do |el|
+         if el.attribute('href').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('href').to_s[1..-1])
+             dependencies.push(el.attribute('href').to_s[1..-1])
+         end
+         el.set_attribute('href', '.' + el.attribute('href'))
+     end
+     
+     newHTML.css('[src]').each do |el|
+         if el.attribute('src').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('src').to_s[1..-1])
+             dependencies.push(el.attribute('src').to_s[1..-1])
+         end
+         el.set_attribute('src', '.' + el.attribute('src'))
+     end
+     
+     # *slightly ugly* way to fix links in the HTML that aren't in a href or src (for exemple in javascript)
+     htmlDoc = newHTML.to_html
+     # the regex match stuff like '/img/reveal.js/foo/lib.js', "/css/reveal.js/theme/special.css" 
+     link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+     while link != nil do
+         if !dependencies.include? link[1..-1]
+             dependencies.push(link[1..-1])
+         end
+         htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
+         link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+     end
+     
+     # save html with links fixed to a relative local path
+     File.open(rand_file, 'w') do |f|
+         f.write htmlDoc
+     end
+     
+     
+     rand_zip = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.zip"
+     
+     # put the presentation and its dependencies (links, images, libraries...) in a zip file
+     Zip.setup do |c|
+         c.on_exists_proc = true
+         c.continue_on_exists_proc = true
+     end
+     Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
+         zipfile.add("presentation.html", rand_file)
+         
+         # put the public directory in the zip file.
+         list_public_file = Dir.glob(Dir.pwd+"/public/**/*")
+         list_public_file.each do |file|
+             # don't add directory or .git files in the zip
+             if file[".git"] == nil && File.file?(file)
+                 # if file is .js or .css, check if it has dependencies that needs to be fixed to relative local path
+                 if file[/\.(js|css)$/] != nil
+                     file_content = File.read(file)
+                     while link != nil
+                         file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
+                         link = file_content[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
+                     end
+                     rand_temp_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.tmp"
+                     File.open(rand_temp_file, 'w') do |f|
+                         f.write file_content
+                     end
+                     # remove Serpico/public from the file path and put it in the zip
+                     zipfile.add(file[(Dir.pwd+"/public/").length..-1], rand_temp_file)
+                 else
+                     # remove Serpico/public from the file path and put it in the zip
+                     zipfile.add(file[(Dir.pwd+"/public/").length..-1], file)
+                 end
+             end
+         end
+         # put attachements in the zip 
+         @images.each do | images|
+             img_p = Attachments.first( :description => images["name"])
+             zipfile.add("report/#{id}/attachments/#{img_p.id}" , img_p.filename_location)
+         end
+     end
+     
+     send_file rand_zip, :type => 'zip', :filename => "#{@report.report_name}.zip"
+end 
 
 # set msf rpc settings for report
 get '/report/:id/msfsettings' do
