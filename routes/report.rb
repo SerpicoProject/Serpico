@@ -373,7 +373,7 @@ get '/report/:id/edit' do
 
     # Query for the first report matching the report_name
     @report = get_report(id)
-	  templates = Xslt.all(:order => [:report_type.asc])
+	  @templates = Xslt.all(:order => [:report_type.asc])
     @plugin_side_menu = get_plugin_list
     @assessment_types = config_options["report_assessment_types"]
 
