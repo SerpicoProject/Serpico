@@ -1198,7 +1198,7 @@ get '/report/:id/generate' do
                     end
                 end
             end
-        services_xml = services_xml_raw.doc.root.to_xml
+            services_xml = services_xml_raw.doc.root.to_xml
             #we create the XML from the hosts found.
             res = rpc.call('db.hosts', {:limit => 10000} )
             msfhosts = res["hosts"]
@@ -1213,8 +1213,8 @@ get '/report/:id/generate' do
                     end
                 end
             end
+            hosts_xml = hosts_xml_raw.doc.root.to_xml
         end
-        hosts_xml = hosts_xml_raw.doc.root.to_xml
     end
     report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{services_xml}#{hosts_xml}</report>"
     xslt_elem = Xslt.first(:report_type => @report.report_type)
