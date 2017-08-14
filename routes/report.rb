@@ -1180,6 +1180,7 @@ get '/report/:id/generate' do
 
     #if msf connection up, we add services and hosts to the xml
     services_xml = ""
+    hosts_xml = ""
     if (msfsettings = RemoteEndpoints.first(:report_id => @report.id))
         if (rpc = msfrpc(@report.id))
             res = rpc.call('console.create')
