@@ -552,6 +552,63 @@ def cvss(data, is_cvssv3)
 	 	# https://www.first.org/cvss/specification-document#i8
 	 
 	 	#Base
+		if attack_vector == "network"
+			c3_vs += "AV:N/"
+			attack_vector_result = 0.85
+	 	elsif attack_vector == "adjacent"
+			c3_vs += "AV:A/"
+	 		attack_vector_result = 0.62
+	 	elsif attack_vector == "local"
+			c3_vs += "AV:L/"
+	 		attack_vector_result = 0.55
+	 	elsif attack_vector == "physical"
+			c3_vs += "AV:P/"
+	 		attack_vector_result = 0.2
+	 	end
+
+	 	if attack_complexity == "high"
+			c3_vs += "AC:H/"
+	 		attack_complexity_result = 0.44
+	 	elsif attack_complexity == "low"
+			c3_vs += "AC:L/"
+	 		attack_complexity_result = 0.77
+	 	end
+
+	 	if privileges_required == "none"
+			c3_vs += "PR:N/"
+	 		privileges_required_result = 0.85
+	 	elsif privileges_required == "high"
+			c3_vs += "PR:H/"
+	 		if (scope_cvss == "changed" || mod_scope == "changed")
+	 			privileges_required_result = 0.50
+	 		else
+	 			privileges_required_result = 0.27
+	 		end
+	 	elsif privileges_required == "low"
+			c3_vs += "PR:L/"
+	 		if (scope_cvss == "changed" || mod_scope == "changed")
+	 			privileges_required_result = 0.68
+	 		else
+	 			privileges_required_result = 0.62
+	 		end
+	 	end
+		
+		if user_interaction == "none"
+			c3_vs += "UI:N/"
+	 		user_interaction_result = 0.85
+	 	elsif user_interaction == "required"
+			c3_vs += "UI:R/"
+	 		user_interaction_result = 0.62
+	 	end
+		
+		if scope_cvss == "unchanged"
+			c3_vs += "S:U/"
+	 		scope_cvss_result = 6.42
+	 	else
+			c3_vs += "S:C/"
+	 		scope_cvss_result = 7.52
+	 	end
+		
 	 	if confidentiality == "none"
 			c3_vs += "C:N/"
 	 		confidentiality_result = 0.0
@@ -585,63 +642,6 @@ def cvss(data, is_cvssv3)
 	 		availability_result = 0.22
 	 	end
 
-		if scope_cvss == "unchanged"
-			c3_vs += "S:U/"
-	 		scope_cvss_result = 6.42
-	 	else
-			c3_vs += "S:C/"
-	 		scope_cvss_result = 7.52
-	 	end
-
-		if attack_vector == "network"
-			c3_vs += "AV:N/"
-			attack_vector_result = 0.85
-	 	elsif attack_vector == "adjacent"
-			c3_vs += "AV:A/"
-	 		attack_vector_result = 0.62
-	 	elsif attack_vector == "local"
-			c3_vs += "AV:L/"
-	 		attack_vector_result = 0.55
-	 	elsif attack_vector == "physical"
-			c3_vs += "AV:P/"
-	 		attack_vector_result = 0.2
-	 	end
-
-	 	if attack_complexity == "high"
-			c3_vs += "AC:H/"
-	 		attack_complexity_result = 0.44
-	 	elsif attack_complexity == "low"
-			c3_vs += "AC:L/"
-	 		attack_complexity_result = 0.77
-	 	end
-
-	 	if user_interaction == "none"
-			c3_vs += "UI:N/"
-	 		user_interaction_result = 0.85
-	 	elsif user_interaction == "required"
-			c3_vs += "UI:R/"
-	 		user_interaction_result = 0.62
-	 	end
-
-		if privileges_required == "none"
-			c3_vs += "PR:N/"
-	 		privileges_required_result = 0.85
-	 	elsif privileges_required == "high"
-			c3_vs += "PR:H/"
-	 		if (scope_cvss == "changed" || mod_scope == "changed")
-	 			privileges_required_result = 0.50
-	 		else
-	 			privileges_required_result = 0.27
-	 		end
-	 	elsif privileges_required == "low"
-			c3_vs += "PR:L/"
-	 		if (scope_cvss == "changed" || mod_scope == "changed")
-	 			privileges_required_result = 0.68
-	 		else
-	 			privileges_required_result = 0.62
-	 		end
-	 	end
-
 		#Temporal
 	 	if exploit_maturity == "not defined"
 			c3_vs += "E:X/"
@@ -653,7 +653,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "E:F/"
 	 		exploit_maturity_result = 0.97
 	 	elsif exploit_maturity == "proof-of-concept code"
-			c3_vs += "E:POC/"
+			c3_vs += "E:P/"
 	 		exploit_maturity_result = 0.94
 	 	elsif exploit_maturity == "unproven exploit exists"
 			c3_vs += "E:U/"
@@ -734,60 +734,6 @@ def cvss(data, is_cvssv3)
 	 		availability_requirement_result = 0.5
 	 	end
 	 	
-	 	if mod_confidentiality == "none"
-			c3_vs += "MAC:N/"
-	 		mod_confidentiality_result = 0.0
-	 	elsif mod_confidentiality == "high"
-			c3_vs += "MAC:H/"
-	 		mod_confidentiality_result = 0.56
-	 	elsif mod_confidentiality == "low"
-			c3_vs += "MAC:L/"
-	 		mod_confidentiality_result = 0.22
-	 	elsif mod_confidentiality == "not defined"
-			c3_vs += "MAC:X/"
-	 		mod_confidentiality_result = confidentiality_result
-	 	end
-
-
-	 	if mod_integrity == "none"
-			c3_vs += "MI:N/"
-	 		mod_integrity_result = 0.0
-	 	elsif mod_integrity == "high"
-			c3_vs += "MI:H/"
-	 		mod_integrity_result = 0.56
-	 	elsif mod_integrity == "low"
-			c3_vs += "MI:L/"
-	 		mod_integrity_result = 0.22
-	 	elsif mod_integrity == "not defined"
-			c3_vs += "MI:X/"
-	 		mod_integrity_result = integrity_result
-	 	end
-
-		if mod_availability == "none"
-			c3_vs += "MA:N/"
-	 		mod_availability_result = 0.0
-	 	elsif mod_availability == "high"
-			c3_vs += "MA:H/"
-	 		mod_availability_result = 0.56
-	 	elsif mod_availability == "low"
-			c3_vs += "MA:L/"
-	 		mod_availability_result = 0.22
-	 	elsif mod_availability == "not defined"
-			c3_vs += "MA:X/"
-	 		mod_availability_result = availability_result
-	 	end
-
-	 	if mod_scope == "unchanged"
-			c3_vs += "MS:X/"
-	 		mod_scope_result = 6.42
-	 	elsif mod_scope == "changed"
-			c3_vs += "MS:N/"
-	 		mod_scope_result = 7.52
-	 	elsif mod_scope == "not defined"
-	 		c3_vs += "MS:X/"	 		
-	 		mod_scope_result = scope_cvss_result
-	 	end
-
 		if mod_attack_vector == "network"
 			c3_vs += "MAV:N/"
 	 		mod_attack_vector_result = 0.85
@@ -815,18 +761,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "MAC:X/"
 	 		mod_attack_complexity_result = attack_complexity_result
 	 	end
-
-	 	if mod_user_interaction == "none"
-			c3_vs += "MUI:N/"
-	 		mod_user_interaction_result = 0.85
-	 	elsif mod_user_interaction == "required"
-			c3_vs += "MUI:R/"
-	 		mod_user_interaction_result = 0.62
-	 	elsif mod_user_interaction == "not defined"
-			c3_vs += "MUI:X/"
-	 		mod_user_interaction_result = user_interaction_result
-	 	end
-	 
+		
 	 	if mod_privileges_required == "none"
 			c3_vs += "MPR:N/"
 	 		mod_privileges_required_result = 0.85
@@ -847,6 +782,70 @@ def cvss(data, is_cvssv3)
 	 	elsif mod_privileges_required == "not defined"
 			c3_vs += "MPR:X/"
 	 		mod_privileges_required_result = privileges_required_result
+	 	end
+		
+	 	if mod_user_interaction == "none"
+			c3_vs += "MUI:N/"
+	 		mod_user_interaction_result = 0.85
+	 	elsif mod_user_interaction == "required"
+			c3_vs += "MUI:R/"
+	 		mod_user_interaction_result = 0.62
+	 	elsif mod_user_interaction == "not defined"
+			c3_vs += "MUI:X/"
+	 		mod_user_interaction_result = user_interaction_result
+	 	end
+		
+		if mod_scope == "unchanged"
+			c3_vs += "MS:U/"
+	 		mod_scope_result = 6.42
+	 	elsif mod_scope == "changed"
+			c3_vs += "MS:C/"
+	 		mod_scope_result = 7.52
+	 	elsif mod_scope == "not defined"
+	 		c3_vs += "MS:X/"	 		
+	 		mod_scope_result = scope_cvss_result
+	 	end
+		
+		if mod_confidentiality == "none"
+			c3_vs += "MC:N/"
+	 		mod_confidentiality_result = 0.0
+	 	elsif mod_confidentiality == "high"
+			c3_vs += "MC:H/"
+	 		mod_confidentiality_result = 0.56
+	 	elsif mod_confidentiality == "low"
+			c3_vs += "MC:L/"
+	 		mod_confidentiality_result = 0.22
+	 	elsif mod_confidentiality == "not defined"
+			c3_vs += "MC:X/"
+	 		mod_confidentiality_result = confidentiality_result
+	 	end
+
+	 	if mod_integrity == "none"
+			c3_vs += "MI:N/"
+	 		mod_integrity_result = 0.0
+	 	elsif mod_integrity == "high"
+			c3_vs += "MI:H/"
+	 		mod_integrity_result = 0.56
+	 	elsif mod_integrity == "low"
+			c3_vs += "MI:L/"
+	 		mod_integrity_result = 0.22
+	 	elsif mod_integrity == "not defined"
+			c3_vs += "MI:X/"
+	 		mod_integrity_result = integrity_result
+	 	end
+
+		if mod_availability == "none"
+			c3_vs += "MA:N/"
+	 		mod_availability_result = 0.0
+	 	elsif mod_availability == "high"
+			c3_vs += "MA:H/"
+	 		mod_availability_result = 0.56
+	 	elsif mod_availability == "low"
+			c3_vs += "MA:L/"
+	 		mod_availability_result = 0.22
+	 	elsif mod_availability == "not defined"
+			c3_vs += "MA:X/"
+	 		mod_availability_result = availability_result
 	 	end
 
 		# Base Score
