@@ -139,16 +139,18 @@
                     %a{ :href => "/report/#{@report.id}/hosts" } Hosts
                   %li
                     %a{ :href => "/report/#{@report.id}/vulns" } Vulnerabilities
+                  %li
+                    %a{ :href => "/report/#{@report.id}/services" } Services
                   %li.nav-header Additional
                   %li
                     %a{ :href => "/report/#{@report.id}/additional_features" } Additional Features
-              - if @plugin_side_menu 
+              - if @plugin_side_menu
                 %ul.nav.nav-list
-                  %li.nav-header Enabled Plugins 
+                  %li.nav-header Enabled Plugins
                   -@plugin_side_menu.each do |item|
                     %li
                     %a{ :href => "#{item["link"]}?report_id=#{@report.id}"} #{item["name"]}
-                    
+
           =yield
   - else
     %body
