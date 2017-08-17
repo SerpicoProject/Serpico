@@ -384,7 +384,7 @@ get '/report/:id/edit' do
     end
 
     if @report.scoring == ""
-        @report.update({"scoring" => set_scoring(config_options)})
+        @report.update(:scoring => set_scoring(config_options))
     end
 
     haml :report_edit, :encode_html => true
@@ -510,7 +510,7 @@ get '/report/:id/findings' do
         return "No Such Report"
     end
     if @report.scoring == ""
-        @report.update({"scoring" => set_scoring(config_options)})
+        @report.update(:scoring => set_scoring(config_options))
     end
 
     @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
@@ -1065,7 +1065,7 @@ get '/report/:id/generate' do
     end
   
     if @report.scoring == ""
-        @report.update({"scoring" => set_scoring(config_options)})
+        @report.update(:scoring => set_scoring(config_options))
     end
 
     user = User.first(:username => get_username)
