@@ -42,7 +42,7 @@ def gen_asciidoc(finding, score)
 	elsif(score == "cvss" or score == "cvssv3")	
 		asciidoc << "|====== \n"
 		asciidoc << "|CVSS Score Total:"
-		asciidoc << "|#{finding.total} \n"
+		asciidoc << "|#{finding.cvss_total} \n"
 		asciidoc << "|======\n\n"
 	else
 		risk = ["Informational", "Low", "Moderate", "High", "Critical"]	
