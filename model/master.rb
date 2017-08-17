@@ -347,6 +347,8 @@ class Reports
     property :owner, String, :length => 200
     property :authors, CommaSeparatedList, :required => false, :lazy => false
     property :user_defined_variables, String, :length => 10000
+    property :scoring, String, :length => 100
+
 
 end
 

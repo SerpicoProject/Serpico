@@ -39,6 +39,7 @@ post '/report/new' do
     data["date"] = DateTime.now.strftime "%m/%d/%Y"
 
     @report = Reports.new(data)
+    @report.scoring = set_scoring(config_options)
     @report.save
 
     redirect to("/report/#{@report.id}/edit")
@@ -373,13 +374,17 @@ get '/report/:id/edit' do
 
     # Query for the first report matching the report_name
     @report = get_report(id)
-	  @templates = Xslt.all(:order => [:report_type.asc])
+    @templates = Xslt.all(:order => [:report_type.asc])
     @plugin_side_menu = get_plugin_list
     @assessment_types = config_options["report_assessment_types"]
-
+    @risk_scores = ["Risk","DREAD","CVSS","CVSSv3","RiskMatrix"]
+    
     if @report == nil
         return "No Such Report"
     end
+
+    @report.scoring = set_scoring(config_options) if @report.scoring == ""
+    @report.update
 
     haml :report_edit, :encode_html => true
 end
@@ -503,22 +508,10 @@ get '/report/:id/findings' do
     if @report == nil
         return "No Such Report"
     end
+    @report.scoring = set_scoring(config_options) if @report.scoring == ""
+    @report.update
 
-    # Query for the findings that match the report_id
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
-
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :findings_list, :encode_html => true
 end
@@ -534,16 +527,7 @@ get '/report/:id/status' do
         return "No Such Report"
     end
 
-    # Query for the findings that match the report_id
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     ## We have to do some hackery here for wordml
     findings_xml = ""
@@ -704,20 +688,8 @@ post '/report/:id/findings_add' do
         finding.save
     end
 
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :findings_list, :encode_html => true
 end
@@ -738,11 +710,7 @@ get '/report/:id/findings/new' do
         @attaches.push(ta.description)
     end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
-    @vulnmap = config_options["vulnmap"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :create_finding, :encode_html => true
 end
@@ -755,21 +723,18 @@ post '/report/:id/findings/new' do
     end
     data = url_escape_hash(request.POST)
 
-    if(config_options["dread"])
-        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    elsif(config_options["cvss"])
-        data = cvss(data, false)
-    elsif(config_options["cvssv3"])
-        data = cvss(data, true)
-    end
-
     id = params[:id]
-
-    # Query for the first report matching the report_name
     @report = get_report(id)
-
     if @report == nil
         return "No Such Report"
+    end
+
+    if(@report.scoring.downcase == "dread")
+        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    elsif(@report.scoring.downcase == "cvss")
+        data = cvss(data, false)
+    elsif(@report.scoring.downcase == "cvssv3")
+        data = cvss(data, true)
     end
 
     data["report_id"] = id
@@ -816,10 +781,7 @@ get '/report/:id/findings/:finding_id/edit' do
         @attaches.push(ta.description)
     end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :findings_edit, :encode_html => true
 end
@@ -854,13 +816,14 @@ post '/report/:id/findings/:finding_id/edit' do
     # to prevent title's from degenerating with &gt;, etc. [issue 237]
     data["title"] = data["title"].gsub('&amp;','&')
 
-    if(config_options["dread"])
+    if(@report.scoring.downcase == "dread")
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    elsif(config_options["cvss"])
+    elsif(@report.scoring.downcase == "cvss")
         data = cvss(data, false)
-    elsif(config_options["cvssv3"])
+    elsif(@report.scoring.downcase == "cvssv3")
         data = cvss(data, true)
     end
+
     # Update the finding with templated finding stuff
     @finding.update(data)
 
@@ -1098,6 +1061,8 @@ get '/report/:id/generate' do
     if @report == nil
         return "No Such Report"
     end
+    @report.scoring = set_scoring(config_options) if @report.scoring == ""
+    @report.update
 
     user = User.first(:username => get_username)
 
@@ -1118,16 +1083,8 @@ get '/report/:id/generate' do
     end
     @report.save
 
-    # Query for the findings that match the report_id
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
+
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     ## We have to do some hackery here for wordml
     findings_xml = ""
@@ -1408,7 +1365,7 @@ get '/report/:id/asciidoc_status' do
 
     ascii_doc_ = ""
     findings.each do |finding|
-        ascii_doc_ << gen_asciidoc(finding,config_options["dread"])
+        ascii_doc_ << gen_asciidoc(finding,report.scoring)
     end
 
     local_filename = "./tmp/#{rand(36**12).to_s(36)}.asd"
@@ -1458,19 +1415,8 @@ get '/report/:id/presentation' do
     # bail without a report
     redirect to("/") unless @report
 
-    # add the findings
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["riskmatrix"])
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
 
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     # add images into presentations
     @images = []
@@ -1491,10 +1437,6 @@ get '/report/:id/presentation' do
             end
         end
     end
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
 
     haml :presentation, :encode_html => true, :layout => false
 end
@@ -1515,18 +1457,8 @@ end
      # bail without a report
      redirect to("/") unless @report
 
-     # add the findings
-     if(config_options["dread"])
-         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-     elsif(config_options["cvss"])
-         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-     elsif(config_options["cvssv3"])
-         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-     elsif(config_options["riskmatrix"])
-         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-     else
-         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-     end
+
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
      # add images into presentations
      @images = []
@@ -1547,10 +1479,6 @@ end
              end
          end
      end
-     @dread = config_options["dread"]
-     @cvss = config_options["cvss"]
-     @cvssv3 = config_options["cvssv3"]
-     @riskmatrix = config_options["riskmatrix"]
 
      # create html file from haml template
      template = File.read(Dir.pwd+"/views/presentation.haml")
