@@ -383,7 +383,7 @@ get '/report/:id/edit' do
         return "No Such Report"
     end
 
-    if @report.scoring == ""
+    unless @report.scoring
         @report.update(:scoring => set_scoring(config_options))
     end
 
@@ -509,7 +509,8 @@ get '/report/:id/findings' do
     if @report == nil
         return "No Such Report"
     end
-    if @report.scoring == ""
+
+    unless @report.scoring
         @report.update(:scoring => set_scoring(config_options))
     end
 
@@ -1064,7 +1065,7 @@ get '/report/:id/generate' do
         return "No Such Report"
     end
   
-    if @report.scoring == ""
+    unless @report.scoring
         @report.update(:scoring => set_scoring(config_options))
     end
 
