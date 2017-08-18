@@ -983,3 +983,60 @@ def convert_score(finding)
 	end
 	return finding
 end
+
+# Get the type of scoring from the report and set the view variables, pull findings
+def get_scoring_findings(report)
+    if(report.scoring.downcase == "dread")
+        findings = Findings.all(:report_id => report.id, :order => [:dread_total.desc])
+        dread = true
+        cvss = false
+        cvss3 = false
+        risk = false
+        riskmatrix = false
+    elsif(report.scoring.downcase == "cvss")
+        findings = Findings.all(:report_id => report.id, :order => [:cvss_total.desc])
+        dread = false
+        cvss = true
+        cvss3 = false
+        risk = false
+        riskmatrix = false
+    elsif(report.scoring.downcase == "cvssv3")
+        findings = Findings.all(:report_id => report.id, :order => [:cvss_total.desc])
+        dread = false
+        cvss = false
+        cvss3 = true
+        risk = false
+        riskmatrix = false
+    elsif(report.scoring.downcase == "riskmatrix")
+        findings = Findings.all(:report_id => report.id, :order => [:risk.desc])
+        dread = false
+        cvss = false
+        cvss3 = false
+        risk = false
+        riskmatrix = true
+    else
+        findings = Findings.all(:report_id => report.id, :order => [:risk.desc])
+        dread = false
+        cvss = false
+        cvss3 = false
+        risk = true
+        riskmatrix = false
+    end
+
+    return findings,dread,cvss,cvss3,risk,riskmatrix
+end
+
+# Get the global configuration scoring algorithm and set at the report level
+def set_scoring(config_options)
+    if(config_options["dread"])
+    	return "dread"
+    elsif(config_options["cvss"])
+    	return "cvss"
+    elsif(config_options["cvssv3"])
+    	return "cvssv3"
+    elsif(config_options["riskmatrix"])
+    	return "riskmatrix"
+    end
+
+    return "risk"
+end

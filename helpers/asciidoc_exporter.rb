@@ -24,12 +24,12 @@ def parse_input(text)
 end
 
 # takes in a serpico finding and returns asciidoc version
-def gen_asciidoc(finding, dread)
+def gen_asciidoc(finding, score)
 	asciidoc = ""
 
 	asciidoc << "== #{finding.title} \n\n"
 	
-	if(dread)	
+	if(score == "dread")	
 		asciidoc << "|====== \n"
 		asciidoc << "|Damage|Reproducibility|Exploitability|Affected Users|Discoverability|Remediation Effort\n"
 		asciidoc << "|#{finding.damage} \n"
@@ -38,6 +38,11 @@ def gen_asciidoc(finding, dread)
 		asciidoc << "|#{finding.affected_users} \n"
 		asciidoc << "|#{finding.discoverability} \n"
 		asciidoc << "|#{finding.effort} \n"
+		asciidoc << "|======\n\n"
+	elsif(score == "cvss" or score == "cvssv3")	
+		asciidoc << "|====== \n"
+		asciidoc << "|CVSS Score Total:"
+		asciidoc << "|#{finding.cvss_total} \n"
 		asciidoc << "|======\n\n"
 	else
 		risk = ["Informational", "Low", "Moderate", "High", "Critical"]	
