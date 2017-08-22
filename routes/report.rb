@@ -39,6 +39,7 @@ post '/report/new' do
     data["date"] = DateTime.now.strftime "%m/%d/%Y"
 
     @report = Reports.new(data)
+    @report.scoring = set_scoring(config_options)
     @report.save
 
     redirect to("/report/#{@report.id}/edit")
@@ -281,7 +282,7 @@ post '/report/:id/upload_attachments' do
     	datax["filename"] = upf[:filename]
     	datax["description"] = CGI::escapeHTML(upf[:filename]).gsub(" ","_").gsub("/","_").gsub("\\","_").gsub("`","_")
     	datax["report_id"] = id
-        datax["caption"] = params[:caption]
+      datax["caption"] = params[:caption]
     	data = url_escape_hash(datax)
 
     	@attachment = Attachments.new(data)
@@ -373,12 +374,17 @@ get '/report/:id/edit' do
 
     # Query for the first report matching the report_name
     @report = get_report(id)
-	@templates = Xslt.all(:order => [:report_type.asc])
+    @templates = Xslt.all(:order => [:report_type.asc])
     @plugin_side_menu = get_plugin_list
     @assessment_types = config_options["report_assessment_types"]
-
+    @risk_scores = ["Risk","DREAD","CVSS","CVSSv3","RiskMatrix"]
+    
     if @report == nil
         return "No Such Report"
+    end
+
+    unless @report.scoring
+        @report.update(:scoring => set_scoring(config_options))
     end
 
     haml :report_edit, :encode_html => true
@@ -422,7 +428,7 @@ get '/report/:id/user_defined_variables' do
         # add in the global UDV from config
         if config_options["user_defined_variables"].size > 0 and !@user_variables.include?(config_options["user_defined_variables"][0])
             config_options["user_defined_variables"].each do |key,value|
-                @user_variables.store(key,"")               
+                @user_variables.store(key,"")
             end
         end
 
@@ -504,21 +510,11 @@ get '/report/:id/findings' do
         return "No Such Report"
     end
 
-    # Query for the findings that match the report_id
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
+    unless @report.scoring
+        @report.update(:scoring => set_scoring(config_options))
     end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :findings_list, :encode_html => true
 end
@@ -534,16 +530,7 @@ get '/report/:id/status' do
         return "No Such Report"
     end
 
-    # Query for the findings that match the report_id
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     ## We have to do some hackery here for wordml
     findings_xml = ""
@@ -704,20 +691,8 @@ post '/report/:id/findings_add' do
         finding.save
     end
 
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :findings_list, :encode_html => true
 end
@@ -738,11 +713,7 @@ get '/report/:id/findings/new' do
         @attaches.push(ta.description)
     end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
-    @vulnmap = config_options["vulnmap"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :create_finding, :encode_html => true
 end
@@ -755,21 +726,18 @@ post '/report/:id/findings/new' do
     end
     data = url_escape_hash(request.POST)
 
-    if(config_options["dread"])
-        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    elsif(config_options["cvss"])
-        data = cvss(data, false)
-    elsif(config_options["cvssv3"])
-        data = cvss(data, true)
-    end
-
     id = params[:id]
-
-    # Query for the first report matching the report_name
     @report = get_report(id)
-
     if @report == nil
         return "No Such Report"
+    end
+
+    if(@report.scoring.downcase == "dread")
+        data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
+    elsif(@report.scoring.downcase == "cvss")
+        data = cvss(data, false)
+    elsif(@report.scoring.downcase == "cvssv3")
+        data = cvss(data, true)
     end
 
     data["report_id"] = id
@@ -816,10 +784,7 @@ get '/report/:id/findings/:finding_id/edit' do
         @attaches.push(ta.description)
     end
 
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     haml :findings_edit, :encode_html => true
 end
@@ -854,13 +819,14 @@ post '/report/:id/findings/:finding_id/edit' do
     # to prevent title's from degenerating with &gt;, etc. [issue 237]
     data["title"] = data["title"].gsub('&amp;','&')
 
-    if(config_options["dread"])
+    if(@report.scoring.downcase == "dread")
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
-    elsif(config_options["cvss"])
+    elsif(@report.scoring.downcase == "cvss")
         data = cvss(data, false)
-    elsif(config_options["cvssv3"])
+    elsif(@report.scoring.downcase == "cvssv3")
         data = cvss(data, true)
     end
+
     # Update the finding with templated finding stuff
     @finding.update(data)
 
@@ -946,7 +912,7 @@ get '/report/:id/findings/:finding_id/upload' do
                     :cvss_impact_score => @finding.cvss_impact_score,
                     :cvss_mod_impact_score => @finding.cvss_mod_impact_score,
                     :severity => @finding.severity,
-		            :likelihood => @finding.likelihood,
+		                :likelihood => @finding.likelihood,
                 }
 
     @new_finding = TemplateFindings.new(attr)
@@ -1098,6 +1064,10 @@ get '/report/:id/generate' do
     if @report == nil
         return "No Such Report"
     end
+  
+    unless @report.scoring
+        @report.update(:scoring => set_scoring(config_options))
+    end
 
     user = User.first(:username => get_username)
 
@@ -1118,16 +1088,8 @@ get '/report/:id/generate' do
     end
     @report.save
 
-    # Query for the findings that match the report_id
-    if(config_options["dread"])
-        @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-    elsif(config_options["cvss"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    elsif(config_options["cvssv3"])
-        @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-    else
-        @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-    end
+
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     ## We have to do some hackery here for wordml
     findings_xml = ""
@@ -1165,7 +1127,7 @@ get '/report/:id/generate' do
         # we need the user defined variables in xml
         udv_hash = JSON.parse(@report.user_defined_variables)
     end
-    
+
     # update udv_hash with findings totals
     udv_hash = add_findings_totals(udv_hash, @findings, config_options)
 
@@ -1178,8 +1140,46 @@ get '/report/:id/generate' do
 
     udv << "</udv>"
 
-    report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}</report>"
-
+    #if msf connection up, we add services and hosts to the xml
+    services_xml = ""
+    hosts_xml = ""
+    if (msfsettings = RemoteEndpoints.first(:report_id => @report.id))
+        if (rpc = msfrpc(@report.id))
+            res = rpc.call('console.create')
+            rpc.call('db.set_workspace', msfsettings.workspace)
+            #We create the XML from the opened services. onlyup undocumented but it does exist
+            res = rpc.call('db.services', {:limit => 10000, :only_up => true} )
+            msfservices = res["services"]
+            services_xml_raw = Nokogiri::XML::Builder.new do |xml|
+                xml.services do
+                    msfservices.each do |msfservice|
+                        xml.service do
+                            msfservice.each do |key, value|
+                                  xml.send "#{key}_", value
+                            end
+                        end
+                    end
+                end
+            end
+            services_xml = services_xml_raw.doc.root.to_xml
+            #we create the XML from the hosts found.
+            res = rpc.call('db.hosts', {:limit => 10000} )
+            msfhosts = res["hosts"]
+            hosts_xml_raw = Nokogiri::XML::Builder.new do |xml|
+                xml.hosts do
+                    msfhosts.each do |msfhost|
+                        xml.host do
+                            msfhost.each do |key, value|
+                                  xml.send "#{key}_", value
+                            end
+                        end
+                    end
+                end
+            end
+            hosts_xml = hosts_xml_raw.doc.root.to_xml
+        end
+    end
+    report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{services_xml}#{hosts_xml}</report>"
     xslt_elem = Xslt.first(:report_type => @report.report_type)
 
     # Push the finding from XML to XSLT
@@ -1247,7 +1247,7 @@ get '/report/:id/generate' do
     #### END IMAGE INSERT CODE
 
     docx_modify(rand_file, docx,'word/document.xml')
-	
+
 	list_components.each do |name, xml|
 		docx_modify(rand_file, xml.to_s,name)
 	end
@@ -1370,7 +1370,7 @@ get '/report/:id/asciidoc_status' do
 
     ascii_doc_ = ""
     findings.each do |finding|
-        ascii_doc_ << gen_asciidoc(finding,config_options["dread"])
+        ascii_doc_ << gen_asciidoc(finding,report.scoring)
     end
 
     local_filename = "./tmp/#{rand(36**12).to_s(36)}.asd"
@@ -1420,8 +1420,8 @@ get '/report/:id/presentation' do
     # bail without a report
     redirect to("/") unless @report
 
-    # add the findings
-    @findings = Findings.all(:report_id => id)
+
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     # add images into presentations
     @images = []
@@ -1435,17 +1435,13 @@ get '/report/:id/presentation' do
                 if Attachments.first( :description => img)
                     img_p = Attachments.first( :description => img)
                 else
-                    return "attachment #{img} from vulnerability \" #{find.title} \" doesn't exist. Did you mistype something?"
+                    return "attachment #{img} from vulnerability <a href=/report/#{find.report_id}/findings/#{find.id}/edit#pocu> #{find.title}</a> doesn't exist. Did you mistype something?"
                 end
                 a["link"] = "/report/#{id}/attachments/"+img_p.id.to_s
                 @images.push(a)
             end
         end
     end
-    @dread = config_options["dread"]
-    @cvss = config_options["cvss"]
-    @cvssv3 = config_options["cvssv3"]
-    @riskmatrix = config_options["riskmatrix"]
 
     haml :presentation, :encode_html => true, :layout => false
 end
@@ -1456,29 +1452,19 @@ end
      if !(File.directory?(Dir.pwd+"/public/reveal.js"))
         return "reveal.js not found in /public/ directory. To install:<br><br> 1. Goto [INSTALL_DIR]/public/ <br>2.run 'git clone https://github.com/hakimel/reveal.js.git'<br>3. Restart Serpico"
         sleep(30)
-        redirect to("/") 
+        redirect to("/")
     end
- 
+
      id = params[:id]
- 
+
      @report = get_report(id)
- 
+
      # bail without a report
      redirect to("/") unless @report
- 
-     # add the findings
-     if(config_options["dread"])
-         @findings = Findings.all(:report_id => id, :order => [:dread_total.desc])
-     elsif(config_options["cvss"])
-         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-     elsif(config_options["cvssv3"])
-         @findings = Findings.all(:report_id => id, :order => [:cvss_total.desc])
-     elsif(config_options["riskmatrix"])
-         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-     else
-         @findings = Findings.all(:report_id => id, :order => [:risk.desc])
-     end
- 
+
+
+    @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
+
      # add images into presentations
      @images = []
      @findings.each do |find|
@@ -1491,28 +1477,24 @@ end
                 if Attachments.first( :description => img)
                      img_p = Attachments.first( :description => img)
                 else
-                    return "attachment #{img} from vulnerability \" #{find.title} \" doesn't exist. Did you mistype something?"
+                    return "attachment #{img} from vulnerability <a href=/report/#{find.report_id}/findings/#{find.id}/edit#pocu> #{find.title}</a> doesn't exist. Did you mistype something?"
                 end
                  a["link"] = "/report/#{id}/attachments/#{img_p.id}"
                 @images.push(a)
              end
          end
      end
-     @dread = config_options["dread"]
-     @cvss = config_options["cvss"]
-     @cvssv3 = config_options["cvssv3"]
-     @riskmatrix = config_options["riskmatrix"]
- 	
+
      # create html file from haml template
      template = File.read(Dir.pwd+"/views/presentation.haml")
      haml_engine = Haml::Engine.new(template)
      output = haml_engine.render(Object.new, {:@report => @report, :@findings => @findings, :@dread => @dread, :@cvss => @cvss, :@cvss3 => @cvss3, :@riskmatrix => @riskmatrix, :@images => @images})
      rand_file = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.html"
      newHTML = Nokogiri::HTML(output)
-     
+
      # Each link inside the HTML file is considered as a dependency that will need to be fixed to a relative local path
      dependencies = []
-     
+
      # fix href and src based links in the html to relative local URL. This should cover most of the use cases.
      newHTML.css('[href]').each do |el|
          if el.attribute('href').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('href').to_s[1..-1])
@@ -1520,17 +1502,17 @@ end
          end
          el.set_attribute('href', '.' + el.attribute('href'))
      end
-     
+
      newHTML.css('[src]').each do |el|
          if el.attribute('src').to_s[1, 6] != "report" && !(dependencies.include? el.attribute('src').to_s[1..-1])
              dependencies.push(el.attribute('src').to_s[1..-1])
          end
          el.set_attribute('src', '.' + el.attribute('src'))
      end
-     
+
      # *slightly ugly* way to fix links in the HTML that aren't in a href or src (for exemple in javascript)
      htmlDoc = newHTML.to_html
-     # the regex match stuff like '/img/reveal.js/foo/lib.js', "/css/reveal.js/theme/special.css" 
+     # the regex match stuff like '/img/reveal.js/foo/lib.js', "/css/reveal.js/theme/special.css"
      link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
      while link != nil do
          if !dependencies.include? link[1..-1]
@@ -1539,15 +1521,15 @@ end
          htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]= ".#{link}"
          link = htmlDoc[/(\'|\")(\/(img|js|css|reveal\.js|fonts)\/(\S*\/)*\S*\.\S*)(\'|\")/,2]
      end
-     
+
      # save html with links fixed to a relative local path
      File.open(rand_file, 'w') do |f|
          f.write htmlDoc
      end
-     
-     
+
+
      rand_zip = Dir.pwd+"/tmp/#{rand(36**12).to_s(36)}.zip"
-     
+
      # put the presentation and its dependencies (links, images, libraries...) in a zip file
      Zip.setup do |c|
          c.on_exists_proc = true
@@ -1555,7 +1537,7 @@ end
      end
      Zip::File.open(rand_zip, Zip::File::CREATE) do |zipfile|
          zipfile.add("presentation.html", rand_file)
-         
+
          # put the public directory in the zip file.
          list_public_file = Dir.glob(Dir.pwd+"/public/**/*")
          list_public_file.each do |file|
@@ -1580,15 +1562,15 @@ end
                  end
              end
          end
-         # put attachements in the zip 
+         # put attachements in the zip
          @images.each do | images|
              img_p = Attachments.first( :description => images["name"])
              zipfile.add("report/#{id}/attachments/#{img_p.id}" , img_p.filename_location)
          end
      end
-     
+
      send_file rand_zip, :type => 'zip', :filename => "#{@report.report_name}.zip"
-end 
+end
 
 # set msf rpc settings for report
 get '/report/:id/msfsettings' do
@@ -1662,6 +1644,36 @@ get '/report/:id/hosts' do
     @hosts = res["hosts"]
 
     haml :dbhosts, :encode_html => true
+end
+
+# display services from msf db
+get '/report/:id/services' do
+    id = params[:id]
+    @report = get_report(id)
+    @vulnmap = config_options["vulnmap"]
+
+    # bail without a report
+    redirect to("/") unless @report
+
+    msfsettings = RemoteEndpoints.first(:report_id => id)
+    if !msfsettings
+        return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    end
+
+    #setup msfrpc handler
+    rpc = msfrpc(@report.id)
+    if rpc == false
+        return "ERROR: Connection to metasploit failed. Make sure you have msfprcd running and the settings in Serpico are correct."
+    end
+
+    # get hosts from msf db
+    res = rpc.call('console.create')
+    rpc.call('db.set_workspace', msfsettings.workspace)
+    #onlyup undocumented but it does exist
+    res = rpc.call('db.services', {:limit => 10000, :only_up => true} )
+    @services = res["services"]
+
+    haml :dbservices, :encode_html => true
 end
 
 # display vulns from msf db

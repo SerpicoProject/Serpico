@@ -38,6 +38,16 @@
                       %option #{assessment_type}
             %tr
               %td{:style => 'width: 30%'}
+                Scoring Type
+              %td{:style => 'width: 70%'}
+                %select{ :name => "scoring" }
+                  - @risk_scores.each do |risk_score|
+                    - if risk_score.downcase == @report.scoring.downcase
+                      %option{ :selected => "selected" } #{risk_score}
+                    - else
+                      %option #{risk_score}
+            %tr
+              %td{:style => 'width: 30%'}
                 Full Company Name
               %td{:style => 'width: 70%'}
                 %input{:type => 'text', :style => 'width: 90%', :name => 'full_company_name', :value => "#{@report.full_company_name}"}
