@@ -378,7 +378,7 @@ get '/report/:id/edit' do
     @plugin_side_menu = get_plugin_list
     @assessment_types = config_options["report_assessment_types"]
     @risk_scores = ["Risk","DREAD","CVSS","CVSSv3","RiskMatrix"]
-    
+
     if @report == nil
         return "No Such Report"
     end
@@ -417,7 +417,159 @@ post '/report/:id/edit' do
     redirect to("/report/#{id}/edit")
 end
 
-#Edit user defined variables
+#Manage user defined objects. User can see all UDOs from here.
+get '/report/:id/udo/manage' do
+
+    #if a udo has just been created, we add a message
+    @id = params[:id]
+    @report = get_report(@id)
+    if @report == nil
+        return "No Such Report"
+    end
+
+    if params[:created_id]
+        @udo_template_created = UserDefinedObjectTemplates.get(params[:created_id])
+    end
+    @udos_templates = UserDefinedObjectTemplates.all
+
+    haml :user_defined_object_manage, :encode_html => true
+end
+
+#Create new user defined objects. Get => the user chose the udo values
+get '/report/:id/udo/:udo_template_id/create' do
+    @id = params[:id]
+    @report = get_report(@id)
+    if @report == nil
+        return "No Such Report"
+    end
+
+    @udo_template = UserDefinedObjectTemplates.get(params[:udo_template_id])
+    if @udo_template == nil
+        return "no Such UDO Template"
+    end
+    @udo_template_properties = JSON.parse(@udo_template.udo_properties)
+    haml :user_defined_object_create, :encode_html => true
+end
+
+#Create new user defined objects. Post => the UDO is stored in database
+post '/report/:id/udo/:udo_template_id/create' do
+    data = url_escape_hash(request.POST)
+    id = params[:id]
+    report = get_report(id)
+    if report == nil
+        return "No Such Report"
+    end
+    udo_template_id = params[:udo_template_id]
+    @udo_template = UserDefinedObjectTemplates.get(udo_template_id)
+    if @udo_template == nil
+        return "no Such UDO Template"
+    end
+    #we create the udo
+    @udo = UserDefinedObjects.new
+    @udo.type = @udo_template.type
+    @udo.report_id = id
+    @udo.template_id = udo_template_id
+    #we extract the properties from the posted data
+    udo_properties = {}
+    data.each do |post_param, post_value|
+        if post_param =~ /param_/
+            if not post_value =~ /\<paragraph\>/
+                udo_properties[post_param.split("_")[1].downcase] = "<paragraph>#{post_value}</paragraph>"
+            else
+                udo_properties[post_param.split("_")[1].downcase] = post_value
+            end
+        end
+    end
+    @udo.udo_properties = udo_properties.to_json
+    @udo.save
+    #we go back to the manage panel after creating the udo
+    redirect to("/report/#{id}/udo/manage?created_id=#{@udo_template.id}")
+end
+
+#Edit an UDO. get => user chose the values
+get '/report/:id/udo/:udo_id/edit' do
+    id = params[:id]
+    udo_id = params[:udo_id]
+    report = get_report(id)
+    if report == nil
+        return "No Such Report"
+    end
+    #By asking only udos for the report we have access to, we're safe from
+    #edit by arbitrary user
+    udos = UserDefinedObjects.all(:report_id => id, :id => udo_id)
+    if udos.empty?
+        return "No Such UDO for this report"
+    end
+    @udo_to_edit = UserDefinedObjects.new
+    #there will always be only one udo in this collecion
+    udos.each do |udo_to_edit|
+        @udo_to_edit = udo_to_edit
+    end
+    @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
+    haml :user_defined_object_edit, :encode_html => true
+end
+
+#Edit an UDO. Post => value stored in db
+post '/report/:id/udo/:udo_id/edit' do
+    data = url_escape_hash(request.POST)
+    id = params[:id]
+    udo_id = params[:udo_id]
+    report = get_report(id)
+    if report == nil
+        return "No Such Report"
+    end
+    #By asking only udos for the report we have access to, we're safe from
+    #edit by arbitrary user
+    udos = UserDefinedObjects.all(:report_id => id, :id => udo_id)
+    if udos.empty?
+        return "No Such UDO for this report"
+    end
+    edited_udo = UserDefinedObjects.new
+    #there will always be only one udo in this collecion
+    udos.each do |udo_to_edit|
+          edited_udo = udo_to_edit
+    end
+    #we extract the properties from the posted data
+    udo_new_properties = {}
+    data.each do |post_param, post_value|
+        if post_param =~ /param_/
+            if not post_value =~ /\<paragraph\>/
+                udo_new_properties[post_param.split("_")[1].downcase] = "<paragraph>#{post_value}</paragraph>"
+            else
+                udo_new_properties[post_param.split("_")[1].downcase] = post_value
+            end
+        end
+    end
+    edited_udo.udo_properties = udo_new_properties.to_json
+    edited_udo.save
+    redirect to("/report/#{id}/udo/manage")
+end
+
+
+#Delete an UDO
+get '/report/:id/udo/:udo_id/delete' do
+    @id = params[:id]
+    udo_id = params[:udo_id]
+    report = get_report(@id)
+    if report == nil
+        return "No Such Report"
+    end
+    #By asking only udos for the report we have access to, we're safe from
+    #delete by arbitrary user
+    udos = UserDefinedObjects.all(:report_id => @id, :id => udo_id)
+    if udos.empty?
+        return "No Such UDO for this report"
+    end
+    #there will always be only one udo in this collecion
+    udos.each do |udo_to_destroy|
+        udo_to_destroy.destroy
+    end
+    redirect to("/report/#{@id}/udo/manage")
+end
+
+
+
+#Edit user defined variable
 get '/report/:id/user_defined_variables' do
     id = params[:id]
     @report = get_report(id)
@@ -447,6 +599,14 @@ end
 #Post user defined variables
 post '/report/:id/user_defined_variables' do
     data = url_escape_hash(request.POST)
+
+    # quick fix for udv not in paragraph when on only one line
+
+    data.each do |k,v|
+        if k =~ /variable_data/ and not v =~ /\<paragraph\>/
+            data[k] = "<paragraph>#{v}</paragraph>"
+        end
+    end
 
 	variable_hash = Hash.new()
 	data.each do |k,v|
@@ -1064,7 +1224,7 @@ get '/report/:id/generate' do
     if @report == nil
         return "No Such Report"
     end
-  
+
     unless @report.scoring
         @report.update(:scoring => set_scoring(config_options))
     end
@@ -1128,21 +1288,39 @@ get '/report/:id/generate' do
         udv_hash = JSON.parse(@report.user_defined_variables)
     end
 
+    #adding the udvs to the XML
+
     # update udv_hash with findings totals
     udv_hash = add_findings_totals(udv_hash, @findings, config_options)
 
-    udv = "<udv>"
+    udv = "<udv>\n"
     udv_hash.each do |key,value|
         udv << "<#{key}>"
         udv << "#{value}"
         udv << "</#{key}>\n"
     end
+    udv << "</udv>\n"
 
-    udv << "</udv>"
-
+    # adding the udos to the XML
+    udo_xml = "<udo>\n"
+    udo_templates = UserDefinedObjectTemplates.all
+    udo_templates.each do |udo_template|
+        # we only add the udos that are linked to the current report, and linked to its respective template
+        udos = UserDefinedObjects.all(:report_id => @report.id, :template_id => udo_template.id)
+        udos.each do |udo|
+            udo_xml << "\t<#{udo_template.type.downcase.gsub(" ","_")}>\n"
+            properties = JSON.parse(udo.udo_properties)
+            properties.each do |prop, value|
+                udo_xml << "\t\t<#{prop.downcase.gsub(" ","_")}>"
+                udo_xml << "#{value}"
+                udo_xml << "</#{prop.downcase.gsub(" ","_")}>\n"
+            end
+            udo_xml << "\t</#{udo_template.type.downcase.gsub(" ","_")}>\n"
+        end
+    end
+    udo_xml << "</udo>\n"
     #if msf connection up, we add services and hosts to the xml
     services_xml = ""
-    hosts_xml = ""
     if (msfsettings = RemoteEndpoints.first(:report_id => @report.id))
         if (rpc = msfrpc(@report.id))
             res = rpc.call('console.create')
@@ -1179,7 +1357,9 @@ get '/report/:id/generate' do
             hosts_xml = hosts_xml_raw.doc.root.to_xml
         end
     end
-    report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{services_xml}#{hosts_xml}</report>"
+    #we bring all xml together
+    report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
+
     xslt_elem = Xslt.first(:report_type => @report.report_type)
 
     # Push the finding from XML to XSLT

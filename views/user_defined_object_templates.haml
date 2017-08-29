@@ -1,0 +1,90 @@
+.span10
+  %br
+  %br
+  - if @udos_templates.empty?
+    %h3
+      It appears you do not have any user defined objects. Would you like to add some?
+    %br
+  - else
+    %hr
+    %h3
+      User Defined Object template list :
+    %br
+      - @udos_templates.each do |udo|
+        %br
+        %div{ :class => 'w3-padding'}
+          %table.table-striped{ :class => 'padding'}
+            %tr
+              %td
+                %strong
+                  %i
+                    #{udo.type}
+              - udo_properties = JSON.parse(udo.udo_properties)
+              - udo_properties.each do |key, value|
+                %td
+                  #{key}
+              %td
+                %a{ :class => "btn btn-danger btn-sm", :href => "/admin/udo_templates?delete=#{udo.id}"}
+                  %i{:class => 'icon-remove icon-white', :title => "Delete #{udo.type.downcase} template"}
+                %a{ :class => "btn btn-warning btn-sm", :href => "/admin/udo_template/#{udo.id}/edit"}
+                  %i{:class => 'icon-pencil icon-white', :title => "Edit #{udo.type.downcase} template"}
+
+  %hr
+  %h3
+    Add an User Defined Object template :
+  %br
+    #fields.control-group
+      %label.control-label{:for => "field1"}
+      #profs.controls
+        %form.input-append{:method => 'post'}
+          #field
+            .table.table-striped
+              %table
+                %tr
+                  %td
+                    Object Type:&nbsp;
+                  %td
+                    %input{:type => 'text', :style => 'width: 90%', :id => 'object_name', :name =>'object_type', :placeholder => "Object Type", :required => "true"}
+                %tr
+                  %td
+                    Object Properties Names:&nbsp;
+                  %td
+                    %input#field1.input{:autocomplete => "off", "data-items" => "8", :name => "property_1", :placeholder => "Property Name 1", :type => "text", :required => "true"}/
+                    %button#b1.btn.add-more{:type => "button"} +
+          %input{:type => 'submit', :value => 'Save', :name => 'action',:class => "btn" }
+
+
+
+:javascript
+  $(document).ready(function(){
+      var next = 1;
+      $(".add-more").click(function(e){
+          e.preventDefault();
+          var addto = "#field" + next;
+          var addRemove = "#field" + (next);
+          next = next + 1;
+          var newIn = '<input autocomplete="off" placeholder="Property Name '+ next +'" class="input form-control" id="field' + next + '" name="property_' + next + '" type="text">';
+          var newInput = $(newIn);
+          var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+          var removeButton = $(removeBtn);
+          $(addto).after(newInput);
+          $(addRemove).after(removeButton);
+          $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+          $("#count").val(next);
+
+              $('.remove-me').click(function(e){
+                  e.preventDefault();
+                  var fieldNum = this.id.charAt(this.id.length-1);
+                  var fieldID = "#field" + fieldNum;
+                  $(this).remove();
+                  $(fieldID).remove();
+              });
+      });
+  });
+
+:plain
+  <style>
+    .padding>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
+        padding: 8px;
+    }
+  </style>

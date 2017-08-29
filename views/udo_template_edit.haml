@@ -1,0 +1,77 @@
+%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
+%link{:href => "/css/dynamic-fields.css", :rel => "stylesheet"}/
+%script{:src => "/js/bootstrap-suggest.js"}
+
+%br
+%br
+.span10
+  %h3 Editing object " #{@udo_to_edit.type} "
+  %br
+  %hr
+  %h4 Existing properties
+  %br
+  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+    - @udo_to_edit_properties.each do |param_name, value|
+      .control-group
+        %label{ :class => "control-label", :for => "Property-Name" } Property Name
+        .controls
+          %input{:value => "#{param_name}", :name => "prop_#{param_name}"}
+      .control-group
+        %label{ :class => "control-label", :for => "Default-Value" } Default Value
+        .controls
+          %textarea{:name => "default_#{param_name}",:rows => '3', :class => 'allowMarkupShortcut input-large'}
+            #{meta_markup(value)}
+    %hr
+    %h4 Add properties
+    %br
+    %div{"data-role" => "dynamic-fields"}
+      .form-inline
+        .control-group
+          %label.control-label{:for => "New-Property-Name"} New Property Name
+          .controls
+            %input#field-name.form-control{:type => "text", :name => "prop_new_1"}/
+        .control-group
+          %label{ :class => "control-label", :for => "Default-Value" } Default Value
+          .controls
+            %textarea{:name => "default_new_1",:rows => '3', :class => 'allowMarkupShortcut input-large'}
+        %button.btn.btn-danger{"data-role" => "remove"}
+          %span.icon-minus
+        %button.btn.btn-info{"data-role" => "add"}
+          %span.icon-plus
+
+    %br
+    %hr
+    %input{:type => 'submit', :value => 'Edit', :name => 'action',:class => "btn" }
+
+:javascript
+  $(function() {
+      // Remove button click
+      $(document).on(
+          'click',
+          '[data-role="dynamic-fields"] > .form-inline [data-role="remove"]',
+          function(e) {
+              e.preventDefault();
+              $(this).closest('.form-inline').remove();
+          }
+      );
+      // Add button click
+      $(document).on(
+          'click',
+          '[data-role="dynamic-fields"] > .form-inline [data-role="add"]',
+          function(e) {
+              e.preventDefault();
+              var container = $(this).closest('[data-role="dynamic-fields"]');
+              new_field_group = container.children().filter('.form-inline:first-child').clone();
+              var i = 2;
+              new_field_group.find('input').each(function(){
+                  $(this).attr('name','prop_new_'+i)
+                  $(this).val('')
+              });
+              new_field_group.find('textarea').each(function(){
+                  $(this).attr('name','default_new_'+i)
+                  $(this).val('')
+              });
+              container.append(new_field_group);
+          }
+      );
+  });
