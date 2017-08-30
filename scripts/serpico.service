@@ -1,0 +1,16 @@
+[Unit]
+Description=serpico: SimplE RePort wrIting and COllaboration tool
+After=network.target auditd.service
+
+[Service]
+WorkingDirectory=/opt/Serpico
+Environment=GEM_HOME=/usr/local/rvm/gems/ruby-2.1.5
+ExecStart=/usr/local/rvm/rubies/ruby-2.1.5/bin/ruby serpico.rb &
+ExecStop=/usr/bin/pkill -f serpico.rb
+#ExecReload=/etc/init.d/serpico restart
+KillMode=process
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+Alias=serpico
