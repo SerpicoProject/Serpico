@@ -4,7 +4,11 @@ require 'digest/sha1'
 require 'dm-migrations'
 
 # Initialize the Master DB
-DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/master.db")
+if ENV['RACK_ENV'] == 'test'
+  DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/test.db")
+else
+  DataMapper.setup(:default, "sqlite://#{Dir.pwd}/db/master.db")
+end
 
 
 class TemplateFindings
@@ -436,4 +440,6 @@ DataMapper.finalize
 
 # any differences between the data store and the data model should be fixed by this
 #   As discussed in http://datamapper.org/why.html it is limited. Hopefully we never create conflicts.
-DataMapper.auto_upgrade!
+if ENV['RACK_ENV'] != 'test'
+    DataMapper.auto_upgrade!
+end

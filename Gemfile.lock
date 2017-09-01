@@ -60,6 +60,7 @@ GEM
     json_pure (1.8.2)
     librex (0.0.999)
     mini_portile (0.6.2)
+    minitest (5.10.1)
     msfrpc-client (1.0.3)
       librex (~> 0.0.70, >= 0.0.70)
       msgpack (~> 0.6.2, >= 0.6.2)
@@ -71,6 +72,9 @@ GEM
     rack (1.5.5)
     rack-protection (1.5.3)
       rack
+    rack-test (0.7.0)
+      rack (>= 1.0, < 3)
+    rake (12.0.0)
     rubyzip (1.2.1)
     sinatra (1.4.6)
       rack (~> 1.4)
@@ -89,9 +93,12 @@ DEPENDENCIES
   do_sqlite3 (= 0.10.17)
   haml
   json
+  minitest (= 5.10.1)
   msfrpc-client (= 1.0.3)
   net-ldap (~> 0.11)
   nokogiri
+  rack-test
+  rake
   rubyzip
   sinatra
 
@@ -99,4 +106,4 @@ RUBY VERSION
    ruby 2.1.5p273
 
 BUNDLED WITH
-   1.13.6
+   1.15.1

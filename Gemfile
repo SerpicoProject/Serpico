@@ -2,6 +2,12 @@ source 'https://rubygems.org'
 
 ruby "2.1.5"
 
+group :test do
+  gem 'rake'
+  gem 'rack-test'
+  gem 'minitest', '5.10.1'
+end
+
 gem 'sinatra'
 gem 'haml'
 gem 'rubyzip'
