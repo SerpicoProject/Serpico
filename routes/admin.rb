@@ -409,12 +409,16 @@ get '/admin/delete/templates/:id' do
 
     @xslt = Xslt.first(:id => params[:id])
 
-	if @xslt
-		@xslt.components.destroy
-		@xslt.destroy
-		File.delete(@xslt.xslt_location)
-		File.delete(@xslt.docx_location)
-	end
+  	if @xslt
+    		@xslt.components.destroy
+    		@xslt.destroy
+        if File.file?(@xslt.xslt_location)
+    		    File.delete(@xslt.xslt_location)
+        end
+        if File.file?(@xslt.docx_location)
+    		    File.delete(@xslt.docx_location)
+        end
+  	end
     redirect to('/admin/templates')
 end
 
@@ -453,7 +457,8 @@ post '/admin/templates/add' do
 
     	# open up a file handle and write the attachment
 	    File.open(xslt_file, 'wb') {|f| f.write(xslt) }
-
+      #extract the screenshot names from the file
+      screenshot_names = xslt.scan(/\[!!(.*?)!!]/)
 	    # delete the file data from the attachment
 	    datax = Hash.new
 	    # to prevent traversal we hardcode this
@@ -461,14 +466,15 @@ post '/admin/templates/add' do
 	    datax["xslt_location"] = "#{xslt_file}"
 	    datax["description"] = 	params[:description]
 	    datax["report_type"] = params[:report_type]
-	    data = url_escape_hash(datax)
-	    data["finding_template"] = params[:finding_template] ? true : false
-	    data["status_template"] = params[:status_template] ? true : false
+      datax["screenshot_names"] = screenshot_names.join(",")
+      data = url_escape_hash(datax)
+      data["finding_template"] = params[:finding_template] ? true : false
+      data["status_template"] = params[:status_template] ? true : false
 
-	    @template = Xslt.first(:report_type => data["report_type"])
+      @template = Xslt.first(:report_type => data["report_type"])
 
-	    if @template
-		    @template.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"])
+      if @template
+          @template.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"], :screenshot_names => data["screenshot_names"])
 			@template.components.destroy
 	    else
 		    @template = Xslt.new(data)
@@ -541,7 +547,8 @@ post '/admin/templates/edit' do
 
     	# open up a file handle and write the attachment
 	    File.open(xslt_file, 'wb') {|f| f.write(xslt) }
-
+      #extract the screenshot names from the file
+      screenshot_names = xslt.scan(/\[!!(.*?)!!]/)
 	    # delete the file data from the attachment
 	    datax = Hash.new
 	    # to prevent traversal we hardcode this
@@ -549,6 +556,7 @@ post '/admin/templates/edit' do
 	    datax["xslt_location"] = "#{xslt_file}"
 	    datax["description"] = 	params[:description]
 	    datax["report_type"] = params[:report_type]
+      datax["screenshot_names"] = screenshot_names.join(",")
 	    data = url_escape_hash(datax)
 	    data["finding_template"] = params[:finding_template] ? true : false
 	    data["status_template"] = params[:status_template] ? true : false
@@ -556,7 +564,7 @@ post '/admin/templates/edit' do
 	    @template = Xslt.first(:report_type => data["report_type"])
 
 	    if @template
-		    @template.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"])
+        @template.update(:xslt_location => data["xslt_location"], :docx_location => data["docx_location"], :description => data["description"], :screenshot_names => data["screenshot_names"])
 			@template.components.destroy
 	    else
 		    @template = Xslt.new(data)

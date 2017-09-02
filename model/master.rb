@@ -413,7 +413,7 @@ class Xslt
     property :report_type, String, :length => 400
     property :finding_template, Boolean, :required => false, :default => false
     property :status_template, Boolean, :required => false, :default => false
-
+    property :screenshot_names, String, :length => 10000
     has n, :components, 'Xslt_component',
         :parent_key => [ :id ],
         :child_key  => [ :xslt_id ]
