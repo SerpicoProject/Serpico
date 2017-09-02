@@ -89,6 +89,7 @@ post '/admin/add_user' do
         user.save
     end
 
+    serpico_log("User #{user.username} created")
     redirect to('/admin/list_user')
 end
 
@@ -114,6 +115,8 @@ get '/admin/delete/:id' do
 
     @user = User.first(:id => params[:id])
     @user.destroy if @user
+
+    serpico_log("User #{@user.username} deleted")
 
     redirect to('/admin/list_user')
 end

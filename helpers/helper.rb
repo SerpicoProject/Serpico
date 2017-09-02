@@ -1,6 +1,30 @@
 require 'rubygems'
 require 'zip'
 
+# Log a message including the user and the time
+def serpico_log(msg)
+	user = User.first(:username => get_username)
+	if user
+		uname = user.username
+	else
+		uname = "unknown user"
+	end
+	if settings.logger_out
+		settings.logger_out.puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : #{uname}"
+	else
+		puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : #{uname}"
+	end	
+end
+
+# Log a message globally, not attached to a user
+def server_log(msg)
+	if settings and settings.logger_out
+		settings.logger_out.puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : SERVER_LOG"
+	else
+		puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : SERVER_LOG"
+	end	
+end
+
 def docx_modify(rand_file,docx_xml,fil_r)
 	Zip::File.open(rand_file) do |zipfile|
 	  zipfile.get_output_stream(fil_r) {|f| f.write(docx_xml)}

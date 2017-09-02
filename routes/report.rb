@@ -365,6 +365,8 @@ get '/report/:id/remove' do
     @findings.destroy
     @report.destroy
 
+    serpico_log("Report deleted, Report #{id}")
+
     redirect to("/reports/list")
 end
 
@@ -850,7 +852,8 @@ post '/report/:id/findings_add' do
         end
         finding.save
     end
-
+    
+    serpico_log("#{@newfinding.title} added to report #{id}")
 
     @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
@@ -1104,6 +1107,7 @@ get '/report/:id/findings/:finding_id/remove' do
 
     # Update the finding with templated finding stuff
     @finding.destroy
+    serpico_log("#{@finding.title} deleted from report #{id}")
 
     redirect to("/report/#{id}/findings")
 end
@@ -1380,8 +1384,6 @@ get '/report/:id/generate' do
 	end
     ### IMAGE INSERT CODE
     if docx_xml.to_s =~ /\[!!/
-        puts "|+| Trying to insert image --- "
-
         # first we read in the current [Content_Types.xml]
         content_types = read_rels(rand_file,"[Content_Types].xml")
 
@@ -1431,6 +1433,8 @@ get '/report/:id/generate' do
 	list_components.each do |name, xml|
 		docx_modify(rand_file, xml.to_s,name)
 	end
+
+    serpico_log("Report generation attempted, Report Name: #{@report.report_name} #{rand_file} #{xslt_elem.xslt_location}")
     send_file rand_file, :type => 'docx', :filename => "#{@report.report_name}.docx"
 end
 
@@ -1501,7 +1505,7 @@ post '/report/import' do
     if line["Attachments"]
         # now add the attachments
         line["Attachments"].each do |attach|
-            puts "importing attachments"
+            serpico_log("Importing attachments to #{f.id}")
             attach["id"] = nil
 
             attach["filename"] = "Unknown" if attach["filename"] == nil
