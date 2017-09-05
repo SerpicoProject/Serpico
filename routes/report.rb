@@ -1475,8 +1475,8 @@ post '/report/import' do
     redirect to("/report/import") unless params[:file]
 
     # reject if the file is above a certain limit
-    if params[:file][:tempfile].size > 1000000
-        return "File too large. 1MB limit"
+    if params[:file][:tempfile].size > 100000000
+        return "File too large. 100MB limit"
     end
 
     json_file = params[:file][:tempfile].read
