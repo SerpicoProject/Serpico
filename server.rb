@@ -3,6 +3,7 @@ require 'webrick/https'
 require 'openssl'
 require './model/master'
 require './helpers/image.rb'
+require './helpers/helper.rb'
 require 'zip'
 require 'net/ldap'
 
@@ -18,13 +19,23 @@ class Server < Sinatra::Application
     set :status, ["EXPLOITED"]
     set :show_exceptions, config_options["show_exceptions"]
 
+    if config_options["show_exceptions"].to_s.downcase == "false" or (not config_options["show_exceptions"])
+        configure do
+            disable :logging
+            set :set_logging, nil
+            set :logging, nil
+            set :logger, nil
+            set :logger_out, nil
+        end
+
+        server_log("Using Serpico only logging ..")
+    end
+
     #Set Logging
     if(config_options["log_file"] != "")
-        puts "|+| Started serpico on https://"+config_options["bind_address"]+":"+config_options["port"]
-        puts "|+| Logging to "+config_options["log_file"]
         log = File.new(config_options["log_file"], "a+")
-        $stdout.reopen(log)
-        $stderr.reopen(log)
+        set :logger_out, log  
+        server_log("Logging set to #{config_options["log_file"]}")
     end
 
     # CVSS
@@ -92,7 +103,7 @@ class Server < Sinatra::Application
     Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
         pl = JSON.parse(File.open(lib).read)
         if pl["enabled"]
-            puts "|+| Loaded plugin #{pl['name']}"
+            server_log("Loaded plugin #{pl['name']}")
             # load the plugin
             Dir[File.join(File.dirname(__FILE__), "plugins/#{pl['name']}/**/", "*.rb")].each{ |xlibx|
                 require xlibx
@@ -115,8 +126,7 @@ def msfrpc(report_id)
     begin
       rpc = Msf::RPC::Client.new(opts)
     rescue Exception => log
-      puts "[!] MSF CONNECTION FAILED"
-      puts log.message
+      server_log("[!] MSF CONNECTION FAILED")
       rpc = false
     end
     return rpc
@@ -181,8 +191,7 @@ def auth(username,password)
                @curr_session.save
                return @curr_session.session_key
             else
-                puts "|!| LDAP Authentication failed"
-
+                server_log("|!| LDAP Authentication failed")
             end
         end
     end
