@@ -4,7 +4,10 @@
   %table
     %tr
       %td
-        %a{ :href => "/report/#{@report.id}/user_defined_variables"} Edit User Defined Variables
+        %a{ :href => "/report/#{@report.id}/user_defined_variables"} Manage User Defined Variables
+    %tr
+      %td
+        %a{ :href => "/report/#{@report.id}/udo/manage"} Manage User Defined Objects
     %tr
       %td
         %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments must be exported separately)
@@ -52,4 +55,4 @@
         %a{ :href => "/report/#{@report.id}/presentation?print-pdf" } Generate Presentation to PDF (NOTE: Print and Save to PDF to view)
     %tr
       %td
-        %a{ :href => "/report/#{@report.id}/presentation_export" } Export Presentation to HTML 
+        %a{ :href => "/report/#{@report.id}/presentation_export" } Export Presentation to HTML

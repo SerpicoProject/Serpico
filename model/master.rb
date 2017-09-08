@@ -51,7 +51,7 @@ class TemplateFindings
     property :cvss_total, Float, :required => false
     property :ease, String, :required => false
     property :c2_vs, String, :length => 300, :required => false
-    
+
     #CVSSv3
     property :attack_vector, String, :required => false
     property :attack_complexity, String, :required => false
@@ -364,12 +364,42 @@ class Attachments
 
 end
 
+class Charts
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :location, String, :length => 400
+    property :report_id, String, :length => 30
+    property :type, String, :length => 500
+
+end
+
 class Hosts
     include DataMapper::Resource
 
     property :id, Serial
     property :ip, String
     property :port, String
+
+end
+
+class UserDefinedObjectTemplates
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :type, String, :length => 300
+    property :udo_properties, String, :length => 10000
+
+end
+
+class UserDefinedObjects
+    include DataMapper::Resource
+
+    property :id, Serial
+    property :report_id, Integer, :required => true
+    property :template_id, Integer, :required => true
+    property :type, String, :length => 300
+    property :udo_properties, String, :length => 10000
 
 end
 
@@ -383,10 +413,10 @@ class Xslt
     property :report_type, String, :length => 400
     property :finding_template, Boolean, :required => false, :default => false
     property :status_template, Boolean, :required => false, :default => false
-	
+
     has n, :components, 'Xslt_component',
-        :parent_key => [ :id ], 
-        :child_key  => [ :xslt_id ] 
+        :parent_key => [ :id ],
+        :child_key  => [ :xslt_id ]
 end
 
 class Xslt_component
@@ -395,11 +425,11 @@ class Xslt_component
     property :id, Serial
     property :xslt_location, String, :length => 400
     property :name, String, :length => 400
-	
-    belongs_to :xslt, 'Xslt',
-        :parent_key => [ :id ],
-        :child_key  => [ :xslt_id ],
-	:required   => true
+
+  	belongs_to :xslt, 'Xslt',
+      	:parent_key => [ :id ],
+    		:child_key  => [ :xslt_id ],
+    		:required   => true
 end
 
 DataMapper.finalize

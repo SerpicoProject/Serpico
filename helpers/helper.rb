@@ -1,6 +1,30 @@
 require 'rubygems'
 require 'zip'
 
+# Log a message including the user and the time
+def serpico_log(msg)
+	user = User.first(:username => get_username)
+	if user
+		uname = user.username
+	else
+		uname = "unknown user"
+	end
+	if settings.logger_out
+		settings.logger_out.puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : #{uname}"
+	else
+		puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : #{uname}"
+	end	
+end
+
+# Log a message globally, not attached to a user
+def server_log(msg)
+	if settings and settings.logger_out
+		settings.logger_out.puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : SERVER_LOG"
+	else
+		puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : SERVER_LOG"
+	end	
+end
+
 def docx_modify(rand_file,docx_xml,fil_r)
 	Zip::File.open(rand_file) do |zipfile|
 	  zipfile.get_output_stream(fil_r) {|f| f.write(docx_xml)}
@@ -9,7 +33,7 @@ end
 
 def find_headers_footers(docx)
 	header_footer = []
-	
+
 	Zip::File.open(docx) do |zip|
 		i = 1
 		while zip.find_entry("word/header#{i}.xml") != nil do
@@ -165,12 +189,14 @@ def url_escape_hash(hash)
 end
 
 def meta_markup(text)
-	new_text = text.gsub("<paragraph>","&#x000A;").gsub("</paragraph>","")
-	new_text = new_text.gsub("<bullet>","*-").gsub("</bullet>","-*")
-	new_text = new_text.gsub("<h4>","[==").gsub("</h4>","==]")
-	new_text = new_text.gsub("<code>","[[[").gsub("</code>","]]]")
-	new_text = new_text.gsub("<indented>","[--").gsub("</indented>","--]")
-	new_text = new_text.gsub("<italics>","[~~").gsub("</italics>","~~]")
+		if not text == nil
+				new_text = text.gsub("<paragraph>","&#x000A;").gsub("</paragraph>","")
+				new_text = new_text.gsub("<bullet>","*-").gsub("</bullet>","-*")
+				new_text = new_text.gsub("<h4>","[==").gsub("</h4>","==]")
+				new_text = new_text.gsub("<code>","[[[").gsub("</code>","]]]")
+				new_text = new_text.gsub("<indented>","[--").gsub("</indented>","--]")
+				new_text = new_text.gsub("<italics>","[~~").gsub("</italics>","~~]")
+		end
 end
 
 
@@ -384,7 +410,7 @@ def cvss(data, is_cvssv3)
 		c2_vs += "A:N/"
 	elsif a == "partial"
 	    cvss_a = 0.275
-		c2_vs += "I:P/"	    
+		c2_vs += "I:P/"
 	else
 	    cvss_a = 0.660
 		c2_vs += "I:C/"
@@ -521,7 +547,7 @@ def cvss(data, is_cvssv3)
 	end
 
  	c3_vs = "CVSS3.0:/"
-	
+
 	# cvssV3
 	if is_cvssv3
 		attack_vector = data["attack_vector"].downcase
@@ -546,11 +572,11 @@ def cvss(data, is_cvssv3)
 		mod_confidentiality = data["mod_confidentiality"].downcase
 		mod_integrity = data["mod_integrity"].downcase
 		mod_availability = data["mod_availability"].downcase
- 
+
 	 	# Calculations taken from here:
 	 	# https://gist.github.com/TheCjw/23b1f8b8f1da6ceb011c
 	 	# https://www.first.org/cvss/specification-document#i8
-	 
+
 	 	#Base
 		if attack_vector == "network"
 			c3_vs += "AV:N/"
@@ -592,7 +618,7 @@ def cvss(data, is_cvssv3)
 	 			privileges_required_result = 0.62
 	 		end
 	 	end
-		
+
 		if user_interaction == "none"
 			c3_vs += "UI:N/"
 	 		user_interaction_result = 0.85
@@ -600,7 +626,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "UI:R/"
 	 		user_interaction_result = 0.62
 	 	end
-		
+
 		if scope_cvss == "unchanged"
 			c3_vs += "S:U/"
 	 		scope_cvss_result = 6.42
@@ -608,7 +634,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "S:C/"
 	 		scope_cvss_result = 7.52
 	 	end
-		
+
 	 	if confidentiality == "none"
 			c3_vs += "C:N/"
 	 		confidentiality_result = 0.0
@@ -733,7 +759,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "AR:L/"
 	 		availability_requirement_result = 0.5
 	 	end
-	 	
+
 		if mod_attack_vector == "network"
 			c3_vs += "MAV:N/"
 	 		mod_attack_vector_result = 0.85
@@ -750,7 +776,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "MAV:X/"
 	 		mod_attack_vector_result = attack_vector_result
 	 	end
-	 
+
 	 	if mod_attack_complexity == "high"
 			c3_vs += "MAC:H/"
 	 		mod_attack_complexity_result = 0.44
@@ -761,7 +787,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "MAC:X/"
 	 		mod_attack_complexity_result = attack_complexity_result
 	 	end
-		
+
 	 	if mod_privileges_required == "none"
 			c3_vs += "MPR:N/"
 	 		mod_privileges_required_result = 0.85
@@ -783,7 +809,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "MPR:X/"
 	 		mod_privileges_required_result = privileges_required_result
 	 	end
-		
+
 	 	if mod_user_interaction == "none"
 			c3_vs += "MUI:N/"
 	 		mod_user_interaction_result = 0.85
@@ -794,7 +820,7 @@ def cvss(data, is_cvssv3)
 			c3_vs += "MUI:X/"
 	 		mod_user_interaction_result = user_interaction_result
 	 	end
-		
+
 		if mod_scope == "unchanged"
 			c3_vs += "MS:U/"
 	 		mod_scope_result = 6.42
@@ -802,10 +828,10 @@ def cvss(data, is_cvssv3)
 			c3_vs += "MS:C/"
 	 		mod_scope_result = 7.52
 	 	elsif mod_scope == "not defined"
-	 		c3_vs += "MS:X/"	 		
+	 		c3_vs += "MS:X/"
 	 		mod_scope_result = scope_cvss_result
 	 	end
-		
+
 		if mod_confidentiality == "none"
 			c3_vs += "MC:N/"
 	 		mod_confidentiality_result = 0.0
@@ -851,7 +877,7 @@ def cvss(data, is_cvssv3)
 		# Base Score
 	 	cvss_exploitability = 8.22 * attack_vector_result * attack_complexity_result * privileges_required_result * user_interaction_result #exploitabilitySubScore
 	 	cvss_impact_multipler = (1 - ((1 - confidentiality_result) * (1 - integrity_result) * (1 - availability_result))) # ISCbase
-	 	
+
 	 	if scope_cvss == "unchanged"
 	 		cvss_impact_score = scope_cvss_result * cvss_impact_multipler
 	 	elsif scope_cvss == "changed"
@@ -867,7 +893,7 @@ def cvss(data, is_cvssv3)
 	 			cvss_base_score = (((cvss_exploitability + cvss_impact_score) * 10).ceil) / 10.0
 	 		else
 	 			cvss_base_score = 10
-	 		end	
+	 		end
 		elsif scope_cvss == "changed"
 			if ((cvss_exploitability + cvss_impact_score) * 1.08) < 10
 				cvss_base_score = ((((cvss_exploitability + cvss_impact_score) * 1.08) * 10).ceil) / 10.0
@@ -882,7 +908,7 @@ def cvss(data, is_cvssv3)
 
 		# Enviromental Score
 	 	cvss_mod_exploitability = 8.22 * mod_attack_vector_result * mod_attack_complexity_result * mod_privileges_required_result * mod_user_interaction_result
-	 
+
 	 	if (1 - (1 - mod_confidentiality_result * confidentiality_requirement_result) * (1 - mod_integrity_result * integrity_requirement_result) * (1 - mod_availability_result * availability_requirement_result)) > 0.915
 	 		cvss_mod_impact_multipler = 0.915
 	 	end
@@ -901,9 +927,9 @@ def cvss(data, is_cvssv3)
 	 			cvss_mod_impact_score = scope_cvss_result * (cvss_mod_impact_multipler - 0.029) - 3.25 * ((cvss_mod_impact_multipler - 0.02) ** 15)
 	 		end
 	 	end
-	 
+
 	 	mod_impact_exploit_add = cvss_mod_impact_score + cvss_mod_exploitability
-	 
+
 	 	if cvss_mod_impact_score <= 0
 	 		cvss_environmental = 0
 	 	else
@@ -951,9 +977,9 @@ def cvss(data, is_cvssv3)
 
 	if(is_cvssv3)
 		data["cvss_base_score"] = sprintf("%0.1f" % cvss_base_score)
- 		data["cvss_impact_score"] = sprintf("%0.1f" % cvss_impact_score)	
+ 		data["cvss_impact_score"] = sprintf("%0.1f" % cvss_impact_score)
 		data["cvss_mod_impact_score"] = sprintf("%0.1f" % cvss_mod_impact_score)
-	
+
 	 	data["cvss_total"] = sprintf("%0.1f" % cvss_environmental)
 	else
 		data["cvss_total"] = sprintf("%0.1f" % cvss_total)

@@ -89,6 +89,7 @@ post '/admin/add_user' do
         user.save
     end
 
+    serpico_log("User #{user.username} created")
     redirect to('/admin/list_user')
 end
 
@@ -114,6 +115,8 @@ get '/admin/delete/:id' do
 
     @user = User.first(:id => params[:id])
     @user.destroy if @user
+
+    serpico_log("User #{@user.username} deleted")
 
     redirect to('/admin/list_user')
 end
@@ -252,7 +255,7 @@ post '/admin/config' do
     elsif params["risk_scoring"] == "RISKMATRIX"
     	config_options["dread"] = false
         config_options["cvss"] = false
-        config_options["cvssv3"] = false  
+        config_options["cvssv3"] = false
         config_options["riskmatrix"] = true
     else
         config_options["dread"] = false
@@ -482,7 +485,7 @@ post '/admin/templates/add' do
 			File.open(componentHash['xslt_location'], 'wb') {|f| f.write(component_xslt) }
 			list_components_files.push(componentHash)
 		end
-		
+
 		# insert components into the db
 		list_components_files.each do |component|
 			@component = Xslt_component.new(component)
@@ -570,7 +573,7 @@ post '/admin/templates/edit' do
 			File.open(componentHash['xslt_location'], 'wb') {|f| f.write(component_xslt) }
 			list_components_files.push(componentHash)
 		end
-		
+
 		# insert components into the db
 		list_components_files.each do |component|
 			@component = Xslt_component.new(component)
@@ -597,3 +600,99 @@ get '/admin/admin_plugins' do
     haml :enabled_plugins, :encode_html => true
 end
 
+get '/admin/udo_templates' do
+    redirect to("/no_access") unless is_administrator?
+
+# delete UDO template part
+    if params[:delete]
+        udo_template = UserDefinedObjectTemplates.get(params[:delete])
+        if udo_template == nil
+            return "UDO Template not found"
+        end
+        udo_template.destroy
+    end
+    @udos_templates = UserDefinedObjectTemplates.all
+    haml :user_defined_object_templates, :encode_html => true
+end
+
+post '/admin/udo_templates' do
+    redirect to("/no_access") unless is_administrator?
+    data = url_escape_hash(request.POST)
+
+# Save new UDO template part
+    if data["action"] = "Save"
+        new_udo_template = UserDefinedObjectTemplates.new
+        new_udo_template.type = data["object_type"]
+        udo_properties = {}
+        #we extract the udo properties from the posted data
+        data.each do |param, value|
+            if param =~ /property_/
+                if not value.to_s.empty?
+                    udo_properties[value] = ""
+                end
+            end
+        end
+        new_udo_template.udo_properties = udo_properties.to_json
+        new_udo_template.save()
+    end
+
+    @udos_templates = UserDefinedObjectTemplates.all
+
+    haml :user_defined_object_templates, :encode_html => true
+end
+
+#edit udo template
+get '/admin/udo_template/:template_id/edit' do
+    redirect to("/no_access") unless is_administrator?
+    @udo_to_edit = UserDefinedObjectTemplates.get(params[:template_id])
+    if @udo_to_edit == nil
+        return "No such UDO Template"
+    end
+    @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
+    haml :udo_template_edit, :encode_html => true
+end
+
+post '/admin/udo_template/:template_id/edit' do
+    redirect to("/no_access") unless is_administrator?
+    data = url_escape_hash(request.POST)
+    @udo_to_edit = UserDefinedObjectTemplates.get(params[:template_id])
+    if @udo_to_edit == nil
+        return "No such UDO Template"
+    end
+    @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
+
+
+    udo_properties = {}
+    #we extract the udo properties from the posted data
+    data.each do |param1, value1|
+        if not value1.to_s.empty?
+            #we add the new properties
+            if param1 =~ /prop_new_\d+/
+                id = param1.split("_")[2]
+                data.each do |param2, value2|
+                    if param2 =~ /default_new_#{id}/
+                        if not value2 =~ /\<paragraph\>/
+                            udo_properties[value1] = "<paragraph>#{value2}</paragraph>"
+                        else
+                            udo_properties[value1] = value2
+                        end
+                    end
+                end
+            #we edit the already existing properties
+            elsif param1 =~ /prop_/
+                data.each do |param2, value2|
+                    if param2 =~ /default_#{param1.split("_")[-1]}/
+                        if not value2 =~ /\<paragraph\>/
+                            udo_properties[value1] = "<paragraph>#{value2}</paragraph>"
+                        else
+                            udo_properties[value1] = value2
+                        end
+                    end
+                end
+            end
+        end
+    end
+    @udo_to_edit.udo_properties = udo_properties.to_json
+    @udo_to_edit.save()
+    redirect to("/admin/udo_templates")
+end
