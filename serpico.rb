@@ -2,7 +2,6 @@ require "bundler/setup"
 require 'webrick/https'
 require 'openssl'
 require 'json'
-
 require "./server.rb"
 config_options = JSON.parse(File.read('./config.json'))
 
@@ -15,8 +14,15 @@ bind_address =  config_options["bind_address"]
 
 server_options = {
     :Port => port,
-    :BindAddress => bind_address
+    :BindAddress => bind_address,
 }
+
+if config_options["show_exceptions"].to_s.downcase == "false" or (not config_options["show_exceptions"])
+    puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] Sending Webrick logging to /dev/null.."
+    server_options[:Logger] = WEBrick::Log.new(File.open(File::NULL, 'w'))
+    server_options[:AccessLog] = []
+end
+
 
 if (use_ssl) then
     certificate_content = File.open(ssl_certificate).read
