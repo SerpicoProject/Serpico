@@ -14,10 +14,15 @@ class Server < Sinatra::Application
     set :config_options, config_options
     ## Global variables
     set :finding_types, config_options["finding_types"]
-    set :effort, ["Quick","Planned","Involved"]
     set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
     set :status, ["EXPLOITED"]
     set :show_exceptions, config_options["show_exceptions"]
+
+    if config_options["effort"]
+        set :effort, config_options["effort"]
+    else
+        set :effort, ["Quick","Planned","Involved"]
+    end
 
     if config_options["show_exceptions"].to_s.downcase == "false" or (not config_options["show_exceptions"])
         configure do
