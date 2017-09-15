@@ -219,7 +219,6 @@ post '/admin/config' do
     udv = params["user_defined_variables"].split(",")
     rat = params["report_assessment_types"].split(",")
 
-    p params
     if params["effort"]
         config_options["effort"] = params["effort"].split(",")
     end
@@ -300,7 +299,6 @@ post '/admin/plugins' do
     }
 
     @plugins.each do |plug|
-        p params
         if params[plug["name"]]
             plug["enabled"] = true
             File.open("./plugins/#{plug['name']}/plugin.json","w") do |f|
