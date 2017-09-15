@@ -458,7 +458,7 @@ post '/admin/templates/add' do
       # open up a file handle and write the attachment
       File.open(xslt_file, 'wb') {|f| f.write(xslt) }
       #extract the screenshot names from the file
-      screenshot_names = xslt.scan(/\[!!(.*?)!!]/)
+      screenshot_names = xslt.scan(/\[!!(.*?)!!\]/)
       # delete the file data from the attachment
       datax = Hash.new
       # to prevent traversal we hardcode this
