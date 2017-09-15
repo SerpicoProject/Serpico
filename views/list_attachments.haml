@@ -9,10 +9,8 @@
           %tbody
             - @attachments.each do |attachment|
               %tr
-                %td{:style => 'width: 30%'}
+                %td{:style => 'width: 70%'}
                   #{attachment.description}
-                %td{:style => 'width: 40%' }
-                  #{attachment.caption}
                 %td{:style => 'width: 30%'}
                   %a{ :class => "btn btn-info", :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}"}
                     %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
@@ -21,6 +19,36 @@
 
   - else
     No Attachments Available.
+  %br
+  - if not @screenshot_names.to_s.empty?
+    %h3 The following screenshot variables were found in your report template:
+    %br
+    .table.table-striped
+      %table
+        %tbody
+          %col{:align => "left"}
+          %col{:align => "center"}
+          %tr
+            %td
+              %strong
+                Screenshot Name
+            %td
+              %strong
+                Uploaded?
+          - @screenshot_names.split(",").each do |ss|
+            %tr
+              %td
+                #{ss}
+              %td{:style => "text-align: center"}
+                - found = false
+                - @attachments.each do |att|
+                  - if att.description == ss
+                    - found = true
+                    %i.fa.fa-check{:style => "color:green"}
+                - if found == false
+                  %i.fa.fa-times{:style => "color:red"}
+
+
 
 :javascript
   function confirmDelete(evt) {
