@@ -1084,6 +1084,8 @@ get '/report/:id/findings/:finding_id/upload' do
     @new_finding = TemplateFindings.new(attr)
     @new_finding.save
 
+    serpico_log("Finding #{@finding.title} from Report #{id} uploaded to the template database")
+
     redirect to("/report/#{id}/findings")
 end
 
