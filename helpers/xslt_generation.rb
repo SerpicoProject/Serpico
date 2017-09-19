@@ -566,6 +566,32 @@ def generate_xslt(docx)
 		document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
 	end
 
+###############################
+# ツ - Placeholder for image
+
+	replace = document.split('ツ')
+
+	if (((replace.size-1) % 2) != 0)
+        raise ReportingError.new("Uneven number of ツ. This is usually caused by a mismatch in a variable.")
+	end
+
+	count = 0
+	replace.each do |omega|
+		if (count % 2) == 0
+			count = count + 1
+			next
+		end
+
+		# Execute when between two ツ
+		omega = compress(omega)
+
+		replace[count]="[!!#{omega.downcase}!!]"
+
+		count = count + 1
+	end
+
+	# remove all the ツ and put the document back together
+	document = replace.join("")
 
 
 
@@ -607,21 +633,21 @@ def generate_xslt_components(docx)
 	debug = false
 
 	list_components_xslt = {}
-	
+
 	#add line breaks for easier reading, only use with debugging
 	#document = document.gsub('>',">\n")
 
 	components = find_headers_footers(docx)
-	
+
 	components.each do |component|
 		document = read_rels(docx,component)
-		
+
 		# replace {} for the sake of XSL
 		document = document.gsub("{","{{").gsub("}","}}")
-		
+
 		# add in xslt header
 		document = @top + document
-		
+
 		# Ω - used as a normal substituion variable
 		# let's pull out variables
 		replace = document.split('Ω')
@@ -636,7 +662,7 @@ def generate_xslt_components(docx)
 				count = count + 1
 				next
 			end
-				
+
 			# Execute when between two Ω
 			omega = compress(omega)
 
@@ -688,7 +714,7 @@ def generate_xslt_components(docx)
 
 		# add in xslt footer
 		document = document + @bottom
-		
+
 		list_components_xslt[component] = document
 	end
 

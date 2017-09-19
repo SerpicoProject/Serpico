@@ -57,6 +57,8 @@ get '/report/:id/attachments' do
     end
 
     @attachments = Attachments.all(:report_id => id)
+    xslt = Xslt.first(:report_type => @report.report_type)
+    @screenshot_names = xslt.screenshot_names
     haml :list_attachments, :encode_html => true
 end
 
@@ -335,15 +337,15 @@ get '/report/:id/attachments/delete/:att_id' do
     @attachment = Attachments.first(:report_id => id, :id => params[:att_id])
 
 	if @attachment == nil
-		return "No Such Attachment"
+		  return "No Such Attachment"
 	end
-
-    File.delete(@attachment.filename_location)
-
+    if File.file?(@attachment.filename_location)
+        File.delete(@attachment.filename_location)
+    end
     # delete the entries
     @attachment.destroy
 
-	redirect to("/report/#{id}/attachments")
+    redirect to("/report/#{id}/attachments")
 end
 
 
@@ -507,6 +509,9 @@ get '/report/:id/udo/:udo_id/edit' do
     udos.each do |udo_to_edit|
         @udo_to_edit = udo_to_edit
     end
+    #udo template linked to the udo to edit. We want the template in case the admin changed the properties
+    @udo_template = UserDefinedObjectTemplates.get(@udo_to_edit.template_id)
+    @udo_template_properties = JSON.parse(@udo_template.udo_properties)
     @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
     haml :user_defined_object_edit, :encode_html => true
 end
@@ -759,6 +764,8 @@ get '/report/:id/status' do
                 if image
                     docx = image_insert(docx, rand_file, image, end_xml)
                 else
+                    docx = docx.sub(/<w:p[^\>]*?>((?<!<w:p[ |>]).)*\z/m,"")
+                    end_xml = end_xml.sub(/^<\/w:t>.*?<\/w:r>.*?<\/w:p>/m, '')
                     docx << end_xml
                 end
 
@@ -852,7 +859,7 @@ post '/report/:id/findings_add' do
         end
         finding.save
     end
-    
+
     serpico_log("#{@newfinding.title} added to report #{id}")
 
     @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
@@ -1081,6 +1088,8 @@ get '/report/:id/findings/:finding_id/upload' do
     @new_finding = TemplateFindings.new(attr)
     @new_finding.save
 
+    serpico_log("Finding #{@finding.title} from Report #{id} uploaded to the template database")
+
     redirect to("/report/#{id}/findings")
 end
 
@@ -1197,6 +1206,8 @@ get '/report/:id/findings/:finding_id/preview' do
                     # inserts the image into the doc
                     docx = image_insert(docx, rand_file, image, end_xml)
                 else
+                    docx = docx.sub(/<w:p[^\>]*?>((?<!<w:p[ |>]).)*\z/m,"")
+                    end_xml = end_xml.sub(/^<\/w:t>.*?<\/w:r>.*?<\/w:p>/m, '')
                     docx << end_xml
                 end
 

@@ -14,10 +14,15 @@ class Server < Sinatra::Application
     set :config_options, config_options
     ## Global variables
     set :finding_types, config_options["finding_types"]
-    set :effort, ["Quick","Planned","Involved"]
     set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
     set :status, ["EXPLOITED"]
     set :show_exceptions, config_options["show_exceptions"]
+
+    if config_options["effort"]
+        set :effort, config_options["effort"]
+    else
+        set :effort, ["Quick","Planned","Involved"]
+    end
 
     if config_options["show_exceptions"].to_s.downcase == "false" or (not config_options["show_exceptions"])
         configure do
@@ -34,7 +39,7 @@ class Server < Sinatra::Application
     #Set Logging
     if(config_options["log_file"] != "")
         log = File.new(config_options["log_file"], "a+")
-        set :logger_out, log  
+        set :logger_out, log
         server_log("Logging set to #{config_options["log_file"]}")
     end
 
@@ -77,7 +82,7 @@ class Server < Sinatra::Application
     set :mod_confidentiality, ["Not Defined","None","Low","High"]
     set :mod_integrity, ["Not Defined","None","Low","High"]
     set :mod_availability, ["Not Defined","None","Low","High"]
-    
+
     #Risk Matrix
     set :severity, ["Low","Medium","High"]
     set :likelihood, ["Low","Medium","High"]
@@ -240,9 +245,9 @@ def image_insert(docx, rand_file, image, end_xml)
     p_id = "d#{rand(36**7).to_s(36)}"
     name = image.description
 
-    image_file = File.open(image.filename_location,'rb') 
-    img_data = image_file.read()              
-    
+    image_file = File.open(image.filename_location,'rb')
+    img_data = image_file.read()
+
     #resize picture to fit into word if it's too big
     if jpeg?(img_data)
       jpeg_dimension = JPEG.new(image.filename_location)
@@ -256,7 +261,7 @@ def image_insert(docx, rand_file, image, end_xml)
       width = 400
       height = 200
     end
-    while width > 720 do #fits nicely into word
+    while width > 710 or height > 790 do #fits nicely into word
         width = width - (width/20)
         height = height - (height/20)
     end
@@ -304,7 +309,7 @@ end
 
 def get_plugin_list
     menu = []
-    
+
     Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
         pl = JSON.parse(File.open(lib).read)
         a = {}

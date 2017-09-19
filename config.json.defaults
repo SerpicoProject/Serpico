@@ -32,6 +32,7 @@
   "logo": "/img/logo_1.svg",
   "auto_import": false,
   "chart": true,
+  "effort":["Quick","Planned","Involved"],
   "user_defined_variables": [
 
   ],

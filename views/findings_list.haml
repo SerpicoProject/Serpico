@@ -253,3 +253,12 @@
   for (var index = 0, length = deleteElements.length; index < length; index++) {
     deleteElements[index].addEventListener('click', confirmDelete, false);
   }
+
+  function confirmUploaded(evt) {
+    alert('Nice work! Finding uploaded to the local database.');
+  }
+
+  var inverseElements = $('a.btn-inverse');
+  for (var index = 0, length = inverseElements.length; index < length; index++) {
+    inverseElements[index].addEventListener('click', confirmUploaded, false);
+  }

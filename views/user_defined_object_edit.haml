@@ -7,13 +7,13 @@
   %h3 Edit #{@udo_to_edit.type} object
   %hr
   %form{ :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
-    - @udo_to_edit_properties.each do |param_name, value|
+    - @udo_template_properties.each do |param_name, value|
       .control-group
         %label{ :class => "control-label", :for => "#{param_name}" }
           %strong
             #{param_name}
         .controls
           %textarea{:name => "param_#{param_name}",:rows => '2', :class => 'allowMarkupShortcut input-large'}
-            #{meta_markup(value)}
+            #{meta_markup(@udo_to_edit_properties[param_name.downcase])}
     %br
     %input{:type => 'submit', :value => 'Save', :name => 'action',:class => "btn" }
