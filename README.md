@@ -80,8 +80,6 @@ See also:
 
 * [Serpico Meta-Language In Depth](https://github.com/SerpicoProject/Serpico/wiki/Serpico-Meta-Language-In-Depth)
 
-* [Inserting Screenshots](https://github.com/SerpicoProject/Serpico/wiki/Inserting-Screenshots): This is an area we know needs development so e-mail us with any ideas.
-
 
 ## Support
 * [Wiki](https://github.com/MooseDojo/Serpico/wiki): We try to add most common questions to the wiki.
