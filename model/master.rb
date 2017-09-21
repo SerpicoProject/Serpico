@@ -104,7 +104,7 @@ class Findings
     property :affected_users, Integer, :required => false
     property :discoverability, Integer, :required => false
     property :effort, String, :required => false
-    property :type, String, :required => false
+    property :type, String, :required => false, :length=>200
     property :dread_total, Integer, :required => false
     property :overview, String, :length => 20000, :required => false
     property :poc, String, :length => 20000, :required => false
