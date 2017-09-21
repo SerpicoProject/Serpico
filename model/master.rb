@@ -19,7 +19,7 @@ class TemplateFindings
     property :discoverability, Integer, :required => false
     property :dread_total, Integer, :required => false
     property :effort, String, :required => false
-    property :type, String, :required => false
+    property :type, String, :required => false, :length=>200
     property :overview, String, :length => 20000, :required => false
     property :poc, String, :length => 20000, :required => false
     property :remediation, String, :length => 20000, :required => false
