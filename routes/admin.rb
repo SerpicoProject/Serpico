@@ -240,6 +240,7 @@ post '/admin/config' do
     config_options["chart"] = params["chart"] ? true : false
     config_options["threshold"] = params["threshold"]
     config_options["show_exceptions"] = params["show_exceptions"] ? true : false
+    config_options["cvssv2_scoring_override"] = params["cvssv2_scoring_override"] ? true : false
 
     if params["risk_scoring"] == "CVSSv2"
         config_options["dread"] = false
