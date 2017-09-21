@@ -92,14 +92,29 @@
                   end
                   labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
                 elsif @cvss
-                  @findings.each do |finding|
-                    next unless finding
-                    if finding.cvss_total >= 7.0
-                      vulns["severe"] += 1
-                    elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
-                      vulns["moderate"] += 1
-                    elsif finding.cvss_total <= 3.9
-                      vulns["low"] += 1
+                  if @cvssv2_scoring_override
+                    @findings.each do |finding|
+                      next unless finding
+                      if finding.cvss_total >= 9.0
+                        vulns["critical"] += 1
+                      elsif finding.cvss_total >= 7.0
+                        vulns["severe"] += 1
+                      elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
+                        vulns["moderate"] += 1
+                      elsif finding.cvss_total <= 3.9
+                        vulns["low"] += 1
+                      end
+                    end
+                  else
+                    @findings.each do |finding|
+                      next unless finding
+                      if finding.cvss_total >= 7.0
+                        vulns["severe"] += 1
+                      elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
+                        vulns["moderate"] += 1
+                      elsif finding.cvss_total <= 3.9
+                        vulns["low"] += 1
+                      end
                     end
                   end
                   labels = {"label_1" => "Critical (N/A)", "label_2" => "Severe", "label_3" => "Moderate",  "label_4" => "Low"}

@@ -80,6 +80,12 @@ def add_findings_totals(udv, findings, config_options)
 		udv = {}
 	end
 
+    if config_options.has_key?("cvssv2_scoring_override")
+        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"] 
+    else
+        @cvssv2_scoring_override = false 
+    end
+
     # Query for the findings that match the report_id
     if(config_options["dread"])
     	findings.each do |finding|
@@ -96,15 +102,29 @@ def add_findings_totals(udv, findings, config_options)
     		end
 	    end
     elsif(config_options["cvss"])
-    	findings.each do |finding|
-    		if finding.cvss_total >= 7
-    			high += 1
-    		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
-    			moderate += 1
-    		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
-    			low += 1
-    		end
-	    end
+    	if(@cvssv2_scoring_override)
+	    	findings.each do |finding|
+	    		if finding.cvss_total >= 9
+	    			critical += 1
+	    		elsif finding.cvss_total >= 7
+	    			high += 1
+	    		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
+	    			moderate += 1
+	    		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
+	    			low += 1
+	    		end
+		    end
+    	else
+	    	findings.each do |finding|
+	    		if finding.cvss_total >= 7
+	    			high += 1
+	    		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
+	    			moderate += 1
+	    		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
+	    			low += 1
+	    		end
+		    end
+		end
     elsif(config_options["cvssv3"])
     	findings.each do |finding|
     		if finding.cvss_total >= 9

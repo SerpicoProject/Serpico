@@ -39,5 +39,6 @@
   "report_assessment_types": ["Network Internal","External","Web application","Physical","Social engineering","Configuration audit"], 
   "threshold": "2",
   "log_file": "./log/serpico.log",
-  "show_exceptions": false
+  "show_exceptions": false,
+  "cvssv2_scoring_override": false
 }

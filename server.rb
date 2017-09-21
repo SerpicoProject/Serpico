@@ -87,6 +87,13 @@ class Server < Sinatra::Application
     set :severity, ["Low","Medium","High"]
     set :likelihood, ["Low","Medium","High"]
 
+    if config_options["cvssv2_scoring_override"]
+        if config_options["cvssv2_scoring_override"] == "true"
+            set :cvssv2_scoring_override, true
+        end
+    else
+        set :cvssv2_scoring_override, false
+    end
     ## LDAP Settings
     if config_options["ldap"] == "true"
         set :ldap, true

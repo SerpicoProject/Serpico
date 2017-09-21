@@ -683,6 +683,11 @@ get '/report/:id/findings' do
 
     @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
+    if config_options.has_key?("cvssv2_scoring_override")
+        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"] 
+    else
+        @cvssv2_scoring_override = false 
+    end
     haml :findings_list, :encode_html => true
 end
 
