@@ -57,7 +57,7 @@ Usage:
 */
 
 var CVSS = CVSS || {};
-var CVSS = function (id, options) {
+CVSS.js = function (id, options) {
     this.options = options;
     this.wId = id;
     var e = function (tag) {

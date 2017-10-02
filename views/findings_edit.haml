@@ -403,11 +403,11 @@
                 }
                 }
                 }}
-                var c = new CVSS.js("cvssboard", {
+                var cvssjs = new CVSS.js("cvssboard", {
                 onchange: function() {
                 window.location.hash = cvssjs.get().vector;
                 document.getElementById('vs').value = cvssjs.get().vector;
-                updateDropdown(cvssjs.get().vector);ç
+                updateDropdown(cvssjs.get().vector);
                 }
                 });
 
