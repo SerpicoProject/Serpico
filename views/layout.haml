@@ -41,29 +41,45 @@
       .orange {
         background-color: #ffa500;
       }
+      .btn-navbar.padded {
+        margin-top: 22px;
+      }
+
+      @media (max-width: 979px) {
+        body {
+          padding-top: 0px;
+        }
+      }
+
         %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}
   - if valid_session?
     %body
       .navbar.navbar-fixed-top
         .navbar-inner
-          %ul.nav{"class" => "padded"}
+          %ul.nav.padded
             %li
-              %a.fa.fa-file-word-o{:href => "/reports/list"} &nbsp;List Reports
+              %a.fa.fa-file-word-o{ :href => "/reports/list" } &nbsp;List Reports
             %li
-              %a.fa.fa-pencil-square-o{:href => "/report/new"} &nbsp;New Report
-          .nav-collapse
-            %ul.nav{"class" => "pull-right padded"}
+              %a.fa.fa-pencil-square-o{ :href => "/report/new" } &nbsp;New Report
+
+          %a.btn.btn-navbar.padded{ "data-toggle" => "collapse", "data-target" => ".nav-collapse" }
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+
+          .nav-collapse.collapse
+            %ul.nav.pull-right.padded
               - if is_administrator?
                 %li
-                  %a.fa.fa-sitemap{:href => "/master/findings"} &nbsp;Findings Database
+                  %a.fa.fa-sitemap{ :href => "/master/findings" } &nbsp;Findings Database
                 %li
-                  %a.fa.fa-reorder{:href => "/admin/"} &nbsp;Administration
+                  %a.fa.fa-reorder{ :href => "/admin/" } &nbsp;Administration
               %li
-                %a.fa.fa-tasks{:href => "/info"} &nbsp;Consultant Information
+                %a.fa.fa-tasks{ :href => "/info" } &nbsp;Consultant Information
               %li
-                %a.fa.fa-support{:href => "/reset"} &nbsp;Change Password
+                %a.fa.fa-support{ :href => "/reset" } &nbsp;Change Password
               %li
-                %a.fa.fa-external-link-square{:href => "/logout"} &nbsp;Logout
+                %a.fa.fa-external-link-square{ :href => "/logout" } &nbsp;Logout
 
       <br>
       .container-fluid
