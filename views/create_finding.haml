@@ -8,55 +8,55 @@
   %br
   %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
     .control-group
-      %label{ :class => "control-label", :for => "title" } Title
+      %label.control-label{ :for => "title" } Title
       .controls
         %input{ :type => 'text', :name => 'title', :value => ""}
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
+        %label.control-label{ :for => "assessment_type" } Assessment Type
         .controls
           %select{ :name => "assessment_type" }
             - options.assessment_types.each do |type|
               %option #{type}
     .control-group
-      %label{ :class => "control-label", :for => "type" } Finding Type
+      %label.control-label{ :for => "type" } Finding Type
       .controls
         %select{ :name => "type" }
           - options.finding_types.each do |type|
             %option #{type}
     - if @nessusmap
       .control-group
-        %label{ :class => "control-label", :for => "pluginid" } Add new nessus ID mapping
+        %label.control-label{ :for => "pluginid" } Add new nessus ID mapping
         .controls
           %input{ :type => 'text', :name => 'pluginid'}
     - if @vulnmap
       .control-group
-        %label{ :class => "control-label", :for => "msf_ref" } Add new Vuln ID mapping
+        %label.control-label{ :for => "msf_ref" } Add new Vuln ID mapping
         .controls
           %input{ :type => 'text', :name => 'msf_ref'}
     - if @dread
       .control-group
-        %label{ :class => "control-label", :for => "damage" } Damage
+        %label.control-label{ :for => "damage" } Damage
         .controls
           %input{ :type => 'number', :min => '0', :max => '10', :name => 'damage', :value => "0", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+        %label.control-label{ :for => "reproducability" } Reproducibility
         .controls
           %input{ :type => 'number', :min => '0', :max => '10', :name => 'reproducability', :value => "0", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "exploitability" } Exploitability
+        %label.control-label{ :for => "exploitability" } Exploitability
         .controls
           %input{ :type => 'number', :min => '0', :max => '10', :name => 'exploitability', :value => "0", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "affected_users" } Affected Users
+        %label.control-label{ :for => "affected_users" } Affected Users
         .controls
           %input{ :type => 'number', :min => '0', :max => '10', :name => 'affected_users', :value => "0", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "discoverability" } Discoverability
+        %label.control-label{ :for => "discoverability" } Discoverability
         .controls
           %input{ :type => 'number', :min => '0', :max => '10', :name => 'discoverability', :value => "0", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        %label.control-label{ :for => "effort" } Remediation Effort
         .controls
           %select{ :name => "effort" }
             %option LOW
@@ -64,7 +64,7 @@
             %option HARD
     - elsif @cvss
       .control-group
-        %label{ :class => "control-label", :for => "attack_vector" }
+        %label.control-label{ :for => "attack_vector" }
           %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
             CVSS Vector String
         .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
@@ -320,49 +320,49 @@
         .controls
           %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}
       .control-group
-        %label{ :class => "control-label", :for => "av" } Access Vector
+        %label.control-label{ :for => "av" } Access Vector
         .controls
           %select{ :name => "av", :id => "av" }
             %option Local
             %option Local Network
             %option Network
       .control-group
-        %label{ :class => "control-label", :for => "ac" } Access Complexity
+        %label.control-label{ :for => "ac" } Access Complexity
         .controls
           %select{ :name => "ac", :id => "ac" }
             %option High
             %option Medium
             %option Low
       .control-group
-        %label{ :class => "control-label", :for => "au" } Authentication
+        %label.control-label{ :for => "au" } Authentication
         .controls
           %select{ :name => "au", :id => "au" }
             %option Multiple
             %option Single
             %option None
       .control-group
-        %label{ :class => "control-label", :for => "c" } Confidentiality Impact
+        %label.control-label{ :for => "c" } Confidentiality Impact
         .controls
           %select{ :name => "c", :id => "c" }
             %option None
             %option Partial
             %option Complete
       .control-group
-        %label{ :class => "control-label", :for => "i" } Integrity Impact
+        %label.control-label{ :for => "i" } Integrity Impact
         .controls
           %select{ :name => "i", :id => "i" }
             %option None
             %option Partial
             %option Complete
       .control-group
-        %label{ :class => "control-label", :for => "a" } Availability Impact
+        %label.control-label{ :for => "a" } Availability Impact
         .controls
           %select{ :name => "a", :id => "a" }
             %option None
             %option Partial
             %option Complete
       .control-group
-        %label{ :class => "control-label", :for => "e" } Exploitability
+        %label.control-label{ :for => "e" } Exploitability
         .controls
           %select{ :name => "e", :id => "e" }
             %option Not Defined
@@ -371,7 +371,7 @@
             %option Functional Exploit Exists
             %option High
       .control-group
-        %label{ :class => "control-label", :for => "rl" } Remediation Level
+        %label.control-label{ :for => "rl" } Remediation Level
         .controls
           %select{ :name => "rl", :id => "rl" }
             %option Not Defined
@@ -380,7 +380,7 @@
             %option Workaround
             %option Unavailable
       .control-group
-        %label{ :class => "control-label", :for => "rc" } Report Confidence
+        %label.control-label{ :for => "rc" } Report Confidence
         .controls
           %select{ :name => "rc", :id => "rc" }
             %option Not Defined
@@ -388,7 +388,7 @@
             %option Uncorroborated
             %option Confirmed
       .control-group
-        %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
+        %label.control-label{ :for => "cdp" } Collateral Damage Potential
         .controls
           %select{ :name => "cdp", :id => "cdp" }
             %option Not Defined
@@ -398,7 +398,7 @@
             %option Medium-High
             %option High
       .control-group
-        %label{ :class => "control-label", :for => "td" } Target Distribution
+        %label.control-label{ :for => "td" } Target Distribution
         .controls
           %select{ :name => "td", :id => "td" }
             %option Not Defined
@@ -407,7 +407,7 @@
             %option Medium
             %option High
       .control-group
-        %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
+        %label.control-label{ :for => "cr" } Confidentiality Requirement
         .controls
           %select{ :name => "cr", :id => "cr" }
             %option Not Defined
@@ -415,7 +415,7 @@
             %option Medium
             %option High
       .control-group
-        %label{ :class => "control-label", :for => "ir" } Integrity Requirement
+        %label.control-label{ :for => "ir" } Integrity Requirement
         .controls
           %select{ :name => "ir", :id => "ir" }
             %option Not Defined
@@ -423,7 +423,7 @@
             %option Medium
             %option High
       .control-group
-        %label{ :class => "control-label", :for => "ar" } Availability Requirement
+        %label.control-label{ :for => "ar" } Availability Requirement
         .controls
           %select{ :name => "ar", :id => "ar" }
             %option Not Defined
@@ -659,513 +659,188 @@
         }
         });
       .control-group
-        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        %label.control-label{ :for => "effort" } Remediation Effort
         .controls
           %select{ :name => "effort" }
             %option QUICK
             %option PLANNED
             %option INVOLVED
     - elsif @cvssv3
-      .control-group
-        %label{ :class => "control-label", :for => "attack_vector" }
-          %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+      .control-group.cvss3
+        %label.control-label{ :for => "attack_vector" }
+          %a.btn.btn-info{ :href=> "#mymodal", "data-toggle" => "modal" }
             CVSS Vector String
         .controls
-          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}
-        .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+          %input.form-control#vs{ :type => "text", :placeholder=>"CVSS Vector String", :style=>"width:35em" }
+        .modal.modal.hide.fade#mymodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
           .modal-header
-            %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+            %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
               x
-            %h3{:id=>"modal-label"}
+            %h3#modal-label
               CVSS Vector String
           .modal-body
-            %link{ :rel=>"stylesheet", :type=>"text/css", :media=>"all", :href=>"/css/cvss.css"}
+            %link{ :rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/cvss.css" }
+            %script{:src => "/js/cvsscalc30.js"}
             %script{ :src => "/js/cvss3.js"}
-            %div{ :id=>"cvssboard"}
-              %script
-                function updateDropdown(score){
-
-                var vector = score.trim().split("/");
-                for(var i in vector){
-                var part = vector[i];
-
-                if (part.length > 0){
-                part = part.toUpperCase();
-                }
-
-                //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
-                // AV
-                // LANP
-                if(part.includes("AV:") && !part.includes("MAV:")){
-                if(part.includes(":L")){
-                document.getElementById('attack_vector').selectedIndex=0;
-                }
-                if(part.includes(":A")){
-                document.getElementById('attack_vector').selectedIndex=1;
-                }
-                if(part.includes(":N")){
-                document.getElementById('attack_vector').selectedIndex=2;
-                }
-                if(part.includes(":P")){
-                document.getElementById('attack_vector').selectedIndex=3;
-                }
-                }
-
-                // AC
-                if(part.includes("AC:")  && !part.includes("MAC:")){
-                if(part.includes(":L")){
-                document.getElementById('attack_complexity').selectedIndex=0;
-                }
-                if(part.includes(":H")){
-                document.getElementById('attack_complexity').selectedIndex=1;
-                }
-                }
-
-                // PR NLH
-                if(part.includes("PR:")  && !part.includes("MPR:")){
-                if(part.includes(":N")){
-                document.getElementById('privileges_required').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('privileges_required').selectedIndex=1;
-                }
-                if(part.includes(":H")){
-                document.getElementById('privileges_required').selectedIndex=2;
-                }
-                }
-
-                // UI
-                if(part.includes("UI:")){
-                if(part.includes(":N")){
-                document.getElementById('user_interaction').selectedIndex=0;
-                }
-                if(part.includes(":R")){
-                document.getElementById('user_interaction').selectedIndex=1;
-                }
-                }
-
-                // S
-                if(part.includes("S:")  && !part.includes("MS:")){
-                if(part.includes(":U")){
-                document.getElementById('scope').selectedIndex=0;
-                }
-                if(part.includes(":C")){
-                document.getElementById('scope').selectedIndex=1;
-                }
-                }
-
-                // I
-                if(part.includes("I:")  && !part.includes("MI:")){
-                if(part.includes(":N")){
-                document.getElementById('integrity').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('integrity').selectedIndex=1;
-                }
-                if(part.includes(":H")){
-                document.getElementById('integrity').selectedIndex=2;
-                }
-                }
-
-                // C
-                if(part.includes("C:") && !part.includes("MC:") && !part.includes("MAC:")){
-                if(part.includes(":N")){
-                document.getElementById('confidentiality-impact').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('confidentiality-impact').selectedIndex=1;
-                }
-                if(part.includes(":H")){
-                document.getElementById('confidentiality-impact').selectedIndex=2;
-                }
-                }
-
-                // A
-                if(part.includes("A:")  && !part.includes("MA:")){
-                if(part.includes(":N")){
-                document.getElementById('availability').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('availability').selectedIndex=1;
-                }
-                if(part.includes(":H")){
-                document.getElementById('availability').selectedIndex=2;
-                }
-                }
-
-                // Exploit Code Maturity
-                if(part.includes("E:")){
-                if(part.includes(":X")){
-                document.getElementById('exploit_maturity').selectedIndex=0;
-                }
-                if(part.includes(":U")){
-                document.getElementById('exploit_maturity').selectedIndex=1;
-                }
-                if(part.includes(":P")){
-                document.getElementById('exploit_maturity').selectedIndex=2;
-                }
-                if(part.includes(":F")){
-                document.getElementById('exploit_maturity').selectedIndex=3;
-                }
-                }
-
-
-                // Remediation Level
-                if(part.includes("RL:")){
-                if(part.includes(":X")){
-                document.getElementById('remeditation_level').selectedIndex=0;
-                }
-                if(part.includes(":O")){
-                document.getElementById('remeditation_level').selectedIndex=1;
-                }
-                if(part.includes(":T")){
-                document.getElementById('remeditation_level').selectedIndex=2;
-                }
-                if(part.includes(":W")){
-                document.getElementById('remeditation_level').selectedIndex=3;
-                }
-                if(part.includes(":U")){
-                document.getElementById('remeditation_level').selectedIndex=4;
-                }
-                }
-
-
-                // report confidence
-                if(part.includes("RC:")){
-                if(part.includes(":X")){
-                document.getElementById('report_confidence').selectedIndex=0;
-                }
-                if(part.includes(":U")){
-                document.getElementById('report_confidence').selectedIndex=1;
-                }
-                if(part.includes(":R")){
-                document.getElementById('report_confidence').selectedIndex=2;
-                }
-                if(part.includes(":C")){
-                document.getElementById('report_confidence').selectedIndex=3;
-                }
-                }
-
-                // confidentiality-requirement
-                if(part.includes("CR:")){
-                if(part.includes(":X")){
-                document.getElementById('confidentiality_requirement').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('confidentiality_requirement').selectedIndex=1;
-                }
-                if(part.includes(":M")){
-                document.getElementById('confidentiality_requirement').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('confidentiality_requirement').selectedIndex=3;
-                }
-                }
-
-                // integrity-requirement
-                if(part.includes("IR:")){
-                if(part.includes(":X")){
-                document.getElementById('integrity_requirement').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('integrity_requirement').selectedIndex=1;
-                }
-                if(part.includes(":M")){
-                document.getElementById('integrity_requirement').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('integrity_requirement').selectedIndex=3;
-                }
-                }
-
-
-                // integrity-requirement
-                if(part.includes("AR:")){
-                if(part.includes(":X")){
-                document.getElementById('availability_requirement').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('availability_requirement').selectedIndex=1;
-                }
-                if(part.includes(":M")){
-                document.getElementById('availability_requirement').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('availability_requirement').selectedIndex=3;
-                }
-                }
-
-                // modified-attack-vector
-                if(part.includes("MAV:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_attack_vector').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('mod_attack_vector').selectedIndex=1;
-                }
-                if(part.includes(":A")){
-                document.getElementById('mod_attack_vector').selectedIndex=2;
-                }
-                if(part.includes(":N")){
-                document.getElementById('mod_attack_vector').selectedIndex=3;
-                }
-                if(part.includes(":P")){
-                document.getElementById('mod_attack_vector').selectedIndex=4;
-                }
-                }
-
-                // modified-attack-vector
-                if(part.includes("MAC:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_attack_complexity').selectedIndex=0;
-                }
-                if(part.includes(":L")){
-                document.getElementById('mod_attack_complexity').selectedIndex=1;
-                }
-                if(part.includes(":H")){
-                document.getElementById('mod_attack_complexity').selectedIndex=2;
-                }
-                }
-
-                // modified-privileges-Required
-                if(part.includes("MPR:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_privileges_required').selectedIndex=0;
-                }
-                if(part.includes(":N")){
-                document.getElementById('mod_privileges_required').selectedIndex=1;
-                }
-                if(part.includes(":L")){
-                document.getElementById('mod_privileges_required').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('mod_privileges_required').selectedIndex=3;
-                }
-                }
-
-                // modified-user-interaction
-                if(part.includes("MUI:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_user_interaction').selectedIndex=0;
-                }
-                if(part.includes(":N")){
-                document.getElementById('mod_user_interaction').selectedIndex=1;
-                }
-                if(part.includes(":R")){
-                document.getElementById('mod_user_interaction').selectedIndex=2;
-                }
-                }
-
-
-                // modified-scope
-                if(part.includes("MS:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_scope').selectedIndex=0;
-                }
-                if(part.includes(":U")){
-                document.getElementById('mod_scope').selectedIndex=1;
-                }
-                if(part.includes(":C")){
-                document.getElementById('mod_scope').selectedIndex=2;
-                }
-                }
-
-                // modified-confidentiality
-                if(part.includes("MC:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_confidentiality').selectedIndex=0;
-                }
-                if(part.includes(":N")){
-                document.getElementById('mod_confidentiality').selectedIndex=1;
-                }
-                if(part.includes(":L")){
-                document.getElementById('mod_confidentiality').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('mod_confidentiality').selectedIndex=3;
-                }
-                }
-
-                // modified-integrity
-                if(part.includes("MI:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_integrity').selectedIndex=0;
-                }
-                if(part.includes(":N")){
-                document.getElementById('mod_integrity').selectedIndex=1;
-                }
-                if(part.includes(":L")){
-                document.getElementById('mod_integrity').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('mod_integrity').selectedIndex=3;
-                }
-                }
-
-
-                // modified-availability
-                if(part.includes("MA:")){
-                if(part.includes(":X")){
-                document.getElementById('mod_availability').selectedIndex=0;
-                }
-                if(part.includes(":N")){
-                document.getElementById('mod_availability').selectedIndex=1;
-                }
-                if(part.includes(":L")){
-                document.getElementById('mod_availability').selectedIndex=2;
-                }
-                if(part.includes(":H")){
-                document.getElementById('mod_availability').selectedIndex=3;
-                }
-                }
-                }}
-
-                var c = new CVSS.js("cvssboard", {
-                onchange: function() {
-                document.getElementById('vs').value = c.get().vector;
-                updateDropdown(c.get().vector);
-                }
-                });
-
-                $("#vs").on('change keydown paste input', function(){
-                updateDropdown(this.value);
-                });
-      %span{:class=>"input-group-btn"}
-      .control-group
-        %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
+            %div#cvssboard
+      %span.input-group-btn
+      .control-group.cvss3
+        %label.control-label{ :for => "attack_vector" } Base Score
         .controls
-          %select{ :name => "attack_vector", :id => "attack_vector" }
+          #baseScore.cvssjs
+            .results
+              %span.score
+              %span.severity
+      .control-group.cvss3
+        %label.control-label{ :for => "attack_vector" } Temporal Score
+        .controls
+          #temporalScore.cvssjs
+            .results
+              %span.score
+              %span.severity
+      .control-group.cvss3
+        %label.control-label{ :for => "attack_vector" } Environmental Score
+        .controls
+          #environmentalScore.cvssjs
+            .results
+              %span.score
+              %span.severity
+
+      .control-group.cvss3
+        %label.control-label{ :for => "attack_vector" } Attack Vector
+        .controls
+          %select#attack_vector{ :name => "attack_vector", "data-cvss-tag" => "AV" }
             - options.attack_vector.each do |attack_vector|
               %option #{attack_vector}
-      .control-group
-        %label{ :class => "control-label", :for => "attack_complexity" } Attack Complexity
+      .control-group.cvss3
+        %label.control-label{ :for => "attack_complexity" } Attack Complexity
         .controls
-          %select{ :name => "attack_complexity", :id =>  "attack_complexity"}
+          %select#attack_complexity{ :name => "attack_complexity", "data-cvss-tag" => "AC" }
             - options.attack_complexity.each do |attack_complexity|
               %option #{attack_complexity}
-      .control-group
-        %label{ :class => "control-label", :for => "privileges_required" } Privileges Required
+      .control-group.cvss3
+        %label.control-label{ :for => "privileges_required" } Privileges Required
         .controls
-          %select{ :name => "privileges_required", :id =>  "privileges_required"}
+          %select#privileges_required{ :name => "privileges_required", "data-cvss-tag" => "PR" }
             - options.privileges_required.each do |privileges_required|
               %option #{privileges_required}
-      .control-group
-        %label{ :class => "control-label", :for => "user_interaction" } User Interaction
+      .control-group.cvss3
+        %label.control-label{ :for => "user_interaction" } User Interaction
         .controls
-          %select{ :name => "user_interaction", :id => "user_interaction" }
+          %select#user_interaction{ :name => "user_interaction", "data-cvss-tag" => "UI" }
             - options.user_interaction.each do |user_interaction|
               %option #{user_interaction}
-      .control-group
-        %label{ :class => "control-label", :for => "scope_cvss" } Scope
+      .control-group.cvss3
+        %label.control-label{ :for => "scope_cvss" } Scope
         .controls
-          %select{ :name => "scope_cvss", :id => "scope" }
+          %select#scope{ :name => "scope_cvss", "data-cvss-tag" => "S" }
             - options.scope_cvss.each do |scope_cvss|
               %option #{scope_cvss}
-      .control-group
-        %label{ :class => "control-label", :for => "confidentiality" } Confidentiality
+      .control-group.cvss3
+        %label.control-label{ :for => "confidentiality" } Confidentiality
         .controls
-          %select{ :name => "confidentiality", :id => "confidentiality-impact" }
+          %select#confidentiality-impact{ :name => "confidentiality", "data-cvss-tag" => "C" }
             - options.confidentiality.each do |confidentiality|
               %option #{confidentiality}
-      .control-group
-        %label{ :class => "control-label", :for => "integrity" } Integrity
+      .control-group.cvss3
+        %label.control-label{ :for => "integrity" } Integrity
         .controls
-          %select{ :name => "integrity", :id => "integrity" }
+          %select#integrity{ :name => "integrity", "data-cvss-tag" => "I" }
             - options.integrity.each do |integrity|
               %option #{integrity}
-      .control-group
-        %label{ :class => "control-label", :for => "availability" } Availability
+      .control-group.cvss3
+        %label.control-label{ :for => "availability" } Availability
         .controls
-          %select{ :name => "availability", :id => "availability" }
+          %select#availability{ :name => "availability", "data-cvss-tag" => "A" }
             - options.availability.each do |availability|
               %option #{availability}
-      .control-group
-        %label{ :class => "control-label", :for => "exploit_maturity" } Exploit Code Maturity
+      .control-group.cvss3
+        %label.control-label{ :for => "exploit_maturity" } Exploit Code Maturity
         .controls
-          %select{ :name => "exploit_maturity", :id => "exploit_maturity" }
+          %select#exploit_maturity{ :name => "exploit_maturity", "data-cvss-tag" => "E" }
             - options.exploit_maturity.each do |exploit_maturity|
               %option #{exploit_maturity}
-      .control-group
-        %label{ :class => "control-label", :for => "remeditation_level" } Remediation Level
+      .control-group.cvss3
+        %label.control-label{ :for => "remeditation_level" } Remediation Level
         .controls
-          %select{ :name => "remeditation_level", :id => "remeditation_level" }
+          %select#remeditation_level{ :name => "remeditation_level", "data-cvss-tag" => "RL" }
             - options.remeditation_level.each do |remeditation_level|
               %option #{remeditation_level}
-      .control-group
-        %label{ :class => "control-label", :for => "report_confidence" } Report Confidence
+      .control-group.cvss3
+        %label.control-label{ :for => "report_confidence" } Report Confidence
         .controls
-          %select{ :name => "report_confidence", :id => "report_confidence" }
+          %select#report_confidence{ :name => "report_confidence", "data-cvss-tag" => "RC" }
             - options.report_confidence.each do |report_confidence|
               %option #{report_confidence}
-      .control-group
-        %label{ :class => "control-label", :for => "confidentiality_requirement" } Confidentiality Requirement
+      .control-group.cvss3
+        %label.control-label{ :for => "confidentiality_requirement" } Confidentiality Requirement
         .controls
-          %select{ :name => "confidentiality_requirement", :id => "confidentiality_requirement" }
+          %select#confidentiality_requirement{ :name => "confidentiality_requirement", "data-cvss-tag" => "CR" }
             - options.confidentiality_requirement.each do |confidentiality_requirement|
               %option #{confidentiality_requirement}
-      .control-group
-        %label{ :class => "control-label", :for => "integrity_requirement" } Integrity Requirement
+      .control-group.cvss3
+        %label.control-label{ :for => "integrity_requirement" } Integrity Requirement
         .controls
-          %select{ :name => "integrity_requirement", :id => "integrity_requirement" }
+          %select#integrity_requirement{ :name => "integrity_requirement", "data-cvss-tag" => "IR" }
             - options.integrity_requirement.each do |integrity_requirement|
               %option #{integrity_requirement}
-      .control-group
-        %label{ :class => "control-label", :for => "availability_requirement" } Availability Requirement
+      .control-group.cvss3
+        %label.control-label{ :for => "availability_requirement" } Availability Requirement
         .controls
-          %select{ :name => "availability_requirement", :id => "availability_requirement" }
+          %select#availability_requirement{ :name => "availability_requirement", "data-cvss-tag" => "AR" }
             - options.availability_requirement.each do |availability_requirement|
               %option #{availability_requirement}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_attack_vector" } Modified Attack Vector
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_attack_vector" } Modified Attack Vector
         .controls
-          %select{ :name => "mod_attack_vector", :id => "mod_attack_vector" }
+          %select#mod_attack_vector{ :name => "mod_attack_vector", "data-cvss-tag" => "MAV" }
             - options.mod_attack_vector.each do |mod_attack_vector|
               %option #{mod_attack_vector}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_attack_complexity" } Modified Attack Complexity
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_attack_complexity" } Modified Attack Complexity
         .controls
-          %select{ :name => "mod_attack_complexity", :id => "mod_attack_complexity"  }
+          %select#mod_attack_complexity{ :name => "mod_attack_complexity", "data-cvss-tag" => "MAC" }
             - options.mod_attack_complexity.each do |mod_attack_complexity|
               %option #{mod_attack_complexity}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_privileges_required" } Modified Privileges Required
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_privileges_required" } Modified Privileges Required
         .controls
-          %select{ :name => "mod_privileges_required", :id => "mod_privileges_required" }
+          %select#mod_privileges_required{ :name => "mod_privileges_required", "data-cvss-tag" => "MPR" }
             - options.mod_privileges_required.each do |mod_privileges_required|
               %option #{mod_privileges_required}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_user_interaction" } Modified User Interaction
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_user_interaction" } Modified User Interaction
         .controls
-          %select{ :name => "mod_user_interaction", :id => "mod_user_interaction" }
+          %select#mod_user_interaction{ :name => "mod_user_interaction", "data-cvss-tag" => "MUI" }
             - options.mod_user_interaction.each do |mod_user_interaction|
               %option #{mod_user_interaction}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_scope" } Modified Scope
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_scope" } Modified Scope
         .controls
-          %select{ :name => "mod_scope", :id => "mod_scope" }
+          %select#mod_scope{ :name => "mod_scope", "data-cvss-tag" => "MS" }
             - options.mod_scope.each do |mod_scope|
               %option #{mod_scope}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_confidentiality" } Modified Confidentiality
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_confidentiality" } Modified Confidentiality
         .controls
-          %select{ :name => "mod_confidentiality", :id => "mod_confidentiality" }
+          %select#mod_confidentiality{ :name => "mod_confidentiality", "data-cvss-tag" => "MC" }
             - options.mod_confidentiality.each do |mod_confidentiality|
               %option #{mod_confidentiality}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_integrity" } Modified Integrity
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_integrity" } Modified Integrity
         .controls
-          %select{ :name => "mod_integrity", :id => "mod_integrity" }
+          %select#mod_integrity{ :name => "mod_integrity", "data-cvss-tag" => "MI" }
             - options.mod_integrity.each do |mod_integrity|
               %option #{mod_integrity}
-      .control-group
-        %label{ :class => "control-label", :for => "mod_availability" } Modified Availability
+      .control-group.cvss3
+        %label.control-label{ :for => "mod_availability" } Modified Availability
         .controls
-          %select{ :name => "mod_availability", :id => "mod_availability" }
+          %select#mod_availability{ :name => "mod_availability", "data-cvss-tag" => "MA" }
             - options.mod_availability.each do |mod_availability|
               %option #{mod_availability}
     - elsif @riskmatrix
       .control-group
-        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
             %option{:value => 0}= "None"
@@ -1174,29 +849,29 @@
             %option{:value => 3}= "High"
             %option{:value => 4}= "Critical"
       .control-group
-        %label{ :class => "control-label", :for => "severity" } Severity
+        %label.control-label{ :for => "severity" } Severity
         .controls
           %select{ :name => "severity" }
             - options.severity.each do |severity|
               %option #{severity}
       .control-group
-        %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
+        %label.control-label{ :for => "severity_rationale" } Severity Rationale
         .controls
           %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'severity_rationale', :name => 'severity_rationale'}
       .control-group
-        %label{ :class => "control-label", :for => "likelihood" } Likelihood
+        %label.control-label{ :for => "likelihood" } Likelihood
         .controls
           %select{ :name => "likelihood" }
             - options.likelihood.each do |likelihood|
               %option #{likelihood}
       .control-group
-        %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
+        %label.control-label{ :for => "likelihood_rationale" } Likelihood Rationale
         .controls
           %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}
 
     - else
       .control-group
-        %label{ :class => "control-label", :for => "effort" } Remediation Effort
+        %label.control-label{ :for => "effort" } Remediation Effort
         .controls
           %select{ :name => "effort" }
             - if @finding
@@ -1209,7 +884,7 @@
               - options.effort.each do |effort|
                 %option #{effort}
       .control-group
-        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
             %option{:value => 0}= "Informational"
@@ -1218,7 +893,7 @@
             %option{:value => 3}= "High"
             %option{:value => 4}= "Critical"
     .control-group
-      %label{ :class => "control-label", :for => "overview" }
+      %label.control-label{ :for => "overview" }
         %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
       .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
@@ -1278,7 +953,7 @@
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'overview', :name => 'overview'}
     .control-group
-      %label{ :class => "control-label", :for => "pocu" } Proof of Concept
+      %label.control-label{ :for => "pocu" } Proof of Concept
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'poc', :name => 'poc', :id => 'pocu'}
     - attachments=''
@@ -1305,20 +980,20 @@
         })
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts
+        %label.control-label{ :for => "affected_hosts" } Affected Hosts
         .controls
           %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'affected_hosts', :name => 'affected_hosts'}
     .control-group
-      %label{ :class => "control-label", :for => "remediation" } Remediation
+      %label.control-label{ :for => "remediation" } Remediation
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'remediation'}
     .control-group
-      %label{ :class => "control-label", :for => "references" } References (One Per Line)
+      %label.control-label{ :for => "references" } References (One Per Line)
       .controls
         %textarea{ :rows => '5', :class => 'input-xxlarge allowMarkupShortcut', :name => 'references'}
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "notes" } Notes Data
+        %label.control-label{ :for => "notes" } Notes Data
         %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_2", :id=>"actionButton"}
         .info{ :id => "info_2", :class => "collapse out" }
           %label
@@ -1330,7 +1005,7 @@
                 #{meta_markup(@finding.notes)}
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "preso" } Presentation Data
+        %label.control-label{ :for => "preso" } Presentation Data
         %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_1", :id=>"actionButton"}
         .info{ :id => "info_1", :class => "collapse out" }
           %label
@@ -1352,3 +1027,396 @@
     %input{:type => 'submit', :value => 'Save'}
     %a{ :href => "#{id_r}"}
       %input{ :type => "button", :value => 'Cancel'}
+
+  -if @cvssv3
+    :css
+      .cvss3 .cvssjs .results {
+        padding: 0px;
+      }
+
+    :javascript
+      var cvssjs;
+
+      function updateCVSS() {
+        updateCVSSSummary(true);
+      }
+
+      function updateCVSSSummary(updateCVSSJS) {
+        var vectorString = "CVSS:3.0";
+
+        $("select[data-cvss-tag]").each(function (index, element) {
+          if (element.value.toLowerCase() == "not defined") {
+            vectorString += "/" + element.getAttribute("data-cvss-tag") + ":X";
+          } else {
+            vectorString += "/" + element.getAttribute("data-cvss-tag") + ":" + element.value[0];
+          }
+        });
+        var output = CVSS.calculateCVSSFromVector(vectorString);
+
+        $("#baseScore .results .score").text(output.baseMetricScore);
+        $("#baseScore .results .severity").text(output.baseSeverity);
+        $("#baseScore .results .severity").attr("class", "severity " + output.baseSeverity);
+        $("#temporalScore .results .score").text(output.temporalMetricScore);
+        $("#temporalScore .results .severity").text(output.temporalSeverity);
+        $("#temporalScore .results .severity").attr("class", "severity " + output.temporalSeverity);
+        $("#environmentalScore .results .score").text(output.environmentalMetricScore);
+        $("#environmentalScore .results .severity").text(output.environmentalSeverity);
+        $("#environmentalScore .results .severity").attr("class", "severity " + output.environmentalSeverity);
+
+        if (updateCVSSJS) {
+          cvssjs.set(vectorString);
+        }
+      }
+
+      function updateDropdown(score){
+        var vector = score.trim().split("/");
+
+        for(var i in vector){
+          var part = vector[i];
+
+          if (part.length > 0){
+            part = part.toUpperCase();
+          }
+
+          //CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:N/A:N/RL:O/CR:L
+          // AV
+          // LANP
+          if(part.includes("AV:") && !part.includes("MAV:")){
+            if(part.includes(":L")){
+              document.getElementById('attack_vector').selectedIndex=0;
+            }
+            if(part.includes(":A")){
+              document.getElementById('attack_vector').selectedIndex=1;
+            }
+            if(part.includes(":N")){
+              document.getElementById('attack_vector').selectedIndex=2;
+            }
+            if(part.includes(":P")){
+              document.getElementById('attack_vector').selectedIndex=3;
+            }
+          }
+
+          // AC
+          if(part.includes("AC:")  && !part.includes("MAC:")){
+            if(part.includes(":L")){
+              document.getElementById('attack_complexity').selectedIndex=0;
+            }
+            if(part.includes(":H")){
+              document.getElementById('attack_complexity').selectedIndex=1;
+            }
+          }
+
+          // PR NLH
+          if(part.includes("PR:")  && !part.includes("MPR:")){
+            if(part.includes(":N")){
+              document.getElementById('privileges_required').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('privileges_required').selectedIndex=1;
+            }
+            if(part.includes(":H")){
+              document.getElementById('privileges_required').selectedIndex=2;
+            }
+          }
+
+          // UI
+          if(part.includes("UI:")){
+            if(part.includes(":N")){
+              document.getElementById('user_interaction').selectedIndex=0;
+            }
+            if(part.includes(":R")){
+              document.getElementById('user_interaction').selectedIndex=1;
+            }
+          }
+
+          // S
+          if(part.includes("S:")  && !part.includes("MS:")){
+            if(part.includes(":U")){
+              document.getElementById('scope').selectedIndex=0;
+            }
+            if(part.includes(":C")){
+              document.getElementById('scope').selectedIndex=1;
+            }
+          }
+
+          // I
+          if(part.includes("I:")  && !part.includes("MI:")){
+            if(part.includes(":N")){
+              document.getElementById('integrity').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('integrity').selectedIndex=1;
+            }
+            if(part.includes(":H")){
+              document.getElementById('integrity').selectedIndex=2;
+            }
+          }
+
+          // C
+          if(part.includes("C:") && !part.includes("MC:") && !part.includes("MAC:")){
+            if(part.includes(":N")){
+              document.getElementById('confidentiality-impact').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('confidentiality-impact').selectedIndex=1;
+            }
+            if(part.includes(":H")){
+              document.getElementById('confidentiality-impact').selectedIndex=2;
+            }
+          }
+
+          // A
+          if(part.includes("A:")  && !part.includes("MA:")){
+            if(part.includes(":N")){
+              document.getElementById('availability').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('availability').selectedIndex=1;
+            }
+            if(part.includes(":H")){
+              document.getElementById('availability').selectedIndex=2;
+            }
+          }
+
+          // Exploit Code Maturity
+          if(part.includes("E:")){
+            if(part.includes(":X")){
+              document.getElementById('exploit_maturity').selectedIndex=0;
+            }
+            if(part.includes(":U")){
+              document.getElementById('exploit_maturity').selectedIndex=1;
+            }
+            if(part.includes(":P")){
+              document.getElementById('exploit_maturity').selectedIndex=2;
+            }
+            if(part.includes(":F")){
+              document.getElementById('exploit_maturity').selectedIndex=3;
+            }
+          }
+
+
+          // Remediation Level
+          if(part.includes("RL:")){
+            if(part.includes(":X")){
+              document.getElementById('remeditation_level').selectedIndex=0;
+            }
+            if(part.includes(":O")){
+              document.getElementById('remeditation_level').selectedIndex=1;
+            }
+            if(part.includes(":T")){
+              document.getElementById('remeditation_level').selectedIndex=2;
+            }
+            if(part.includes(":W")){
+              document.getElementById('remeditation_level').selectedIndex=3;
+            }
+            if(part.includes(":U")){
+              document.getElementById('remeditation_level').selectedIndex=4;
+            }
+          }
+
+
+          // report confidence
+          if(part.includes("RC:")){
+            if(part.includes(":X")){
+              document.getElementById('report_confidence').selectedIndex=0;
+            }
+            if(part.includes(":U")){
+              document.getElementById('report_confidence').selectedIndex=1;
+            }
+            if(part.includes(":R")){
+              document.getElementById('report_confidence').selectedIndex=2;
+            }
+            if(part.includes(":C")){
+              document.getElementById('report_confidence').selectedIndex=3;
+            }
+          }
+
+          // confidentiality-requirement
+          if(part.includes("CR:")){
+            if(part.includes(":X")){
+              document.getElementById('confidentiality_requirement').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('confidentiality_requirement').selectedIndex=1;
+            }
+            if(part.includes(":M")){
+              document.getElementById('confidentiality_requirement').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('confidentiality_requirement').selectedIndex=3;
+            }
+          }
+
+          // integrity-requirement
+          if(part.includes("IR:")){
+            if(part.includes(":X")){
+              document.getElementById('integrity_requirement').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('integrity_requirement').selectedIndex=1;
+            }
+            if(part.includes(":M")){
+              document.getElementById('integrity_requirement').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('integrity_requirement').selectedIndex=3;
+            }
+          }
+
+          // integrity-requirement
+          if(part.includes("AR:")){
+            if(part.includes(":X")){
+              document.getElementById('availability_requirement').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('availability_requirement').selectedIndex=1;
+            }
+            if(part.includes(":M")){
+              document.getElementById('availability_requirement').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('availability_requirement').selectedIndex=3;
+            }
+          }
+
+          // modified-attack-vector
+          if(part.includes("MAV:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_attack_vector').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('mod_attack_vector').selectedIndex=1;
+            }
+            if(part.includes(":A")){
+              document.getElementById('mod_attack_vector').selectedIndex=2;
+            }
+            if(part.includes(":N")){
+              document.getElementById('mod_attack_vector').selectedIndex=3;
+            }
+            if(part.includes(":P")){
+              document.getElementById('mod_attack_vector').selectedIndex=4;
+            }
+          }
+
+          // modified-attack-vector
+          if(part.includes("MAC:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_attack_complexity').selectedIndex=0;
+            }
+            if(part.includes(":L")){
+              document.getElementById('mod_attack_complexity').selectedIndex=1;
+            }
+            if(part.includes(":H")){
+              document.getElementById('mod_attack_complexity').selectedIndex=2;
+            }
+          }
+
+          // modified-privileges-Required
+          if(part.includes("MPR:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_privileges_required').selectedIndex=0;
+            }
+            if(part.includes(":N")){
+              document.getElementById('mod_privileges_required').selectedIndex=1;
+            }
+            if(part.includes(":L")){
+              document.getElementById('mod_privileges_required').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('mod_privileges_required').selectedIndex=3;
+            }
+          }
+
+          // modified-user-interaction
+          if(part.includes("MUI:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_user_interaction').selectedIndex=0;
+            }
+            if(part.includes(":N")){
+              document.getElementById('mod_user_interaction').selectedIndex=1;
+            }
+            if(part.includes(":R")){
+              document.getElementById('mod_user_interaction').selectedIndex=2;
+            }
+          }
+
+          // modified-scope
+          if(part.includes("MS:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_scope').selectedIndex=0;
+            }
+            if(part.includes(":U")){
+              document.getElementById('mod_scope').selectedIndex=1;
+            }
+            if(part.includes(":C")){
+              document.getElementById('mod_scope').selectedIndex=2;
+            }
+          }
+
+          // modified-confidentiality
+          if(part.includes("MC:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_confidentiality').selectedIndex=0;
+            }
+            if(part.includes(":N")){
+              document.getElementById('mod_confidentiality').selectedIndex=1;
+            }
+            if(part.includes(":L")){
+              document.getElementById('mod_confidentiality').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('mod_confidentiality').selectedIndex=3;
+            }
+          }
+
+          // modified-integrity
+          if(part.includes("MI:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_integrity').selectedIndex=0;
+            }
+            if(part.includes(":N")){
+              document.getElementById('mod_integrity').selectedIndex=1;
+            }
+            if(part.includes(":L")){
+              document.getElementById('mod_integrity').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('mod_integrity').selectedIndex=3;
+            }
+          }
+
+          // modified-availability
+          if(part.includes("MA:")){
+            if(part.includes(":X")){
+              document.getElementById('mod_availability').selectedIndex=0;
+            }
+            if(part.includes(":N")){
+              document.getElementById('mod_availability').selectedIndex=1;
+            }
+            if(part.includes(":L")){
+              document.getElementById('mod_availability').selectedIndex=2;
+            }
+            if(part.includes(":H")){
+              document.getElementById('mod_availability').selectedIndex=3;
+            }
+          }
+        }
+      }
+
+      $(document).ready(function() {
+        cvssjs = new CVSS.js("cvssboard", {
+          onchange: function() {
+            document.getElementById('vs').value = cvssjs.get().vector;
+            updateDropdown(cvssjs.get().vector);
+            updateCVSSSummary(false);
+          }
+        });
+
+        $(".cvss3 select").on("change", updateCVSS);
+        updateCVSSSummary(true);
+
+        $("#vs").on('change keydown paste input', function(){
+          updateDropdown(this.value);
+          updateCVSSSummary(true, false);
+        });
+      });

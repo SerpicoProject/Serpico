@@ -8,13 +8,13 @@
   %br
   %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
     .control-group
-      %label{ :class => "control-label", :for => "title" } Title
+      %label.control-label{ :for => "title" } Title
       .controls
         %input{ :type => 'text', :name => 'title', :value => "#{@finding.title}"}
     -if !@master
       %br
       .control-group
-        %label{ :class => "control-label", :for => "assessment_type" } Assessment Type
+        %label.control-label{ :for => "assessment_type" } Assessment Type
         .controls
           %select{ :name => "assessment_type" }
             - options.assessment_types.each do |type|
@@ -25,7 +25,7 @@
                   %option #{type}
     -if @master
       .control-group
-        %label{ :class => "control-label", :for => "approved" } Approved
+        %label.control-label{ :for => "approved" } Approved
         .controls
           -if @finding.approved
             %input{ :type=>"checkbox", :name => 'approved', :checked=>"checked"}
@@ -33,7 +33,7 @@
             %input{ :type=>"checkbox", :name => 'approved'}
       - if @vulnmap
         .control-group
-          %label{ :class => "control-label", :for => "existingvulnmaps" } Vuln IDs mapped to this finding
+          %label.control-label{ :for => "existingvulnmaps" } Vuln IDs mapped to this finding
           .controls
             .table
               %table{ :style => 'width: 220px'}
@@ -46,7 +46,7 @@
                         %a{ :class => "btn btn-danger btn-sm", :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete"}
                           %i{:class => 'icon-remove icon-white icon-sm', :value => "#{vuln.msf_ref}", :type => "submit", :title => 'Delete'}
         .control-group
-          %label{ :class => "control-label", :for => "msf_ref" }
+          %label.control-label{ :for => "msf_ref" }
             %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
               Add new Vuln ID mapping
           .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
@@ -88,7 +88,7 @@
             %input{ :type => 'text', :name => 'msf_ref'}
       - if @nessusmap
         .control-group
-          %label{ :class => "control-label", :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
+          %label.control-label{ :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
           .controls
             .table
               %table{ :style => 'width: 220px'}
@@ -102,12 +102,12 @@
                         %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete"}
                           %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
         .control-group
-          %label{ :class => "control-label", :for => "nessus_pluginid" } Add new nessus ID mapping
+          %label.control-label{ :for => "nessus_pluginid" } Add new nessus ID mapping
           .controls
             %input{ :type => 'text', :name => 'nessus_pluginid'}
       - if @burpmap
         .control-group
-          %label{ :class => "control-label", :for => "existingburpmaps" } Burp IDs Mapped to this finding
+          %label.control-label{ :for => "existingburpmaps" } Burp IDs Mapped to this finding
           .controls
             .table
               %table{ :style => 'width: 220px'}
@@ -121,7 +121,7 @@
                         %a{ :class => "btn btn-danger btn-xs", :href => "/mapping/#{@finding.id}/burp/#{item.pluginid}/delete"}
                           %i{:class => 'icon-remove icon-white', :value => "#{item.pluginid}", :type => "submit", :title => 'Delete'}
         .control-group
-          %label{ :class => "control-label", :for => "burp_pluginid" }
+          %label.control-label{ :for => "burp_pluginid" }
             %a{:href=> '#burpmodal', "data-toggle"=>'modal'}
               Add new Burp ID mapping
           .modal{:id=>'burpmodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
@@ -140,28 +140,28 @@
             %input{ :type => 'text', :name => 'burp_pluginid'}
     - if @dread
       .control-group
-        %label{ :class => "control-label", :for => "damage" } Damage
+        %label.control-label{ :for => "damage" } Damage
         .controls
           %input{ :type => 'number', :min => '1', :max => '10', :name => 'damage', :value => "#{@finding.damage}", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "reproducability" } Reproducibility
+        %label.control-label{ :for => "reproducability" } Reproducibility
         .controls
           %input{ :type => 'number', :min => '1', :max => '10', :name => 'reproducability', :value => "#{@finding.reproducability}", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "exploitability" } Exploitability
+        %label.control-label{ :for => "exploitability" } Exploitability
         .controls
           %input{ :type => 'number', :min => '1', :max => '10', :name => 'exploitability', :value => "#{@finding.exploitability}", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "affected_users" } Affected Users
+        %label.control-label{ :for => "affected_users" } Affected Users
         .controls
           %input{ :type => 'number', :min => '1', :max => '10', :name => 'affected_users', :value => "#{@finding.affected_users}", :required => true}
       .control-group
-        %label{ :class => "control-label", :for => "discoverability" } Discoverability
+        %label.control-label{ :for => "discoverability" } Discoverability
         .controls
           %input{ :type => 'number', :min => '1', :max => '10', :name => 'discoverability', :value => "#{@finding.discoverability}", :required => true}
     - elsif @cvss
       .control-group
-        %label{ :class => "control-label", :for => "attack_vector" }
+        %label.control-label{ :for => "attack_vector" }
           %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
             CVSS Vector String
         .controls
@@ -415,7 +415,7 @@
                 updateDropdown(this.value);
                 });
       .control-group
-        %label{ :class => "control-label", :for => "av" } Access Vector
+        %label.control-label{ :for => "av" } Access Vector
         .controls
           %select{ :name => "av", :id => "av" }
             - options.av.each do |av|
@@ -424,7 +424,7 @@
               - else
                 %option #{av}
       .control-group
-        %label{ :class => "control-label", :for => "ac" } Access Complexity
+        %label.control-label{ :for => "ac" } Access Complexity
         .controls
           %select{ :name => "ac", :id => "ac" }
             - options.ac.each do |ac|
@@ -433,7 +433,7 @@
               - else
                 %option #{ac}
       .control-group
-        %label{ :class => "control-label", :for => "au" } Authentication
+        %label.control-label{ :for => "au" } Authentication
         .controls
           %select{ :name => "au", :id => "au" }
             - options.au.each do |au|
@@ -442,7 +442,7 @@
               - else
                 %option #{au}
       .control-group
-        %label{ :class => "control-label", :for => "c" } Confidentiality Impact
+        %label.control-label{ :for => "c" } Confidentiality Impact
         .controls
           %select{ :name => "c", :id => "c" }
             - options.c.each do |c|
@@ -451,7 +451,7 @@
               - else
                 %option #{c}
       .control-group
-        %label{ :class => "control-label", :for => "i" } Integrity Impact
+        %label.control-label{ :for => "i" } Integrity Impact
         .controls
           %select{ :name => "i", :id => "i" }
             - options.i.each do |i|
@@ -460,7 +460,7 @@
               - else
                 %option #{i}
       .control-group
-        %label{ :class => "control-label", :for => "a" } Availability Impact
+        %label.control-label{ :for => "a" } Availability Impact
         .controls
           %select{ :name => "a", :id => "a" }
             - options.a.each do |a|
@@ -469,7 +469,7 @@
               - else
                 %option #{a}
       .control-group
-        %label{ :class => "control-label", :for => "e" } Exploitability
+        %label.control-label{ :for => "e" } Exploitability
         .controls
           %select{ :name => "e", :id => "e" }
             - options.e.each do |e|
@@ -478,7 +478,7 @@
               - else
                 %option #{e}
       .control-group
-        %label{ :class => "control-label", :for => "rl" } Remediation Level
+        %label.control-label{ :for => "rl" } Remediation Level
         .controls
           %select{ :name => "rl", :id => "rl" }
             - options.rl.each do |rl|
@@ -487,7 +487,7 @@
               - else
                 %option #{rl}
       .control-group
-        %label{ :class => "control-label", :for => "rc" } Report Confidence
+        %label.control-label{ :for => "rc" } Report Confidence
         .controls
           %select{ :name => "rc", :id => "rc" }
             - options.rc.each do |rc|
@@ -496,7 +496,7 @@
               - else
                 %option #{rc}
       .control-group
-        %label{ :class => "control-label", :for => "cdp" } Collateral Damage Potential
+        %label.control-label{ :for => "cdp" } Collateral Damage Potential
         .controls
           %select{ :name => "cdp", :id => "cdp" }
             - options.cdp.each do |cdp|
@@ -505,7 +505,7 @@
               - else
                 %option #{cdp}
       .control-group
-        %label{ :class => "control-label", :for => "td" } Target Distribution
+        %label.control-label{ :for => "td" } Target Distribution
         .controls
           %select{ :name => "td", :id => "td" }
             - options.td.each do |td|
@@ -514,7 +514,7 @@
               - else
                 %option #{td}
       .control-group
-        %label{ :class => "control-label", :for => "cr" } Confidentiality Requirement
+        %label.control-label{ :for => "cr" } Confidentiality Requirement
         .controls
           %select{ :name => "cr", :id => "cr" }
             - options.cr.each do |cr|
@@ -523,7 +523,7 @@
               - else
                 %option #{cr}
       .control-group
-        %label{ :class => "control-label", :for => "ir" } Integrity Requirement
+        %label.control-label{ :for => "ir" } Integrity Requirement
         .controls
           %select{ :name => "ir", :id => "ir" }
             - options.ir.each do |ir|
@@ -532,7 +532,7 @@
               - else
                 %option #{ir}
       .control-group
-        %label{ :class => "control-label", :for => "ar" } Availability Requirement
+        %label.control-label{ :for => "ar" } Availability Requirement
         .controls
           %select{ :name => "ar", :id => "ar" }
             - options.ar.each do |ar|
@@ -542,39 +542,39 @@
                 %option #{ar}
     - elsif @cvssv3
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "attack_vector" }
-          %a{:href=> '#mymodal', "data-toggle"=>'modal', :class=>'btn btn-info'}
+        %label.control-label{ :for => "attack_vector" }
+          %a.btn.btn-info{:href=> "#mymodal", "data-toggle"=>'modal', :class=>'btn btn-info'}
             CVSS Vector String
         .controls
-          %input{:type => "text", :class=>"form-control", :placeholder=>"CVSS Vector String", :id=>"vs", :style=>"width:35em"}
-        .modal{:id=>'mymodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+          %input.form-control#vs{ :type => "text", :placeholder=>"CVSS Vector String", :style=>"width:35em" }
+        .modal.modal.hide.fade#mymodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
           .modal-header
-            %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+            %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
               x
-            %h3{:id=>"modal-label"}
+            %h3#modal-label
               CVSS Vector String
           .modal-body
-            %link{ :rel=>"stylesheet", :type=>"text/css", :media=>"all", :href=>"/css/cvss.css"}
+            %link{ :rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/cvss.css" }
             %script{:src => "/js/cvsscalc30.js"}
             %script{ :src => "/js/cvss3.js"}
-            %div{ :id=>"cvssboard"}
-      %span{:class=>"input-group-btn"}
+            %div#cvssboard
+      %span.input-group-btn
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "attack_vector" } Base Score
+        %label.control-label{ :for => "attack_vector" } Base Score
         .controls
           #baseScore.cvssjs
             .results
               %span.score
               %span.severity
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "attack_vector" } Temporal Score
+        %label.control-label{ :for => "attack_vector" } Temporal Score
         .controls
           #temporalScore.cvssjs
             .results
               %span.score
               %span.severity
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "attack_vector" } Environmental Score
+        %label.control-label{ :for => "attack_vector" } Environmental Score
         .controls
           #environmentalScore.cvssjs
             .results
@@ -582,7 +582,7 @@
               %span.severity
 
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "attack_vector" } Attack Vector
+        %label.control-label{ :for => "attack_vector" } Attack Vector
         .controls
           %select{ :name => "attack_vector", :id => "attack_vector", "data-cvss-tag" => "AV"  }
             - options.attack_vector.each do |attack_vector|
@@ -591,189 +591,189 @@
               - else
                 %option #{attack_vector}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "attack_complexity" } Attack Complexity
+        %label.control-label{ :for => "attack_complexity" } Attack Complexity
         .controls
-          %select{ :name => "attack_complexity", :id =>  "attack_complexity", "data-cvss-tag" => "AC" }
+          %select#attack_complexity{ :name => "attack_complexity", "data-cvss-tag" => "AC" }
             - options.attack_complexity.each do |attack_complexity|
               - if attack_complexity == @finding.attack_complexity
                 %option{ :selected => "selected" } #{attack_complexity}
               - else
                 %option #{attack_complexity}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "privileges_required" } Privileges Required
+        %label.control-label{ :for => "privileges_required" } Privileges Required
         .controls
-          %select{ :name => "privileges_required", :id =>  "privileges_required", "data-cvss-tag" => "PR" }
+          %select#privileges_required{ :name => "privileges_required", "data-cvss-tag" => "PR" }
             - options.privileges_required.each do |privileges_required|
               - if privileges_required == @finding.privileges_required
                 %option{ :selected => "selected" } #{privileges_required}
               - else
                 %option #{privileges_required}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "user_interaction" } User Interaction
+        %label.control-label{ :for => "user_interaction" } User Interaction
         .controls
-          %select{ :name => "user_interaction", :id => "user_interaction", "data-cvss-tag" => "UI"  }
+          %select#user_interaction{ :name => "user_interaction", "data-cvss-tag" => "UI" }
             - options.user_interaction.each do |user_interaction|
               - if user_interaction == @finding.user_interaction
                 %option{ :selected => "selected" } #{user_interaction}
               - else
                 %option #{user_interaction}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "scope_cvss" } Scope
+        %label.control-label{ :for => "scope_cvss" } Scope
         .controls
-          %select{ :name => "scope_cvss", :id => "scope", "data-cvss-tag" => "S"  }
+          %select#scope{ :name => "scope_cvss", "data-cvss-tag" => "S"  }
             - options.scope_cvss.each do |scope_cvss|
               - if scope_cvss == @finding.scope_cvss
                 %option{ :selected => "selected" } #{scope_cvss}
               - else
                 %option #{scope_cvss}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "confidentiality" } Confidentiality
+        %label.control-label{ :for => "confidentiality" } Confidentiality
         .controls
-          %select{ :name => "confidentiality", :id => "confidentiality-impact", "data-cvss-tag" => "C" }
+          %select#confidentiality-impact{ :name => "confidentiality", "data-cvss-tag" => "C" }
             - options.confidentiality.each do |confidentiality|
               - if confidentiality == @finding.confidentiality
                 %option{ :selected => "selected" } #{confidentiality}
               - else
                 %option #{confidentiality}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "integrity" } Integrity
+        %label.control-label{ :for => "integrity" } Integrity
         .controls
-          %select{ :name => "integrity", :id => "integrity", "data-cvss-tag" => "I" }
+          %select#integrity{ :name => "integrity", "data-cvss-tag" => "I" }
             - options.integrity.each do |integrity|
               - if integrity == @finding.integrity
                 %option{ :selected => "selected" } #{integrity}
               - else
                 %option #{integrity}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "availability" } Availability
+        %label.control-label{ :for => "availability" } Availability
         .controls
-          %select{ :name => "availability", :id => "availability", "data-cvss-tag" => "A" }
+          %select#availability{ :name => "availability", "data-cvss-tag" => "A" }
             - options.availability.each do |availability|
               - if availability == @finding.availability
                 %option{ :selected => "selected" } #{availability}
               - else
                 %option #{availability}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "exploit_maturity" } Exploit Code Maturity
+        %label.control-label{ :for => "exploit_maturity" } Exploit Code Maturity
         .controls
-          %select{ :name => "exploit_maturity", :id => "exploit_maturity", "data-cvss-tag" => "E"  }
+          %select#exploit_maturity{ :name => "exploit_maturity", "data-cvss-tag" => "E"  }
             - options.exploit_maturity.each do |exploit_maturity|
               - if exploit_maturity == @finding.exploit_maturity
                 %option{ :selected => "selected" } #{exploit_maturity}
               - else
                 %option #{exploit_maturity}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "remeditation_level" } Remediation Level
+        %label.control-label{ :for => "remeditation_level" } Remediation Level
         .controls
-          %select{ :name => "remeditation_level", :id => "remeditation_level", "data-cvss-tag" => "RL" }
+          %select#remeditation_level{ :name => "remeditation_level", "data-cvss-tag" => "RL" }
             - options.remeditation_level.each do |remeditation_level|
               - if remeditation_level == @finding.remeditation_level
                 %option{ :selected => "selected" } #{remeditation_level}
               - else
                 %option #{remeditation_level}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "report_confidence" } Report Confidence
+        %label.control-label{ :for => "report_confidence" } Report Confidence
         .controls
-          %select{ :name => "report_confidence", :id => "report_confidence", "data-cvss-tag" => "RC" }
+          %select#report_confidence{ :name => "report_confidence", "data-cvss-tag" => "RC" }
             - options.report_confidence.each do |report_confidence|
               - if report_confidence == @finding.report_confidence
                 %option{ :selected => "selected" } #{report_confidence}
               - else
                 %option #{report_confidence}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "confidentiality_requirement" } Confidentiality Requirement
+        %label.control-label{ :for => "confidentiality_requirement" } Confidentiality Requirement
         .controls
-          %select{ :name => "confidentiality_requirement", :id => "confidentiality_requirement", "data-cvss-tag" => "CR" }
+          %select#confidentiality_requirement{ :name => "confidentiality_requirement", "data-cvss-tag" => "CR" }
             - options.confidentiality_requirement.each do |confidentiality_requirement|
               - if confidentiality_requirement == @finding.confidentiality_requirement
                 %option{ :selected => "selected" } #{confidentiality_requirement}
               - else
                 %option #{confidentiality_requirement}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "integrity_requirement" } Integrity Requirement
+        %label.control-label{ :for => "integrity_requirement" } Integrity Requirement
         .controls
-          %select{ :name => "integrity_requirement", :id => "integrity_requirement", "data-cvss-tag" => "IR" }
+          %select#integrity_requirement{ :name => "integrity_requirement", "data-cvss-tag" => "IR" }
             - options.integrity_requirement.each do |integrity_requirement|
               - if integrity_requirement == @finding.integrity_requirement
                 %option{ :selected => "selected" } #{integrity_requirement}
               - else
                 %option #{integrity_requirement}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "availability_requirement" } Availability Requirement
+        %label.control-label{ :for => "availability_requirement" } Availability Requirement
         .controls
-          %select{ :name => "availability_requirement", :id => "availability_requirement", "data-cvss-tag" => "AR" }
+          %select#availability_requirement{ :name => "availability_requirement", "data-cvss-tag" => "AR" }
             - options.availability_requirement.each do |availability_requirement|
               - if availability_requirement == @finding.availability_requirement
                 %option{ :selected => "selected" } #{availability_requirement}
               - else
                 %option #{availability_requirement}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_attack_vector" } Modified Attack Vector
+        %label.control-label{ :for => "mod_attack_vector" } Modified Attack Vector
         .controls
-          %select{ :name => "mod_attack_vector", :id => "mod_attack_vector", "data-cvss-tag" => "MAV" }
+          %select#mod_attack_vector{ :name => "mod_attack_vector", "data-cvss-tag" => "MAV" }
             - options.mod_attack_vector.each do |mod_attack_vector|
               - if mod_attack_vector == @finding.mod_attack_vector
                 %option{ :selected => "selected" } #{mod_attack_vector}
               - else
                 %option #{mod_attack_vector}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_attack_complexity" } Modified Attack Complexity
+        %label.control-label{ :for => "mod_attack_complexity" } Modified Attack Complexity
         .controls
-          %select{ :name => "mod_attack_complexity", :id => "mod_attack_complexity", "data-cvss-tag" => "MAC" }
+          %select#mod_attack_complexity{ :name => "mod_attack_complexity", "data-cvss-tag" => "MAC" }
             - options.mod_attack_complexity.each do |mod_attack_complexity|
               - if mod_attack_complexity == @finding.mod_attack_complexity
                 %option{ :selected => "selected" } #{mod_attack_complexity}
               - else
                 %option #{mod_attack_complexity}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_privileges_required" } Modified Privileges Required
+        %label.control-label{ :for => "mod_privileges_required" } Modified Privileges Required
         .controls
-          %select{ :name => "mod_privileges_required", :id => "mod_privileges_required", "data-cvss-tag" => "MPR" }
+          %select#mod_privileges_required{ :name => "mod_privileges_required", "data-cvss-tag" => "MPR" }
             - options.mod_privileges_required.each do |mod_privileges_required|
               - if mod_privileges_required == @finding.mod_privileges_required
                 %option{ :selected => "selected" } #{mod_privileges_required}
               - else
                 %option #{mod_privileges_required}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_user_interaction" } Modified User Interaction
+        %label.control-label{ :for => "mod_user_interaction" } Modified User Interaction
         .controls
-          %select{ :name => "mod_user_interaction", :id => "mod_user_interaction", "data-cvss-tag" => "MUI" }
+          %select#mod_user_interaction{ :name => "mod_user_interaction", "data-cvss-tag" => "MUI" }
             - options.mod_user_interaction.each do |mod_user_interaction|
               - if mod_user_interaction == @finding.mod_user_interaction
                 %option{ :selected => "selected" } #{mod_user_interaction}
               - else
                 %option #{mod_user_interaction}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_scope" } Modified Scope
+        %label.control-label{ :for => "mod_scope" } Modified Scope
         .controls
-          %select{ :name => "mod_scope", :id => "mod_scope", "data-cvss-tag" => "MS" }
+          %select#mod_scope{ :name => "mod_scope", "data-cvss-tag" => "MS" }
             - options.mod_scope.each do |mod_scope|
               - if mod_scope == @finding.mod_scope
                 %option{ :selected => "selected" } #{mod_scope}
               - else
                 %option #{mod_scope}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_confidentiality" } Modified Confidentiality
+        %label.control-label{ :for => "mod_confidentiality" } Modified Confidentiality
         .controls
-          %select{ :name => "mod_confidentiality", :id => "mod_confidentiality", "data-cvss-tag" => "MC" }
+          %select#mod_confidentiality{ :name => "mod_confidentiality", "data-cvss-tag" => "MC" }
             - options.mod_confidentiality.each do |mod_confidentiality|
               - if mod_confidentiality == @finding.mod_confidentiality
                 %option{ :selected => "selected" } #{mod_confidentiality}
               - else
                 %option #{mod_confidentiality}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_integrity" } Modified Integrity
+        %label.control-label{ :for => "mod_integrity" } Modified Integrity
         .controls
-          %select{ :name => "mod_integrity", :id => "mod_integrity", "data-cvss-tag" => "MI" }
+          %select#mod_integrity{ :name => "mod_integrity", "data-cvss-tag" => "MI" }
             - options.mod_integrity.each do |mod_integrity|
               - if mod_integrity == @finding.mod_integrity
                 %option{ :selected => "selected" } #{mod_integrity}
               - else
                 %option #{mod_integrity}
       .control-group.cvss3
-        %label{ :class => "control-label", :for => "mod_availability" } Modified Availability
+        %label.control-label{ :for => "mod_availability" } Modified Availability
         .controls
-          %select{ :name => "mod_availability", :id => "mod_availability", "data-cvss-tag" => "MA" }
+          %select#mod_availability{ :name => "mod_availability", "data-cvss-tag" => "MA" }
             - options.mod_availability.each do |mod_availability|
               - if mod_availability == @finding.mod_availability
                 %option{ :selected => "selected" } #{mod_availability}
@@ -781,7 +781,7 @@
                 %option #{mod_availability}
     - elsif @riskmatrix
       .control-group
-        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
             - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
@@ -794,7 +794,7 @@
               - else
                 %option{ :value => "#{r_type}"} #{risk_types[r_type]}
       .control-group
-        %label{ :class => "control-label", :for => "severity" } Severity
+        %label.control-label{ :for => "severity" } Severity
         .controls
           %select{ :name => "severity" }
             - options.severity.each do |severity|
@@ -803,14 +803,14 @@
               - else
                 %option #{severity}
       .control-group
-        %label{ :class => "control-label", :for => "severity_rationale" } Severity Rationale
+        %label.control-label{ :for => "severity_rationale" } Severity Rationale
         .controls
           %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'severity_rationale', :name => 'severity_rationale'}
             - if @finding
               - if @finding.severity_rationale
                 #{meta_markup(@finding.severity_rationale)}
       .control-group
-        %label{ :class => "control-label", :for => "likelihood" } Likelihood
+        %label.control-label{ :for => "likelihood" } Likelihood
         .controls
           %select{ :name => "likelihood" }
             - options.likelihood.each do |likelihood|
@@ -819,7 +819,7 @@
               - else
                 %option #{likelihood}
       .control-group
-        %label{ :class => "control-label", :for => "likelihood_rationale" } Likelihood Rationale
+        %label.control-label{ :for => "likelihood_rationale" } Likelihood Rationale
         .controls
           %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :id => 'likelihood_rationale', :name => 'likelihood_rationale'}
             - if @finding
@@ -827,7 +827,7 @@
                 #{meta_markup(@finding.likelihood_rationale)}
     - else
       .control-group
-        %label{ :class => "control-label", :for => "risk" } Vulnerability Risk Level
+        %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
           %select{ :name => "risk" }
             - risk_types = ["Informational", "Low", "Moderate", "High", "Critical"]
@@ -840,7 +840,7 @@
               - else
                 %option{ :value => "#{r_type}"} #{risk_types[r_type]}
     .control-group
-      %label{ :class => "control-label", :for => "effort" } Remediation Effort
+      %label.control-label{ :for => "effort" } Remediation Effort
       .controls
         %select{ :name => "effort" }
           - options.effort.each do |effort|
@@ -849,7 +849,7 @@
             - else
               %option #{effort}
     .control-group
-      %label{ :class => "control-label", :for => "type" } Finding Type
+      %label.control-label{ :for => "type" } Finding Type
       .controls
         %select{ :name => "type" }
           - options.finding_types.each do |type|
@@ -858,7 +858,7 @@
             - else
               %option #{type}
     .control-group
-      %label{ :class => "control-label", :for => "overview" }
+      %label.control-label{ :for => "overview" }
         %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
           Overview
       .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
@@ -935,7 +935,7 @@
             - if @finding.overview
               #{meta_markup(@finding.overview)}
     .control-group
-      %label{ :class => "control-label", :for => "pocu" } Proof of Concept
+      %label.control-label{ :for => "pocu" } Proof of Concept
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'poc', :id => "pocu"}
           - if @finding
@@ -966,21 +966,21 @@
 
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "affected_hosts" } Affected Hosts/URLs
+        %label.control-label{ :for => "affected_hosts" } Affected Hosts/URLs
         .controls
           %textarea{ :rows => '3', :class => 'input-xxlarge allowMarkupShortcut', :name => 'affected_hosts'}
             - if @finding
               - if @finding.affected_hosts
                 #{meta_markup(@finding.affected_hosts)}
     .control-group
-      %label{ :class => "control-label", :for => "remediation" } Remediation
+      %label.control-label{ :for => "remediation" } Remediation
       .controls
         %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => 'remediation'}
           - if @finding
             - if @finding.remediation
               #{meta_markup(@finding.remediation)}
     .control-group
-      %label{ :class => "control-label", :for => "references" } References (One Per Line)
+      %label.control-label{ :for => "references" } References (One Per Line)
       .controls
         %textarea{ :rows => '5', :class => 'input-xxlarge allowMarkupShortcut', :name => 'references'}
           - if @finding
@@ -988,7 +988,7 @@
               #{meta_markup(@finding.references)}
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "notes" } Notes Data
+        %label.control-label{ :for => "notes" } Notes Data
         %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_2", :id=>"actionButton"}
         .info{ :id => "info_2", :class => "collapse out" }
           %label
@@ -1000,7 +1000,7 @@
                 #{meta_markup(@finding.notes)}
     - if !@master
       .control-group
-        %label{ :class => "control-label", :for => "preso" } Presentation Data
+        %label.control-label{ :for => "preso" } Presentation Data
         %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_1", :id=>"actionButton"}
         .info{ :id => "info_1", :class => "collapse out" }
           %label
@@ -1050,9 +1050,7 @@
     }
 
     function updateCVSSSummary(updateCVSSJS) {
-      var vectorString = "";
-
-      vectorString = "CVSS:3.0";
+      var vectorString = "CVSS:3.0";
 
       $("select[data-cvss-tag]").each(function (index, element) {
         if (element.value.toLowerCase() == "not defined") {
