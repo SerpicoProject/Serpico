@@ -987,8 +987,6 @@ def cvss(data, is_cvssv3)
 	 	end
 	end
 
-	print(cvss_environmental)
-
 	data["cvss_base"] = sprintf("%0.1f" % cvss_base)
 	data["cvss_impact"] = sprintf("%0.1f" % cvss_impact)
 	data["cvss_exploitability"] = sprintf("%0.1f" % cvss_exploitability)
