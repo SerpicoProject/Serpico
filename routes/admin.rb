@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'zip'
 
-config_options = JSON.parse(File.read('./config.json'))
+config_options = Server.settings.config_options
 
 # set the report_assessment_types for <1.2 versions of Serpico
 unless config_options["report_assessment_types"]
