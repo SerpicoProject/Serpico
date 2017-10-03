@@ -1,7 +1,7 @@
 require 'sinatra'
 ### Basic Routes
 
-config_options = JSON.parse(File.read('./config.json'))
+config_options = Server.settings.config_options
 
 # Used for 404 responses
 not_found do
