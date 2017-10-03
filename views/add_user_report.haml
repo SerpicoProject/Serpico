@@ -28,6 +28,8 @@
           %option #{user.username}
     %br
     %input{:type => 'submit', :value => 'Modify' }
+    %a{ :href => "/reports/list"}
+      %input{ :type => "button", :value => 'Cancel'}
 
 :javascript
   function confirmDelete(evt) {
