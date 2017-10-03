@@ -13,7 +13,7 @@ def serpico_log(msg)
 		settings.logger_out.puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : #{uname}"
 	else
 		puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : #{uname}"
-	end	
+	end
 end
 
 # Log a message globally, not attached to a user
@@ -22,7 +22,7 @@ def server_log(msg)
 		settings.logger_out.puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : SERVER_LOG"
 	else
 		puts "|+| [#{DateTime.now.strftime("%d/%m/%Y %H:%M")}] #{msg} : SERVER_LOG"
-	end	
+	end
 end
 
 def docx_modify(rand_file,docx_xml,fil_r)
@@ -81,9 +81,9 @@ def add_findings_totals(udv, findings, config_options)
 	end
 
     if config_options.has_key?("cvssv2_scoring_override")
-        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"] 
+        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"]
     else
-        @cvssv2_scoring_override = false 
+        @cvssv2_scoring_override = false
     end
 
     # Query for the findings that match the report_id
@@ -931,10 +931,9 @@ def cvss(data, is_cvssv3)
 
 	 	if (1 - (1 - mod_confidentiality_result * confidentiality_requirement_result) * (1 - mod_integrity_result * integrity_requirement_result) * (1 - mod_availability_result * availability_requirement_result)) > 0.915
 	 		cvss_mod_impact_multipler = 0.915
+		else
+			cvss_mod_impact_multipler = 1 - (1 - mod_confidentiality_result * confidentiality_requirement_result) * (1 - mod_integrity_result * integrity_requirement_result) * (1 - mod_availability_result * availability_requirement_result)
 	 	end
-
-		cvss_mod_impact_multipler = 1 - (1 - mod_confidentiality_result * confidentiality_requirement_result) * (1 - mod_integrity_result * integrity_requirement_result) * (1 - mod_availability_result * availability_requirement_result)
-
 
 		if mod_scope == "unchanged"
 	 		cvss_mod_impact_score = mod_scope_result * cvss_mod_impact_multipler
