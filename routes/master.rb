@@ -5,7 +5,7 @@ require 'sinatra'
 # Template Document Routes
 ######
 
-config_options = JSON.parse(File.read('./config.json'))
+config_options = Server.settings.config_options
 
 # These are the master routes, they control the findings database
 # List Available Templated Findings
