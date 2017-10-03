@@ -1,6 +1,6 @@
 .span9.indent3
   %br
-    .table.table-striped
+    .table.table-striped{:id => "mytable"}
       %table{:style => 'width: 80%'}
         %tbody
           - if @reports.size > 0
@@ -18,25 +18,26 @@
               searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
               });
             %br
+            %br
+            %a{ :class => "btn btn-danger", :href => "/report/remove/",  :id => "deletemultiple"}
+              Delete selected
+            %br
+            %br
             %trd
-              %td{:style => 'width: 60%'}
-                %b
-                  Report Name
-              %td{:style => 'width: 10%'}
-                %b
-                  Customer
-              %td{:style => 'width: 10%'}
-                %b
-                  Owner
-              %td{:style => 'width: 20%'}
-                %b
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Actions
+              %th
+                %input.checkbox{ :type=>"checkbox", :id=>"checkall"}
+              %th{:style => 'width: 70%'}
+                Report Name
+              %th{:style => 'width: 10%'}
+                Owner
+              %th{:style => 'width: 20%'}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Actions
             - @reports.each do |report|
               %tr
-                %td{:style => 'width: 60%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                %td{:"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                  %input.checkbox{ :type=>"checkbox", :name=>"#{report.id}"}
+                %td{:style => 'width: 70%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   #{report.report_name}
-                %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
-                  #{report.full_company_name}
                 %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   #{report.owner}
                 %td{:style => 'width: 20%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
@@ -46,38 +47,16 @@
                     %a{:class => 'btn btn-info', :href => "/master/reports/#{report.id}/generate"}
                       %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                   - else
-                    - if @admin
-                      %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
-                        %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
-                      %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
-                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-                      %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
-                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}
-                      %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
-                        %i{:class => 'icon-user icon-white', :title => 'Add Author'}
-                    - else
-                      %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
-                        %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
-                      %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
-                        %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-                      %a{ :class => "btn btn-danger", :href => "/report/#{report.id}/remove"}
-                        %i{:class => 'icon-remove icon-white', :title => 'Delete'}
-                      %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
-                        %i{:class => 'icon-user icon-white', :title => 'Add Author'}
+                    %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
+                      %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
+                    %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
+                      %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                    %a{ :class => "btn btn-danger", :href => "/report/remove/#{report.id}"}
+                      %i{:class => 'icon-remove icon-white', :title => 'Delete'}
+                    %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
+                      %i{:class => 'icon-user icon-white', :title => 'Add Author'}
 
 
           - else
             %h4
               You have no reports, how about <a href="/report/new">creating</a> or <a href="/report/import">importing</a> one...
-
-:javascript
-  function confirmDelete(evt) {
-    if (!confirm('Are you sure you want to permanently delete the select element ?')) {
-      evt.preventDefault();
-    }
-  }
-
-  var deleteElements = $('a.btn-danger');
-  for (var index = 0, length = deleteElements.length; index < length; index++) {
-    deleteElements[index].addEventListener('click', confirmDelete, false);
-  }
