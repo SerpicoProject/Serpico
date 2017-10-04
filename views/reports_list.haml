@@ -26,8 +26,10 @@
             %trd
               %th
                 %input.checkbox{ :type=>"checkbox", :id=>"checkall"}
-              %th{:style => 'width: 70%'}
+              %th{:style => 'width: 60%'}
                 Report Name
+              %th{:style => 'width: 10%'}
+                Customer
               %th{:style => 'width: 10%'}
                 Owner
               %th{:style => 'width: 20%'}
@@ -38,6 +40,8 @@
                   %input.checkbox{ :type=>"checkbox", :name=>"#{report.id}"}
                 %td{:style => 'width: 70%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   #{report.report_name}
+                %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                  #{report.full_company_name}
                 %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
                   #{report.owner}
                 %td{:style => 'width: 20%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
