@@ -44,7 +44,7 @@ class Server < Sinatra::Application
     end
 
     # CVSS
-    set :av, ["Local","Local Network","Network"]
+    set :av, ["Local","Adjacent Network","Network"]
     set :ac, ["High","Medium","Low"]
     set :au, ["Multiple","Single","None"]
     set :c, ["None","Partial","Complete"]
