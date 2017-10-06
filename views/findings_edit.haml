@@ -1,5 +1,5 @@
-%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
-%script{:src => "/js/bootstrap-suggest.js"}
+%link{ :href => "/css/bootstrap-suggest.css", :rel => "stylesheet" }/
+%script{ :src => "/js/bootstrap-suggest.js" }
 
 .span10
   %br
@@ -854,10 +854,12 @@
         } else {
           var value;
 
-          if (element.value.indexOf("-") < 0) {
+          if (element.value.toUpperCase() == "LOW-MEDIUM") {
+            value = "LM";
+          } else if (element.value.toUpperCase() == "MEDIUM-HIGH") {
+            value = "MH";
+          } else  {
             value = element.value[0];
-          } else {
-            value = element.value.split("-")[0][0] + element.value.split("-")[1][0];
           }
 
           vectorString += "/" + element.getAttribute("data-cvss-tag") + ":" + value;
