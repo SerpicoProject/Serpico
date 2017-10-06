@@ -16,13 +16,13 @@
         %label.control-label{ :for => "assessment_type" } Assessment Type
         .controls
           %select{ :name => "assessment_type" }
-            - options.assessment_types.each do |type|
+            - settings.assessment_types.each do |type|
               %option #{type}
     .control-group
       %label.control-label{ :for => "type" } Finding Type
       .controls
         %select{ :name => "type" }
-          - options.finding_types.each do |type|
+          - settings.finding_types.each do |type|
             %option #{type}
     - if @nessusmap
       .control-group
@@ -710,133 +710,133 @@
         %label.control-label{ :for => "attack_vector" } Attack Vector
         .controls
           %select#attack_vector{ :name => "attack_vector", "data-cvss-tag" => "AV" }
-            - options.attack_vector.each do |attack_vector|
+            - settings.attack_vector.each do |attack_vector|
               %option #{attack_vector}
       .control-group.cvss3
         %label.control-label{ :for => "attack_complexity" } Attack Complexity
         .controls
           %select#attack_complexity{ :name => "attack_complexity", "data-cvss-tag" => "AC" }
-            - options.attack_complexity.each do |attack_complexity|
+            - settings.attack_complexity.each do |attack_complexity|
               %option #{attack_complexity}
       .control-group.cvss3
         %label.control-label{ :for => "privileges_required" } Privileges Required
         .controls
           %select#privileges_required{ :name => "privileges_required", "data-cvss-tag" => "PR" }
-            - options.privileges_required.each do |privileges_required|
+            - settings.privileges_required.each do |privileges_required|
               %option #{privileges_required}
       .control-group.cvss3
         %label.control-label{ :for => "user_interaction" } User Interaction
         .controls
           %select#user_interaction{ :name => "user_interaction", "data-cvss-tag" => "UI" }
-            - options.user_interaction.each do |user_interaction|
+            - settings.user_interaction.each do |user_interaction|
               %option #{user_interaction}
       .control-group.cvss3
         %label.control-label{ :for => "scope_cvss" } Scope
         .controls
           %select#scope{ :name => "scope_cvss", "data-cvss-tag" => "S" }
-            - options.scope_cvss.each do |scope_cvss|
+            - settings.scope_cvss.each do |scope_cvss|
               %option #{scope_cvss}
       .control-group.cvss3
         %label.control-label{ :for => "confidentiality" } Confidentiality
         .controls
           %select#confidentiality-impact{ :name => "confidentiality", "data-cvss-tag" => "C" }
-            - options.confidentiality.each do |confidentiality|
+            - settings.confidentiality.each do |confidentiality|
               %option #{confidentiality}
       .control-group.cvss3
         %label.control-label{ :for => "integrity" } Integrity
         .controls
           %select#integrity{ :name => "integrity", "data-cvss-tag" => "I" }
-            - options.integrity.each do |integrity|
+            - settings.integrity.each do |integrity|
               %option #{integrity}
       .control-group.cvss3
         %label.control-label{ :for => "availability" } Availability
         .controls
           %select#availability{ :name => "availability", "data-cvss-tag" => "A" }
-            - options.availability.each do |availability|
+            - settings.availability.each do |availability|
               %option #{availability}
       .control-group.cvss3
         %label.control-label{ :for => "exploit_maturity" } Exploit Code Maturity
         .controls
           %select#exploit_maturity{ :name => "exploit_maturity", "data-cvss-tag" => "E" }
-            - options.exploit_maturity.each do |exploit_maturity|
+            - settings.exploit_maturity.each do |exploit_maturity|
               %option #{exploit_maturity}
       .control-group.cvss3
         %label.control-label{ :for => "remeditation_level" } Remediation Level
         .controls
           %select#remeditation_level{ :name => "remeditation_level", "data-cvss-tag" => "RL" }
-            - options.remeditation_level.each do |remeditation_level|
+            - settings.remeditation_level.each do |remeditation_level|
               %option #{remeditation_level}
       .control-group.cvss3
         %label.control-label{ :for => "report_confidence" } Report Confidence
         .controls
           %select#report_confidence{ :name => "report_confidence", "data-cvss-tag" => "RC" }
-            - options.report_confidence.each do |report_confidence|
+            - settings.report_confidence.each do |report_confidence|
               %option #{report_confidence}
       .control-group.cvss3
         %label.control-label{ :for => "confidentiality_requirement" } Confidentiality Requirement
         .controls
           %select#confidentiality_requirement{ :name => "confidentiality_requirement", "data-cvss-tag" => "CR" }
-            - options.confidentiality_requirement.each do |confidentiality_requirement|
+            - settings.confidentiality_requirement.each do |confidentiality_requirement|
               %option #{confidentiality_requirement}
       .control-group.cvss3
         %label.control-label{ :for => "integrity_requirement" } Integrity Requirement
         .controls
           %select#integrity_requirement{ :name => "integrity_requirement", "data-cvss-tag" => "IR" }
-            - options.integrity_requirement.each do |integrity_requirement|
+            - settings.integrity_requirement.each do |integrity_requirement|
               %option #{integrity_requirement}
       .control-group.cvss3
         %label.control-label{ :for => "availability_requirement" } Availability Requirement
         .controls
           %select#availability_requirement{ :name => "availability_requirement", "data-cvss-tag" => "AR" }
-            - options.availability_requirement.each do |availability_requirement|
+            - settings.availability_requirement.each do |availability_requirement|
               %option #{availability_requirement}
       .control-group.cvss3
         %label.control-label{ :for => "mod_attack_vector" } Modified Attack Vector
         .controls
           %select#mod_attack_vector{ :name => "mod_attack_vector", "data-cvss-tag" => "MAV" }
-            - options.mod_attack_vector.each do |mod_attack_vector|
+            - settings.mod_attack_vector.each do |mod_attack_vector|
               %option #{mod_attack_vector}
       .control-group.cvss3
         %label.control-label{ :for => "mod_attack_complexity" } Modified Attack Complexity
         .controls
           %select#mod_attack_complexity{ :name => "mod_attack_complexity", "data-cvss-tag" => "MAC" }
-            - options.mod_attack_complexity.each do |mod_attack_complexity|
+            - settings.mod_attack_complexity.each do |mod_attack_complexity|
               %option #{mod_attack_complexity}
       .control-group.cvss3
         %label.control-label{ :for => "mod_privileges_required" } Modified Privileges Required
         .controls
           %select#mod_privileges_required{ :name => "mod_privileges_required", "data-cvss-tag" => "MPR" }
-            - options.mod_privileges_required.each do |mod_privileges_required|
+            - settings.mod_privileges_required.each do |mod_privileges_required|
               %option #{mod_privileges_required}
       .control-group.cvss3
         %label.control-label{ :for => "mod_user_interaction" } Modified User Interaction
         .controls
           %select#mod_user_interaction{ :name => "mod_user_interaction", "data-cvss-tag" => "MUI" }
-            - options.mod_user_interaction.each do |mod_user_interaction|
+            - settings.mod_user_interaction.each do |mod_user_interaction|
               %option #{mod_user_interaction}
       .control-group.cvss3
         %label.control-label{ :for => "mod_scope" } Modified Scope
         .controls
           %select#mod_scope{ :name => "mod_scope", "data-cvss-tag" => "MS" }
-            - options.mod_scope.each do |mod_scope|
+            - settings.mod_scope.each do |mod_scope|
               %option #{mod_scope}
       .control-group.cvss3
         %label.control-label{ :for => "mod_confidentiality" } Modified Confidentiality
         .controls
           %select#mod_confidentiality{ :name => "mod_confidentiality", "data-cvss-tag" => "MC" }
-            - options.mod_confidentiality.each do |mod_confidentiality|
+            - settings.mod_confidentiality.each do |mod_confidentiality|
               %option #{mod_confidentiality}
       .control-group.cvss3
         %label.control-label{ :for => "mod_integrity" } Modified Integrity
         .controls
           %select#mod_integrity{ :name => "mod_integrity", "data-cvss-tag" => "MI" }
-            - options.mod_integrity.each do |mod_integrity|
+            - settings.mod_integrity.each do |mod_integrity|
               %option #{mod_integrity}
       .control-group.cvss3
         %label.control-label{ :for => "mod_availability" } Modified Availability
         .controls
           %select#mod_availability{ :name => "mod_availability", "data-cvss-tag" => "MA" }
-            - options.mod_availability.each do |mod_availability|
+            - settings.mod_availability.each do |mod_availability|
               %option #{mod_availability}
     - elsif @riskmatrix
       .control-group
@@ -852,7 +852,7 @@
         %label.control-label{ :for => "severity" } Severity
         .controls
           %select{ :name => "severity" }
-            - options.severity.each do |severity|
+            - settings.severity.each do |severity|
               %option #{severity}
       .control-group
         %label.control-label{ :for => "severity_rationale" } Severity Rationale
@@ -862,7 +862,7 @@
         %label.control-label{ :for => "likelihood" } Likelihood
         .controls
           %select{ :name => "likelihood" }
-            - options.likelihood.each do |likelihood|
+            - settings.likelihood.each do |likelihood|
               %option #{likelihood}
       .control-group
         %label.control-label{ :for => "likelihood_rationale" } Likelihood Rationale
@@ -875,13 +875,13 @@
         .controls
           %select{ :name => "effort" }
             - if @finding
-              - options.effort.each do |effort|
+              - settings.effort.each do |effort|
                 - if effort == @finding.effort
                   %option{ :selected => "selected" } #{effort}
                 - else
                   %option #{effort}
             - else
-              - options.effort.each do |effort|
+              - settings.effort.each do |effort|
                 %option #{effort}
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level

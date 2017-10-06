@@ -21,8 +21,8 @@
                   - else
                     %input{:type => 'checkbox', :name => "#{plug['name']}"}
         %input{:type => 'submit', :value => 'Save' }
-        %a{ :href => "/admin/plugins"}
-        %input{ :type => "button", :value => 'Cancel'}
+        %a{ :href => "/admin/"}
+          %input{ :type => "button", :value => 'Cancel'}
     - else
       No plugins found.
   #{@plugin}
