@@ -4,11 +4,11 @@
     - if @findings
       - if @autoadd
         %h3 Auto Add Findings
-        %h4 
+        %h4
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following findings were automatically selected to be added to your report.
       - else
         %h3 Templated Findings
-        %h4 
+        %h4
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
       %br
       &nbsp;
@@ -16,7 +16,7 @@
       %style{:id => "search_style" }
       %span{:class=>"input-group-btn"}
       %script{:type=>"text/javascript"}
-        // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this 
+        // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
         var searchStyle = document.getElementById('search_style');
         document.getElementById('search').addEventListener('input', function() {
         if (!this.value) {
@@ -29,7 +29,7 @@
         .table
           %table{:style => 'width: 90%'}
             %tbody
-            - options.finding_types.each do |type|
+            - settings.finding_types.each do |type|
               %tr
                 %td{:colspan => "2"}
                   %b
