@@ -275,7 +275,7 @@
                       %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
                     %a{ :class => "btn btn-inverse", :href => "/report/#{@report.id}/findings/#{finding.id}/upload"}
                       %i{:class => 'icon-arrow-up icon-white', :title => 'Add to the findings database'}
-                    %a{ :class => "btn btn-danger", :href => "/report/findings/remove/#{finding.id}"}
+                    %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/remove/#{finding.id}"}
                       %i{:class => 'icon-remove icon-white', :title => 'Delete'}
               %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/remove/",  :id => "deletemultiple"}
                 Delete selected
