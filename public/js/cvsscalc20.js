@@ -19,13 +19,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/* This JavaScript contains two main functions. Both take CVSS metric values and calculate CVSS scores for Base,
- * Temporal and Environmental metric groups, their associated severity ratings, and an overall Vector String.
+/* This JavaScript is a modified version of the original cvsscalc30.js from FIRST
+ * It was modified to calculate CVSS V2 instead of CVSS V3.
  *
  * Use CVSS.calculateCVSSFromMetrics if you wish to pass metric values as individual parameters.
  * Use CVSS.calculateCVSSFromVector if you wish to pass metric values as a single Vector String.
  *
  * Changelog
+ *
+ * 2017-10-06  Maxime Nadeau  Changed the file to calculate CVSS V2 instead of CVSS V3.
+ *
  *
  * 2015-08-04  Darius Wiles   Added CVSS.generateXMLFromMetrics and CVSS.generateXMLFromVector functions to return
  *                            XML string representations of: a set of metric values; or a Vector String respectively.
@@ -61,7 +64,7 @@ CVSS.exploitabilityCoefficient = 20.;
 CVSS.vectorStringRegex_20 = /^CVSS:2\.0\/((AV:[NAL]|AC:[HML]|AU:[MSN]|[CIA]:[NPC]|E:[XUPFH]|RL:[XOTWU]|RC:[XURC]|CDP:([XNLH]|LM|MH)|TD:[XNLMH]|[CIA]R:[XLMH])\/)*(AV:[NAL]|AC:[HML]|AU:[MSN]|[CIA]:[NPC]|E:[XUPFH]|RL:[XOTWU]|RC:[XURC]|CDP:([XNLH]|LM|MH)|TD:[XNLMH]|[CIA]R:[XLMH])$/;
 
 
-// Associative arrays mapping each metric value to the constant defined in the CVSS scoring formula in the CVSS v3.0
+// Associative arrays mapping each metric value to the constant defined in the CVSS scoring formula in the CVSS v2.0
 // specification.
 
 CVSS.Weight = {
@@ -81,13 +84,11 @@ CVSS.Weight = {
 };
 
 
-// Severity rating bands, as defined in the CVSS v3.0 specification.
+// Severity rating bands, as defined in the CVSS v2.0 specification.
 
-CVSS.severityRatings  = [ { name: "None",     bottom: 0.0, top:  0.0},
-                          { name: "Low",      bottom: 0.1, top:  3.9},
+CVSS.severityRatings  = [ { name: "Low",      bottom: 0.0, top:  3.9},
                           { name: "Medium",   bottom: 4.0, top:  6.9},
-                          { name: "High",     bottom: 7.0, top:  8.9},
-                          { name: "Critical", bottom: 9.0, top: 10.0} ];
+                          { name: "High",     bottom: 7.0, top:  10.0} ];
 
 
 
@@ -95,7 +96,7 @@ CVSS.severityRatings  = [ { name: "None",     bottom: 0.0, top:  0.0},
 /* ** CVSS.calculateCVSSFromMetrics **
  *
  * Takes Base, Temporal and Environmental metric values as individual parameters. Their values are in the short format
- * defined in the CVSS v3.0 standard definition of the Vector String. For example, the AttackComplexity parameter
+ * defined in the CVSS v2.0 standard definition of the Vector String. For example, the AttackComplexity parameter
  * should be either "H" or "L".
  *
  * Returns Base, Temporal and Environmental scores, severity ratings, and an overall Vector String. All Base metrics
@@ -116,7 +117,7 @@ CVSS.severityRatings  = [ { name: "None",     bottom: 0.0, top:  0.0},
  *                 "MissingBaseMetric", if at least one Base metric has not been defined; or
  *                 "UnknownMetricValue", if at least one metric value is invalid.
  *   errorMetrics - an array of strings representing the metrics at fault. The strings are abbreviated versions of the
- *                  metrics, as defined in the CVSS v3.0 standard definition of the Vector String.
+ *                  metrics, as defined in the CVSS v2.0 standard definition of the Vector String.
  */
 CVSS.calculateCVSSFromMetrics = function (
   AttackVector, AttackComplexity, Authentication, Confidentiality, Integrity, Availability,
@@ -301,7 +302,7 @@ CVSS.calculateCVSSFromMetrics = function (
 /* ** CVSS.calculateCVSSFromVector **
  *
  * Takes Base, Temporal and Environmental metric values as a single string in the Vector String format defined
- * in the CVSS v3.0 standard definition of the Vector String.
+ * in the CVSS v2.0 standard definition of the Vector String.
  *
  * Returns Base, Temporal and Environmental scores, severity ratings, and an overall Vector String. All Base metrics
  * are required to generate this output. All Temporal and Environmental metric values are optional. Any that are not
