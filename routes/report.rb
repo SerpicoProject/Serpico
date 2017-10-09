@@ -1117,9 +1117,7 @@ get '/report/:id/findings/remove/:finding_id' do
     # delete the entries
     finding.destroy
   end
-
-  # Update the finding with templated finding stuff
-
+  serpico_log("#{@finding.title} deleted from report #{id}")
   redirect to("/report/#{id}/findings")
 end
 
