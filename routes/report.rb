@@ -369,7 +369,7 @@ get '/report/remove/:id' do
     udos.destroy
     report.destroy
   end
-
+  serpico_log("Report deleted, Report #{id}")
   redirect to('/reports/list')
 end
 
