@@ -45,21 +45,32 @@ post '/report/new' do
     redirect to("/report/#{@report.id}/edit")
 end
 
-# List attachments
+# List attachments and provides an overview on uploaded screenshots
 get '/report/:id/attachments' do
-    id = params[:id]
+  id = params[:id]
 
-    # Query for the first report matching the id
-    @report = get_report(id)
-
-    if @report == nil
-        return "No Such Report"
+  # Query for the first report matching the id
+  @report = get_report(id)
+  return 'No Such Report' if @report.nil?
+  @screenshot_names_from_findings = {}
+  #fetching screenshots names in findings
+  findings = Findings.all(report_id: id)
+  findings.each do |find|
+    next unless find.poc
+    @screenshot_names_from_findings[find.id] = []
+    #for each finding, we extract the screenshot name in the poc field.
+    #screenshot names are like this : [!!screenshotnames.png!!]
+    find.poc.to_s.split('<paragraph>').each do |pp|
+      next unless pp =~ /\[\!\!/
+      @screenshot_names_from_findings[find.id] << pp.split('[!!')[1].split('!!]').first
     end
-
-    @attachments = Attachments.all(:report_id => id)
-    xslt = Xslt.first(:report_type => @report.report_type)
-    @screenshot_names = xslt.screenshot_names
-    haml :list_attachments, :encode_html => true
+  end
+  @attachments = Attachments.all(report_id: id)
+  #fetching screenshot names in report
+  xslt = Xslt.first(report_type: @report.report_type)
+  @screenshot_names_from_report = xslt.screenshot_names
+  @screenshot_names_from_findings
+  haml :list_attachments, encode_html: true
 end
 
 get '/report/:id/export_attachments' do
