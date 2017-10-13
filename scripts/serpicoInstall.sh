@@ -2,7 +2,7 @@
 
 #!/bin/bash
 
-username="r3b00t"
+username=$(whoami)
 
 # Use this to download the rvm gpg
 \curl -sSL https://rvm.io/mpapis.asc | sudo gpg --import -
@@ -48,7 +48,7 @@ gem install msfrpc-client -v 1.0.3
 bundle install
 
 # Initialize the findings database
-ruby scripts/first_time.rb
+puts "|+| Please run 'ruby scripts/first_time.rb' to complete the installation"
 EOF
 
 # One completed, you can edit /opt/Serpico-Dev/config.json so that your Serpico instance is local only.
