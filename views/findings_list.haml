@@ -3,14 +3,34 @@
   - if @newfinding
     %h2 Finding(s) Added! You rock.
   %br
-    %h3 Current Findings
+    %h3
+      Current Findings
     %br
-    .table
-      %table{:style => 'width: 90%'}
-        %tbody
-          - if @findings
+    - if not @findings.empty?
+      .table{:id => "mytable"}
+        %table{:id => "mytable",:style => 'table-layout: fixed; width: 90%;'}
+          - if !@master
+            %thead
+              %th{:style => 'width: 2%'}
+                %input.checkbox{ :type=>"checkbox", :id=>"checkall"}
+              %th{:style => 'width: 50%'}
+                Title
+              %th{:style => 'text-align:center;width: 7%'}
+                Risk
+              %th{:style => "text-align:center;width: 10%"}
+                Actions
+          %tbody
             - if @master
               %input{:type => "text", :class=>"form-control", :placeholder=>"Finding Name Search", :id=>"search"}
+              %br
+              %br
+              %div
+                %label{ :id=>"checkall", :class => "btn btn-outline-primary", :autocomplete=>"off"}
+                  %input.checkbox{ :type=>"checkbox", :id=>"checkall", :hidden=>"true"}
+                  Select all
+                %a{ :class => "btn btn-danger", :href => "/master/findings/delete/",  :id => "deletemultiple"}
+                  Delete selected
+              %br
               %style{:id => "search_style" }
               %span{:class=>"input-group-btn"}
               %script{:type=>"text/javascript"}
@@ -23,7 +43,6 @@
                 }
                 searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
                 });
-              %br
               &nbsp;
               - settings.finding_types.each do |type|
                 %tr
@@ -46,6 +65,8 @@
                                 - else
                                   -@class=""
                                 %tr{:class => "#{@class}"}
+                                  %td{:"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable",:style => 'width: 1%'}
+                                    %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}"}
                                   %td{:style => 'width: 70%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                     #{finding.title}
                                   - if @dread
@@ -66,13 +87,13 @@
                                         - scr = finding.dread_total/10
                                         - scr = 4 if dread_total == 50
                                         #{risk_t[scr]}
-                                  %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
-                                    - if @master
+                                  - if @master
+                                    %td{:style => "text-align:center;width: 20%",:"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                                       %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
                                         %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
                                       %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
                                         %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-                                      %a{ :class => "btn btn-danger", :href => "/master/findings/#{finding.id}/delete"}
+                                      %a{ :class => "btn btn-danger", :href => "/master/findings/delete/#{finding.id}"}
                                         %i{:class => 'icon-remove icon-white', :title => 'Delete'}
             - else
               :ruby
@@ -206,7 +227,9 @@
                 %br
               - @findings.each do |finding|
                 %tr{:class => "#{@class}"}
-                  %td{:style => 'width:70%;max-width: 0px;'}
+                  %td
+                    %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}"}
+                  %td{:style => 'width:60%;max-width: 0px;'}
                     #{finding.title}
                     - if finding.overview
                       %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
@@ -224,20 +247,20 @@
                             - else
                               None.
                   - if @dread
-                    %td{:style => 'width: 10%'}
+                    %td{:style => 'text-align:center'}
                       #{finding.dread_total}
                   - elsif @cvss
-                    %td{:style => 'width: 10%',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
+                    %td{:style => 'text-align:center',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                       #{finding.cvss_total}
                   - elsif @cvssv3
-                    %td{:style => 'width: 10%',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
+                    %td{:style => 'text-align:center',  :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
                       #{finding.cvss_total}
                   - elsif @riskmatrix
-                    %td{:style => 'width: 10%'}
+                    %td{:style => 'text-align:center'}
                       - risk_t = ["None","Low","Moderate","High","Critical"]
                       #{risk_t[finding.risk]}
                   - else
-                    %td{:style => 'width: 10%' }
+                    %td{:style => 'text-align:center' }
                       - risk_t = ["Informational","Low","Moderate","High","Critical"]
                       - if finding.risk
                         #{risk_t[finding.risk]}
@@ -245,30 +268,21 @@
                         - scr = finding.dread_total/10
                         - scr = 4 if dread_total == 50
                         #{risk_t[scr]}
-                  %td{:style => 'width: 20%'}
+                  %td
                     %a{ :class => "btn btn-warning", :href => "/report/#{@report.id}/findings/#{finding.id}/edit"}
                       %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
                     %a{ :class => "btn btn-info", :href => "/report/#{@report.id}/findings/#{finding.id}/preview"}
                       %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-                    %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/#{finding.id}/remove"}
-                      %i{:class => 'icon-remove icon-white', :title => 'Delete'}
                     %a{ :class => "btn btn-inverse", :href => "/report/#{@report.id}/findings/#{finding.id}/upload"}
                       %i{:class => 'icon-arrow-up icon-white', :title => 'Add to the findings database'}
-          - else
-            No Findings Available
+                    %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/remove/#{finding.id}"}
+                      %i{:class => 'icon-remove icon-white', :title => 'Delete'}
+              %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/findings/remove/",  :id => "deletemultiple"}
+                Delete selected
+    - else
+      No Findings Available
 
 :javascript
-  function confirmDelete(evt) {
-    if (!confirm('Are you sure you want to permanently delete the select element ?')) {
-      evt.preventDefault();
-    }
-  }
-
-  var deleteElements = $('a.btn-danger');
-  for (var index = 0, length = deleteElements.length; index < length; index++) {
-    deleteElements[index].addEventListener('click', confirmDelete, false);
-  }
-
   function confirmUploaded(evt) {
     alert('Nice work! Finding uploaded to the local database.');
   }
