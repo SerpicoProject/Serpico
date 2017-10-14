@@ -25,6 +25,33 @@ def server_log(msg)
 	end
 end
 
+# Returns xmlText with hyperlinks and a list of References tags
+def updateHyperlinks(xmlText)
+  retHash = Hash.new
+  # Find urls
+  urls = xmlText.scan(/<w:t>{{.*}}<\/w:t>/)
+  # Resources for <Resources> tag  
+  retHash["urls"] = []
+  retHash["id"] = []
+  i = 25
+  urls.each do |url|
+    cleanUrl = url.gsub("{{", "").gsub("}}", "")
+    # set resourceId and xmlText
+    resourceId = "r:id=\"rId#{i}\""
+    xmlText = xmlText.gsub(url,"<w:hyperlink #{resourceId} w:history=\"1\"><w:r w:rsidRPr=\"00720130\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr>#{cleanUrl}</w:r></w:hyperlink>")	
+    # remove tags 
+    cleanUrl = cleanUrl.gsub("<w:t>", "")
+    cleanUrl = cleanUrl.gsub("<\/w:t>", "")
+    # put urls in resources
+    retHash["urls"].push(cleanUrl)
+    retHash["id"].push("rId#{i}")
+    i = i+1
+  end
+	retHash["xmlText"] = xmlText
+  return retHash
+end
+
+
 def docx_modify(rand_file,docx_xml,fil_r)
 	Zip::File.open(rand_file) do |zipfile|
 	  zipfile.get_output_stream(fil_r) {|f| f.write(docx_xml)}
@@ -60,6 +87,11 @@ def read_rels(zipfile,fil_r)
 	return content_types
 end
 
+def write_rels(zipfile, fil_r, content)
+	Zip::File.open(zipfile) do |zipfile|
+	  zipfile.get_output_stream(fil_r) {|f| f.write(content)}
+	end
+end
 def zip_attachments(zip_file)
   Zip::Archive.open(zip_file, Zip::CREATE) do |zipfile|
     Dir["../attachments/*" ].each do | name|
@@ -1084,4 +1116,12 @@ def set_scoring(config_options)
     end
 
     return "risk"
+end
+
+def setHyperlinks(xmlText)
+    urls = xmlText.scan(/<w:t>http.*<\/w:t>/)
+    urls.each do |url|
+      xmlText = xmlText.gsub(url,"<w:hyperlink><w:r><w:rPr><w:rStyle w:val=\"hyperLink\"/></w:rPr>#{url}</w:r></w:hyperlink>")	
+    end
+    return xmlText
 end
