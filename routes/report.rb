@@ -1,5 +1,6 @@
 require 'sinatra'
 
+
 #####
 # Reporting Routes
 #####
@@ -45,32 +46,21 @@ post '/report/new' do
     redirect to("/report/#{@report.id}/edit")
 end
 
-# List attachments and provides an overview on uploaded screenshots
+# List attachments
 get '/report/:id/attachments' do
-  id = params[:id]
+    id = params[:id]
 
-  # Query for the first report matching the id
-  @report = get_report(id)
-  return 'No Such Report' if @report.nil?
-  @screenshot_names_from_findings = {}
-  #fetching screenshots names in findings
-  findings = Findings.all(report_id: id)
-  findings.each do |find|
-    next unless find.poc
-    @screenshot_names_from_findings[find.id] = []
-    #for each finding, we extract the screenshot name in the poc field.
-    #screenshot names are like this : [!!screenshotnames.png!!]
-    find.poc.to_s.split('<paragraph>').each do |pp|
-      next unless pp =~ /\[\!\!/
-      @screenshot_names_from_findings[find.id] << pp.split('[!!')[1].split('!!]').first
+    # Query for the first report matching the id
+    @report = get_report(id)
+
+    if @report == nil
+        return "No Such Report"
     end
-  end
-  @attachments = Attachments.all(report_id: id)
-  #fetching screenshot names in report
-  xslt = Xslt.first(report_type: @report.report_type)
-  @screenshot_names_from_report = xslt.screenshot_names
-  @screenshot_names_from_findings
-  haml :list_attachments, encode_html: true
+
+    @attachments = Attachments.all(:report_id => id)
+    xslt = Xslt.first(:report_type => @report.report_type)
+    @screenshot_names = xslt.screenshot_names
+    haml :list_attachments, :encode_html => true
 end
 
 get '/report/:id/export_attachments' do
@@ -334,43 +324,53 @@ get '/report/:id/attachments/:att_id' do
     send_file @attachment.filename_location, :filename => "#{@attachment.filename}"
 end
 
-# Delete an attachment
+#Delete an attachment
 get '/report/:id/attachments/delete/:att_id' do
-  id = params[:id]
+    id = params[:id]
 
-  # Query for the first report matching the id
-  @report = get_report(id)
+    # Query for the first report matching the id
+    @report = get_report(id)
 
-  return 'No Such Report' if @report.nil?
-  params[:att_id].split(',').each do |current_id|
-    @attachment = Attachments.first(report_id: id, id: current_id)
-    return "No Such Attachment : #{current_id}" if @attachment.nil?
+    if @report == nil
+        return "No Such Report"
+    end
+
+    @attachment = Attachments.first(:report_id => id, :id => params[:att_id])
+
+	if @attachment == nil
+		  return "No Such Attachment"
+	end
     if File.file?(@attachment.filename_location)
-      File.delete(@attachment.filename_location)
+        File.delete(@attachment.filename_location)
     end
     # delete the entries
     @attachment.destroy
-  end
-  redirect to("/report/#{id}/attachments")
+
+    redirect to("/report/#{id}/attachments")
 end
 
 
-# Delete a report
-get '/report/remove/:id' do
-  id = params[:id]
-  params[:id].split(',').each do |current_id|
-    report = get_report(current_id)
-    return "No Such Report : #{current_id}" if report.nil?
-    # get all findings and udos associated with the report
-    findings = Findings.all(report_id: id)
-    udos = UserDefinedObjects.all(report_id: id)
+#Delete a report
+get '/report/:id/remove' do
+    id = params[:id]
+
+    # Query for the first report matching the id
+    @report = get_report(id)
+
+    if @report == nil
+        return "No Such Report"
+    end
+
+    # get all findings associated with the report
+    @findings = Findings.all(:report_id => id)
+
     # delete the entries
-    findings.destroy
-    udos.destroy
-    report.destroy
-  end
-  serpico_log("Report deleted, Report #{id}")
-  redirect to('/reports/list')
+    @findings.destroy
+    @report.destroy
+
+    serpico_log("Report deleted, Report #{id}")
+
+    redirect to("/reports/list")
 end
 
 # Edit the Report's main information; Name, Consultant, etc.
@@ -685,9 +685,9 @@ get '/report/:id/findings' do
     @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     if config_options.has_key?("cvssv2_scoring_override")
-        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"]
+        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"] 
     else
-        @cvssv2_scoring_override = false
+        @cvssv2_scoring_override = false 
     end
     haml :findings_list, :encode_html => true
 end
@@ -1100,25 +1100,31 @@ get '/report/:id/findings/:finding_id/upload' do
 end
 
 # Remove a finding from the report
-get '/report/:id/findings/remove/:finding_id' do
-  # Check for kosher name in report name
-  id = params[:id]
+get '/report/:id/findings/:finding_id/remove' do
+    # Check for kosher name in report name
+    id = params[:id]
 
-  # Query for the report
-  @report = get_report(id)
+    # Query for the report
+    @report = get_report(id)
 
-  return 'No Such Report' if @report.nil?
+    if @report == nil
+        return "No Such Report"
+    end
 
-  finding_id = params[:finding_id]
+    finding_id = params[:finding_id]
 
-  params[:finding_id].split(',').each do |current_id|
-        finding = Findings.first(report_id: id, id: current_id)
-    return "No Such Finding : #{current_id}" if finding.nil?
-    # delete the entries
-    finding.destroy
-  end
-  serpico_log("#{@finding.title} deleted from report #{id}")
-  redirect to("/report/#{id}/findings")
+    # Query for all Findings
+    @finding = Findings.first(:report_id => id, :id => finding_id)
+
+    if @finding == nil
+        return "No Such Finding"
+    end
+
+    # Update the finding with templated finding stuff
+    @finding.destroy
+    serpico_log("#{@finding.title} deleted from report #{id}")
+
+    redirect to("/report/#{id}/findings")
 end
 
 # preview a finding
@@ -1393,6 +1399,7 @@ get '/report/:id/generate' do
 		xslt = Nokogiri::XSLT(File.read(component.xslt_location))
 		list_components[component.name] = xslt.transform(Nokogiri::XML(report_xml))
 	end
+
     ### IMAGE INSERT CODE
     if docx_xml.to_s =~ /\[!!/
         # first we read in the current [Content_Types.xml]
@@ -1439,8 +1446,28 @@ get '/report/:id/generate' do
     end
     #### END IMAGE INSERT CODE
 
-    docx_modify(rand_file, docx,'word/document.xml')
+    # Get hyperlinks and References
+    hyperlinks = updateHyperlinks(docx)
+    # Update _rels directrory
+    rels_file =  read_rels(rand_file, "word/_rels/document.xml.rels")
+    # Noko syntax rels
+    noko_rels =  Nokogiri::XML(rels_file)
+    urls = hyperlinks["urls"] 
+    id = hyperlinks["id"]
+    for i in 0..id.length - 1
+      url =  urls[i]
+      cid =  id[i]
+      noko_rels.root.first_element_child.after("<Relationship Id=\"#{cid}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"#{url}\" TargetMode=\"External\"/>")
+    end
 
+    content_to_write = noko_rels.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML).strip
+    #Edit Relationships file
+    write_rels(rand_file, "word/_rels/document.xml.rels", content_to_write)
+
+    # Update hyperlinks
+    docx = hyperlinks["xmlText"]
+    docx_modify(rand_file, docx,'word/document.xml')
+  
 	list_components.each do |name, xml|
 		docx_modify(rand_file, xml.to_s,name)
 	end
