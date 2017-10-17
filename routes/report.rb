@@ -1113,11 +1113,11 @@ get '/report/:id/findings/remove/:finding_id' do
 
   params[:finding_id].split(',').each do |current_id|
         finding = Findings.first(report_id: id, id: current_id)
-    return "No Such Finding : #{current_id}" if finding.nil?
-    # delete the entries
-    finding.destroy
+		return "No Such Finding : #{current_id}" if finding.nil?
+		# delete the entries
+		finding.destroy
+ 		serpico_log("#{finding.title} deleted from report #{id}")
   end
-  serpico_log("#{@finding.title} deleted from report #{id}")
   redirect to("/report/#{id}/findings")
 end
 
