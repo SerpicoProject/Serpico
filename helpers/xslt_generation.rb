@@ -35,6 +35,12 @@ def generate_xslt(docx)
 
 	document = read_rels(docx,"word/document.xml")
 
+	# fix for curly apostrophes
+	document = document.gsub(/‘/,"'")
+	document = document.gsub(/’/,"'")
+	document = document.gsub(/“/,"\"")
+	document = document.gsub(/”/,"\"")
+
 	#add line breaks for easier reading, only use with debugging
 	#document = document.gsub('>',">\n")
 

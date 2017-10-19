@@ -45,21 +45,32 @@ post '/report/new' do
     redirect to("/report/#{@report.id}/edit")
 end
 
-# List attachments
+# List attachments and provides an overview on uploaded screenshots
 get '/report/:id/attachments' do
-    id = params[:id]
+  id = params[:id]
 
-    # Query for the first report matching the id
-    @report = get_report(id)
-
-    if @report == nil
-        return "No Such Report"
+  # Query for the first report matching the id
+  @report = get_report(id)
+  return 'No Such Report' if @report.nil?
+  @screenshot_names_from_findings = {}
+  #fetching screenshots names in findings
+  findings = Findings.all(report_id: id)
+  findings.each do |find|
+    next unless find.poc
+    @screenshot_names_from_findings[find.id] = []
+    #for each finding, we extract the screenshot name in the poc field.
+    #screenshot names are like this : [!!screenshotnames.png!!]
+    find.poc.to_s.split('<paragraph>').each do |pp|
+      next unless pp =~ /\[\!\!/
+      @screenshot_names_from_findings[find.id] << pp.split('[!!')[1].split('!!]').first
     end
-
-    @attachments = Attachments.all(:report_id => id)
-    xslt = Xslt.first(:report_type => @report.report_type)
-    @screenshot_names = xslt.screenshot_names
-    haml :list_attachments, :encode_html => true
+  end
+  @attachments = Attachments.all(report_id: id)
+  #fetching screenshot names in report
+  xslt = Xslt.first(report_type: @report.report_type)
+  @screenshot_names_from_report = xslt.screenshot_names
+  @screenshot_names_from_findings
+  haml :list_attachments, encode_html: true
 end
 
 get '/report/:id/export_attachments' do
@@ -323,53 +334,43 @@ get '/report/:id/attachments/:att_id' do
     send_file @attachment.filename_location, :filename => "#{@attachment.filename}"
 end
 
-#Delete an attachment
+# Delete an attachment
 get '/report/:id/attachments/delete/:att_id' do
-    id = params[:id]
+  id = params[:id]
 
-    # Query for the first report matching the id
-    @report = get_report(id)
+  # Query for the first report matching the id
+  @report = get_report(id)
 
-    if @report == nil
-        return "No Such Report"
-    end
-
-    @attachment = Attachments.first(:report_id => id, :id => params[:att_id])
-
-	if @attachment == nil
-		  return "No Such Attachment"
-	end
+  return 'No Such Report' if @report.nil?
+  params[:att_id].split(',').each do |current_id|
+    @attachment = Attachments.first(report_id: id, id: current_id)
+    return "No Such Attachment : #{current_id}" if @attachment.nil?
     if File.file?(@attachment.filename_location)
-        File.delete(@attachment.filename_location)
+      File.delete(@attachment.filename_location)
     end
     # delete the entries
     @attachment.destroy
-
-    redirect to("/report/#{id}/attachments")
+  end
+  redirect to("/report/#{id}/attachments")
 end
 
 
-#Delete a report
-get '/report/:id/remove' do
-    id = params[:id]
-
-    # Query for the first report matching the id
-    @report = get_report(id)
-
-    if @report == nil
-        return "No Such Report"
-    end
-
-    # get all findings associated with the report
-    @findings = Findings.all(:report_id => id)
-
+# Delete a report
+get '/report/remove/:id' do
+  id = params[:id]
+  params[:id].split(',').each do |current_id|
+    report = get_report(current_id)
+    return "No Such Report : #{current_id}" if report.nil?
+    # get all findings and udos associated with the report
+    findings = Findings.all(report_id: id)
+    udos = UserDefinedObjects.all(report_id: id)
     # delete the entries
-    @findings.destroy
-    @report.destroy
-
-    serpico_log("Report deleted, Report #{id}")
-
-    redirect to("/reports/list")
+    findings.destroy
+    udos.destroy
+    report.destroy
+  end
+  serpico_log("Report deleted, Report #{id}")
+  redirect to('/reports/list')
 end
 
 # Edit the Report's main information; Name, Consultant, etc.
@@ -684,9 +685,9 @@ get '/report/:id/findings' do
     @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix = get_scoring_findings(@report)
 
     if config_options.has_key?("cvssv2_scoring_override")
-        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"] 
+        @cvssv2_scoring_override = config_options["cvssv2_scoring_override"]
     else
-        @cvssv2_scoring_override = false 
+        @cvssv2_scoring_override = false
     end
     haml :findings_list, :encode_html => true
 end
@@ -1099,31 +1100,25 @@ get '/report/:id/findings/:finding_id/upload' do
 end
 
 # Remove a finding from the report
-get '/report/:id/findings/:finding_id/remove' do
-    # Check for kosher name in report name
-    id = params[:id]
+get '/report/:id/findings/remove/:finding_id' do
+  # Check for kosher name in report name
+  id = params[:id]
 
-    # Query for the report
-    @report = get_report(id)
+  # Query for the report
+  @report = get_report(id)
 
-    if @report == nil
-        return "No Such Report"
-    end
+  return 'No Such Report' if @report.nil?
 
-    finding_id = params[:finding_id]
+  finding_id = params[:finding_id]
 
-    # Query for all Findings
-    @finding = Findings.first(:report_id => id, :id => finding_id)
-
-    if @finding == nil
-        return "No Such Finding"
-    end
-
-    # Update the finding with templated finding stuff
-    @finding.destroy
-    serpico_log("#{@finding.title} deleted from report #{id}")
-
-    redirect to("/report/#{id}/findings")
+  params[:finding_id].split(',').each do |current_id|
+        finding = Findings.first(report_id: id, id: current_id)
+		return "No Such Finding : #{current_id}" if finding.nil?
+		# delete the entries
+		finding.destroy
+ 		serpico_log("#{finding.title} deleted from report #{id}")
+  end
+  redirect to("/report/#{id}/findings")
 end
 
 # preview a finding
