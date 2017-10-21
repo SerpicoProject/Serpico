@@ -251,9 +251,13 @@ def image_insert(docx, rand_file, image, end_xml)
     # assign random id, ms requires it begin with a letter. weird.
     p_id = "d#{rand(36**7).to_s(36)}"
     name = image.description
-
     image_file = File.open(image.filename_location,'rb')
     img_data = image_file.read()
+    if image.respond_to? :alignment
+      alignment = image.alignment
+    else 
+      alignment = ""
+    end
 
     #resize picture to fit into word if it's too big
     if jpeg?(img_data)
@@ -273,8 +277,19 @@ def image_insert(docx, rand_file, image, end_xml)
         height = height - (height/20)
     end
     image_file.close
+    # Image alignment setting
+    case alignment
+      when "Left"
+        imgAlign = "left"
+      when "Right"
+        imgAlign = "right"
+      when "Center"
+        imgAlign = "center"
+      else 
+        imgAlign = "left"
+    end
     # insert picture into xml
-    docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+    docx << " <w:p><w:pPr><w:jc w:val=\"#{imgAlign}\"/></w:pPr><w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict></w:p>"
     docx << end_xml
 
     # insert picture into zip

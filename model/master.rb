@@ -361,6 +361,7 @@ class Attachments
     property :report_id, String, :length => 30
     property :description, String, :length => 500
     property :caption, String, :length => 500
+    property :alignment, String, :length => 30
 
 end
 

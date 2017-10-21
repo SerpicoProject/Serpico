@@ -21,6 +21,15 @@
           Caption &nbsp;
         %td
           %input{ :type => 'text', :name => 'caption'}
+      %tr
+        %td
+          Alignment &nbsp;
+        %td
+          %select{ :name => 'alignment'}
+            %option{value: "Left", selected: params[:x] == "Left"}= "Left"
+            %option{value: "Center", selected: params[:x] == "Center"}= "Center"
+            %option{value: "Right", selected: params[:x] == "Right"}= "Right"
+          
     %br
     %input{:type => 'submit', :value => 'Upload' }
     %a{ :href => "/report/#{@report.id}/edit"}

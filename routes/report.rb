@@ -285,6 +285,7 @@ post '/report/:id/upload_attachments' do
     	datax["description"] = CGI::escapeHTML(upf[:filename]).gsub(" ","_").gsub("/","_").gsub("\\","_").gsub("`","_")
     	datax["report_id"] = id
       datax["caption"] = params[:caption]
+      datax["alignment"] = params[:alignment]
     	data = url_escape_hash(datax)
 
     	@attachment = Attachments.new(data)
