@@ -1,5 +1,5 @@
 {
-    "port":"8443",
+    "port":"443",
     "use_ssl":true,
     "bind_address":"0.0.0.0",
     "ssl_certificate":"./cert.pem",

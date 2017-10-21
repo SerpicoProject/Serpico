@@ -40,7 +40,7 @@ post '/master/findings/new' do
     if(config_options["dread"])
         data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
     end
-
+     
     if(config_options["riskmatrix"])
         if data["severity"] == "Low"
             severity_val = 0
@@ -49,7 +49,7 @@ post '/master/findings/new' do
         elsif data["severity"] == "High"
             severity_val = 2
         end
-
+ 
         if data["likelihood"] == "Low"
             likelihood_val = 0
         elsif data["likelihood"] == "Medium"
@@ -57,7 +57,7 @@ post '/master/findings/new' do
         elsif data["likelihood"] == "High"
             likelihood_val = 2
         end
-
+ 
         data['risk'] = severity_val + likelihood_val
     end
 
@@ -165,7 +165,7 @@ post '/master/findings/:id/edit' do
     elsif(config_options["cvssv3"])
         data = cvss(data, true)
     end
-
+    
     if(config_options["riskmatrix"])
         if data["severity"] == "Low"
             severity_val = 0
@@ -174,7 +174,7 @@ post '/master/findings/:id/edit' do
         elsif data["severity"] == "High"
             severity_val = 2
         end
-
+ 
         if data["likelihood"] == "Low"
             likelihood_val = 0
         elsif data["likelihood"] == "Medium"
@@ -182,7 +182,7 @@ post '/master/findings/:id/edit' do
         elsif data["likelihood"] == "High"
             likelihood_val = 2
         end
-
+ 
         data['risk'] = severity_val + likelihood_val
     end
 
@@ -229,19 +229,25 @@ post '/master/findings/:id/edit' do
 end
 
 # Delete a template finding
-get '/master/findings/delete/:id' do
-  id = params[:id]
+get '/master/findings/:id/delete' do
+    # Check for kosher name in report name
+    id = params[:id]
 
-  params[:id].split(',').each do |current_id|
-        finding = TemplateFindings.first(id: current_id)
-    return "No Such Finding : #{current_id}" if finding.nil?
-    # delete the entries
-    finding.destroy
+    # Query for all Findings
+    @finding = TemplateFindings.first(:id => id)
+
+    if @finding == nil
+        return "No Such Finding"
+    end
+
     # delete associated vuln mappings
-    vulnmappings = VulnMappings.all(templatefindings_id: current_id)
-    vulnmappings.destroy
-  end
-  redirect to('/master/findings')
+    @vulnmappings = VulnMappings.all(:templatefindings_id => id)
+    @vulnmappings.destroy
+
+    # Update the finding with templated finding stuff
+    @finding.destroy
+
+    redirect to("/master/findings")
 end
 
 # preview a finding
@@ -349,3 +355,4 @@ post '/master/import' do
     end
     redirect to("/master/findings")
 end
+

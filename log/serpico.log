@@ -1,0 +1,325 @@
+|+| [08/10/2017 07:05] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:07] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:09] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:10] Importing attachments to 1 : admin
+|+| [08/10/2017 07:10] Importing attachments to 1 : admin
+|+| [08/10/2017 07:10] Importing attachments to 1 : admin
+|+| [08/10/2017 07:10] Importing attachments to 1 : admin
+|+| [08/10/2017 07:10] Importing attachments to 1 : admin
+|+| [08/10/2017 07:13] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:14] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:19] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:20] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 07:25] Report generation attempted, Report Name: ReportTest ./tmp/gnoyrvmxnwcq.docx ./templates/rosnxlasjo063glok0jpifolj3dw2zud7nq0.xslt : admin
+|+| [08/10/2017 07:30] Report generation attempted, Report Name: ReportTest ./tmp/t6flsmc905e9.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [08/10/2017 07:32] Report generation attempted, Report Name: ReportTest ./tmp/7eev14ege3hu.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [08/10/2017 07:36] Report generation attempted, Report Name: ReportTest ./tmp/tg9jj4g8i95k.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [08/10/2017 07:38] Report generation attempted, Report Name: ReportTest ./tmp/z60yv4gcgim7.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [08/10/2017 07:38] Report generation attempted, Report Name: ReportTest ./tmp/2jz84p7q6c08.docx ./templates/xmigt2zvwzy4dkg1y153sz1yv9ac18wdaq4k.xslt : admin
+|+| [08/10/2017 07:38] Report generation attempted, Report Name: ReportTest ./tmp/5ej0y91kgjgr.docx ./templates/xmigt2zvwzy4dkg1y153sz1yv9ac18wdaq4k.xslt : admin
+|+| [08/10/2017 07:40] Report generation attempted, Report Name: ReportTest ./tmp/d5iwsrxdswgh.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 07:42] Report generation attempted, Report Name: ReportTest ./tmp/87pn0mxmayuc.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 07:43] Report generation attempted, Report Name: ReportTest ./tmp/1tpl40pgfxdo.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 07:59] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:10] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:10] Report generation attempted, Report Name: ReportTest ./tmp/npnn4dlrz4tg.docx ./templates/cofbfb0r0tpcrdmtd3dqv0mq78bhkba3j7cr.xslt : admin
+|+| [08/10/2017 08:11] hello : SERVER_LOG
+|+| [08/10/2017 08:12] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:12] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:13] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:14] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:45] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:47] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:47] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:52] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:56] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 08:57] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:02] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:04] Report generation attempted, Report Name: ReportTest ./tmp/h8wyhg32c2wc.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:05] Report generation attempted, Report Name: ReportTest ./tmp/r02q7i8a7efp.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:07] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:07] Report generation attempted, Report Name: ReportTest ./tmp/rja7ybxvimct.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:08] Report generation attempted, Report Name: ReportTest ./tmp/whg5hgmf3zui.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:09] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:09] Report generation attempted, Report Name: ReportTest ./tmp/b8rzasma5v9y.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:10] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:10] Report generation attempted, Report Name: ReportTest ./tmp/96wlmljuxbt5.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:11] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:11] Report generation attempted, Report Name: ReportTest ./tmp/n6znkobo55b8.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:12] Report generation attempted, Report Name: ReportTest ./tmp/yrgni3oig6nx.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:13] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:14] Report generation attempted, Report Name: ReportTest ./tmp/jm67s9xivgd4.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:15] Report generation attempted, Report Name: ReportTest ./tmp/9shdn3zb8obh.docx ./templates/2223qkwbvtw99luij7xr3bd3qoqnuxwl8mia.xslt : admin
+|+| [08/10/2017 10:15] Report generation attempted, Report Name: ReportTest ./tmp/o4b9fl61jx1c.docx ./templates/z5cr5jivbrzft6dk5jzcuknbzn3ttihbmq0g.xslt : admin
+|+| [08/10/2017 10:17] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [08/10/2017 10:17] Report generation attempted, Report Name: ReportTest ./tmp/7dkrqn6zwzie.docx ./templates/z5cr5jivbrzft6dk5jzcuknbzn3ttihbmq0g.xslt : admin
+|+| [10/10/2017 14:41] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 15:02] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 15:04] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 15:05] Report generation attempted, Report Name: ReportTest ./tmp/q2k8d1hj3cd9.docx ./templates/z5cr5jivbrzft6dk5jzcuknbzn3ttihbmq0g.xslt : admin
+|+| [10/10/2017 15:05] Report generation attempted, Report Name: ReportTest ./tmp/gxa05pmoddzo.docx ./templates/z5cr5jivbrzft6dk5jzcuknbzn3ttihbmq0g.xslt : admin
+|+| [10/10/2017 15:06] Report generation attempted, Report Name: ReportTest ./tmp/takyxztqh9xp.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 15:25] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 15:25] Report generation attempted, Report Name: ReportTest ./tmp/qhxqd1kv5jir.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 15:26] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 15:26] Report generation attempted, Report Name: ReportTest ./tmp/8nudwc0qgrej.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 15:59] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:01] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:05] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:11] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:12] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:15] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:15] Report generation attempted, Report Name: ReportTest ./tmp/87mmfvkyxh07.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 16:16] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:16] Report generation attempted, Report Name: ReportTest ./tmp/ae3ddb1wwgcq.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 16:17] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:17] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:17] Report generation attempted, Report Name: ReportTest ./tmp/h9xyt5cbq688.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 16:29] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 16:29] Report generation attempted, Report Name: ReportTest ./tmp/bnks7xej6gsx.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 18:41] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 18:41] Report generation attempted, Report Name: ReportTest ./tmp/jzgcchqec70a.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 18:47] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 18:49] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 18:49] Report generation attempted, Report Name: ReportTest ./tmp/q6ptj2eplaq8.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 18:51] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 18:51] Report generation attempted, Report Name: ReportTest ./tmp/1xwm5qdjcue6.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 20:56] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 21:21] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/fdw0v67zckkh.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:23] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/xm7diyysb404.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:26] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/5mhf4q5v153u.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:27] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/dzc23tojilfz.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:27] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/yaxzbd6d1sjs.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:49] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/se2mmxx82r4i.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:52] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/l4dqkt76otrs.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 21:53] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/587ajtdacpb7.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [10/10/2017 23:06] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 23:07] Report generation attempted, Report Name: ReportTest ./tmp/1tesl4ok3qf9.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [10/10/2017 23:07] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 23:09] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [10/10/2017 23:09] Report generation attempted, Report Name: ReportTest ./tmp/j4po2sopnkf9.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [12/10/2017 07:41] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [12/10/2017 07:44] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [12/10/2017 07:45] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [12/10/2017 08:00] Report deleted, Report 3 : admin
+|+| [12/10/2017 08:04] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/wjbz2eb3iinn.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:08] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/uk81atdcinys.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:11] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/iumjuya5z9pv.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:13] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/vsoztwssg214.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:14] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/j0nkivz9pmcf.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:16] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/e5mhjpim0jby.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:17] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/i9aoegskuaqs.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:17] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/qhssg7q1g1bj.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [12/10/2017 08:18] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/9wqtlfok4d6m.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [13/10/2017 08:02] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 11:51] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 12:45] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 12:46] Report generation attempted, Report Name: ReportTest ./tmp/gqfvzvp9tw4y.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 12:46] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 12:46] Report generation attempted, Report Name: ReportTest ./tmp/q4znjafzx53w.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 12:59] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 13:00] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/awtqcbsgmlho.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [13/10/2017 18:47] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 18:53] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 18:56] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 18:56] Report generation attempted, Report Name: ReportTest ./tmp/ief0a5n1djz8.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 18:58] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 18:58] Report generation attempted, Report Name: ReportTest ./tmp/m0d61ws6v9ah.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:02] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:03] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:03] Report generation attempted, Report Name: ReportTest ./tmp/g3yno0aq64es.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:04] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:04] Report generation attempted, Report Name: ReportTest ./tmp/vt9hknt5v5rz.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:05] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:05] Report generation attempted, Report Name: ReportTest ./tmp/9ujpr3h7dz92.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:10] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:10] Report generation attempted, Report Name: ReportTest ./tmp/uog77rqbx0yi.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:10] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:10] Report generation attempted, Report Name: ReportTest ./tmp/uhcd5znym6d0.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:13] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:20] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:20] Report generation attempted, Report Name: ReportTest ./tmp/88wvxi6yyroe.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:21] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:21] Report generation attempted, Report Name: ReportTest ./tmp/tasu2kiu3np1.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 19:23] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 19:23] Report generation attempted, Report Name: ReportTest ./tmp/prbe5wc2h2a.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 21:23] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:23] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:24] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:27] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:27] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:28] Report generation attempted, Report Name: ReportTest ./tmp/zwkw73ttbwks.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 21:31] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:31] Report generation attempted, Report Name: ReportTest ./tmp/h48sop8cg31i.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 21:31] Report generation attempted, Report Name: ReportTest ./tmp/1x2ptxfghr3x.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [13/10/2017 21:32] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [13/10/2017 21:32] Report generation attempted, Report Name: ReportTest ./tmp/98t3rv5hgu0m.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 06:47] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 06:48] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 06:48] Report generation attempted, Report Name: ReportTest ./tmp/zlaufnyil753.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 13:46] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 13:56] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 13:56] Report generation attempted, Report Name: ReportTest ./tmp/ef13dmzkcjpl.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 13:58] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 13:58] Report generation attempted, Report Name: ReportTest ./tmp/p0pn9xtl9lir.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:01] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:01] Report generation attempted, Report Name: ReportTest ./tmp/bpsdum5zmcr4.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:07] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:07] Report generation attempted, Report Name: ReportTest ./tmp/itn5wstp3ibr.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:07] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:07] Report generation attempted, Report Name: ReportTest ./tmp/srr4qeupj9nr.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:10] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:10] Report generation attempted, Report Name: ReportTest ./tmp/p8yncce0a1no.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:11] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:11] Report generation attempted, Report Name: ReportTest ./tmp/1bgir4paxsz4.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:11] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:12] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:12] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/ay9lyqv8lzzy.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [14/10/2017 14:14] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:14] Report generation attempted, Report Name: ReportTest ./tmp/1shomkw9lj4m.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:16] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:17] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:17] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/624c029fazgf.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [14/10/2017 14:17] Report generation attempted, Report Name: ReportTest ./tmp/223qv76xx37h.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:26] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:26] Report generation attempted, Report Name: ReportTest ./tmp/t0rjqp8rb8ts.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:27] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:27] Report generation attempted, Report Name: ReportTest ./tmp/wk1fhao86c3b.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:27] Report generation attempted, Report Name: ReportTest ./tmp/8udej0hmgv1r.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:27] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:28] Report generation attempted, Report Name: ReportTest ./tmp/qksf539srxk.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:32] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:32] Report generation attempted, Report Name: ReportTest ./tmp/1nwp1t6lws4r.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:33] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:33] Report generation attempted, Report Name: ReportTest ./tmp/hc3xo3ppjitl.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:33] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:33] Report generation attempted, Report Name: ReportTest ./tmp/uxuiy2ik3emx.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:34] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:34] Report generation attempted, Report Name: ReportTest ./tmp/xun5d1a220ag.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:35] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:35] Report generation attempted, Report Name: ReportTest ./tmp/w38i2hqq15kx.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:37] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:38] Report generation attempted, Report Name: ReportTest ./tmp/dkipru1lxdet.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:40] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:40] Report generation attempted, Report Name: ReportTest ./tmp/tcdo6m9y75dt.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:40] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:40] Report generation attempted, Report Name: ReportTest ./tmp/ltt18zm999jb.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:40] Report generation attempted, Report Name: ReportTest ./tmp/b5chj3i0rlyt.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:41] Report generation attempted, Report Name: ReportTest ./tmp/e8ctgyrdgra3.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:44] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:44] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/z0tml1od8wlp.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [14/10/2017 14:45] Report generation attempted, Report Name: ReportTest ./tmp/ovb7gcf81q11.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:52] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:52] Report generation attempted, Report Name: ReportTest ./tmp/3p06rr6wu1tj.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:53] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:53] Report generation attempted, Report Name: ReportTest ./tmp/cyh48882i6xb.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:53] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:53] Report generation attempted, Report Name: ReportTest ./tmp/wu758x513am2.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:54] Report generation attempted, Report Name: ReportTest ./tmp/4139get5ibdv.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:54] Report generation attempted, Report Name: ReportTest ./tmp/ed29qgfbarb5.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:55] Report generation attempted, Report Name: ReportTest ./tmp/9gzbujir8egz.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 14:59] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 14:59] Report generation attempted, Report Name: ReportTest ./tmp/h0lzfz6ysqho.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:03] Report generation attempted, Report Name: ReportTest ./tmp/pdl1d588qqsw.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:40] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:41] Report generation attempted, Report Name: ReportTest ./tmp/as3ioyi2lue2.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:51] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:52] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:54] Report generation attempted, Report Name: ReportTest ./tmp/jytczmvn02d7.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:55] Report generation attempted, Report Name: ReportTest ./tmp/ova9oa0qbxxh.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:55] Report generation attempted, Report Name: ReportTest ./tmp/lyrhiljgfx3n.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:56] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:56] Report generation attempted, Report Name: ReportTest ./tmp/e4f7ztwdu26h.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:56] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:56] Report generation attempted, Report Name: ReportTest ./tmp/g1uljjoi45lh.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [14/10/2017 15:58] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [14/10/2017 15:58] Report generation attempted, Report Name: ReportTest ./tmp/j9dyblagaj05.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [17/10/2017 08:00] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:00] Report deleted, Report 4 : admin
+|+| [17/10/2017 08:00] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/w1rqtmiubvux.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [17/10/2017 08:01] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/2n41rma4htaj.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [17/10/2017 08:02] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/ixsi6dyt5y8j.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [17/10/2017 08:07] Report generation attempted, Report Name: Prova ./tmp/dgxqpq5uqokp.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:12] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:12] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:12] Report generation attempted, Report Name: Prova ./tmp/dbnzphf3lxlv.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:15] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:15] Report generation attempted, Report Name: Prova ./tmp/wp3v5thpe29r.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:16] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:18] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:18] Report generation attempted, Report Name: Prova ./tmp/3jqrl10nlmru.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:19] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:19] Report generation attempted, Report Name: Prova ./tmp/gxcngj746atx.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:21] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:21] Report generation attempted, Report Name: Prova ./tmp/i5ye3tpk938b.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:22] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:22] Report generation attempted, Report Name: Prova ./tmp/9hthu330ssd8.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:30] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [17/10/2017 08:31] Report generation attempted, Report Name: Prova ./tmp/u27ygcgyp0j3.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:34] Report generation attempted, Report Name: Prova ./tmp/vt5iz9bcjsl8.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:35] Report generation attempted, Report Name: Prova ./tmp/cx5vixzxywb9.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:36] Report generation attempted, Report Name: Prova ./tmp/ahnvtzhu7292.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:37] Report generation attempted, Report Name: Prova ./tmp/3w1jetcmfv6z.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [17/10/2017 08:40] Report generation attempted, Report Name: BSA - Template Mail Code Review v3.0 ./tmp/z208hbtd9mxe.docx ./templates/7minwbwjlxbmivoo1vih1tkz8v4umuj6m284.xslt : admin
+|+| [17/10/2017 08:52] Report generation attempted, Report Name: ReportTest ./tmp/swsac20w6byh.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [17/10/2017 08:52] Clickjacking [EN] deleted from report 1 : admin
+|+| [17/10/2017 08:52] Report generation attempted, Report Name: ReportTest ./tmp/hvr3yd20h9qs.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [17/10/2017 08:52] HTTPOnly flag not present deleted from report 1 : admin
+|+| [17/10/2017 08:52] Report generation attempted, Report Name: ReportTest ./tmp/v8p1m3rwoq81.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:01] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:01] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:01] Report generation attempted, Report Name: ReportTest ./tmp/gac5t89bwhs8.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:02] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:02] Report generation attempted, Report Name: ReportTest ./tmp/ievbcxujbugq.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:03] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:03] Report generation attempted, Report Name: ReportTest ./tmp/bp1fudr2f7bw.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:05] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:06] Report generation attempted, Report Name: Prova ./tmp/wnk4pi5gafzr.docx ./templates/6yeh0twbsoe1stcw6u9zxiyg1yplyilaknwd.xslt : admin
+|+| [21/10/2017 15:06] Report generation attempted, Report Name: ReportTest ./tmp/fgp1kvhjk88.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:07] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:07] Report generation attempted, Report Name: ReportTest ./tmp/q3xc1mufpau4.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:16] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:50] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:51] Report generation attempted, Report Name: ReportTest ./tmp/wv481c9xqfur.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 15:51] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:52] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 15:54] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:00] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:13] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:14] Report generation attempted, Report Name: ReportTest ./tmp/dyua02vqgt8p.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:14] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:15] Report generation attempted, Report Name: ReportTest ./tmp/qu2wcf3aagfs.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:20] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:24] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:24] Report generation attempted, Report Name: ReportTest ./tmp/n5u2vsioj7l9.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:25] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:25] Report generation attempted, Report Name: ReportTest ./tmp/z2nltfxaowai.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:26] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:26] Report generation attempted, Report Name: ReportTest ./tmp/vx8j71y4k48n.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:26] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:27] Report generation attempted, Report Name: ReportTest ./tmp/baamg9s1jtw5.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:27] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:27] Report generation attempted, Report Name: ReportTest ./tmp/577fu2uu6ogd.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:28] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:29] Report generation attempted, Report Name: ReportTest ./tmp/xxll3i89q3n8.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:34] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:35] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:35] Report generation attempted, Report Name: ReportTest ./tmp/eaw8lxh6bsx6.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:35] Report generation attempted, Report Name: ReportTest ./tmp/9m4fv8f125pi.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:37] Report generation attempted, Report Name: ReportTest ./tmp/fi8g6obs82cb.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:37] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:37] Report generation attempted, Report Name: ReportTest ./tmp/3dgnsmni2nlx.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:39] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:39] Report generation attempted, Report Name: ReportTest ./tmp/rs76cbb7bsyn.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:40] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:40] Report generation attempted, Report Name: ReportTest ./tmp/j4376bfm6b2r.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:40] Report generation attempted, Report Name: ReportTest ./tmp/w07wfcukaokj.docx ./templates/81wuiubg4bifsuc3zzseygq0ic0wwnmqqvw5.xslt : admin
+|+| [21/10/2017 16:52] Logging set to ./log/serpico.log : SERVER_LOG
+|+| [21/10/2017 16:52] Logging set to ./log/serpico.log : SERVER_LOG
