@@ -4,13 +4,13 @@ def parse_input(text)
 	else
 		# replace paragragh
 		text = text.gsub("<paragraph>","").gsub("</paragraph>","\n\n")
-		
+
 		# replace h4
 		text = text.gsub("<h4>","==== ").gsub("</h4>","")
-		
-		# not sure asciidoc equivalent for indent 
+
+		# not sure asciidoc equivalent for indent
 		text = text.gsub("<indented>","").gsub("</indented>","")
-		
+
 		# replace italics
 		text = text.gsub("<italics>","_").gsub("</italics>","_")
 
@@ -28,8 +28,8 @@ def gen_asciidoc(finding, score)
 	asciidoc = ""
 
 	asciidoc << "== #{finding.title} \n\n"
-	
-	if(score == "dread")	
+
+	if(score == "dread")
 		asciidoc << "|====== \n"
 		asciidoc << "|Damage|Reproducibility|Exploitability|Affected Users|Discoverability|Remediation Effort\n"
 		asciidoc << "|#{finding.damage} \n"
@@ -39,20 +39,20 @@ def gen_asciidoc(finding, score)
 		asciidoc << "|#{finding.discoverability} \n"
 		asciidoc << "|#{finding.effort} \n"
 		asciidoc << "|======\n\n"
-	elsif(score == "cvss" or score == "cvssv3")	
+	elsif(score == "cvss" or score == "cvssv3")
 		asciidoc << "|====== \n"
 		asciidoc << "|CVSS Score Total:"
 		asciidoc << "|#{finding.cvss_total} \n"
 		asciidoc << "|======\n\n"
 	else
-		risk = ["Informational", "Low", "Moderate", "High", "Critical"]	
+		risk = ["Informational", "Low", "Moderate", "High", "Critical"]
 		asciidoc << "|===\n"
 		asciidoc << "|Risk |Remediation Effort\n"
 		asciidoc << "|#{risk[finding.risk]} \n"
 		asciidoc << "|#{finding.effort} \n"
-		asciidoc << "|===\n\n"	
-	end	
-	
+		asciidoc << "|===\n\n"
+	end
+
 	asciidoc << "=== Overview \n"
 	asciidoc << parse_input(finding.overview) + "\n"
 	asciidoc << "=== Affected Hosts \n"
@@ -61,8 +61,8 @@ def gen_asciidoc(finding, score)
 	asciidoc << parse_input(finding.poc) + "\n"
 	asciidoc << "=== Remediation \n"
 	asciidoc << parse_input(finding.remediation) + "\n"
-	asciidoc << "=== References \n"				
-	asciidoc << parse_input(finding.references) + "\n\n"		
+	asciidoc << "=== References \n"
+	asciidoc << parse_input(finding.references) + "\n\n"
 	asciidoc << "<<< \n\n"
     return asciidoc
 end
