@@ -31,17 +31,15 @@ Usage:
     <div id="cvssboard"></div>
 
     // create a new instance of CVSS calculator:
-    var c = new CVSS("cvssboard");
+    var c = new CVSS.js("cvssboard");
 
     // create a new instance of CVSS calculator with some event handler callbacks
-    var c = new CVSS("cvssboard", {
+    var c = new CVSS.js("cvssboard", {
                 onchange: function() {....} //optional
                 onsubmit: function() {....} //optional
                 }
-                
     // set a vector
     c.set('AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:L');
-    
     //get the value
     c.get() returns an object like:
 
@@ -49,10 +47,10 @@ Usage:
         score: 4.3,
         vector: 'AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:L'
     }
-    
 */
 
-var CVSS = function (id, options) {
+var CVSS = CVSS || {};
+CVSS.js = function (id, options) {
     this.options = options;
     this.wId = id;
     var e = function (tag) {
@@ -179,7 +177,6 @@ var CVSS = function (id, options) {
             }
         }
     };
-    
     this.bme = {};
     this.bmgReg = {
         AV: 'NALP',
@@ -197,7 +194,7 @@ var CVSS = function (id, options) {
         C: 'C',
         I: 'C',
         A: 'C'
-    };    
+    };
     var s, f, dl, g, dd, l;
     this.el = document.getElementById(id);
     this.el.appendChild(s = e('style'));
@@ -249,7 +246,6 @@ var CVSS = function (id, options) {
     l.appendChild(this.vector = e('a'));
     this.vector.className = 'vector';
     this.vector.innerHTML = 'CVSS:3.0/AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_';
-    
     if (options.onsubmit) {
         f.appendChild(e('hr'));
         this.submitButton = f.appendChild(e('input'));
@@ -258,7 +254,7 @@ var CVSS = function (id, options) {
     }
 };
 
-CVSS.prototype.severityRatings = [{
+CVSS.js.prototype.severityRatings = [{
     name: "None",
     bottom: 0.0,
     top: 0.0
@@ -280,7 +276,7 @@ CVSS.prototype.severityRatings = [{
     top: 10.0
 }];
 
-CVSS.prototype.severityRating = function (score) {
+CVSS.js.prototype.severityRating = function (score) {
     var i;
     var severityRatingLength = this.severityRatings.length;
     for (i = 0; i < severityRatingLength; i++) {
@@ -295,7 +291,7 @@ CVSS.prototype.severityRating = function (score) {
     };
 };
 
-CVSS.prototype.calculate = function () {
+CVSS.js.prototype.calculate = function () {
     var cvssVersion = "3.0";
     var exploitabilityCoefficient = 8.22;
     var scopeCoefficient = 1.08;
@@ -399,14 +395,14 @@ CVSS.prototype.calculate = function () {
     }
 };
 
-CVSS.prototype.get = function() {
+CVSS.js.prototype.get = function() {
     return {
         score: this.score.innerHTML,
         vector: this.vector.innerHTML
     }
 };
 
-CVSS.prototype.setMetric = function(a) {
+CVSS.js.prototype.setMetric = function(a) {
     var vectorString = this.vector.innerHTML;
     if (/AV:.\/AC:.\/PR:.\/UI:.\/S:.\/C:.\/I:.\/A:./.test(vectorString)) {} else {
         vectorString = 'AV:_/AC:_/PR:_/UI:_/S:_/C:_/I:_/A:_';
@@ -416,7 +412,7 @@ CVSS.prototype.setMetric = function(a) {
     this.set(newVec);
 };
 
-CVSS.prototype.set = function(vec) {
+CVSS.js.prototype.set = function(vec) {
     var newVec = 'CVSS:3.0/';
     sep = '';
     for (m in this.bm) {
@@ -439,7 +435,7 @@ CVSS.prototype.set = function(vec) {
     this.update(newVec);
 };
 
-CVSS.prototype.update = function(newVec) {
+CVSS.js.prototype.update = function(newVec) {
     this.vector.innerHTML = newVec;
     var s = this.calculate();
     this.score.innerHTML = s;

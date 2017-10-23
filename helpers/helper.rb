@@ -396,7 +396,7 @@ def cvss(data, is_cvssv3)
 	if av == "local"
 	    cvss_av = 0.395
 		c2_vs += "AV:L/"
-	elsif av == "local network"
+	elsif av == "adjacent network"
 	    cvss_av = 0.646
 		c2_vs += "AV:A/"
 	else
