@@ -3,7 +3,7 @@ require 'webrick/https'
 require 'openssl'
 require 'json'
 require "./server.rb"
-config_options = JSON.parse(File.read('./config.json'))
+config_options = Server.settings.config_options
 
 ## SSL Settings
 ssl_certificate = config_options["ssl_certificate"]

@@ -2,7 +2,7 @@ require 'sinatra'
 
 ##### Simple API Components - Read-Only for now
 
-config_options = JSON.parse(File.read('./config.json'))
+config_options = Server.settings.config_options
 
 # returns an API session key
 post '/v1/session' do
