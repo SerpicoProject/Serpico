@@ -1,4 +1,4 @@
-.span10
+.col-md-10
   - if not @vulnmap
     Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
   - else
@@ -7,7 +7,7 @@
     %br
     %br
     .table.table-hover
-      %table{:style => 'width: 90%'}
+      %table{ :style => "width: 90%" }
         %thead
           %tr
             %td
@@ -24,13 +24,13 @@
           - if @services
             - @services.each do |service|
               %tr
-                %td{:style => 'width: 15%', :"data-index" => "#{service["host"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["host"]}" }
                   #{service["host"]}
-                %td{:style => 'width: 15%', :"data-index" => "#{service["port"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["port"]}" }
                   #{service["port"]}
-                %td{:style => 'width: 15%', :"data-index" => "#{service["proto"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["proto"]}" }
                   #{service["name"]}
-                %td{:style => 'width: 15%', :"data-index" => "#{service["state"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["state"]}" }
                   #{service["state"]}
-                %td{:style => 'width: 40%', :"data-index" => "#{service["info"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 40%", :"data-index" => "#{service["info"]}" }
                   #{service["info"]}

@@ -1,12 +1,19 @@
-.span10
-  .table
-    %table{:style => 'width: 90%'}
-      %tbody
-        - @menu.each do |item|
-          %tr
-            %td
-              #{item["name"]}
-            %td
-              #{item["description"]}
-            %td
-              %a{ :href => "#{item["link"]}"} #{item["name"]}
+.col-md-10
+  %br
+  %h2 Administrator Specific Plugins
+  %br
+
+  - if @menu.size > 0
+    .table
+      %table{ :style => "width: 90%" }
+        %tbody
+          - @menu.each do |item|
+            %tr
+              %td
+                #{item["name"]}
+              %td
+                #{item["description"]}
+              %td
+                %a{ :href => "#{item["link"]}" } #{item["name"]}
+  - else
+    No administrator specific plugins found.

@@ -1,30 +1,30 @@
 !!!
-%html{:lang => "en"}
+%html{ :lang => "en" }
   %head
-    %script{:src => "/js/jquery-3.1.1.js"}
-    %script{:src => "/js/jquery-migrate-3.0.0.min.js"}
-    %script{:src => "/js/bootstrap-collapse.js"}
-    %script{:src => "/js/bootstrap-transition.js"}
-    %script{:src => "/js/bootstrap-alert.js"}
-    %script{:src => "/js/bootstrap-modal.js"}
-    %script{:src => "/js/bootstrap-dropdown.js"}
-    %script{:src => "/js/bootstrap-scrollspy.js"}
-    %script{:src => "/js/bootstrap-tab.js"}
-    %script{:src => "/js/bootstrap-tooltip.js"}
-    %script{:src => "/js/bootstrap-popover.js"}
-    %script{:src => "/js/bootstrap-button.js"}
-    %script{:src => "/js/bootstrap-carousel.js"}
-    %script{:src => "/js/bootstrap-typeahead.js"}
-    %script{:src => "/js/format_shortcut.js"}
-    %script{:src => "/js/helpers.js"}
+    %script{ :src => "/js/jquery-3.1.1.js" }
+    %script{ :src => "/js/jquery-migrate-3.0.0.min.js" }
+    %script{ :src => "/js/bootstrap-collapse.js" }
+    %script{ :src => "/js/bootstrap-transition.js" }
+    %script{ :src => "/js/bootstrap-alert.js" }
+    %script{ :src => "/js/bootstrap-modal.js" }
+    %script{ :src => "/js/bootstrap-dropdown.js" }
+    %script{ :src => "/js/bootstrap-scrollspy.js" }
+    %script{ :src => "/js/bootstrap-tab.js" }
+    %script{ :src => "/js/bootstrap-tooltip.js" }
+    %script{ :src => "/js/bootstrap-popover.js" }
+    %script{ :src => "/js/bootstrap-button.js" }
+    %script{ :src => "/js/bootstrap-carousel.js" }
+    %script{ :src => "/js/bootstrap-typeahead.js" }
+    %script{ :src => "/js/format_shortcut.js" }
+    %script{ :src => "/js/helpers.js" }
 
-    %meta{:charset => "utf-8"}/
+    %meta{ :charset => "utf-8" }/
     %title Serpico
-    %meta{:content => "", :name => "description"}/
-    %meta{:content => "", :name => "author"}/
-    %link{:href => "/css/bootstrap.css", :rel => "stylesheet"}/
-    %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}/
-    %link{:href => "/css/font-awesome.css", :rel => "stylesheet"}/
+    %meta{ :content => "", :name => "description" }/
+    %meta{ :content => "", :name => "author" }/
+    %link{ :href => "/css/bootstrap.css", :rel => "stylesheet" }/
+    %link{ :href => "/css/bootstrap-responsive.css", :rel => "stylesheet" }/
+    %link{ :href => "/css/font-awesome.css", :rel => "stylesheet" }/
     :css
       body {
         padding-top: 60px;
@@ -52,7 +52,7 @@
         }
       }
 
-        %link{:href => "/css/bootstrap-responsive.css", :rel => "stylesheet"}
+      %link{ :href => "/css/bootstrap-responsive.css", :rel => "stylesheet" }
   - if valid_session?
     %body
       .navbar.navbar-fixed-top
@@ -95,40 +95,40 @@
               %ul.nav.nav-list
                 %li.nav-header Findings Menu
                 %li
-                  %a{ :href => '/master/findings' } List Current Findings
+                  %a{ :href => "/master/findings" } List Current Findings
                 %li
-                  %a{ :href => '/master/findings/new' } Add Finding
+                  %a{ :href => "/master/findings/new" } Add Finding
               %ul.nav.nav-list
                 %li.nav-header Database Functions
                 %li
-                  %a{ :href => '/master/export' } Export Current Findings
+                  %a{ :href => "/master/export" } Export Current Findings
                 %li
-                  %a{ :href => '/master/import' } Import Findings
+                  %a{ :href => "/master/import" } Import Findings
             - elsif @admin
               %ul.nav.nav-list
                 %li.nav-header Admin User Menu
                 %li
-                  %a{ :href => '/admin/add_user' } Add User
+                  %a{ :href => "/admin/add_user" } Add User
                 %li
-                  %a{ :href => '/admin/list_user' } List Users
+                  %a{ :href => "/admin/list_user" } List Users
                 %li.nav-header Admin Report Template Menu
                 %li
-                  %a{ :href => '/admin/templates/add' } Add Report Template
+                  %a{ :href => "/admin/templates/add" } Add Report Template
                 %li
-                  %a{ :href => '/admin/templates' } List Report Templates
+                  %a{ :href => "/admin/templates" } List Report Templates
                 %li
-                  %a{ :href => '/admin/udo_templates' } Manage UDOs templates for reports
+                  %a{ :href => "/admin/udo_templates" } Manage UDOs templates for reports
                 %li.nav-header Plugin Menu
                 %li
-                  %a{ :href => '/admin/plugins' } Enable/Disable Plugins
+                  %a{ :href => "/admin/plugins" } Enable/Disable Plugins
                 %li
-                  %a{ :href => '/admin/admin_plugins' } Administrator Specific Plugins
+                  %a{ :href => "/admin/admin_plugins" } Administrator Specific Plugins
                 %li.nav-header Maintenance Menu
                 %li
-                  %a{ :href => '/admin/config' } Modify Configurations
+                  %a{ :href => "/admin/config" } Modify Configurations
                 %li
-                  %a{ :href => '/admin/dbbackup' } Backup Master Database
-                  %a{ :href => '/admin/attacments_backup' } Backup All Attachments
+                  %a{ :href => "/admin/dbbackup" } Backup Master Database
+                  %a{ :href => "/admin/attacments_backup" } Backup All Attachments
                 - @version = File.open("VERSION.txt").read()
                 %li.nav-header Serpico Version: #{@version}
 
@@ -168,17 +168,17 @@
                   %li.nav-header Enabled Plugins
                   -@plugin_side_menu.each do |item|
                     %li
-                    %a{ :href => "#{item["link"]}?report_id=#{@report.id}"} #{item["name"]}
+                    %a{ :href => "#{item["link"]}?report_id=#{@report.id}" } #{item["name"]}
 
           =yield
   - else
     %body
-    %link(rel="stylesheet" type="text/css" href="/css/signin.css")
+    %link{ :href => "/css/signin.css", :rel => "stylesheet", :type => "text/css" }
     .container
-    %form.form-signin{:action => "/login", :method => "POST", :role => "form"}
-      %img{:src => "#{@logo}", :height => 150, :width =>  500, :class => 'text-center'}
+    %form.form-signin{ :action => "/login", :method => "POST", :role => "form" }
+      %img.text-center{ :src => "#{@logo}", :height => 150, :width =>  500 }
       %br
       %br
-      %input.form-control.btn-block{:autofocus => "", :placeholder => "Username", :required => "", :type => "text", :name=> "username"}
-      %input.form-control.btn-block{:placeholder => "Password", :required => "", :type => "password", :name=> "password"}
-      %button.btn.btn-signin.btn-block.form-control{:type => "submit"} Sign in
+      %input.form-control.btn-block{ :autofocus => "", :placeholder => "Username", :required => "", :type => "text", :name=> "username" }
+      %input.form-control.btn-block{ :placeholder => "Password", :required => "", :type => "password", :name=> "password", :autocomplete => "off" }
+      %button.btn.btn-signin.btn-block.form-control{ :type => "submit" } Sign in

@@ -1,30 +1,31 @@
-.span10
+.col-md-10
   %br
-    %h3 Current Users
-    %br
-    .table.table-striped
-      %table{:style => 'width: 40%'}
-        %tbody
-          - if @users
+  %h3 Current Users
+  %br
+
+  .table.table-striped
+    %table{ :style => "width: 40%" }
+      %tbody
+        - if @users
+          %tr
+            %td{ :style => "width: 30%" }
+              %b
+                Username
+            %td{ :style => "width: 30%" }
+              %b
+                Level/Authentication Type
+            %td{ :style => "width: 40%" }
+              Actions
+          - @users.each do |user|
             %tr
-              %td{ :style => 'width: 30%' }
-                %b
-                  Username
-              %td{ :style => 'width: 30%' }
-                %b
-                  Level/Authentication Type
-              %td{:style => 'width: 40%'}
-                Actions
-            - @users.each do |user|
-              %tr
-                %td{ :style => 'width: 30%' }
-                  #{user.username}
-                %td{:style => 'width: 30%'}
-                  #{user.type} / #{user.auth_type}
-                %td{:style => 'width: 40%'}
-                  %a{ :class => "btn btn-danger", :href => "/admin/delete/#{user.id}"}
-                    %i{:class => 'icon-trash icon-white', :title => 'Delete User'}
-                  %a{ :class => "btn btn-warning", :href => "/admin/edit_user/#{user.id}"}
-                    %i{:class => 'icon-pencil icon-white', :title => 'Edit Password'}
-          - else
-            No Users. How Curious. Who are you?
+              %td{ :style => "width: 30%" }
+                #{user.username}
+              %td{ :style => "width: 30%" }
+                #{user.type} / #{user.auth_type}
+              %td{ :style => "width: 40%" }
+                %a.btn.btn-danger{ :href => "/admin/delete/#{user.id}" }
+                  %i.icon-trash.icon-white{ :title => "Delete User" }
+                %a.btn.btn-warning{ :href => "/admin/edit_user/#{user.id}" }
+                  %i.icon-pencil.icon-white{ :title => "Edit Password" }
+        - else
+          No Users. How Curious. Who are you?

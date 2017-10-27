@@ -1,18 +1,17 @@
 %link{ :href => "/css/bootstrap-suggest.css", :rel => "stylesheet" }/
 %script{ :src => "/js/bootstrap-suggest.js" }
 
-.span10
+.col-md-10
   %br
   %h2 #{@finding.title}
   %br
-  %br
+
   %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
     .control-group
       %label.control-label{ :for => "title" } Title
       .controls
         %input{ :type => "text", :name => "title", :value => "#{@finding.title}" }
     -if !@master
-      %br
       .control-group
         %label.control-label{ :for => "assessment_type" } Assessment Type
         .controls
@@ -806,9 +805,11 @@
 
 
     - id_r = @report ? "/report/#{@report.id}/findings" : "/master/findings"
-    %input{ :type => "submit", :value => "Save" }
-    %a{ :href => "#{id_r}" }
-      %input{ :type => "button", :value => "Cancel" }
+
+    %br
+    %input.btn.btn-default{ :type => "submit", :value => "Save" }
+    %a.btn.btn-default{ :href => "#{id_r}" }
+      Cancel
 
 -if @cvss
   :javascript

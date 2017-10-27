@@ -278,7 +278,8 @@ a:hover {
   clear: both;
 }
 
-[class*="span"] {
+[class*="span"],
+[class*="col-md"] {
   float: left;
   min-height: 1px;
   margin-left: 20px;
@@ -299,7 +300,8 @@ a:hover {
   width: 860px;
 }
 
-.span10 {
+.span10,
+.col-md-10 {
   width: 780px;
 }
 
@@ -403,7 +405,8 @@ a:hover {
   clear: both;
 }
 
-.row-fluid [class*="span"] {
+.row-fluid [class*="span"],
+.row-fluid [class*="col-md"] {
   display: block;
   float: left;
   width: 100%;
@@ -415,11 +418,13 @@ a:hover {
           box-sizing: border-box;
 }
 
-.row-fluid [class*="span"]:first-child {
+.row-fluid [class*="span"]:first-child,
+.row-fluid [class*="col-md"]:first-child {
   margin-left: 0;
 }
 
-.row-fluid .controls-row [class*="span"] + [class*="span"] {
+.row-fluid .controls-row [class*="span"] + [class*="span"],
+.row-fluid .controls-row [class*="col-md"] + [class*="col-md"] {
   margin-left: 2.127659574468085%;
 }
 
@@ -433,7 +438,8 @@ a:hover {
   *width: 91.43617021276594%;
 }
 
-.row-fluid .span10 {
+.row-fluid .span10,
+.row-fluid .col-md-10 {
   width: 82.97872340425532%;
   *width: 82.92553191489361%;
 }
@@ -604,12 +610,16 @@ a:hover {
 }
 
 [class*="span"].hide,
-.row-fluid [class*="span"].hide {
+.row-fluid [class*="span"].hide,
+[class*="col-md"].hide,
+.row-fluid [class*="col-md"].hide {
   display: none;
 }
 
 [class*="span"].pull-right,
-.row-fluid [class*="span"].pull-right {
+.row-fluid [class*="span"].pull-right,
+[class*="col-md"].pull-right,
+.row-fluid [class*="col-md"].pull-right {
   float: right;
 }
 
@@ -1292,7 +1302,15 @@ textarea[class*="span"],
 .row-fluid input[class*="span"],
 .row-fluid select[class*="span"],
 .row-fluid textarea[class*="span"],
-.row-fluid .uneditable-input[class*="span"] {
+.row-fluid .uneditable-input[class*="span"],
+input[class*="col-md"],
+select[class*="col-md"],
+textarea[class*="col-md"],
+.uneditable-input[class*="col-md"],
+.row-fluid input[class*="col-md"],
+.row-fluid select[class*="col-md"],
+.row-fluid textarea[class*="col-md"],
+.row-fluid .uneditable-input[class*="col-md"] {
   float: none;
   margin-left: 0;
 }
@@ -1306,7 +1324,17 @@ textarea[class*="span"],
 .row-fluid textarea[class*="span"],
 .row-fluid .uneditable-input[class*="span"],
 .row-fluid .input-prepend [class*="span"],
-.row-fluid .input-append [class*="span"] {
+.row-fluid .input-append [class*="col-md"],
+.input-append input[class*="col-md"],
+.input-append .uneditable-input[class*="col-md"],
+.input-prepend input[class*="col-md"],
+.input-prepend .uneditable-input[class*="col-md"],
+.row-fluid input[class*="col-md"],
+.row-fluid select[class*="col-md"],
+.row-fluid textarea[class*="col-md"],
+.row-fluid .uneditable-input[class*="col-md"],
+.row-fluid .input-prepend [class*="col-md"],
+.row-fluid .input-append [class*="col-md"] {
   display: inline-block;
 }
 
@@ -1316,7 +1344,8 @@ textarea,
   margin-left: 0;
 }
 
-.controls-row [class*="span"] + [class*="span"] {
+.controls-row [class*="span"] + [class*="span"],
+.controls-row [class*="col-md"] + [class*="col-md"] {
   margin-left: 20px;
 }
 
@@ -1334,7 +1363,10 @@ textarea.span11,
 
 input.span10,
 textarea.span10,
-.uneditable-input.span10 {
+.uneditable-input.span10,
+input.col-md-10,
+textarea.col-md-10,
+.uneditable-input.col-md-10 {
   width: 766px;
 }
 
@@ -1408,12 +1440,16 @@ textarea.span1,
 }
 
 .controls-row [class*="span"],
-.row-fluid .controls-row [class*="span"] {
+.row-fluid .controls-row [class*="span"],
+.controls-row [class*="col-md"],
+.row-fluid .controls-row [class*="col-md"] {
   float: left;
 }
 
 .controls-row .checkbox[class*="span"],
-.controls-row .radio[class*="span"] {
+.controls-row .radio[class*="span"],
+.controls-row .checkbox[class*="col-md"],
+.controls-row .radio[class*="col-md"] {
   padding-top: 5px;
 }
 
@@ -2121,7 +2157,11 @@ table {
 table td[class*="span"],
 table th[class*="span"],
 .row-fluid table td[class*="span"],
-.row-fluid table th[class*="span"] {
+.row-fluid table th[class*="span"],
+table td[class*="col-md"],
+table th[class*="col-md"],
+.row-fluid table td[class*="col-md"],
+.row-fluid table th[class*="col-md"] {
   display: table-cell;
   float: none;
   margin-left: 0;
@@ -2191,7 +2231,9 @@ table th[class*="span"],
 }
 
 .table td.span10,
-.table th.span10 {
+.table th.span10,
+.table td.col-md-10,
+.table th.col-md-10 {
   float: none;
   width: 764px;
   margin-left: 0;

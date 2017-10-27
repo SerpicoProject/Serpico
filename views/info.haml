@@ -1,38 +1,42 @@
-.span10
-  %form{:method => 'post'}
-    %br
-    %h2 Consultant Information
-    %br
+.col-md-10
+  %br
+  %h2 Consultant Information
+  %br
+
+  %form{ :method => "post" }
     %table
       %tr
         %td
-          Consultant Company &nbsp;
+          %label.col-md-3{ :for => "company" }
+            Consultant Company &nbsp;
         %td
-          %input{:type => 'text', :name => 'company', :value=> "#{@user.consultant_company}"}
+          %input#company{ :type => "text", :name => "company", :value=> "#{@user.consultant_company}" }
       %tr
         %td
-          Consultant Name &nbsp;
+          %label.col-md-3{ :for => "name" }
+            Consultant Name &nbsp;
         %td
-          %input{:type => 'text', :name => 'name', :value=> "#{@user.consultant_name}"}
+          %input#name{ :type => "text", :name => "name", :value=> "#{@user.consultant_name}" }
       %tr
         %td
-          Email &nbsp;
+          %label.col-md-3{ :for => "email" }
+            Email &nbsp;
         %td
-          %input{:type => 'text', :name => 'email', :value => "#{@user.consultant_email}"}
+          %input#email{ :type => "text", :name => "email", :value => "#{@user.consultant_email}" }
       %tr
         %td
-          Phone &nbsp;
+          %label.col-md-3{ :for => "phone" }
+            Phone &nbsp;
         %td
-          %input{:type => 'text', :name => 'phone', :value => "#{@user.consultant_phone}"}
+          %input#phone{ :type => "text", :name => "phone", :value => "#{@user.consultant_phone}" }
       %tr
         %td
-          Title &nbsp;
+          %label.col-md-3{ :for => "title" }
+            Title &nbsp;
         %td
-          %input{:type => 'text', :name => 'title', :value => "#{@user.consultant_title}"}
+          %input#title{ :type => "text", :name => "title", :value => "#{@user.consultant_title}" }
 
     %br
-    %input{:type => 'submit', :value => 'Save' }
-    %a{ :href => "/"}
-      %input{ :type => "button", :value => 'Cancel'}
-
-
+    %input.btn.btn-default{ :type => "submit", :value => "Save" }
+    %a.btn.btn-default{ :href => "/" }
+      Cancel

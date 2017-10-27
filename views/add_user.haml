@@ -1,30 +1,37 @@
-.span10
-  %form{:method => 'post', :action => '/admin/add_user'}
-    %br
-    %h2 Add/Edit User
-    %br
+.col-md-10
+  %br
+  - if @user
+    %h2 Edit User
+  - else
+    %h2 Add User
+  %br
+
+  %form{ :method => "post", :action => "/admin/add_user" }
     %table
       %tr
         %td
-          Username &nbsp;
+          %label.col-md-3{ :for => "username" }
+            Username &nbsp;
         %td
           - if @user
-            %input{:type => 'text', :name => 'username', :value => "#{@user.username}"}
+            %input#username{ :type => "text", :name => "username", :value => "#{@user.username}" }
           - else
-            %input{:type => 'text', :name => 'username'}
+            %input#username{ :type => "text", :name => "username" }
       %tr
         %td
-          Password (Not required for AD Auth Type)
+          %label.col-md-3{ :for => "password" }
+            Password (Not required for AD Auth Type)
         %td
-          %input{:type => 'password', :name => 'password'}
+          %input#password{ :type => "password", :name => "password" }
       %tr
         %td
-          Authorization Type
+          %label.col-md-3{ :for => "auth_type" }
+            Authorization Type
         %td
           - if @user
-            %select{ :name => "auth_type" }
+            %select#auth_type{ :name => "auth_type" }
               - if @user.auth_type == "AD"
-                %option{ :selected => "selected" }AD
+                %option{ :selected => "selected" } AD
               - else
                 %option AD
               - if @user.auth_type == "Local"
@@ -32,17 +39,18 @@
               - else
                 %option Local
           - else
-            %select{ :name => "auth_type" }
-              %option{ :selected => "selected" }AD
+            %select#auth_type{ :name => "auth_type" }
+              %option{ :selected => "selected" } AD
               %option Local
       %tr
         %td
-          User Level
+          %label.col-md-3{ :for => "type" }
+            User Level
         %td
           - if @user
-            %select{ :name => "type" }
+            %select#type{ :name => "type" }
               - if @user.type == "Administrator"
-                %option{ :selected => "selected" }Administrator
+                %option{ :selected => "selected" } Administrator
               - else
                 %option Administrator
               - if @user.type == "User"
@@ -50,12 +58,11 @@
               - else
                 %option User
           - else
-            %select{ :name => "type" }
-              %option{ :selected => "selected" }User
+            %select#type{ :name => "type" }
+              %option{ :selected => "selected" } User
               %option Administrator
+
     %br
-    %input{:type => 'submit', :value => 'Modify' }
-    %a{ :href => "/admin/list_user"}
-      %input{ :type => "button", :value => 'Cancel'}
-
-
+    %input.btn.btn-default{ :type => "submit", :value => "Add" }
+    %a.btn.btn-default{ :href => "/admin/list_user" }
+      Cancel

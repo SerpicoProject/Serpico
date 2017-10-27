@@ -1,13 +1,13 @@
 .span9.indent3
   %br
-    .table.table-striped{:id => "mytable"}
-      %table{:style => 'width: 80%'}
+    .table.table-striped#mytable
+      %table{ :style => "width: 80%" }
         %tbody
           - if @reports.size > 0
-            %input{:type => "text", :class=>"form-control", :placeholder=>"Report Name Search", :id=>"search"}
-            %style{:id => "search_style" }
-            %span{:class=>"input-group-btn"}
-            %script{:type=>"text/javascript"}
+            %input.form-control#search{ :type => "text", :placeholder => "Report Name Search" }
+            %style#search_style
+            %span.input-group-btn
+            %script{ :type=>"text/javascript" }
               // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
               var searchStyle = document.getElementById('search_style');
               document.getElementById('search').addEventListener('input', function() {
@@ -19,47 +19,46 @@
               });
             %br
             %br
-            %a{ :class => "btn btn-danger", :href => "/report/remove/",  :id => "deletemultiple"}
+            %a.btn.btn-danger#deletemultiple{ :href => "/report/remove/" }
               Delete selected
             %br
             %br
             %trd
               %th
-                %input.checkbox{ :type=>"checkbox", :id=>"checkall"}
-              %th{:style => 'width: 60%'}
+                %input.checkbox#checkall{ :type => "checkbox" }
+              %th{ :style => "width: 60%" }
                 Report Name
-              %th{:style => 'width: 10%'}
+              %th{ :style => "width: 10%" }
                 Customer
-              %th{:style => 'width: 10%'}
+              %th{ :style => "width: 10%" }
                 Owner
-              %th{:style => 'width: 20%'}
+              %th{ :style => "width: 20%" }
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Actions
             - @reports.each do |report|
               %tr
-                %td{:"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
-                  %input.checkbox{ :type=>"checkbox", :name=>"#{report.id}"}
-                %td{:style => 'width: 70%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                %td.searchable{ :"data-index" => "#{report.report_name.downcase.gsub(' ','')}" }
+                  %input.checkbox{ :type => "checkbox", :name => "#{report.id}" }
+                %td.searchable{ :style => "width: 70%", :"data-index" => "#{report.report_name.downcase.gsub(' ','')}" }
                   #{report.report_name}
-                %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 10%", :"data-index" => "#{report.report_name.downcase.gsub(' ','')}" }
                   #{report.full_company_name}
-                %td{:style => 'width: 10%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 10%", :"data-index" => "#{report.report_name.downcase.gsub(' ','')}" }
                   #{report.owner}
-                %td{:style => 'width: 20%', :"data-index" => "#{report.report_name.downcase.gsub(' ','')}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 20%", :"data-index" => "#{report.report_name.downcase.gsub(' ','')}" }
                   - if @master
-                    %a{:class => 'button btn btn-warning', :href => "/master/reports/#{finding.id}"}
-                      %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
-                    %a{:class => 'btn btn-info', :href => "/master/reports/#{report.id}/generate"}
-                      %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                    %a.btn.btn-warning{ :href => "/master/reports/#{finding.id}" }
+                      %i.icon-pencil.icon-white{ :title => "Edit" }
+                    %a.btn.btn-info{ :href => "/master/reports/#{report.id}/generate" }
+                      %i.icon-play-circle.icon-white{ :title => "Preview" }
                   - else
-                    %a{:class => 'btn btn-warning', :href => "/report/#{report.id}/edit"}
-                      %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
-                    %a{:class => 'btn btn-info', :href => "/report/#{report.id}/generate"}
-                      %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-                    %a{ :class => "btn btn-danger", :href => "/report/remove/#{report.id}"}
-                      %i{:class => 'icon-remove icon-white', :title => 'Delete'}
-                    %a{ :class => "btn btn-inverse", :href => "/admin/add_user/#{report.id}"}
-                      %i{:class => 'icon-user icon-white', :title => 'Add Author'}
-
+                    %a.btn.btn-warning{ :href => "/report/#{report.id}/edit" }
+                      %i.icon-pencil.icon-white{ :title => "Edit" }
+                    %a.btn.btn-info{ :href => "/report/#{report.id}/generate" }
+                      %i.icon-play-circle.icon-white{ :title => "Preview" }
+                    %a.btn.btn-danger{ :href => "/report/remove/#{report.id}" }
+                      %i.icon-remove.icon-white{ :title => "Delete" }
+                    %a.btn.btn-inverse{ :href => "/admin/add_user/#{report.id}" }
+                      %i.icon-user.icon-white{ :title => "Add Author" }
 
           - else
             %h4

@@ -1,37 +1,43 @@
-.span10
-  %form{:method => 'post', :action => '/admin/templates/edit', :enctype=>"multipart/form-data"}
-    %br
-    %h2 Edit Template
-    %br
+.col-md-10
+  %br
+  %h2 Edit Template
+  %br
+
+  %form{ :method => "post", :action => "/admin/templates/edit", :enctype => "multipart/form-data" }
     %table
       %tr
         %td
-          Report Type &nbsp;
+          %label.col-md-3{ :for => "report_type" }
+            Report Type &nbsp;
         %td
-          %input{:type => 'text', :name => 'report_type', :required=>true, :value => "#{@template.report_type}"}
+          %input#report_type{ :type => "text", :name => "report_type", :required => true, :value => "#{@template.report_type}" }
       %tr
         %td
-          File Description &nbsp;
+          %label.col-md-3{ :for => "description" }
+            File Description &nbsp;
         %td
-          %input{:type => 'text', :name => 'description', :value => "#{@template.description}"}
+          %input#description{ :type => "text", :name => "description", :value => "#{@template.description}" }
       %tr
         %td
-          Finding Template &nbsp;
+          %label.col-md-3{ :for => "finding_template" }
+            Finding Template &nbsp;
         %td
-          %input{:type => 'checkbox', :name => 'finding_template'}
+          %input#finding_template{ :type => "checkbox", :name => "finding_template" }
       %tr
         %td
-          Status Template &nbsp;
+          %label.col-md-3{ :for => "status_template" }
+            Status Template &nbsp;
         %td
-          %input{:type => 'checkbox', :name => 'status_template'}
+          %input#status_template{ :type => "checkbox", :name => "status_template" }
       %tr
         %td
-          DOCX
+          %label.col-md-3{ :for => "file" }
+            DOCX
         %td
-          %input{:type => 'file', :name => 'file', :required => true}
-    %br
-    %input{:type => 'hidden', :name => 'id', :value => "#{@template.id}"}
-    %input{:type => 'submit', :value => 'Modify' }
-    %a{ :href => "/admin/templates"}
-      %input{ :type => "button", :value => 'Cancel'}
+          %input#file{ :type => "file", :name => "file", :required => true }
+    %input{ :type => "hidden", :name => "id", :value => "#{@template.id}" }
 
+    %br
+    %input.btn.btn-default{ :type => "submit", :value => "Modify" }
+    %a.btn.btn-default{ :href => "/admin/templates" }
+      Cancel
