@@ -495,8 +495,8 @@ end
 get '/report/:id/udo/:udo_id/edit' do
   id = params[:id]
   udo_id = params[:udo_id]
-  report = get_report(id)
-  if report == nil
+  @report = get_report(id)
+  if @report == nil
     return "No Such Report"
   end
 

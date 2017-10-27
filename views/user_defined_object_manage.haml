@@ -1,15 +1,13 @@
-%br
-%br
-.span10
+.col-md-10
   .control-group
-    %label{ :class => "control-label", :for => "overview" }
-      %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
+    %label.control-label{ :for => "overview" }
+      %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
         UDOs Overview
-    .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+    .modal.modal.hide.fade#modaloverview{ :tabindex =>  "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => true }
       .modal-header
-        %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+        %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
           x
-        %h3{:id=>"modal-label"}
+        %h3#modal-label
           User Defined Objects
       .modal-body
         %p
@@ -48,12 +46,12 @@
       %hr
       %h4
         #{udo_template.type}
-        %a{ :class => "btn btn-info btn-small", :href => "/report/#{@id}/udo/#{udo_template.id}/create"}
-          %i{:class => 'icon-plus icon-white', :title => "Create new #{udo_template.type}"}
+        %a.btn.btn-info.btn-small{ :href => "/report/#{@id}/udo/#{udo_template.id}/create" }
+          %i.icon-plus.icon-white{ :title => "Create new #{udo_template.type}" }
       - udos_linked_to_current_template = UserDefinedObjects.all(:template_id => udo_template.id, :report_id => @id)
       - if not udos_linked_to_current_template.empty?
         .table.table-striped
-          %table{:style => "white-space: nowrap; table-layout: fixed"}
+          %table{ :style => "white-space: nowrap; table-layout: fixed" }
             %tr
               %td
                 %strong
@@ -74,13 +72,13 @@
                 - i += 1
                 - properties = JSON.parse(udo.udo_properties)
                 - template_properties.each do |template_property_name, template_property_value|
-                  %td{:style => "overflow:hidden;text-overflow:ellipsis;max-width: 300px;"}
+                  %td{ :style => "overflow:hidden;text-overflow:ellipsis;max-width: 300px;" }
                     #{meta_markup(properties[template_property_name.downcase])}
                 %td
-                  %a{ :class => "btn btn-danger btn-small", :href => "/report/#{@id}/udo/#{udo.id}/delete"}
-                    %i{:class => 'icon-remove icon-white', :title => "Delete this #{udo_template.type.downcase}"}
-                  %a{ :class => "btn btn-warning btn-small", :href => "/report/#{@id}/udo/#{udo.id}/edit"}
-                    %i{:class => 'icon-pencil icon-white', :title => "Edit this #{udo_template.type.downcase}"}
+                  %a.btn.btn-danger.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/delete" }
+                    %i.icon-remove.icon-white{ :title => "Delete this #{udo_template.type.downcase}" }
+                  %a.btn.btn-warning.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/edit" }
+                    %i.icon-pencil.icon-white{ :title => "Edit this #{udo_template.type.downcase}" }
       - else
         You have no #{udo_template.type.downcase} yet !
         %br

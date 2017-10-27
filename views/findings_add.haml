@@ -1,85 +1,87 @@
-.span10
+.col-md-10
   %br
-  %br
-    - if @findings
-      - if @autoadd
-        %h3 Auto Add Findings
-        %h4
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following findings were automatically selected to be added to your report.
-      - else
-        %h3 Templated Findings
-        %h4
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
-      %br
-      &nbsp;
-      %input{:type => "text", :class=>"form-control", :placeholder=>"Finding Name Search", :id=>"search"}
-      %style{:id => "search_style" }
-      %span{:class=>"input-group-btn"}
-      %script{:type=>"text/javascript"}
-        // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
-        var searchStyle = document.getElementById('search_style');
-        document.getElementById('search').addEventListener('input', function() {
-        if (!this.value) {
-        searchStyle.innerHTML = "";
-        return;
-        }
-        searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&rt;').replace(/>/g, '&lt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
-        });
-      %form{:method => 'post', :action => "/report/#{@report.id}/findings_add"}
-        .table
-          %table{:style => 'width: 90%'}
-            %tbody
-            - settings.finding_types.each do |type|
-              %tr
-                %td{:colspan => "2"}
-                  %b
-                    #{type}
-                  %i{:class=>"icon-list", "data-toggle"=>"collapse", "data-target"=>"#findings_list_#{type.gsub(' ','_')}", :id=>"actionButton"}
-                  - col = "collapse out"
-                  - @findings.each do |finding|
-                    - if finding.type == type
-                      - col = "collapse in"
-                  .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class =>"#{col}" }
-                    - if @findings.size > 0
-                      .table.table-hover
-                        %table{:style => 'width: 100%'}
-                          - @findings.each do |finding|
-                            - if finding.type == type
-                              %tr
-                                %td{:style => 'width: 80%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
-                                  - if @autoadd
-                                    - if @autoadd_findings.include?(finding.id.to_s) and not @dup_findings.include?(finding.id)
-                                      %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}", :checked => ""}
-                                    - else
-                                      %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
-                                  - else
-                                    %input{ :type => "checkbox", :name => "finding[]", :value => "#{finding.id}"}
-                                  #{finding.title}
-                                  - if @dup_findings
-                                    - if @dup_findings.include?(finding.id)
-                                      .label.label-warning Duplicate
-                                  - if finding.overview
-                                    %i{:class=>"icon-chevron-down", "data-toggle"=>"collapse", "data-target"=>"#info_#{finding.id}", :id=>"actionButton"}
-                                    .info{ :id => "info_#{finding.id}", :class => "collapse out" }
-                                      #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
-                                    - if @autoadd_hosts
-                                      - @autoadd_hosts.keys.each do |x|
-                                        - if finding.id == x.to_i
-                                          - @autoadd_hosts[x].each do |ip|
-                                            .label.label-default #{ip}
-                                          - iplist = @autoadd_hosts[x].join(",")
-                                          %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{iplist}"}
-                                %td{:style => 'width: 20%', :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :class=>"searchable"}
-                                  - if @master
-                                    %a{ :class => "btn btn-warning", :href => "/master/findings/#{finding.id}/edit"}
-                                      %i{:class => 'icon-pencil icon-white', :title => 'Edit'}
-                                    %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
-                                      %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-                                  - else
-                                    %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
-                                      %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
-        %input{ :type => "submit", :value => 'Add' }
-        %a{ :href => "/report/#{@report.id}/findings"}
-          %input{ :type => "button", :value => 'Cancel'}
+  - if @findings
+    - if @autoadd
+      %h3 Auto Add Findings
+      %h4
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following findings were automatically selected to be added to your report.
     - else
-      No Findings Available
+      %h3 Templated Findings
+      %h4
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
+    %br
+
+    %input.form-control#search{ :type => "text", :placeholder => "Finding Name Search" }
+    %style#search_style
+    %span.input-group-btn
+    %script{ :type => "text/javascript" }
+      // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
+      var searchStyle = document.getElementById('search_style');
+      document.getElementById('search').addEventListener('input', function() {
+      if (!this.value) {
+      searchStyle.innerHTML = "";
+      return;
+      }
+      searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&rt;').replace(/>/g, '&lt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
+      });
+    %form.form-inline{ :method => "post", :action => "/report/#{@report.id}/findings_add" }
+      .table
+        %table{ :style => "width: 90%" }
+          %tbody
+          - settings.finding_types.each do |type|
+            %tr
+              %td{ :colspan => "2" }
+                %b
+                  #{type}
+                %i.icon-list#actionButton{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
+                - col = "collapse out"
+                - @findings.each do |finding|
+                  - if finding.type == type
+                    - col = "collapse in"
+                .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class => "#{col}" }
+                  - if @findings.size > 0
+                    .table.table-hover
+                      %table{ :style => "width: 100%" }
+                        - @findings.each do |finding|
+                          - if finding.type == type
+                            %tr
+                              %td.searchable{ :style => "width: 80%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                - if @autoadd
+                                  - if @autoadd_findings.include?(finding.id.to_s) and not @dup_findings.include?(finding.id)
+                                    %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}", :checked => "" }
+                                  - else
+                                    %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}" }
+                                - else
+                                  %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}" }
+                                %label.control-label{ :for => "finding_#{finding.id}" }
+                                  #{finding.title}
+                                - if @dup_findings
+                                  - if @dup_findings.include?(finding.id)
+                                    .label.label-warning Duplicate
+                                - if finding.overview
+                                  %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_#{finding.id}" }
+                                  .info.collapse.out{ :id => "info_#{finding.id}" }
+                                    #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                                  - if @autoadd_hosts
+                                    - @autoadd_hosts.keys.each do |x|
+                                      - if finding.id == x.to_i
+                                        - @autoadd_hosts[x].each do |ip|
+                                          .label.label-default #{ip}
+                                        - iplist = @autoadd_hosts[x].join(",")
+                                        %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{iplist}" }
+                              %td.searchable{ :style => "width: 20%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                - if @master
+                                  %a.btn.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
+                                    %i.icon-pencil.icon-white{ :title => "Edit" }
+                                  %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
+                                    %i.icon-play-circle.icon-white{ :title => "Preview" }
+                                - else
+                                  %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
+                                    %i.icon-play-circle.icon-white{ :title => "Preview" }
+
+      %br
+      %input.btn.btn-default{ :type => "submit", :value => "Add" }
+      %a.btn.btn-default{ :href => "/report/#{@report.id}/findings" }
+        Cancel
+  - else
+    No Findings Available

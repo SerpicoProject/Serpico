@@ -1,19 +1,22 @@
 %link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
 %script{:src => "/js/bootstrap-suggest.js"}
 
-%br
-%br
-.span10
+.col-md-10
+  %br
   %h3 Create new #{@udo_template.type}
-  %hr
-  %form{ :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+  %br
+
+  %form{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
     - @udo_template_properties.each do |param_name, param_default_value|
       .control-group
-        %label{ :class => "control-label", :for => "#{param_name}" }
+        %label.control-label{ :for => "param_#{param_name}" }
           %strong
             #{param_name}
         .controls
-          %textarea{ :type => 'textarea', :name => "param_#{param_name}",:rows => '2', :class => 'allowMarkupShortcut input-large'}
+          %textarea.allowMarkupShortcut.input-large{ :id => "param_#{param_name}", :type => "textarea", :name => "param_#{param_name}", :rows => "2" }
             #{meta_markup(param_default_value)}
+
     %br
-    %input{:type => 'submit', :value => 'Save', :name => 'action',:class => "btn" }
+    %input.btn.btn-default{ :type => "submit", :value => "Save", :name => "action" }
+    %a.btn.btn-default{ :href => "/report/#{@report.id}/udo/manage" }
+      Cancel

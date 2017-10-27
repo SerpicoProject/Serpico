@@ -1,23 +1,22 @@
-.span10
+.col-md-10
   %br
-    - if @findings.size > 0
-      Hi!
+  - if @findings.size > 0
+    Hi!
+    %br
+    Here is a current list of findings from the assessment and the risk rating:
+    %br
+    - @findings.each do |finding|
       %br
-      Here is a current list of findings from the assessment and the risk rating:
-      %br
-      - @findings.each do |finding|
-        %br
-        &nbsp;&nbsp;&nbsp;#{finding.title} -
-        - if @dread
-          DREAD Score: #{finding.dread_total}
+      &nbsp;&nbsp;&nbsp;#{finding.title} -
+      - if @dread
+        DREAD Score: #{finding.dread_total}
+      - else
+        - risk_t = ["Informational","Low","Moderate","High","Critical"]
+        - if finding.risk
+          #{risk_t[finding.risk]}
         - else
-          - risk_t = ["Informational","Low","Moderate","High","Critical"]
-          - if finding.risk
-            #{risk_t[finding.risk]}
-          - else
-            - scr = finding.dread_total/10
-            - scr = 4 if dread_total == 50
-            #{risk_t[scr]}
-    - else
-      This is going to be a short status update as you don't have any findings associated with this project.
-
+          - scr = finding.dread_total/10
+          - scr = 4 if dread_total == 50
+          #{risk_t[scr]}
+  - else
+    This is going to be a short status update as you don't have any findings associated with this project.

@@ -1,9 +1,9 @@
-.span10
-  %form{:method => 'post'}
-    %br
-    %h2 Report Name: #{@report.report_name}
-    %br
-    %br
+.col-md-10
+  %br
+  %h2 Report Name: #{@report.report_name}
+  %br
+
+  %form{ :method => "post" }
     - if @user_variables == ""
       %h3
         It appears you do not have any user defied variables. Would you like to add some?
@@ -14,15 +14,17 @@
       .table.table-striped
         %table
           %tr
-          %td
-            Variable Name:&nbsp;
-          %td
-            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>'variable_name_0_'}
+            %td
+              %label.col-md-3{ :for => "variable_name" }
+                Variable Name:&nbsp;
+            %td
+              %input#variable_name{ :type => "text", :style => "width: 90%", :name => "variable_name_0_" }
           %tr
-          %td
-            Variable data:&nbsp;
-          %td
-            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => 'variable_data_0_'}
+            %td
+              %label.col-md-3{ :for => "variable_data" }
+                Variable data:&nbsp;
+            %td
+              %textarea.input-xxlarge#variable_data{ :rows => "10", :name => "variable_data_0_" }
         %br
     - else
       - i = 0
@@ -31,36 +33,39 @@
         .table.table-striped
           %table
             %tr
-            %td
-              Variable Name:&nbsp;
-            %td
-              %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name', :name =>"variable_name_#{w}_", :value => "#{variables_name}"}
+              %td
+                %label.col-md-3{ :for => "variable_name_#{w}_" }
+                  Variable Name:&nbsp;
+              %td
+                %input{ :id => "variable_name_#{w}_", :type => "text", :style => "width: 90%", :name =>"variable_name_#{w}_", :value => "#{variables_name}" }
             %tr
-            %td
-              Variable data:&nbsp;
-            %td
-              %textarea{:name => "variable_data_#{w}_"}
-                #{variables_data}
+              %td
+                %label.col-md-3{ :for => "variable_data_#{w}_" }
+                  Variable data:&nbsp;
+              %td
+                %textarea{ :id => "variable_data_#{w}_", :name => "variable_data_#{w}_" }
+                  #{variables_data}
           %br
           - w = w + 1
-        %br
-        %br
       %h3
-      Add addtional user defined variables
+        Add addtional user defined variables
       .table.table-striped
         %table
           %tr
-          %td
-            Variable Name:&nbsp;
-          %td
-            %input{:type => 'text', :style => 'width: 90%', :id => 'variable_name_#{i}_', :name =>"variable_name_#{i}_"}
+            %td
+              %label.col-md-3{ :for => "variable_name_#{i}_" }
+                Variable Name:&nbsp;
+            %td
+              %input{ :id => "variable_name_#{i}_", :type => "text", :style => "width: 90%", :name =>"variable_name_#{i}_" }
           %tr
-          %td
-            Variable data:&nbsp;
-          %td
-            %textarea{ :rows => '10', :class => 'input-xxlarge', :id => 'variable_data', :name => "variable_data_#{i}_"}
+            %td
+              %label.col-md-3{ :for => "variable_data_#{i}_" }
+                Variable data:&nbsp;
+            %td
+              %textarea.input-xxlarge{ :id => "variable_data_#{i}_", :rows => "10", :name => "variable_data_#{i}_" }
         %br
         - i = i + 1
-    %input{:type => 'submit', :value => 'Save' }
-    %a{ :href => "/report/#{@report.id}/additional_features"}
-      %input{ :type => "button", :value => 'Cancel'}
+
+    %input.btn.btn-default{ :type => "submit", :value => "Save" }
+    %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
+      Cancel

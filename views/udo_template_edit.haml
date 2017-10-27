@@ -2,46 +2,47 @@
 %link{:href => "/css/dynamic-fields.css", :rel => "stylesheet"}/
 %script{:src => "/js/bootstrap-suggest.js"}
 
-%br
-%br
-.span10
-  %h3 Editing object " #{@udo_to_edit.type} "
+.col-md-10
   %br
-  %hr
+  %h3 Editing object " #{@udo_to_edit.type} "
   %h4 Existing properties
   %br
-  %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+
+  %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
     - @udo_to_edit_properties.each do |param_name, value|
       .control-group
-        %label{ :class => "control-label", :for => "Property-Name" } Property Name
+        %label.control-label{ :for => "prop_#{param_name}" } Property Name
         .controls
-          %input{:value => "#{param_name}", :name => "prop_#{param_name}"}
+          %input{ :id => "prop_#{param_name}", :value => "#{param_name}", :name => "prop_#{param_name}" }
       .control-group
-        %label{ :class => "control-label", :for => "Default-Value" } Default Value
+        %label.control-label{ :for => "default_#{param_name}" } Default Value
         .controls
-          %textarea{:name => "default_#{param_name}",:rows => '3', :class => 'allowMarkupShortcut input-large'}
+          %textarea.allowMarkupShortcut.input-large{ :id => "default_#{param_name}", :name => "default_#{param_name}", :rows => "3" }
             #{meta_markup(value)}
-    %hr
+
+    %br
     %h4 Add properties
     %br
-    %div{"data-role" => "dynamic-fields"}
+
+    %div{ "data-role" => "dynamic-fields" }
       .form-inline
         .control-group
-          %label.control-label{:for => "New-Property-Name"} New Property Name
+          %label.control-label{ :for => "prop_new_1" } New Property Name
           .controls
-            %input#field-name.form-control{:type => "text", :name => "prop_new_1"}/
+            %input#field-name.form-control#prop_new_1{ :type => "text", :name => "prop_new_1" }
         .control-group
-          %label{ :class => "control-label", :for => "Default-Value" } Default Value
+          %label.control-label{ :for => "default_new_1" } Default Value
           .controls
-            %textarea{:name => "default_new_1",:rows => '3', :class => 'allowMarkupShortcut input-large'}
-        %button.btn.btn-danger{"data-role" => "remove"}
+            %textarea.allowMarkupShortcut.input-large#default_new_1{ :name => "default_new_1", :rows => "3" }
+        %button.btn.btn-danger{ "data-role" => "remove" }
           %span.icon-minus
-        %button.btn.btn-info{"data-role" => "add"}
+        %button.btn.btn-info{ "data-role" => "add" }
           %span.icon-plus
 
     %br
-    %hr
-    %input{:type => 'submit', :value => 'Edit', :name => 'action',:class => "btn" }
+    %input.btn.btn-default{ :type => "submit", :value => "Edit", :name => "action" }
+    %a.btn.btn-default{ :href => "/admin/udo_templates" }
+      Cancel
 
 :javascript
   $(function() {
@@ -62,12 +63,21 @@
               e.preventDefault();
               var container = $(this).closest('[data-role="dynamic-fields"]');
               new_field_group = container.children().filter('.form-inline:first-child').clone();
-              var i = 2;
+              var i = container.children().filter('.form-inline').size() + 1;
+              new_field_group.find('label').each(function(){
+                if ($(this).attr('for').startsWith("prop_new_")) {
+                  $(this).attr('for','prop_new_'+i);
+                } else {
+                  $(this).attr('for','default_new_'+i);
+                }
+              });
               new_field_group.find('input').each(function(){
+                  $(this).attr('id','prop_new_'+i)
                   $(this).attr('name','prop_new_'+i)
                   $(this).val('')
               });
               new_field_group.find('textarea').each(function(){
+                  $(this).attr('id','default_new_'+i)
                   $(this).attr('name','default_new_'+i)
                   $(this).val('')
               });

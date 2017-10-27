@@ -1,42 +1,40 @@
-.span10
-  %br
+.col-md-10
   %br
   - if @udos_templates.empty?
     %h3
       It appears you do not have any user defined objects. Would you like to add some?
     %br
   - else
-    %hr
     %h3
       User Defined Object template list :
     %br
-      - @udos_templates.each do |udo|
-        %br
-        %div{ :class => 'w3-padding'}
-          %table.table-striped{ :class => 'padding'}
-            %tr
+    - @udos_templates.each do |udo|
+      %div.w3-padding
+        %table.table-striped.padding
+          %tr
+            %td
+              %strong
+                %i
+                  #{udo.type}
+            - udo_properties = JSON.parse(udo.udo_properties)
+            - udo_properties.each do |key, value|
               %td
-                %strong
-                  %i
-                    #{udo.type}
-              - udo_properties = JSON.parse(udo.udo_properties)
-              - udo_properties.each do |key, value|
-                %td
-                  #{key}
-              %td
-                %a{ :class => "btn btn-danger btn-sm", :href => "/admin/udo_templates?delete=#{udo.id}"}
-                  %i{:class => 'icon-remove icon-white', :title => "Delete #{udo.type.downcase} template"}
-                %a{ :class => "btn btn-warning btn-sm", :href => "/admin/udo_template/#{udo.id}/edit"}
-                  %i{:class => 'icon-pencil icon-white', :title => "Edit #{udo.type.downcase} template"}
+                #{key}
+            %td
+              %a.btn.btn-danger.btn-sm{ :href => "/admin/udo_templates?delete=#{udo.id}" }
+                %i.icon-remove.icon-white{ :title => "Delete #{udo.type.downcase} template" }
+              %a.btn.btn-warning.btn-sm{ :href => "/admin/udo_template/#{udo.id}/edit" }
+                %i.icon-pencil.icon-white{ :title => "Edit #{udo.type.downcase} template" }
 
-  %hr
+  %br
+  %br
   %h3
     Add an User Defined Object template :
   %br
     #fields.control-group
-      %label.control-label{:for => "field1"}
+      %label.control-label{ :for => "field1" }
       #profs.controls
-        %form.input-append{:method => 'post'}
+        %form.input-append{ :method => "post" }
           #field
             .table.table-striped
               %table
@@ -44,16 +42,18 @@
                   %td
                     Object Type:&nbsp;
                   %td
-                    %input{:type => 'text', :style => 'width: 90%', :id => 'object_name', :name =>'object_type', :placeholder => "Object Type", :required => "true"}
+                    %input#object_name{ :type => "text", :style => "width: 90%", :name => "object_type", :placeholder => "Object Type", :required => true }
                 %tr
                   %td
                     Object Properties Names:&nbsp;
                   %td
-                    %input#field1.input{:autocomplete => "off", "data-items" => "8", :name => "property_1", :placeholder => "Property Name 1", :type => "text", :required => "true"}/
-                    %button#b1.btn.add-more{:type => "button"} +
-          %input{:type => 'submit', :value => 'Save', :name => 'action',:class => "btn" }
+                    %input#field1.input{ "data-items" => "8", :name => "property_1", :placeholder => "Property Name 1", :type => "text", :required => true, :autocomplete => "off" }
+                    %button#b1.btn.add-more{ :type => "button" } +
 
-
+          %br
+          %input.btn.btn-default{ :type => "submit", :value => "Save", :name => "action" }
+          %a.btn.btn-default{ :href => "/" }
+            Cancel
 
 :javascript
   $(document).ready(function(){

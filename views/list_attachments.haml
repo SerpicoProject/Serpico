@@ -1,19 +1,19 @@
-.span10
+.col-md-10
   %br
   - if not @attachments.empty?
     %br
       %h3
         Current Attachments
       %br
-      %a{ :class => "btn btn-danger", :href => "/report/#{@report.id}/attachments/delete/",  :id => "deletemultiple"}
+      %a.btn.btn-danger#deletemultiple{ :href => "/report/#{@report.id}/attachments/delete/" }
         Delete selected
       %br
       %br
       .table.table-striped
-        %table{ :id => "mytable"}
+        %table#mytable
           %thead
             %th
-              %input{ :type=>"checkbox", :id=>"checkall"}
+              %input#checkall{ :type => "checkbox" }
             %th
               Attachment Name
             %th
@@ -24,15 +24,15 @@
           - @attachments.each do |attachment|
             %tr
               %td
-                %input.checkbox{ :type=>"checkbox", :name=>"#{attachment.id}"}
-              %td{:style => 'width: 70%'}
+                %input.checkbox{ :type => "checkbox", :name => "#{attachment.id}" }
+              %td{ :style => "width: 70%" }
                 #{attachment.description}
               %td
-                %a{ :class => "btn btn-info", :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}"}
-                  %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                %a.btn.btn-info{ :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}" }
+                  %i.icon-play-circle.icon-white{ :title => "Preview" }
               %td
-                %a{ :class => "btn btn-danger", :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}"}
-                  %i{:class => 'icon-remove icon-white', :title => 'Preview'}
+                %a.btn.btn-danger{ :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}" }
+                  %i.icon-remove.icon-white{ :title => "Preview" }
 
   - else
     %h3 No Attachments Available.
@@ -43,8 +43,8 @@
     .table.table-striped
       %table
         %tbody
-          %col{:align => "left"}
-          %col{:align => "center"}
+          %col{ :align => "left" }
+          %col{ :align => "center" }
           %tr
             %td
               %strong
@@ -56,14 +56,14 @@
             %tr
               %td
                 #{ss}
-              %td{:style => "text-align: center"}
+              %td{ :style => "text-align: center" }
                 - found = false
                 - @attachments.each do |att|
                   - if att.description.downcase == ss.downcase
                     - found = true
-                    %i.fa.fa-check{:style => "color:green"}
+                    %i.fa.fa-check{ :style => "color:green" }
                 - if found == false
-                  %i.fa.fa-times{:style => "color:red"}
+                  %i.fa.fa-times{ :style => "color:red" }
   %br
   - if not @screenshot_names_from_findings.to_s.empty?
     %h3 The following screenshot variables were found in your report findings:
@@ -71,8 +71,8 @@
     .table.table-striped
       %table
         %tbody
-          %col{:align => "left"}
-          %col{:align => "center"}
+          %col{ :align => "left" }
+          %col{ :align => "center" }
           %tr
             %td
               %strong
@@ -91,11 +91,11 @@
                   #{ss}
                 %td
                   <a href=/report/#{find.report_id}/findings/#{find.id}/edit#pocu> #{find.title}</a>
-                %td{:style => "text-align: center"}
+                %td{ :style => "text-align: center" }
                   - found = false
                   - @attachments.each do |att|
                     - if att.description.downcase == ss.downcase
                       - found = true
-                      %i.fa.fa-check{:style => "color:green"}
+                      %i.fa.fa-check{ :style => "color:green" }
                   - if found == false
-                    %i.fa.fa-times{:style => "color:red"}
+                    %i.fa.fa-times{ :style => "color:red" }

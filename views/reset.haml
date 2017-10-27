@@ -1,34 +1,36 @@
-.span10
-  %form{:method => 'post'}
-    - if @message
-      - if @message == "success"
-        %br
-        %h2 Password Successfully Changed
-        %br
-    - else
+.col-md-10
+  - if @message
+    - if @message == "success"
       %br
-      %h2 Change Password
+      %h2 Password Successfully Changed
       %br
+  - else
+    %br
+    %h2 Change Password
+    %br
+
+    %form{ :method => "post" }
       %table
         %tr
           %td
-            Old Password &nbsp;
+            %label.col-md-3{ :for => "old_pass" }
+              Old Password &nbsp;
           %td
-            %input{:type => 'text', :name => 'old_pass', :value=> "", :type=>"password"}
+            %input#old_pass{ :type => "password", :name => "old_pass", :value=> "", :autocomplete => "off" }
         %tr
           %td
-            New Password &nbsp;
+            %label.col-md-3{ :for => "new_pass" }
+              New Password &nbsp;
           %td
-            %input{:type => 'text', :name => 'new_pass', :value=> "", :type=>"password"}
+            %input#new_pass{ :type => "password", :name => "new_pass", :value=> "", :autocomplete => "off" }
         %tr
           %td
-            Confirm New Password &nbsp;
+            %label.col-md-3{ :for => "new_pass_confirm" }
+              Confirm New Password &nbsp;
           %td
-            %input{:type => 'text', :name => 'new_pass_confirm', :value => "", :type=>"password"}
+            %input#new_pass_confirm{ :type => "password", :name => "new_pass_confirm", :value => "", :autocomplete => "off" }
 
       %br
-      %input{:type => 'submit', :value => 'Save' }
-      %a{ :href => "/reports/list"}
-        %input{ :type => "button", :value => 'Cancel'}
-
-
+      %input.btn.btn-default{ :type => "submit", :value => "Save" }
+      %a.btn.btn-default{ :href => "/reports/list" }
+        Cancel

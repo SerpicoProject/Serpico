@@ -1,29 +1,30 @@
-.span10
-  %form{:method => 'post', :enctype=>"multipart/form-data"}
-    %br
-    %h2 Upload Attachment
-    %h4 Note: 
-    %h4 &nbsp;&nbsp;&bullet;&nbsp;Only jpg and png are supported for screenshots
-    %h4 &nbsp;&nbsp;&bullet;&nbsp;The file name is inherited from the file.
-    %h4 &nbsp;&nbsp;&bullet;&nbsp;Multiple files can be uploaded at once.   
-    - if @no_file == "1"
-      You forgot to include a file, silly
-    %br
-    %br
+.col-md-10
+  %br
+  %h2 Upload Attachment
+  %h4 Note:
+  %h4 &nbsp;&nbsp;&bullet;&nbsp;Only jpg and png are supported for screenshots
+  %h4 &nbsp;&nbsp;&bullet;&nbsp;The file name is inherited from the file.
+  %h4 &nbsp;&nbsp;&bullet;&nbsp;Multiple files can be uploaded at once.
+  - if @no_file == "1"
+    You forgot to include a file, silly
+  %br
+
+  %form{ :method => "post", :enctype => "multipart/form-data" }
     %table
       %tr
         %td
-          Upload Files &nbsp;
+          %label.col-md-3{ :for => "files" }
+            Upload Files &nbsp;
         %td
-          %input{:type => 'file', :name => 'files[]', :multiple => true}
+          %input#files{ :type => "file", :name => "files[]", :multiple => true }
       %tr
         %td
-          Caption &nbsp;
+          %label.col-md-3{ :for => "caption" }
+            Caption &nbsp;
         %td
-          %input{ :type => 'text', :name => 'caption'}
+          %input#caption{ :type => "text", :name => "caption" }
+
     %br
-    %input{:type => 'submit', :value => 'Upload' }
-    %a{ :href => "/report/#{@report.id}/edit"}
-      %input{ :type => "button", :value => 'Cancel'}
-
-
+    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
+    %a.btn.btn-default{ :href => "/report/#{@report.id}/edit" }
+      Cancel
