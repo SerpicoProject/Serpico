@@ -88,9 +88,10 @@
           .span2
             %br
             - if @master
-              %button.btn-danger.btn-small
-                WARNING: You are editing the Templates Database
-              %br
+              %div.alert.alert-danger
+                %strong WARNING
+                %br
+                You are editing the Templates Database
               %br
               %ul.nav.nav-list
                 %li.nav-header Findings Menu

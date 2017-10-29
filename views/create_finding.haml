@@ -10,55 +10,55 @@
     .control-group
       %label.control-label{ :for => "title" } Title
       .controls
-        %input{ :type => "text", :name => "title", :value => "" }
+        %input#title{ :type => "text", :name => "title", :value => "" }
     - if !@master
       .control-group
         %label.control-label{ :for => "assessment_type" } Assessment Type
         .controls
-          %select{ :name => "assessment_type" }
+          %select#assessment_type{ :name => "assessment_type" }
             - settings.assessment_types.each do |type|
               %option #{type}
     .control-group
       %label.control-label{ :for => "type" } Finding Type
       .controls
-        %select{ :name => "type" }
+        %select#type{ :name => "type" }
           - settings.finding_types.each do |type|
             %option #{type}
     - if @nessusmap
       .control-group
         %label.control-label{ :for => "pluginid" } Add new nessus ID mapping
         .controls
-          %input{ :type => "text", :name => "pluginid" }
+          %input#pluginid{ :type => "text", :name => "pluginid" }
     - if @vulnmap
       .control-group
         %label.control-label{ :for => "msf_ref" } Add new Vuln ID mapping
         .controls
-          %input{ :type => "text", :name => "msf_ref" }
+          %input#msf_ref{ :type => "text", :name => "msf_ref" }
     - if @dread
       .control-group
         %label.control-label{ :for => "damage" } Damage
         .controls
-          %input{ :type => "number", :min => "0", :max => "10", :name => "damage", :value => "0", :required => true }
+          %input#damage{ :type => "number", :min => "0", :max => "10", :name => "damage", :value => "0", :required => true }
       .control-group
         %label.control-label{ :for => "reproducability" } Reproducibility
         .controls
-          %input{ :type => "number", :min => "0", :max => "10", :name => "reproducability", :value => "0", :required => true }
+          %input#reproducability{ :type => "number", :min => "0", :max => "10", :name => "reproducability", :value => "0", :required => true }
       .control-group
         %label.control-label{ :for => "exploitability" } Exploitability
         .controls
-          %input{ :type => "number", :min => "0", :max => "10", :name => "exploitability", :value => "0", :required => true }
+          %input#exploitability{ :type => "number", :min => "0", :max => "10", :name => "exploitability", :value => "0", :required => true }
       .control-group
         %label.control-label{ :for => "affected_users" } Affected Users
         .controls
-          %input{ :type => "number", :min => "0", :max => "10", :name => "affected_users", :value => "0", :required => true }
+          %input#affected_users{ :type => "number", :min => "0", :max => "10", :name => "affected_users", :value => "0", :required => true }
       .control-group
         %label.control-label{ :for => "discoverability" } Discoverability
         .controls
-          %input{ :type => "number", :min => "0", :max => "10", :name => "discoverability", :value => "0", :required => true }
+          %input#discoverability{ :type => "number", :min => "0", :max => "10", :name => "discoverability", :value => "0", :required => true }
       .control-group
         %label.control-label{ :for => "effort" } Remediation Effort
         .controls
-          %select{ :name => "effort" }
+          %select#effort{ :name => "effort" }
             %option LOW
             %option MODERATE
             %option HARD
@@ -398,7 +398,7 @@
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
-          %select{ :name => "risk" }
+          %select#risk{ :name => "risk" }
             %option{ :value => 0 }= "None"
             %option{ :value => 1 }= "Low"
             %option{ :value => 2 }= "Moderate"
@@ -407,7 +407,7 @@
       .control-group
         %label.control-label{ :for => "severity" } Severity
         .controls
-          %select{ :name => "severity" }
+          %select#severity{ :name => "severity" }
             - settings.severity.each do |severity|
               %option #{severity}
       .control-group
@@ -417,7 +417,7 @@
       .control-group
         %label.control-label{ :for => "likelihood" } Likelihood
         .controls
-          %select{ :name => "likelihood" }
+          %select#likelihood{ :name => "likelihood" }
             - settings.likelihood.each do |likelihood|
               %option #{likelihood}
       .control-group
@@ -429,7 +429,7 @@
       .control-group
         %label.control-label{ :for => "effort" } Remediation Effort
         .controls
-          %select{ :name => "effort" }
+          %select#effort{ :name => "effort" }
             - if @finding
               - settings.effort.each do |effort|
                 - if effort == @finding.effort
@@ -442,7 +442,7 @@
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
-          %select{ :name => "risk" }
+          %select#risk{ :name => "risk" }
             %option{ :value => 0 }= "Informational"
             %option{ :value => 1 }= "Low"
             %option{ :value => 2 }= "Moderate"
@@ -509,7 +509,7 @@
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#overview{ :rows => "10", :name => "overview" }
     .control-group
-      %label.control-label{ :for => "pocu" } Proof of Concept
+      %label.control-label{ :for => "poc" } Proof of Concept
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#poc{ :rows => "10", :name => "poc" }
     - attachments=''
@@ -542,39 +542,39 @@
     .control-group
       %label.control-label{ :for => "remediation" } Remediation
       .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "remediation" }
+        %textarea.input-xxlarge.allowMarkupShortcut#remediation{ :rows => "10", :name => "remediation" }
     .control-group
       %label.control-label{ :for => "references" } References (One Per Line)
       .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "5", :name => "references" }
+        %textarea.input-xxlarge.allowMarkupShortcut#references{ :rows => "5", :name => "references" }
     - if !@master
       .control-group
-        %label.control-label{ :for => "notes" } Notes Data
+        %label.control-label Notes Data
         %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_2" }
         .info.collapse.out#info_2
-          %label
+          %label{ :for => "notes" }
             Notes
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "notes" }
+          %textarea.input-xxlarge.allowMarkupShortcut#notes{ :rows => "10", :name => "notes" }
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
     - if !@master
       .control-group
-        %label.control-label{ :for => "preso" } Presentation Data
+        %label.control-label Presentation Data
         %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_1" }
         .info.collapse.out#info_1
-          %label
+          %label{ :for => "presentation_points" }
             Presentation Points (One Per Line)
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "presentation_points" }
+          %textarea.input-xxlarge.allowMarkupShortcut#presentation_points{ :rows => "10", :name => "presentation_points" }
             - if @finding
               - if @finding.presentation_points
                 #{meta_markup(@finding.presentation_points)}
-          %label
+          %label{ :for => "presentation_rem_points" }
             Presentation Remediation Points (One Per Line)
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "presentation_rem_points" }
+          %textarea.input-xxlarge.allowMarkupShortcut#presentation_rem_points{ :rows => "10", :name => "presentation_rem_points" }
             - if @finding
               - if @finding.presentation_rem_points
                 #{meta_markup(@finding.presentation_rem_points)}
