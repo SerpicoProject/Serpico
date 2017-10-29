@@ -1,20 +1,17 @@
-.span10
-  %form{:method => 'post', :enctype=>"multipart/form-data"}
-    %br
-    %h2 Import Report
-    %br
+.col-md-10
+  %br
+  %h2 Import Report
+  %br
+
+  %form{ :method => "post", :enctype=>"multipart/form-data" }
     %table
       %tr
-      %tr
         %td
-          Upload JSON Report - Please be careful. This must have been exported from the UI.&nbsp;
-          %br
-          %br
-          %input{:type => 'file', :name => 'file'}
-    %br
-    %br
-    %input{:type => 'submit', :value => 'Upload' }
-    %a{ :href => "/"}
-      %input{ :type => "button", :value => 'Cancel'}
+          %label.col-md-3{ :for => "file" }
+            Upload JSON Report - Please be careful. This must have been exported from the UI.&nbsp;
+          %input#file{ :type => "file", :name => "file" }
 
-
+    %br
+    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
+    %a.btn.btn-default{ :href => "/" }
+      Cancel

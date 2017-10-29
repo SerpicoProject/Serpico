@@ -90,6 +90,12 @@ end
 
 # Restore Attachments menu
 get '/report/:id/restore_attachments' do
+  @id = params[:id]
+  @report = get_report(@id)
+  if @report == nil
+    return "No Such Report"
+  end
+  
   haml :restore_attachments, :encode_html => true
 end
 
