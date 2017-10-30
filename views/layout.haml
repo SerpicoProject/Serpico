@@ -84,15 +84,16 @@
 
       <br>
       .container-fluid
+        - if @master
+          %div.alert.alert-danger
+            %strong WARNING
+            %br
+            You are editing the Templates Database
+          %br
         .row-fluid
           .span2
             %br
             - if @master
-              %div.alert.alert-danger
-                %strong WARNING
-                %br
-                You are editing the Templates Database
-              %br
               %ul.nav.nav-list
                 %li.nav-header Findings Menu
                 %li
