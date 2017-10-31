@@ -1,27 +1,22 @@
-.span10
+.col-md-10
   - if not @nessusmap
     Nessus Auto Mapping not enabled. Contact your administrator to enable.
   - else
-    %form{:method => 'post', :action => "/report/#{@report.id}/import_autoadd", :enctype=>"multipart/form-data"}
-      %br
-      %h2 Auto Add Findings from Nessus XML
-      %br
+    %br
+    %h2 Auto Add Findings from Nessus XML
+    %br
+
+    %form{ :method => "post", :action => "/report/#{@report.id}/import_autoadd", :enctype => "multipart/form-data" }
       %table
         %tr
-        %tr
           %td
-            Upload Nessus XML File (Nessusv2 only).&nbsp;
-            %br
-            %br
-            %input{:type => 'file', :name => 'file'}
-        %tr
-          %td
-            %br
-      %br
+            %label.col-md-3{ :for => "file" }
+              Upload Nessus XML File (Nessusv2 only).&nbsp;
+            %input#file{ :type => "file", :name => "file" }
       %br
       %input{:type => "hidden", :name => "type", :value => "nessus"}
-      %input{:type => 'submit', :value => 'Upload' }
-      %a{ :href => "/report/#{@report.id}/additional_features"}
-        %input{ :type => "button", :value => 'Cancel'}
 
-
+      %br
+      %input.btn.btn-default{ :type => "submit", :value => "Upload" }
+      %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
+        Cancel

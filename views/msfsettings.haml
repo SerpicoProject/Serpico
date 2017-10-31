@@ -1,54 +1,57 @@
-.span10
+.col-md-10
   - if not @vulnmap
     Vulnerability Mapping not enabled. Contact your administrator to enable (vulnmap configuration setting)
   - else
+    %br
     .row
       .alert.alert-info
         .fa.fa-exclamation-circle
         &nbsp;Remember to start your metasploit RPC daemon by running the following command in your terminal:
         %b msfrpcd -U $username -P $password --ssl
-    %br
+
     %h2 Metasploit RPC Settings
     %br
-    %h4
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify the metasploit RPC settings for this report.
+    %h4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify the metasploit RPC settings for this report.
     %br
-    %form{ :class => "form-horizontal", :method => 'post', :enctype => 'application/x-www-form-urlencoded'}
+
+    %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
       .control-group
-        %label{ :class => "control-label", :for => "ip" } IP Address
+        %label.control-label{ :for => "ip" } IP Address
         .controls
           - if @msfsettings and @msfsettings.ip
-            %input{ :type => 'text', :name => 'ip', :value => "#{@msfsettings.ip}"}
+            %input#ip{ :type => "text", :name => "ip", :value => "#{@msfsettings.ip}" }
           - else
-            %input{ :type => 'text', :name => 'ip', :value => ""}
+            %input#ip{ :type => "text", :name => "ip", :value => "" }
       .control-group
-        %label{ :class => "control-label", :for => "port" } Port
+        %label.control-label{ :for => "port" } Port
         .controls
           - if @msfsettings and @msfsettings.port
-            %input{ :type => 'text', :name => 'port', :value => "#{@msfsettings.port}"}
+            %input#port{ :type => "text", :name => "port", :value => "#{@msfsettings.port}" }
           -else
-            %input{ :type => 'text', :name => 'port', :value => ""}
+            %input#port{ :type => "text", :name => "port", :value => "" }
       .control-group
-        %label{ :class => "control-label", :for => "user" } Username
+        %label.control-label{ :for => "user" } Username
         .controls
           - if @msfsettings and @msfsettings.user
-            %input{ :type => 'text', :name => 'user', :value => "#{@msfsettings.user}"}
+            %input#user{ :type => "text", :name => "user", :value => "#{@msfsettings.user}" }
           - else
-            %input{ :type => 'text', :name => 'user', :value => ""}
+            %input#user{ :type => "text", :name => "user", :value => "" }
       .control-group
-        %label{ :class => "control-label", :for => "pass" } Password
+        %label.control-label{ :for => "pass" } Password
         .controls
           - if @msfsettings and @msfsettings.pass
-            %input{ :type => 'password', :name => 'pass', :value => "#{@msfsettings.pass}"}
+            %input#pass{ :type => "password", :name => "pass", :value => "#{@msfsettings.pass}" }
           - else
-            %input{ :type => 'password', :name => 'pass', :value => ""}
+            %input#pass{ :type => "password", :name => "pass", :value => "" }
       .control-group
-        %label{ :class => "control-label", :for => "workspace" } Workspace
+        %label.control-label{ :for => "workspace" } Workspace
         .controls
           - if @msfsettings and @msfsettings.workspace
-            %input{ :type => 'text', :name => 'workspace', :value => "#{@msfsettings.workspace}"}
+            %input#workspace{ :type => "text", :name => "workspace", :value => "#{@msfsettings.workspace}" }
           - else
-            %input{ :type => 'text', :name => 'workspace', :value => ""}
-      %input{:type => 'submit', :value => 'Save'}
-      %a{ :href => "/report/#{@report.id}/additional_features"}
-        %input{ :type => "button", :value => 'Cancel'}
+            %input#workspace{ :type => "text", :name => "workspace", :value => "" }
+
+      %br
+      %input.btn.btn-default{ :type => "submit", :value => "Save" }
+      %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
+        Cancel

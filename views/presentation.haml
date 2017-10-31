@@ -1,16 +1,16 @@
-%doctype{:html=>"true"}
+%doctype{ :html => "true" }
   %head
-    %meta{:charset=>"utf-8"}
+    %meta{ :charset => "utf-8" }
     %title
       #{@report.report_name} Presentation
-    %meta{:name=>"apple-mobile-web-app-capable", :content=>"yes"}
-    %meta{:name=>"apple-mobile-web-app-status-bar-style", :content=>"black-translucent"}
-    %meta{:name=>"viewport", :content=>"width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"}
+    %meta{ :name => "apple-mobile-web-app-capable", :content => "yes" }
+    %meta{ :name => "apple-mobile-web-app-status-bar-style", :content => "black-translucent" }
+    %meta{ :name => "viewport", :content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" }
 
-    %link{:rel=>"stylesheet", :href=>"/reveal.js/css/reveal.css"}
-    %link{:rel=>"stylesheet", :href=>"/reveal.js/css/print/paper.css"}
-    %link{:rel=>"stylesheet", :href=>"/reveal.js/css/theme/beige.css", :id=>"theme"}
-    %link{:rel=>"stylesheet", :href=>"/reveal.js/lib/css/zenburn.css"}
+    %link{ :rel => "stylesheet", :href => "/reveal.js/css/reveal.css" }
+    %link{ :rel => "stylesheet", :href => "/reveal.js/css/print/paper.css" }
+    %link#theme{ :rel => "stylesheet", :href => "/reveal.js/css/theme/beige.css" }
+    %link{ :rel => "stylesheet", :href => "/reveal.js/lib/css/zenburn.css" }
 
     :javascript
       if(window.location.search.match(/print-pdf/gi)){
@@ -20,15 +20,15 @@
         link.href = '/reveal.js/css/print/pdf.css';
         document.getElementsByTagName('head')[0].appendChild(link);
       }
-    %script{:src=>"/reveal.js/lib/js/html5shiv.js"}
-  %div{:class=>"reveal"}
-    %div{:class=>"slides"}
+    %script{ :src => "/reveal.js/lib/js/html5shiv.js" }
+  %div.reveal
+    %div.slides
       %section
         %section
           %h1
             #{@report.report_name}
         %section
-          %a{:href=>"/"}
+          %a{ :href => "/" }
             Return To Serpico
           :plain
             <br>
@@ -46,10 +46,10 @@
             <a href="#" onclick="document.getElementById('theme').setAttribute('href','/reveal.js/css/theme/moon.css'); return false;">Moon</a> -
             <a href="#" onclick="document.getElementById('theme').setAttribute('href','/reveal.js/css/theme/solarized.css'); return false;">Solarized</a>
 
-      %section{:style=>"vertical-align:top; text-align: left;"}
+      %section{ :style => "vertical-align:top; text-align: left;" }
         %h2
           Findings Summary
-        %table{:style=>"margin-left:10%"}
+        %table{ :style => "margin-left:10%" }
           - @findings.each do |finding|
             :ruby
               # set the color in here
@@ -76,14 +76,14 @@
               %td
                 #{finding.title}
               %td
-                %span{:style=>"color:#{color};"}
+                %span{ :style => "color:#{color};" }
                   #{risk.upcase}
       - @findings.each do |finding|
         %section
-          %section{:style=>"vertical-align:top; text-align: left;"}
+          %section{ :style => "vertical-align:top; text-align: left;" }
             %h2
               #{finding.title}
-            %p{:style=>"margin-left:10%"}
+            %p{ :style => "margin-left:10%" }
               Risk
               :ruby
                 # set the color in here
@@ -106,17 +106,17 @@
                 else
                   color = "#000000"
                 end
-              %span{:style=>"color:#{color}; font-size:120%"}
+              %span{ :style => "color:#{color}; font-size:120%" }
                 #{risk.upcase}
             - if finding.presentation_points
-              %ul{:style=>"margin-left:10%"}
+              %ul{ :style => "margin-left:10%" }
                 - finding.presentation_points.to_s.split("<paragraph>").each do |pp|
                   - next if pp =~ /\[\!\!/
                   - if pp.gsub('</paragraph>','').size > 0
                     %li
                       #{pp.gsub('</paragraph>','')}
 
-          %section{:style=>"vertical-align:top; text-align: left;"}
+          %section{ :style => "vertical-align:top; text-align: left;" }
             %h2
               #{finding.title}
             %h3
@@ -127,17 +127,17 @@
               - img = pp.split("[!!")[1].split("!!]").first
               - @images.each do |imr|
                 - if imr["name"] == img
-                  %section{:style=>"vertical-align:top; text-align: left;"}
+                  %section{ :style => "vertical-align:top; text-align: left;" }
                     %h2
                       %img{ :src=> "#{imr['link']}" }
                   - break
-          %section{:style=>"vertical-align:top; text-align: left;"}
+          %section{ :style => "vertical-align:top; text-align: left;" }
             %h2
               #{finding.title}
             %h3
               Remediation Recommendations
             - if finding.presentation_rem_points
-              %ul{:style=>"margin-left:10%"}
+              %ul{ :style => "margin-left:10%" }
                 - finding.presentation_rem_points.to_s.split("<paragraph>").each do |pp|
                   - if pp.gsub('</paragraph>','').size > 0
                     %li
@@ -149,8 +149,8 @@
         %h2
           Questions?
 
-  %script{:src=>"/reveal.js/lib/js/head.min.js"}
-  %script{:src=>"/reveal.js/js/reveal.js"}
+  %script{ :src => "/reveal.js/lib/js/head.min.js" }
+  %script{ :src => "/reveal.js/js/reveal.js" }
   :javascript
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
@@ -172,4 +172,3 @@
         { src: '/reveal.js/plugin/notes/notes.js', async: true }
       ]
     });
-

@@ -1,37 +1,42 @@
-.span10
-  %form{:method => 'post', :action => '/admin/templates/add', :enctype=>"multipart/form-data"}
-    %br
-    %h2 Add Template
-    %br
+.col-md-10
+  %br
+  %h2 Add Template
+  %br
+
+  %form{ :method => "post", :action => "/admin/templates/add", :enctype => "multipart/form-data" }
     %table
       %tr
         %td
-          Report Type &nbsp;
+          %label.col-md-3{ :for => "report_type" }
+            Report Type &nbsp;
         %td
-          %input{:type => 'text', :name => 'report_type', :required=>true}
+          %input#report_type{ :type => "text", :name => "report_type", :required => true }
       %tr
         %td
-          File Description &nbsp;
+          %label.col-md-3{ :for => "description" }
+            File Description &nbsp;
         %td
-          %input{:type => 'text', :name => 'description'}
+          %input#description{ :type => "text", :name => "description" }
       %tr
         %td
-          Finding Template &nbsp;
+          %label.col-md-3{ :for => "finding_template" }
+            Finding Template &nbsp;
         %td
-          %input{:type => 'checkbox', :name => 'finding_template'}
+          %input#finding_template{ :type => "checkbox", :name => "finding_template" }
       %tr
         %td
-          Status Template &nbsp;
+          %label.col-md-3{ :for => "status_template" }
+            Status Template &nbsp;
         %td
-          %input{:type => 'checkbox', :name => 'status_template'}
+          %input#status_template{ :type => "checkbox", :name => "status_template" }
       %tr
         %td
-          DOCX
+          %label.col-md-3{ :for => "file" }
+            DOCX
         %td
-          %input{:type => 'file', :name => 'file'}
+          %input#file{ :type => "file", :name => "file" }
+
     %br
-    %input{:type => 'submit', :value => 'Add' }
-    %a{ :href => "/admin/templates"}
-      %input{ :type => "button", :value => 'Cancel'}
-
-
+    %input.btn.btn-default{ :type => "submit", :value => "Add" }
+    %a.btn.btn-default{ :href => "/admin/templates" }
+      Cancel

@@ -1,18 +1,20 @@
-.span10
-  %form{:method => 'post', :enctype=>"multipart/form-data"}
-    %br
-    %h2 Restore attachments from Attachments Export
-    %h4 Note: the restore file MUST be a zip file from the Attachments Export
+.col-md-10
+  %br
+  %h2 Restore attachments from Attachments Export
+  %h4 Note: the restore file MUST be a zip file from the Attachments Export
+  %br
+
+  %form{ :method => "post", :enctype=>"multipart/form-data" }
     - if @no_file == "1"
       You forgot to include a file, silly
-    %br
-    %br
     %table
       %tr
         %td
-          Upload &nbsp;
-        %td
-          %input{:type => 'file', :name => 'file',}
+          %label.col-md-3{ :for => "file" }
+            Upload &nbsp;
+          %input#file{ :type => "file", :name => "file" }
+
     %br
-    %input{:type => 'submit', :value => 'Upload' }
-      %input{ :type => "button", :value => 'Cancel'}
+    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
+    %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
+      Cancel

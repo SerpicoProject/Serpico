@@ -1,5 +1,5 @@
-.span10
-  %form{:method => 'post'}
+.col-md-10
+  %form{ :method => "post" }
     %br
     %h2 #{@report.report_name}
     %br
@@ -8,13 +8,14 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modify the information that will appear in the report.
       %br
       .table.table-striped
-        %table{:style => 'width: 70%'}
+        %table{ :style => "width: 70%" }
           %tbody
             %tr
-              %td{:style => 'width: 30%'}
-                Report Type
-              %td{:style => 'width: 70%'}
-                %select{ :name => "report_type" }
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "report_type" }
+                  Report Type
+              %td{ :style => "width: 70%" }
+                %select#report_type{ :name => "report_type" }
                   - @templates.each do |template|
                     - if template.finding_template == false and template.status_template == false
                       - if template.report_type == @report.report_type
@@ -22,100 +23,119 @@
                       - else
                         %option #{template.report_type}
             %tr
-              %td{:style => 'width: 30%'}
-                Title
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'report_name', :value => "#{@report.report_name}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "report_name" }
+                  Title
+              %td{ :style => "width: 70%" }
+                %input#report_name{ :type => "text", :style => "width: 90%", :name => "report_name", :value => "#{@report.report_name}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Assessment Type
-              %td{:style => 'width: 70%'}
-                %select{ :name => "assessment_type" }
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "assessment_type" }
+                  Assessment Type
+              %td{ :style => "width: 70%" }
+                %select#assessment_type{ :name => "assessment_type" }
                   - @assessment_types.each do |assessment_type|
                     - if assessment_type == @report.assessment_type
                       %option{ :selected => "selected" } #{assessment_type}
                     - else
                       %option #{assessment_type}
             %tr
-              %td{:style => 'width: 30%'}
-                Scoring Type
-              %td{:style => 'width: 70%'}
-                %select{ :name => "scoring" }
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "scoring" }
+                  Scoring Type
+              %td{ :style => "width: 70%" }
+                %select#scoring{ :name => "scoring" }
                   - @risk_scores.each do |risk_score|
                     - if risk_score.downcase == @report.scoring.downcase
                       %option{ :selected => "selected" } #{risk_score}
                     - else
                       %option #{risk_score}
             %tr
-              %td{:style => 'width: 30%'}
-                Full Company Name
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'full_company_name', :value => "#{@report.full_company_name}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "full_company_name" }
+                  Full Company Name
+              %td{ :style => "width: 70%" }
+                %input#full_company_name{ :type => "text", :style => "width: 90%", :name => "full_company_name", :value => "#{@report.full_company_name}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Short Company Name
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'short_company_name', :value => "#{@report.short_company_name}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "short_company_name" }
+                  Short Company Name
+              %td{ :style => "width: 70%" }
+                %input#short_company_name{ :type => "text", :style => "width: 90%", :name => "short_company_name", :value => "#{@report.short_company_name}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Company Website
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'company_website', :value => "#{@report.company_website}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "company_website" }
+                  Company Website
+              %td{ :style => "width: 70%" }
+                %input#company_website{ :type => "text", :style => "width: 90%", :name => "company_website", :value => "#{@report.company_website}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Company Address
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_address', :value => "#{@report.contact_address}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_address" }
+                  Company Address
+              %td{ :style => "width: 70%" }
+                %input#contact_address{ :type => "text", :style => "width: 90%", :name => "contact_address", :value => "#{@report.contact_address}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Company City
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_city', :value => "#{@report.contact_city}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_city" }
+                  Company City
+              %td{ :style => "width: 70%" }
+                %input#contact_city{ :type => "text", :style => "width: 90%", :name => "contact_city", :value => "#{@report.contact_city}" }
             %tr
-              %td{:style => 'width: 30%'}
-                State
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_state', :value => "#{@report.contact_state}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_state" }
+                  State
+              %td{ :style => "width: 70%" }
+                %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state", :value => "#{@report.contact_state}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Company Zip
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_zip', :value => "#{@report.contact_zip}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_zip" }
+                  Company Zip
+              %td{ :style => "width: 70%" }
+                %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip", :value => "#{@report.contact_zip}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Contact Name
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_name', :value => "#{@report.contact_name}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_name" }
+                  Contact Name
+              %td{ :style => "width: 70%" }
+                %input#contact_name{ :type => "text", :style => "width: 90%", :name => "contact_name", :value => "#{@report.contact_name}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Contact E-Mail
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_email', :value => "#{@report.contact_email}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_email" }
+                  Contact E-Mail
+              %td{ :style => "width: 70%" }
+                %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email", :value => "#{@report.contact_email}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Contact Title
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_title', :value => "#{@report.contact_title}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_title" }
+                  Contact Title
+              %td{ :style => "width: 70%" }
+                %input#contact_title{ :type => "text", :style => "width: 90%", :name => "contact_title", :value => "#{@report.contact_title}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Contact Phone
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'contact_phone', :value => "#{@report.contact_phone}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "contact_phone" }
+                  Contact Phone
+              %td{ :style => "width: 70%" }
+                %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone", :value => "#{@report.contact_phone}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Assessment Start Date
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'assessment_start_date', :value => "#{@report.assessment_start_date}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "assessment_start_date" }
+                  Assessment Start Date
+              %td{ :style => "width: 70%" }
+                %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date", :value => "#{@report.assessment_start_date}" }
             %tr
-              %td{:style => 'width: 30%'}
-                Assessment End Date
-              %td{:style => 'width: 70%'}
-                %input{:type => 'text', :style => 'width: 90%', :name => 'assessment_end_date', :value => "#{@report.assessment_end_date}"}
+              %td{ :style => "width: 30%" }
+                %label.col-md-3{ :for => "assessment_end_date" }
+                  Assessment End Date
+              %td{ :style => "width: 70%" }
+                %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date", :value => "#{@report.assessment_end_date}" }
+
+      %input{ :type => "hidden", :name => "id", :value => "#{@report.id}" }
+
       %br
-      %input{:type => 'hidden', :name => 'id', :value => "#{@report.id}"}
-      %input{:type => 'submit', :value => 'Save'}
-      %a{ :href => "/report/#{@report.id}/edit"}
-        %input{ :type => "button", :value => 'Cancel'}
+      %input.btn.btn-default{ :type => "submit", :value => "Save" }
+      %a.btn.btn-default{ :href => "/report/#{@report.id}/edit" }
+        Cancel
+
     - else
       %h3
         Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-

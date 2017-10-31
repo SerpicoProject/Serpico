@@ -109,7 +109,8 @@
   .row:after {
     clear: both;
   }
-  [class*="span"] {
+  [class*="span"],
+  [class*="col-md"] {
     float: left;
     min-height: 1px;
     margin-left: 30px;
@@ -126,7 +127,8 @@
   .span11 {
     width: 1070px;
   }
-  .span10 {
+  .span10,
+  .col-md-10 {
     width: 970px;
   }
   .span9 {
@@ -205,7 +207,8 @@
   .row-fluid:after {
     clear: both;
   }
-  .row-fluid [class*="span"] {
+  .row-fluid [class*="span"],
+  .row-fluid [class*="col-md"] {
     display: block;
     float: left;
     width: 100%;
@@ -216,10 +219,12 @@
        -moz-box-sizing: border-box;
             box-sizing: border-box;
   }
-  .row-fluid [class*="span"]:first-child {
+  .row-fluid [class*="span"]:first-child,
+  .row-fluid [class*="col-md"]:first-child {
     margin-left: 0;
   }
-  .row-fluid .controls-row [class*="span"] + [class*="span"] {
+  .row-fluid .controls-row [class*="span"] + [class*="span"],
+  .row-fluid .controls-row [class*="col-md"] + [class*="col-md"] {
     margin-left: 2.564102564102564%;
   }
   .row-fluid .span12 {
@@ -230,7 +235,8 @@
     width: 91.45299145299145%;
     *width: 91.39979996362975%;
   }
-  .row-fluid .span10 {
+  .row-fluid .span10,
+  .row-fluid .col-md-10 {
     width: 82.90598290598291%;
     *width: 82.8527914166212%;
   }
@@ -371,7 +377,8 @@
   .uneditable-input {
     margin-left: 0;
   }
-  .controls-row [class*="span"] + [class*="span"] {
+  .controls-row [class*="span"] + [class*="span"],
+  .controls-row [class*="col-md"] + [class*="col-md"] {
     margin-left: 30px;
   }
   input.span12,
@@ -386,7 +393,10 @@
   }
   input.span10,
   textarea.span10,
-  .uneditable-input.span10 {
+  .uneditable-input.span10,
+  input.col-md-10,
+  textarea.col-md-10,
+  .uneditable-input.col-md-10 {
     width: 956px;
   }
   input.span9,
@@ -459,7 +469,8 @@
   .row:after {
     clear: both;
   }
-  [class*="span"] {
+  [class*="span"],
+  [class*="col-md"] {
     float: left;
     min-height: 1px;
     margin-left: 20px;
@@ -476,7 +487,8 @@
   .span11 {
     width: 662px;
   }
-  .span10 {
+  .span10,
+  .col-md-10 {
     width: 600px;
   }
   .span9 {
@@ -555,7 +567,8 @@
   .row-fluid:after {
     clear: both;
   }
-  .row-fluid [class*="span"] {
+  .row-fluid [class*="span"],
+  .row-fluid [class*="col-md"] {
     display: block;
     float: left;
     width: 100%;
@@ -566,10 +579,12 @@
        -moz-box-sizing: border-box;
             box-sizing: border-box;
   }
-  .row-fluid [class*="span"]:first-child {
+  .row-fluid [class*="span"]:first-child,
+  .row-fluid [class*="col-md"]:first-child {
     margin-left: 0;
   }
-  .row-fluid .controls-row [class*="span"] + [class*="span"] {
+  .row-fluid .controls-row [class*="span"] + [class*="span"],
+  .row-fluid .controls-row [class*="col-md"] + [class*="col-md"] {
     margin-left: 2.7624309392265194%;
   }
   .row-fluid .span12 {
@@ -580,7 +595,8 @@
     width: 91.43646408839778%;
     *width: 91.38327259903608%;
   }
-  .row-fluid .span10 {
+  .row-fluid .span10,
+  .row-fluid .col-md-10 {
     width: 82.87292817679558%;
     *width: 82.81973668743387%;
   }
@@ -721,7 +737,8 @@
   .uneditable-input {
     margin-left: 0;
   }
-  .controls-row [class*="span"] + [class*="span"] {
+  .controls-row [class*="span"] + [class*="span"],
+  .controls-row [class*="col-md"] + [class*="col-md"] {
     margin-left: 20px;
   }
   input.span12,
@@ -736,7 +753,10 @@
   }
   input.span10,
   textarea.span10,
-  .uneditable-input.span10 {
+  .uneditable-input.span10,
+  input.col-md-10,
+  textarea.col-md-10,
+  .uneditable-input.col-md-10 {
     width: 586px;
   }
   input.span9,
@@ -825,7 +845,10 @@
   }
   [class*="span"],
   .uneditable-input[class*="span"],
-  .row-fluid [class*="span"] {
+  .row-fluid [class*="span"],
+  [class*="col-md"],
+  .uneditable-input[class*="col-md"],
+  .row-fluid [class*="col-md"] {
     display: block;
     float: none;
     width: 100%;
@@ -850,6 +873,9 @@
   input[class*="span"],
   select[class*="span"],
   textarea[class*="span"],
+  input[class*="col-md"],
+  select[class*="col-md"],
+  textarea[class*="col-md"],
   .uneditable-input {
     display: block;
     width: 100%;
@@ -861,11 +887,14 @@
   .input-prepend input,
   .input-append input,
   .input-prepend input[class*="span"],
-  .input-append input[class*="span"] {
+  .input-append input[class*="span"],
+  .input-prepend input[class*="col-md"],
+  .input-append input[class*="col-md"] {
     display: inline-block;
     width: auto;
   }
-  .controls-row [class*="span"] + [class*="span"] {
+  .controls-row [class*="span"] + [class*="span"],
+  .controls-row [class*="col-md"] + [class*="col-md"] {
     margin-left: 0;
   }
   .modal {

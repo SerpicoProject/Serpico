@@ -1,18 +1,18 @@
-.span10
+.col-md-10
   - if not @vulnmap
     Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
   - else
     %h2 Vulnerabilities
     This is a read-only view of the first 10k vulnerabilities within Metasploits database.
     %p
-    %label{:class => "control-label"}
-      %a{:href=> '#vulninfomodal', "data-toggle"=>'modal', :class => 'btn btn-info'}
+    %label.control-label
+      %a.btn.btn-info{ :href => "#vulninfomodal", "data-toggle" => "modal" }
         More Info
-    .modal{:id=>'vulninfomodal', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+    .modal.hide.fade#vulninfomodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => true }
       .modal-header
-        %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+        %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
           x
-        %h3{:id=>"modal-label"}
+        %h3#modal-label
           Metasploit Auto Mapping Vulnerabilities
       .modal-body
         To automatically add vulnerabilities from the Metasploit database into your report, you'll need to have one of the reference codes mapped to an existing Serpico finding.
@@ -21,12 +21,12 @@
         %b Vuln ID
         field of a finding in the Findings Database.
         %p
-        %a{:href=> '/master/findings', :class=>'btn btn-default', }
+        %a.btn.btn-default{ :href=> "/master/findings" }
           Go to Findings Database
         %p
     %br
     .table.table-hover
-      %table{:style => 'width: 90%'}
+      %table{ :style => "width: 90%" }
         %thead
           %tr
             %td
@@ -41,11 +41,11 @@
           - if @vulns
             - @vulns.each do |vuln|
               %tr
-                %td{:style => 'width: 50%', :"data-index" => "#{vuln["name"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 50%", :"data-index" => "#{vuln["name"]}" }
                   #{vuln["name"]}
-                %td{:style => 'width: 10%', :"data-index" => "#{vuln["host"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 10%", :"data-index" => "#{vuln["host"]}" }
                   #{vuln["host"]}
-                %td{:style => 'width: 5%', :"data-index" => "#{vuln["port"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 5%", :"data-index" => "#{vuln["port"]}" }
                   #{vuln["port"]}
-                %td{:style => 'width: 35%', :"data-index" => "#{vuln["refs"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 35%", :"data-index" => "#{vuln["refs"]}" }
                   #{vuln["refs"]}

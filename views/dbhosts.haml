@@ -1,4 +1,4 @@
-.span10
+.col-md-10
   - if not @vulnmap
     Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
   - else
@@ -7,7 +7,7 @@
     %br
     %br
     .table.table-hover
-      %table{:style => 'width: 90%'}
+      %table{ :style => "width: 90%" }
         %thead
           %tr
             %td
@@ -22,12 +22,12 @@
           - if @hosts
             - @hosts.each do |host|
               %tr
-                %td{:style => 'width: 20%', :"data-index" => "#{host["address"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["address"]}" }
                   #{host["address"]}
-                %td{:style => 'width: 20%', :"data-index" => "#{host["name"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["name"]}" }
                   #{host["name"]}
-                %td{:style => 'width: 20%', :"data-index" => "#{host["os_name"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["os_name"]}" }
                   #{host["os_name"]}
                   #{host["os_sp"]}
-                %td{:style => 'width: 40%', :"data-index" => "#{host["info"]}", :class=>"searchable"}
+                %td.searchable{ :style => "width: 40%", :"data-index" => "#{host["info"]}" }
                   #{host["info"]}
