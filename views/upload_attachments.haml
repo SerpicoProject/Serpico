@@ -17,13 +17,6 @@
             Upload Files &nbsp;
         %td
           %input#files{ :type => "file", :name => "files[]", :multiple => true }
-      %tr
-        %td
-          %label.col-md-3{ :for => "caption" }
-            Caption &nbsp;
-        %td
-          %input#caption{ :type => "text", :name => "caption" }
-
     %br
     %input.btn.btn-default{ :type => "submit", :value => "Upload" }
     %a.btn.btn-default{ :href => "/report/#{@report.id}/edit" }
