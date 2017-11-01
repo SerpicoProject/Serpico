@@ -43,6 +43,13 @@ class Server < Sinatra::Application
     server_log("Logging set to #{config_options["log_file"]}")
   end
 
+  #Set Alignment
+  if(config_options["image_align"] == "")
+    set :alignment, "center"
+  else
+    set :alignment, config_options["image_align"]
+  end
+
   # CVSS
   set :av, ["Local","Adjacent Network","Network"]
   set :ac, ["High","Medium","Low"]
@@ -275,8 +282,28 @@ def image_insert(docx, rand_file, image, end_xml)
   end
   image_file.close
 
-  # insert picture into xml
-  docx << " <w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+  # Image alignment setting
+  unless settings.alignment
+    settings.alignment = "center"
+  end
+
+  case settings.alignment.downcase
+    when "Left"
+      imgAlign = "left"
+    when "Right"
+      imgAlign = "right"
+    when "Center"
+      imgAlign = "center"
+    else 
+      imgAlign = "center"
+  end
+  
+  # insert picture into xml, allow the user to ignore alignment if they want
+  if settings.alignment == "ignore"
+    docx << "<w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+  else
+    docx << "<w:p><w:pPr><w:jc w:val=\"#{imgAlign}\"/></w:pPr><w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict></w:p>"
+  end
   docx << end_xml
 
   # insert picture into zip

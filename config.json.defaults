@@ -40,5 +40,6 @@
   "threshold": "2",
   "log_file": "./log/serpico.log",
   "show_exceptions": false,
-  "cvssv2_scoring_override": false
+  "cvssv2_scoring_override": false,
+  "image_align":"center"
 }
