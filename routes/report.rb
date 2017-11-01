@@ -1446,6 +1446,26 @@ get '/report/:id/generate' do
   end
   #### END IMAGE INSERT CODE
 
+  # Get hyperlinks and References
+  hyperlinks = updateHyperlinks(docx)
+  # Update _rels directrory
+  rels_file =  read_rels(rand_file, "word/_rels/document.xml.rels")
+  # Noko syntax rels
+  noko_rels =  Nokogiri::XML(rels_file)
+  urls = hyperlinks["urls"] 
+  id = hyperlinks["id"]
+  for i in 0..id.length - 1
+    url =  urls[i]
+    cid =  id[i]
+    noko_rels.root.first_element_child.after("<Relationship Id=\"#{cid}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"#{url.gsub(' ','')}\" TargetMode=\"External\"/>")
+  end
+ 
+  content_to_write = noko_rels.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML).strip
+  #Edit Relationships file
+  write_rels(rand_file, "word/_rels/document.xml.rels", content_to_write)
+  # Update hyperlinks
+  docx = hyperlinks["xmlText"]
+ 
   docx_modify(rand_file, docx,'word/document.xml')
 
 	list_components.each do |name, xml|

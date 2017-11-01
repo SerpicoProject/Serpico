@@ -654,11 +654,16 @@
             Meta Markup
         .modal-body
           %p
-            There are four markup sets you can use in the Overview and the Remediation summary. This text is converted inside of Microsoft Word.
+            There are markup sets you can use in any field. This text is converted inside of Microsoft Word.
             %p.text-error
               YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
             %b
               Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+          %h2
+            {{ URL }}
+          %p
+            If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
+            %br            
           %h2
             &lt;&lt;CUSTOMER&gt;&gt;
           %p
