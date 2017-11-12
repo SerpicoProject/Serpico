@@ -221,37 +221,45 @@ end
 
 # Grab a specific report
 def get_report(id)
-  if is_administrator?
-    return Reports.first(:id => id)
-  else
-    report = Reports.first(:id => id)
-    if report
-      authors = report.authors
-      return report if report.owner == get_username
-      if authors
-        return report if authors.include?(get_username)
+  begin
+    if is_administrator?
+      return Reports.first(:id => id)
+    else
+      report = Reports.first(:id => id)
+      if report
+        authors = report.authors
+        return report if report.owner == get_username
+        if authors
+          return report if authors.include?(get_username)
+        end
       end
     end
+  rescue Exception => log
+    # ignoring this error for now
   end
 end
 
 # List out the reports
 def get_reports
-  if is_administrator?
-    return Reports.all( :order => [:id.desc])
-  else
-    reports = Reports.all( :order => [:id.desc])
-    reports_array = []
-    reports.each do |report|
-      next unless report and get_username
-      authors = report.authors
-      reports_array.push(report) if report.owner == get_username
-      if authors
-        reports_array.push(report) if authors.include?(get_username)
+  begin
+    if is_administrator?
+      return Reports.all( :order => [:id.desc])
+    else
+      reports = Reports.all( :order => [:id.desc])
+      reports_array = []
+      reports.each do |report|
+        next unless report and get_username
+        authors = report.authors
+        reports_array.push(report) if report.owner == get_username
+        if authors
+          reports_array.push(report) if authors.include?(get_username)
+        end
       end
-  end
-  return nil unless reports_array
-  return reports_array
+      return nil unless reports_array
+      return reports_array
+    end
+  rescue Exception
+    return []
   end
 end
 

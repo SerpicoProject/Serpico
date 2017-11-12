@@ -5,6 +5,12 @@ require 'json'
 require "./server.rb"
 config_options = JSON.parse(File.read('./config.json'))
 
+# SSL Ciphers
+CIPHERS = ['ECDHE-RSA-AES128-GCM-SHA256','ECDHE-RSA-AES256-GCM-SHA384',
+           'ECDHE-RSA-AES128-CBC-SHA','ECDHE-RSA-AES256-CBC-SHA',
+           'AES128-GCM-SHA256','AES256-GCM-SHA384','AES128-SHA256',
+           'AES256-SHA256','AES128-SHA','AES256-SHA']
+
 ## SSL Settings
 ssl_certificate = config_options["ssl_certificate"]
 ssl_key = config_options["ssl_key"]
@@ -31,6 +37,7 @@ if (use_ssl) then
   server_options[:SSLCertificate] = OpenSSL::X509::Certificate.new(certificate_content)
   server_options[:SSLPrivateKey] = OpenSSL::PKey::RSA.new(key_content)
   server_options[:SSLVerifyClient] = OpenSSL::SSL::VERIFY_NONE
+  server_options[:Ciphers] = CIPHERS
 end
 
 Rack::Handler::WEBrick.run Server, server_options
