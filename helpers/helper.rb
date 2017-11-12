@@ -49,13 +49,13 @@ def find_headers_footers(docx)
 	end
 	return header_footer
 end
- 
+
 # Returns xmlText with hyperlinks and a list of References tags
 def updateHyperlinks(xmlText)
   retHash = Hash.new
   # Find urls
   urls = xmlText.scan(/<w:t>{{.*}}<\/w:t>/)
-  # Resources for <Resources> tag  
+  # Resources for <Resources> tag
   retHash["urls"] = []
   retHash["id"] = []
   i = 25
@@ -63,8 +63,8 @@ def updateHyperlinks(xmlText)
     cleanUrl = url.gsub("{{", "").gsub("}}", "")
     # set resourceId and xmlText
     resourceId = "r:id=\"rId#{i}\""
-    xmlText = xmlText.gsub(url,"<w:hyperlink #{resourceId} w:history=\"1\"><w:r w:rsidRPr=\"00720130\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr>#{cleanUrl}</w:r></w:hyperlink>")	
-    # remove tags 
+    xmlText = xmlText.gsub(url,"<w:hyperlink #{resourceId} w:history=\"1\"><w:r w:rsidRPr=\"00720130\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr>#{cleanUrl}</w:r></w:hyperlink>")
+    # remove tags
     cleanUrl = cleanUrl.gsub("<w:t>", "")
     cleanUrl = cleanUrl.gsub("<\/w:t>", "")
     # put urls in resources
@@ -79,7 +79,7 @@ end
 def setHyperlinks(xmlText)
   urls = xmlText.scan(/<w:t>http(s).*<\/w:t>/)
   urls.each do |url|
-    xmlText = xmlText.gsub(url,"<w:hyperlink><w:r><w:rPr><w:rStyle w:val=\"hyperLink\"/></w:rPr>#{url}</w:r></w:hyperlink>")  
+    xmlText = xmlText.gsub(url,"<w:hyperlink><w:r><w:rPr><w:rStyle w:val=\"hyperLink\"/></w:rPr>#{url}</w:r></w:hyperlink>")
   end
   return xmlText
 end
@@ -206,6 +206,7 @@ end
 # The helper class exists to do string manipulation and heavy lifting
 def url_escape_hash(hash)
 	hash.each do |k,v|
+    v = "" unless v
 		v = CGI::escapeHTML(v)
 
     if v
