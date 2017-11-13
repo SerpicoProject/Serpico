@@ -129,7 +129,7 @@ def add_findings_totals(udv, findings, config_options)
   # Query for the findings that match the report_id
   if(config_options["dread"])
   	findings.each do |finding|
-	 		if finding.dread_total >= 40
+	 	if finding.dread_total >= 40
    			critical += 1
    		elsif finding.dread_total >= 30 and finding.dread_total < 40
    			high += 1
@@ -150,8 +150,10 @@ def add_findings_totals(udv, findings, config_options)
 	   			high += 1
 	   		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
 	   			moderate += 1
-	   		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
+	   		elsif finding.cvss_total >= 0.1 and finding.cvss_total <= 3.9
 	   			low += 1
+	   		elsif finding.cvss_total < 0.1
+	   			informational += 1
 	   		end
 	    end
    	else
@@ -173,8 +175,10 @@ def add_findings_totals(udv, findings, config_options)
    			high += 1
    		elsif finding.cvss_total >= 4 and finding.cvss_total <= 6.9
    			moderate += 1
-   		elsif finding.cvss_total >= 0 and finding.cvss_total <= 3.9
+   		elsif finding.cvss_total >= 0.1 and finding.cvss_total <= 3.9
    			low += 1
+   		elsif finding.cvss_total < 0.1
+   			informational += 1
    		end
     end
    else
