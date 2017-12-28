@@ -1,8 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.4.0)
-    bcrypt (3.1.10)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
+    bcrypt (3.1.11)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
     data_mapper (1.2.0)
@@ -54,30 +55,49 @@ GEM
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
     fastercsv (1.5.5)
-    haml (4.0.6)
+    filesize (0.1.1)
+    haml (5.0.4)
+      temple (>= 0.8.0)
       tilt
-    json (1.8.3)
-    json_pure (1.8.2)
-    librex (0.0.999)
-    mini_portile (0.6.2)
+    jsobfu (0.4.2)
+      rkelly-remix
+    json (1.8.6)
+    json_pure (1.8.6)
+    metasm (1.0.3)
+    mini_portile2 (2.3.0)
     msfrpc-client (1.1.1)
-      librex (~> 0.0.70, >= 0.0.70)
-      msgpack (~> 0.6.2, >= 0.6.2)
-    msgpack (0.6.2)
-    multi_json (1.11.2)
-    net-ldap (0.11)
-    nokogiri (1.6.6.2)
-      mini_portile (~> 0.6.0)
-    rack (1.5.5)
-    rack-protection (1.5.3)
+      msgpack (~> 1)
+      rex (~> 2)
+    msgpack (1.2.0)
+    multi_json (1.12.2)
+    mustermann (1.0.1)
+    net-ldap (0.16.1)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
+    public_suffix (3.0.1)
+    rack (2.0.3)
+    rack-protection (2.0.0)
       rack
+    rb-readline (0.5.5)
+    rex (2.0.11)
+      filesize
+      jsobfu (~> 0.4.1)
+      json
+      metasm (~> 1.0.2)
+      nokogiri
+      rb-readline
+      robots
+    rkelly-remix (0.0.7)
+    robots (0.10.1)
     rubyzip (1.2.1)
-    sinatra (1.4.6)
-      rack (~> 1.4)
-      rack-protection (~> 1.4)
-      tilt (>= 1.3, < 3)
+    sinatra (2.0.0)
+      mustermann (~> 1.0)
+      rack (~> 2.0)
+      rack-protection (= 2.0.0)
+      tilt (~> 2.0)
     stringex (1.5.1)
-    tilt (2.0.1)
+    temple (0.8.0)
+    tilt (2.0.8)
     uuidtools (2.1.5)
 
 PLATFORMS
@@ -91,7 +111,7 @@ DEPENDENCIES
   json
   msfrpc-client (= 1.1.1)
   net-ldap (~> 0.11)
-  nokogiri
+  nokogiri (= 1.8.1)
   rubyzip
   sinatra
 
