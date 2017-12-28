@@ -42,6 +42,9 @@ post '/report/new' do
   @report.scoring = set_scoring(config_options)
   @report.save
 
+  # compensate for datamappers oddness
+  @report1 = get_report(@report.id)
+
   redirect to("/report/#{@report.id}/edit")
 end
 
