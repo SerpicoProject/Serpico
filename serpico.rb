@@ -15,7 +15,7 @@ bind_address =  config_options["bind_address"]
 
 server_options = {
   :Port => port,
-  :BindAddress => bind_address,
+  :Host => bind_address,
 }
 
 if config_options["show_exceptions"].to_s.downcase == "false" or (not config_options["show_exceptions"])
