@@ -3,7 +3,7 @@
     %br
     %h2 #{@report.report_name}
     %br
-    - if @templates.size > 0
+    - if @docx_templates.size > 0
       %h4
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modify the information that will appear in the report.
       %br
@@ -12,26 +12,36 @@
           %tbody
             %tr
               %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "report_type" }
-                  Report Type
+                %label.col-md-3{ :for => "report_type_docx" }
+                  Docx Report Template
               %td{ :style => "width: 70%" }
-                %select#report_type{ :name => "report_type" }
-                  - @templates.each do |template|
-                    - if template.finding_template == false and template.status_template == false
-                      - if template.report_type == @report.report_type
-                        %option{ :selected => "selected" } #{template.report_type}
+                %select#report_type_docx{ :name => "associated_docx_template" }
+                  - @docx_templates.each do |template|
+                    - if template.template_type == "Word - Report Template"
+                      - if @report and template.template_title == @report.associated_docx_template
+                        %option{ :selected => "selected" } #{template.template_title}
                       - else
-                        %option #{template.report_type}
+                        %option #{template.template_title}
             %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "report_name" }
-                  Title
+              %td{:style => "width: 30%"}
+                %label.col-md-3{ :for => "report_type_excel" }
+                  Excel Summary Template
+              %td{:style => "width: 70%"}
+                %select#report_type_excel{ :name => "associated_excel_template" }
+                  - @excel_templates.each do |template|
+                    - if template.template_type == "Excel - Summary Template"
+                      - if @report and template.template_title == @report.associated_excel_template
+                        %option{ :selected => "selected" } #{template.template_title}
+                      - else
+                        %option #{template.template_title}
+            %tr
+              %td{:style => "width: 30%"}
+                Title
               %td{ :style => "width: 70%" }
-                %input#report_name{ :type => "text", :style => "width: 90%", :name => "report_name", :value => "#{@report.report_name}" }
+                %input#report_name{ :type => "text", :style => "width: 90%", :name => "report_name", :value => "#{@report.report_name}"}
             %tr
               %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "assessment_type" }
-                  Assessment Type
+                Assessment Type
               %td{ :style => "width: 70%" }
                 %select#assessment_type{ :name => "assessment_type" }
                   - @assessment_types.each do |assessment_type|

@@ -1,4 +1,3 @@
-!!!
 %html{ :lang => "en" }
   %head
     %script{ :src => "/js/jquery-3.1.1.js" }
@@ -142,7 +141,9 @@
                   %li
                     %a{ :href => "/report/#{@report.id}/edit" } Edit Report Information
                   %li
-                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report
+                    %a{ :href => "/report/#{@report.id}/generate/report" } Generate Docx Report
+                  %li
+                    %a{ :href => "/report/#{@report.id}/generate/summary" } Generate Excel Summary
                     %li.nav-header Findings
                   %li
                     %a{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
