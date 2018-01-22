@@ -65,21 +65,21 @@
                               - else
                                 -@class=""
                               %tr{ :class => "#{@class}" }
-                                %td.searchable{ :"data-index" => "#{finding.title.downcase.gsub(' ','')}", :style => "width: 1%" }
+                                %td.searchable{ :"data-index" => "#{finding.title.downcase}", :style => "width: 1%" }
                                   %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}" }
-                                %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase}" }
                                   #{finding.title}
                                 - if @dread
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     #{finding.dread_total}
                                 - elsif @cvss
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     #{finding.cvss_total}
                                 - elsif @cvssv3
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     #{finding.cvss_total}
                                 - else
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     - risk_t = ["Informational","Low","Moderate","High","Critical"]
                                     - if finding.risk
                                       #{risk_t[finding.risk]}
@@ -88,7 +88,7 @@
                                       - scr = 4 if dread_total == 50
                                       #{risk_t[scr]}
                                 - if @master
-                                  %td.searchable{ :style => "text-align:center; width: 20%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                  %td.searchable{ :style => "text-align:center; width: 20%", :"data-index" => "#{finding.title.downcase}" }
                                     %a.btn.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
                                       %i.icon-pencil.icon-white{ :title => "Edit" }
                                     %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
@@ -249,10 +249,10 @@
                   %td{ :style => "text-align:center" }
                     #{finding.dread_total}
                 - elsif @cvss
-                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
                     #{finding.cvss_total}
                 - elsif @cvssv3
-                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
                     #{finding.cvss_total}
                 - elsif @riskmatrix
                   %td{ :style => "text-align:center" }
