@@ -253,12 +253,6 @@ def generate_excel_xslt(excel)
   shared_strings_noko = clean_shared_strings('æ', shared_strings_noko)
   # because we cleaned the shared string, we need to update it in the returned xslts_components
   xslts_components['xl/sharedStrings.xml'] = @top + shared_strings_noko.to_xml + @bottom
-  i = 1
-  # debug
-  xslts_components.each do |_sheet, component|
-    i += 1
-    File.open("/mnt/Kali_Shared/excel_xslt_#{i}", 'w') { |file| file.write(component) }
-  end
   # return the xslts
   xslts_components
 end
