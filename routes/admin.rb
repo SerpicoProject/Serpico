@@ -567,7 +567,6 @@ post '/admin/templates/edit' do
   if params[:template_type].split(' ')[0].casecmp('word').zero?
     docx_location = "./templates/#{rand(36**36).to_s(36)}.docx"
     File.open(docx_location, 'wb') { |f| f.write(params[:file][:tempfile].read) }
-    File.open('/mnt/Kali_Shared/original_xml.xml', 'w') { |file| file.write(params[:file][:tempfile].read) }
 
     xslt_file_location = "./templates/docx_#{rand(36**36).to_s(36)}.xslt"
     error = false
