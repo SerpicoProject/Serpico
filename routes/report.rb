@@ -1184,7 +1184,6 @@ get '/report/:id/generate/:template_type' do
   end
   # we bring all xml together
   report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
-  File.open('/mnt/Kali_Shared/report_xml_will.xml', 'w') { |file| file.write(report_xml) }
   ####### WORD GENERATION PART ###########################
   # This part is used if the generated document is a docx
 
@@ -1352,7 +1351,6 @@ get '/report/:id/generate/:template_type' do
         i += 1
         previous_index = original_index
       end
-      File.open("/mnt/Kali_Shared/excel_final_xml_#{j}", 'w') { |file| file.write(worksheet_to_repair_xml) }
       # we modify the excel with the xslt produced worksheet
       archive_modify(rand_file_name, worksheet_to_repair_xml.to_s, archive_path)
     end
