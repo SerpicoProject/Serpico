@@ -1321,9 +1321,7 @@ get '/report/:id/generate/:template_type' do
 
     # archive_path is something like xl/worksheets/sheetX.xml
     # xslt_path is something like ./templates/excel_worksheet_n91g3lav51i2r4l9riw.xslt
-    j = 0
     worksheets.each do |archive_path, xslt_path|
-      j += 1
       xslt_to_transform = Nokogiri::XSLT(File.read(xslt_path))
       worksheet_to_repair_xml = xslt_to_transform.transform(Nokogiri::XML(report_xml))
       # the xslt generation produces a broken xlsx file : because it added an arbitrary number of rows the indexes of cells and rows are messed up.
