@@ -1,5 +1,5 @@
-.col-md-10
-  %form{ :method => "post" }
+.span10
+  %form{:method => 'post'}
     %br
     %h2 Create Report (or <a href="/report/import">Import</a>)
     %br
@@ -10,19 +10,19 @@
             %label.col-md-3{ :for => "report_name" }
               Title &nbsp;
           %td
-            %input#report_name{ :type => "text", :name => "report_name" }
+            %input{:type => 'text', :name => 'report_name'}
         %tr
           %td
             %label.col-md-3{ :for => "full_company_name" }
               Full Company Name &nbsp;
           %td
-            %input#full_company_name{ :type => "text", :name => "full_company_name" }
+            %input{:type => 'text', :name => 'full_company_name'}
         %tr
           %td
             %label.col-md-3{ :for => "short_company_name" }
               Short Company Name &nbsp;
           %td
-            %input#short_company_name{ :type => "text", :name => "short_company_name" }
+            %input{:type => 'text', :name => 'short_company_name'}
         %tr
         %tr
           %td
@@ -33,23 +33,20 @@
               - @assessment_types.each do |assessment_type|
                 %option #{assessment_type}
         %tr
-          %td{ :style => "width: 30%" }
-            %label.col-md-3{ :for => "report_type" }
-              Report Type
-          %td{ :style => "width: 70%" }
-            %select#report_type{ :name => "report_type" }
+          %td{:style => 'width: 30%'}
+            Docx Template
+          %td{:style => 'width: 70%'}
+            %select{ :name => "associated_docx_template" }
               - @templates.each do |template|
-                - if template.finding_template == false and template.status_template == false
-                  - if @report and template.report_type == @report.report_type
+                - if template.template_type == "Word - Report Template"
+                  - if @report and template.template_title == @report.associated_docx_template
                     %option{ :selected => "selected" } #{type}
                   - else
-                    %option #{template.report_type}
-
+                    %option #{template.template_title}
       %br
-      %input.btn.btn-default{ :type => "submit", :value => "Save" }
-      %a.btn.btn-default{ :href => "/" }
+      %input.btn.btn-default{:type => "submit", :value => "Save" }
+      %a.btn.btn-default{ :href => "/"}
         Cancel
-
     - else
       %h4
         Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-

@@ -16,7 +16,7 @@ class ReportingError < RuntimeError
   end
 end
 
-def generate_xslt(docx)
+def generate_docx_xslt(docx)
 
 # hardcoded stuff
 @top = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -33,7 +33,7 @@ def generate_xslt(docx)
 	document = ""
 	debug = false
 
-	document = read_rels(docx,"word/document.xml")
+  document = read_from_zip(docx,"word/document.xml")
 
 	# fix for curly apostrophes
 	document = document.gsub(/‘/,"'")
@@ -622,7 +622,7 @@ def white_space(document)
 	return document
 end
 
-def generate_xslt_components(docx)
+def generate_docx_xslt_components(docx)
 	# Initialize the xsl
 	@top = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<xsl:stylesheet
@@ -646,7 +646,7 @@ def generate_xslt_components(docx)
 	components = find_headers_footers(docx)
 
 	components.each do |component|
-		document = read_rels(docx,component)
+		document = read_from_zip(docx,component)
 
 		# replace {} for the sake of XSL
 		document = document.gsub("{","{{").gsub("}","}}")

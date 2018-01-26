@@ -7,35 +7,38 @@
     %table
       %tr
         %td
-          %label.col-md-3{ :for => "report_type" }
-            Report Type &nbsp;
+          %label.col-md-3{ :for => "template_title" }
+            Template Title &nbsp;
         %td
-          %input#report_type{ :type => "text", :name => "report_type", :required => true }
+          %input#template_title{ :type => "text", :name => "template_title", :required => true }
       %tr
         %td
-          %label.col-md-3{ :for => "description" }
-            File Description &nbsp;
+          %label.col-md-3{ :for => "template_description" }
+            Template Description &nbsp;
         %td
-          %input#description{ :type => "text", :name => "description" }
+          %input#template_description{ :type => "text", :name => "template_description" }
       %tr
         %td
-          %label.col-md-3{ :for => "finding_template" }
-            Finding Template &nbsp;
+          %label.col-md-3{ :for => "template_type" }
+            Template Type &nbsp;
         %td
-          %input#finding_template{ :type => "checkbox", :name => "finding_template" }
+          .control-group
+            .controls
+              %select{ :name => "template_type" }
+                %option{ :selected => "selected" }
+                  Word - Report Template
+                %option
+                  Word - Status Template
+                %option
+                  Word - Finding Template
+                %option
+                  Excel - Summary Template
       %tr
         %td
-          %label.col-md-3{ :for => "status_template" }
-            Status Template &nbsp;
+          %label.col-md-3{ :for => "template_file" }
+            Template File &nbsp;
         %td
-          %input#status_template{ :type => "checkbox", :name => "status_template" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            DOCX
-        %td
-          %input#file{ :type => "file", :name => "file" }
-
+          %input#file{:type => 'file', :name => 'file'}
     %br
     %input.btn.btn-default{ :type => "submit", :value => "Add" }
     %a.btn.btn-default{ :href => "/admin/templates" }

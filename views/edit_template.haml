@@ -4,13 +4,14 @@
   %br
 
   %form{ :method => "post", :action => "/admin/templates/edit", :enctype => "multipart/form-data" }
+    %input{:type => "text", :name => "old_template_title", :required=>true, :value => "#{@template.template_title}", type:"hidden"}
     %table
       %tr
         %td
-          %label.col-md-3{ :for => "report_type" }
-            Report Type &nbsp;
+          %label.col-md-3{ :for => "template_title" }
+            Template Description &nbsp;
         %td
-          %input#report_type{ :type => "text", :name => "report_type", :required => true, :value => "#{@template.report_type}" }
+          %input#new_template_title{ :type => "text", :name => "new_template_title", :required => true, :value => "#{@template.template_title}" }
       %tr
         %td
           %label.col-md-3{ :for => "description" }
@@ -19,20 +20,24 @@
           %input#description{ :type => "text", :name => "description", :value => "#{@template.description}" }
       %tr
         %td
-          %label.col-md-3{ :for => "finding_template" }
-            Finding Template &nbsp;
+          %label.col-md-3{ :for => "template_type" }
+            Template type &nbsp;
         %td
-          %input#finding_template{ :type => "checkbox", :name => "finding_template" }
+          .control-group
+            .controls
+              %select{ :name => "template_type" }
+                %option{ :selected => "selected" }
+                  Word - Report Template
+                %option
+                  Word - Status Template
+                %option
+                  Word - Finding Template
+                %option
+                  Excel - Summary Template
       %tr
         %td
-          %label.col-md-3{ :for => "status_template" }
-            Status Template &nbsp;
-        %td
-          %input#status_template{ :type => "checkbox", :name => "status_template" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            DOCX
+          %label.col-md-3{ :for => "template_file" }
+            Template File
         %td
           %input#file{ :type => "file", :name => "file", :required => true }
     %input{ :type => "hidden", :name => "id", :value => "#{@template.id}" }
