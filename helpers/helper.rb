@@ -60,7 +60,7 @@ def updateHyperlinks(xmlText)
   retHash["id"] = []
   i = 25
   urls.each do |url|
-    cleanUrl = url.gsub("{{", "").gsub("}}", "")
+    cleanUrl = url.gsub("{{", "").gsub("}}", "").gsub(" ","_")
     # set resourceId and xmlText
     resourceId = "r:id=\"rId#{i}\""
     xmlText = xmlText.gsub(url,"<w:hyperlink #{resourceId} w:history=\"1\"><w:r w:rsidRPr=\"00720130\"><w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr>#{cleanUrl}</w:r></w:hyperlink>")
