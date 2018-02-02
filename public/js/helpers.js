@@ -1,4 +1,31 @@
-//used to confirm deletion
+// Used to search in tables
+// credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
+function initSearch() {
+  var searchBox = document.getElementById('search');
+  var searchStyle = document.getElementById('search_style');
+
+  if (searchBox && searchStyle) {
+    // If the page loads with a value already present in the tables,
+    // lets run the search right away
+    if (searchBox.value) {
+      searchStyle.innerHTML = ".searchable:not([data-index*=\"" + searchBox.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
+    }
+
+    searchBox.addEventListener('input', function() {
+      if (!this.value) {
+        searchStyle.innerHTML = "";
+        return;
+      }
+      searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
+    });
+  }
+}
+
+$(document).ready(function(){
+  initSearch();
+});
+
+// Used to confirm deletion
 function confirmDelete(evt) {
   if (!confirm('Are you sure you want to permanently delete the selected element(s) ?')) {
     evt.preventDefault();
