@@ -7,16 +7,6 @@
             %input.form-control#search{ :type => "text", :placeholder => "Report Name Search" }
             %style#search_style
             %span.input-group-btn
-            %script{ :type=>"text/javascript" }
-              // credit to http://www.redotheweb.com/2013/05/15/client-side-full-text-search-in-css.html for this
-              var searchStyle = document.getElementById('search_style');
-              document.getElementById('search').addEventListener('input', function() {
-              if (!this.value) {
-              searchStyle.innerHTML = "";
-              return;
-              }
-              searchStyle.innerHTML = ".searchable:not([data-index*=\"" + this.value.toLowerCase().replace(/</g, '&lt;').replace(/>/g, '&rt;').replace(/"/g, '&quot;') + "\"]) { display: none; }";
-              });
             %br
             %br
             %a.btn.btn-danger#deletemultiple{ :href => "/report/remove/" }
