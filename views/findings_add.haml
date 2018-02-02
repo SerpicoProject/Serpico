@@ -45,7 +45,7 @@
                         - @findings.each do |finding|
                           - if finding.type == type
                             %tr
-                              %td.searchable{ :style => "width: 80%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                              %td.searchable{ :style => "width: 80%", :"data-index" => "#{finding.title.downcase}" }
                                 - if @autoadd
                                   - if @autoadd_findings.include?(finding.id.to_s) and not @dup_findings.include?(finding.id)
                                     %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}", :checked => "" }
@@ -69,7 +69,7 @@
                                           .label.label-default #{ip}
                                         - iplist = @autoadd_hosts[x].join(",")
                                         %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{iplist}" }
-                              %td.searchable{ :style => "width: 20%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                              %td.searchable{ :style => "width: 20%", :"data-index" => "#{finding.title.downcase}" }
                                 - if @master
                                   %a.btn.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
                                     %i.icon-pencil.icon-white{ :title => "Edit" }
