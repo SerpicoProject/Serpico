@@ -59,9 +59,9 @@
         %label.control-label{ :for => "effort" } Remediation Effort
         .controls
           %select#effort{ :name => "effort" }
-            %option LOW
-            %option MODERATE
-            %option HARD
+            %option Quick
+            %option Planned
+            %option Involved
     - elsif @cvss
       .control-group
         %label.control-label{ :for => "attack_vector" }
