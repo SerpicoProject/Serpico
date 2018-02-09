@@ -457,7 +457,7 @@ def cvss(data, is_cvssv3)
 		c2_vs += "C:P/"
 	else
 	    cvss_c = 0.660
-		c2_vs += "C:C"
+		c2_vs += "C:C/"
 	end
 	if i == "none"
 	    cvss_i = 00
