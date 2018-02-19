@@ -34,6 +34,8 @@
                       %table{ :style => "width: 100%" }
                         - @findings.each do |finding|
                           - if finding.type == type
+                            - if @languages and @languages.size > 1
+                              - next unless (finding.language == @report.language) or (@report.language == "English" and finding.language == nil)
                             %tr
                               %td.searchable{ :style => "width: 80%", :"data-index" => "#{finding.title.downcase}" }
                                 - if @autoadd

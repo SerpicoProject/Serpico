@@ -23,6 +23,7 @@ end
 # Create a new templated finding
 get '/master/findings/new' do
   @master = true
+  @languages = config_options["languages"]
   @dread = config_options["dread"]
   @cvss = config_options["cvss"]
   @cvssv3 = config_options["cvssv3"]
@@ -102,6 +103,7 @@ end
 # Edit the templated finding
 get '/master/findings/:id/edit' do
   @master = true
+  @languages = config_options["languages"]
   @dread = config_options["dread"]
   @cvss = config_options["cvss"]
   @cvssv3 = config_options["cvssv3"]

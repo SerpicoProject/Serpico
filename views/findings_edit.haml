@@ -30,6 +30,17 @@
             %input{ :type=>"checkbox", :name => "approved", :checked=>"checked" }
           - else
             %input{ :type=>"checkbox", :name => "approved" }
+    - if @master
+      - if @languages and @languages.size > 1
+        .control-group
+          %label.control-label{ :for => "language" } Language Setting
+          .controls
+            %select#language{ :name => "language" }
+              - @languages.each do |type|
+                - if @finding.language == type
+                  %option{ :selected => "selected" } #{type}
+                - else
+                  %option #{type}
       - if @vulnmap
         .control-group
           %label.control-label{ :for => "existingvulnmaps" } Vuln IDs mapped to this finding
@@ -663,7 +674,7 @@
             {{ URL }}
           %p
             If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
-            %br            
+            %br
           %h2
             &lt;&lt;CUSTOMER&gt;&gt;
           %p

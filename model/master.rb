@@ -87,6 +87,8 @@ class TemplateFindings
     property :severity_rationale, String, :length => 20000, :required => false
     property :likelihood_rationale, String, :length => 20000, :required => false
 
+    property :language, String, :required => false
+
 end
 
 class Findings
@@ -176,6 +178,7 @@ class Findings
     property :severity_rationale, String, :length => 20000, :required => false
     property :likelihood_rationale, String, :length => 20000, :required => false
 
+    property :language, String, :required => false
 end
 
 class TemplateReports
@@ -349,7 +352,7 @@ class Reports
     property :user_defined_variables, String, :length => 10000
     property :scoring, String, :length => 100
 
-
+    property :language, String, :required => false
 end
 
 class Attachments

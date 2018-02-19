@@ -22,6 +22,18 @@
                         %option{ :selected => "selected" } #{template.report_type}
                       - else
                         %option #{template.report_type}
+            - if @languages and @languages.size > 1
+              %tr
+                %td{ :style => "width: 30%" }
+                  %label.col-md-3{ :for => "language" }
+                    Language
+                %td{ :style => "width: 70%" }
+                  %select#language{ :name => "language" }
+                    - @languages.each do |language|
+                      - if language == @report.language
+                        %option{ :selected => "selected" } #{language}
+                      - else
+                        %option #{language}
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "report_name" }

@@ -216,6 +216,7 @@ post '/admin/config' do
   ft = params["finding_types"].split(",")
   udv = params["user_defined_variables"].split(",")
   rat = params["report_assessment_types"].split(",")
+  lang = params["languages"].gsub(' ','').split(",")
 
   if params["effort"]
     config_options["effort"] = params["effort"].split(",")
@@ -225,6 +226,7 @@ post '/admin/config' do
   config_options["user_defined_variables"] = udv
   config_options["port"] = params["port"]
   config_options["report_assessment_types"] = rat
+  config_options["languages"] = lang
   config_options["use_ssl"] = params["use_ssl"] ? true : false
   config_options["bind_address"] = params["bind_address"]
   config_options["ldap"] = params["ldap"] ? true : false

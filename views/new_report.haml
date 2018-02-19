@@ -11,6 +11,15 @@
               Title &nbsp;
           %td
             %input#report_name{ :type => "text", :name => "report_name" }
+        - if @languages
+          %tr
+            %td
+              %label.col-md-3{ :for => "language" }
+                Language &nbsp;
+            %td
+              %select#language{ :name => "language" }
+                - @languages.each do |lang|
+                  %option #{lang}
         %tr
           %td
             %label.col-md-3{ :for => "full_company_name" }

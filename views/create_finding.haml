@@ -11,6 +11,15 @@
       %label.control-label{ :for => "title" } Title
       .controls
         %input#title{ :type => "text", :name => "title", :value => "" }
+    - if @master
+      - if @languages and @languages.size > 1
+        .control-group
+          %label.control-label{ :for => "language" } Language Setting
+          .controls
+            %select#language{ :name => "language" }
+              - if @languages
+                - @languages.each do |type|
+                  %option #{type}
     - if !@master
       .control-group
         %label.control-label{ :for => "assessment_type" } Assessment Type
@@ -467,7 +476,7 @@
             {{ URL }}
           %p
             If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
-            %br            
+            %br
           %h2
             &lt;&lt;CUSTOMER&gt;&gt;
           %p

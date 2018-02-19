@@ -28,6 +28,7 @@ end
 get '/report/new' do
   @templates = Xslt.all
   @assessment_types = config_options["report_assessment_types"]
+  @languages = config_options["languages"]
   haml :new_report, :encode_html => true
 end
 
@@ -98,7 +99,7 @@ get '/report/:id/restore_attachments' do
   if @report == nil
     return "No Such Report"
   end
-  
+
   haml :restore_attachments, :encode_html => true
 end
 
@@ -391,6 +392,7 @@ get '/report/:id/edit' do
   @templates = Xslt.all(:order => [:report_type.asc])
   @plugin_side_menu = get_plugin_list
   @assessment_types = config_options["report_assessment_types"]
+  @languages = config_options["languages"]
   @risk_scores = ["Risk","DREAD","CVSS","CVSSv3","RiskMatrix"]
 
   if @report == nil
@@ -815,6 +817,8 @@ get '/report/:id/findings_add' do
   if @report == nil
     return "No Such Report"
   end
+
+  @languages = config_options["languages"]
 
   # Query for all Findings
   @findings = TemplateFindings.all(:approved => true, :order => [:title.asc])
@@ -1455,20 +1459,20 @@ get '/report/:id/generate' do
   rels_file =  read_rels(rand_file, "word/_rels/document.xml.rels")
   # Noko syntax rels
   noko_rels =  Nokogiri::XML(rels_file)
-  urls = hyperlinks["urls"] 
+  urls = hyperlinks["urls"]
   id = hyperlinks["id"]
   for i in 0..id.length - 1
     url =  urls[i]
     cid =  id[i]
     noko_rels.root.first_element_child.after("<Relationship Id=\"#{cid}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"#{url.gsub(' ','')}\" TargetMode=\"External\"/>")
   end
- 
+
   content_to_write = noko_rels.to_xml(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML).strip
   #Edit Relationships file
   write_rels(rand_file, "word/_rels/document.xml.rels", content_to_write)
   # Update hyperlinks
   docx = hyperlinks["xmlText"]
- 
+
   docx_modify(rand_file, docx,'word/document.xml')
 
 	list_components.each do |name, xml|
