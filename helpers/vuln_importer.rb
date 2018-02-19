@@ -122,7 +122,7 @@ def parse_nessus_xml(xml,threshold)
       host = hostnode["name"]
     end
     hostnode.css("ReportItem").each do |itemnode|
-      if (itemnode["port"] != "0" && itemnode["severity"] >= threshold)
+      if (itemnode["severity"] >= threshold)
 
         # create a temporary finding object
         finding = Findings.new()
