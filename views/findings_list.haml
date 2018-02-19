@@ -25,9 +25,9 @@
             %br
             %br
             %div
-              %label.btn.btn-outline-primary#checkall{ :autocomplete => "off" }
-                %input.checkbox#checkall{ :type => "checkbox", :hidden =>  true }
-                Select all
+              %th{ :style => "width: 20%" }
+                Select All Findings &nbsp;&nbsp;&nbsp;&nbsp;
+                %input.checkbox#checkall{ :type => "checkbox" }
               %a.btn.btn-danger#deletemultiple{ :href => "/master/findings/delete/" }
                 Delete selected
             %br
