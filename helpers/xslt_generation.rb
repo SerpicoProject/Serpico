@@ -18,17 +18,18 @@ end
 
 def generate_xslt(docx)
 
-# hardcoded stuff
+# Initialize the xsl
 @top = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsl:stylesheet
-  version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <xsl:output method="xml" indent="yes"/>
-  <xsl:template match="/">
-  <xsl:variable name="low" select="\'abcdefghijklmnopqrstuvwxyz\'" /><xsl:variable name="up" select="\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'" />
-    <xsl:processing-instruction name="mso-application">
-      <xsl:text>progid="Word.Document"</xsl:text>
-    </xsl:processing-instruction>'
+version="1.0"
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:output method="xml" indent="yes"/>
+<xsl:template match="/">
+<xsl:variable name="low" select="\'abcdefghijklmnopqrstuvwxyz\'" /><xsl:variable name="up" select="\'ABCDEFGHIJKLMNOPQRSTUVWXYZ\'" />
+<xsl:processing-instruction name="mso-application">
+<xsl:text>progid="Word.Document"</xsl:text>
+</xsl:processing-instruction>'
+@bottom = '</xsl:template></xsl:stylesheet>'
 
 	document = ""
 	debug = false
@@ -601,14 +602,24 @@ def generate_xslt(docx)
 
 
 
-###########################
+  ###########################
 
-# UNUSED
-#	≠
-###############################
+  # UNUSED
+  #	≠
+  ###############################
 
 	# final changes placed here
 	document = white_space(document)
+  # add in xslt footer
+  document = document + @bottom
+
+  #this if for xpathes/xslt errors. Trying to transform with empty xml will give errors if xpathes or xslt syntax is wrong
+  begin
+    transformed_document = Nokogiri::XSLT(document).transform(Nokogiri::XML(''))
+  rescue Exception => e
+    error = e.message
+    raise ReportingError.new("This exception was rescued while verificating the main XSLT well-formedness: <br/><br/>#{CGI.escapeHTML(error)}")
+  end
 
 	#return the xslt
 	return document
@@ -720,7 +731,14 @@ def generate_xslt_components(docx)
 
 		# add in xslt footer
 		document = document + @bottom
-
+    #Trying to catch most xml/xslt/xpathes errors
+    #this if for xml/xslt errors. Trying to transform with empty xml will give errors if xpathes or xslt syntax is wrong
+    begin
+      transformed_document = Nokogiri::XSLT(document).transform(Nokogiri::XML(''))
+    rescue Exception => e
+      error = e.message
+      raise ReportingError.new("This exception was rescued while verificating one the XSLT header or footer XSLT well-formedness: <br/><br/>#{CGI.escapeHTML(error)}")
+    end
 		list_components_xslt[component] = document
 	end
 

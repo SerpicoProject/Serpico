@@ -1388,6 +1388,14 @@ get '/report/:id/generate' do
   end
   #we bring all xml together
   report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
+  noko_report_xml = Nokogiri::XML(report_xml)
+  #no use to go on with report generation if report XML is malformed
+  if !noko_report_xml.errors.empty?
+    noko_report_xml.errors.each do |error|
+      error = CGI.escapeHTML(error.to_s)
+    end
+    return "<p>The following error(s) were found in report XML file : </p>#{noko_report_xml.errors.join('<br/>')}<p>This is most often because of malformed metamarkup in findings."
+  end
 
   xslt_elem = Xslt.first(:report_type => @report.report_type)
 
