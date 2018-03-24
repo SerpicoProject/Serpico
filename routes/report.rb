@@ -431,7 +431,7 @@ post '/report/:id/edit' do
 
   unless @report.update(data)
     error = ""
-    @finding.errors.each do |f|
+    @report.errors.each do |f|
       error = error + f.to_s() + "<br>"
     end
     return "<p>The following error(s) were found while trying to update : </p>#{error}"
