@@ -436,7 +436,14 @@ post '/report/:id/edit' do
   data = url_escape_hash(request.POST)
 
   @report = get_report(id)
-  @report = @report.update(data)
+
+  unless @report.update(data)
+    error = ""
+    @report.errors.each do |f|
+      error = error + f.to_s() + "<br>"
+    end
+    return "<p>The following error(s) were found while trying to update : </p>#{error}"
+  end
 
   redirect to("/report/#{id}/edit")
 end
@@ -1032,11 +1039,13 @@ post '/report/:id/findings/:finding_id/edit' do
     data = cvss(data, true)
   end
 
-  #test for datamapper errors
-  if @finding.update(data)
-    # Update the finding with templated finding stuff
-  else
-      return "<p>The following error(s) were found while trying to update : </p>#{finding.errors.join('<br/>')}"
+  # Update the finding with templated finding stuff
+  unless @finding.update(data)
+    error = ""
+    @finding.errors.each do |f|
+      error = error + f.to_s() + "<br>"
+    end
+    return "<p>The following error(s) were found while trying to update : </p>#{error}"
   end
 
   # because of multiple scores we need to make sure all are set
