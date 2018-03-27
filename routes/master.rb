@@ -38,6 +38,9 @@ end
 post '/master/findings/new' do
   data = url_escape_hash(request.POST)
 
+  @available_languages = config_options['languages']
+  return "Language \"#{data["language"]}\" is absent from the config file" if !@available_languages.include?(data["language"])
+
   if(config_options["dread"])
     data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
   end
@@ -62,6 +65,9 @@ post '/master/findings/new' do
     data['risk'] = severity_val + likelihood_val
   end
 
+  # split out language
+  language = data['language']
+  data.delete('language')
   # split out any nessus mapping data
   nessusdata = Hash.new()
   nessusdata["pluginid"] = data["pluginid"]
@@ -72,12 +78,10 @@ post '/master/findings/new' do
   vulnmapdata["msf_ref"] = data["msf_ref"]
   data.delete("msf_ref")
 
-  @finding = TemplateFindings.new(data)
-  @finding.save
+  @finding = TemplateFindings.create(data)
 
-  # find the id of the newly created finding so we can link mappings to it
-  @newfinding = TemplateFindings.first(:title => data["title"], :order => [:id.desc], :limit => 1)
-
+  # save translation
+  @finding.translations.create(:finding => @finding, :language => language, :title => data['title'], :poc => data['poc'], :overview => data['overview'], :remediation => data['remediation'])
   # save mapping data
   if (config_options["nessusmap"] && nessusdata["pluginid"])
     nessusdata["templatefindings_id"] = @finding.id
@@ -103,7 +107,6 @@ end
 # Edit the templated finding
 get '/master/findings/:id/edit' do
   @master = true
-  @languages = config_options["languages"]
   @dread = config_options["dread"]
   @cvss = config_options["cvss"]
   @cvssv3 = config_options["cvssv3"]
@@ -112,6 +115,7 @@ get '/master/findings/:id/edit' do
   @burpmap = config_options["burpmap"]
   @vulnmap = config_options["vulnmap"]
 
+  @available_languages = config_options['languages']
   # Check for kosher name in report name
   id = params[:id]
 
@@ -157,9 +161,6 @@ post '/master/findings/:id/edit' do
   else
     data["approved"] = false
   end
-
-  # to prevent title's from degenerating with &gt;, etc. [issue 237]
-  data["title"] = data["title"].gsub('&amp;','&')
 
   if(config_options["dread"])
     data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
@@ -207,8 +208,31 @@ post '/master/findings/:id/edit' do
   data.delete("msf_ref")
   vulnmappingdata["templatefindings_id"] = id
 
+    # split out and save any translation data
+    translated_parts_from_findings = @finding.translations.all(:finding_id => id)
+    translated_parts_from_findings.each do |translated_parts_from_finding|
+      translated_finding_data = {}
+      if data["title_#{translated_parts_from_finding.language}"].empty?
+        status 500
+        return "Title can't be empty"
+      end
+      # to prevent title's from degenerating with &gt;, etc. [issue 237]
+      translated_finding_data['title'] = data["title_#{translated_parts_from_finding.language}"].to_s.gsub('&amp;', '&')
+      data.delete("title_#{translated_parts_from_finding.language}")
+      translated_finding_data["overview"] = data["overview_#{translated_parts_from_finding.language}"]
+      data.delete("overview_#{translated_parts_from_finding.language}")
+      translated_finding_data["poc"] = data["poc_#{translated_parts_from_finding.language}"]
+      data.delete("poc_#{translated_parts_from_finding.language}")
+      translated_finding_data["remediation"] = data["remediation_#{translated_parts_from_finding.language}"]
+      data.delete("remediation_#{translated_parts_from_finding.language}")
+      if !translated_parts_from_finding.update(translated_finding_data)
+        return "<p>The following error(s) were found while trying to update translated finding data: </p><p>#{translated_parts_from_finding.errors.full_messages.flatten.join(', ')}<p>"
+      end
+    end
   # Update the finding with templated finding stuff
-  @finding.update(data)
+  if !@finding.update(data)
+  return "<p>The following error(s) were found while trying to update finding: </p><p>#{@finding.errors.full_messages.flatten.join(', ')}<p>"
+  end
 
   # save nessus mapping data to db
   if(config_options["nessusmap"])
@@ -231,6 +255,53 @@ post '/master/findings/:id/edit' do
   redirect to("/master/findings")
 end
 
+post '/master/findings/:id/add_language' do
+  id = params[:id]
+
+  #check if finding exist
+  finding = TemplateFindings.first(:id => id)
+  return "No Such Finding #{id}" if finding.nil?
+
+  error = mm_verify(request.POST)
+  return error if error.size > 1
+  data = url_escape_hash(request.POST)
+
+  @available_languages = config_options['languages']
+  return "Language \"#{data["language"]}\" is absent from the config file" if !@available_languages.include?(data["language"])
+
+
+  finding_translation = finding.translations.first(:language => data["language"])
+  return 'The translation already exists' if !finding_translation.nil?
+
+  #if the finding language is undefined, we update the language "undefined"
+  if finding.translations.empty?
+    translation = finding.translations.create(:finding => finding, :language => data["language"], :title => finding.title, :overview => finding.overview, :poc => finding.poc, :remediation => finding.remediation)
+  else
+    translation = finding.translations.create(:finding => finding, :language => data["language"])
+  end
+  return "Error while creating translation : #{translation.errors.full_messages.flatten.join(', ')}" if !translation.saved?
+  redirect to("/master/findings/#{id}/edit")
+end
+
+get '/master/findings/:id/define_language/:language' do
+  id = params[:id]
+  language = params[:language]
+
+  finding = TemplateFindings.first(:id => id)
+  return "No Such Finding #{id}" if finding.nil?
+
+  @available_languages = config_options['languages']
+  return "Language \"#{data["language"]}\" is absent from the config file" if !@available_languages.include?(language)
+
+  finding_translation = finding.translations.first(:language => language)
+  return 'The translation already exists' if !finding_translation.nil?
+
+  finding_translation = finding.translations.first(:language => "undefined")
+  finding_translation.update(:language => language)
+  return "Error while updating translations : #{translation.errors.full_messages.flatten.join(', ')}" if !translation.saved?
+
+  redirect to("/master/findings/#{id}/edit")
+end
 # Delete a template finding
 get '/master/findings/delete/:id' do
   id = params[:id]
@@ -239,6 +310,11 @@ get '/master/findings/delete/:id' do
     finding = TemplateFindings.first(id: current_id)
     return "No Such Finding : #{current_id}" if finding.nil?
 
+        # delete the entries
+        finding.translations.each do |translation|
+          translation.destroy
+        end
+        
     # delete the entries
     finding.destroy
 

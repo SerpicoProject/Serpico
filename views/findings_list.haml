@@ -58,7 +58,10 @@
                                 %td.searchable{ :"data-index" => "#{finding.title.downcase}", :style => "width: 1%" }
                                   %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}" }
                                 %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase}" }
-                                  #{finding.title}
+                                  - if !finding.translations.first.nil?
+                                    #{finding.translations.first.title}
+                                  - else
+                                    #{finding.title}
                                 - if @dread
                                   %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     #{finding.dread_total}

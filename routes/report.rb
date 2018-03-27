@@ -27,8 +27,12 @@ end
 # Create a report
 get '/report/new' do
   @templates = Xslt.all
+  if config_options['languages']
+    @languages = config_options['languages']
+  else
+    return "No language found in your config.json file. Please, add your langagues in the config.json file."
+  end
   @assessment_types = config_options["report_assessment_types"]
-  @languages = config_options["languages"]
   haml :new_report, :encode_html => true
 end
 
@@ -392,7 +396,11 @@ get '/report/:id/edit' do
   @templates = Xslt.all(:order => [:report_type.asc])
   @plugin_side_menu = get_plugin_list
   @assessment_types = config_options["report_assessment_types"]
-  @languages = config_options["languages"]
+  if config_options['languages']
+    @languages = config_options['languages']
+  else
+    return "No language found in your config.json file. Please, add your langagues in the config.json file."
+  end
   @risk_scores = ["Risk","DREAD","CVSS","CVSSv3","RiskMatrix"]
 
   if @report == nil
@@ -586,8 +594,6 @@ get '/report/:id/udo/:udo_id/delete' do
   end
   redirect to("/report/#{@id}/udo/manage")
 end
-
-
 
 #Edit user defined variable
 get '/report/:id/user_defined_variables' do
@@ -821,7 +827,7 @@ get '/report/:id/findings_add' do
   @languages = config_options["languages"]
 
   # Query for all Findings
-  @findings = TemplateFindings.all(:approved => true, :order => [:title.asc])
+  @findings = TemplateFindings.all(order: [:title.asc], :translations => {:language => [@report.language]}) + TemplateFindings.all(order: [:title.asc], :translations => nil )
 
   haml :findings_add, :encode_html => true
 end
@@ -845,9 +851,18 @@ post '/report/:id/findings_add' do
 	params[:finding].each do |finding|
 		templated_finding = TemplateFindings.first(:id => finding.to_i)
 
+        # Set translation in approriate attributes
+        if !templated_finding.translations.first(:language => @report.language).nil?
+          templated_finding.title = templated_finding.translations.first(:language => @report.language).title
+          templated_finding.overview = templated_finding.translations.first(:language => @report.language).overview
+          templated_finding.poc = templated_finding.translations.first(:language => @report.language).poc
+          templated_finding.remediation = templated_finding.translations.first(:language => @report.language).remediation
+        end
+    
 		templated_finding.id = nil
 		attr = templated_finding.attributes
 		attr.delete(:approved)
+		attr.delete(:translations)
 		attr["master_id"] = finding.to_i
 		@newfinding = Findings.new(attr)
 		@newfinding.report_id = id
@@ -1017,8 +1032,12 @@ post '/report/:id/findings/:finding_id/edit' do
     data = cvss(data, true)
   end
 
-  # Update the finding with templated finding stuff
-  @finding.update(data)
+  #test for datamapper errors
+  if @finding.update(data)
+    # Update the finding with templated finding stuff
+  else
+      return "<p>The following error(s) were found while trying to update : </p>#{finding.errors.join('<br/>')}"
+  end
 
   # because of multiple scores we need to make sure all are set
   # => leave it up to the user to make the calculation if they switch mid report
