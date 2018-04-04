@@ -59,7 +59,7 @@ end
 if !Pathname("verify/language_db").exist?
   @findings = TemplateFindings.all(:language.not => nil)
   @findings.each do |finding|
-    finding.translations.create(:finding => finding, :language => finding.language, :title => finding.title, :overview =>finding.overview, :poc => finding.poc, :remediation => finding.remediation)
+    finding.translations.create(:finding => finding, :language => finding.language, :title => finding.title, :overview =>finding.overview, :poc => finding.poc, :remediation => finding.remediation, :references => finding.references)
   end
   File.open("verify/language_db", "w") {}
   puts "|+| [#{DateTime.now.strftime('%d/%m/%Y %H:%M')}] Updated database"

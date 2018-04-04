@@ -1014,13 +1014,29 @@
           .controls
             %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "remediation"}
               #{meta_markup(@finding.remediation)}
-    .control-group
-      %label.control-label{ :for => "references" } References (One Per Line)
-      .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "5", :name => "references" }
-          - if @finding
-            - if @finding.references
-              #{meta_markup(@finding.references)}
+    - if @report
+      .control-group
+        %label{ :class => "control-label", :for => "references" } References (One Per Line)
+        .controls
+          %textarea{ :rows => '5', :class => 'input-xxlarge allowMarkupShortcut', :name => 'references'}
+            - if @finding
+              - if @finding.references
+                #{meta_markup(@finding.references)}
+    - if @master
+      - @finding.translations.each do |translation|
+        .control-group{:class => "language_#{translation.language}", :style => "display: none;"}
+          %label{ :class => "control-label", :for => "references" } References (One Per Line) (#{translation.language})
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "references_#{translation.language}", :id => "references"}
+              #{meta_markup(translation.references)}
+      - if @finding.translations.empty?
+        .control-group
+          %label.control-label{ :for => "references" } References (One Per Line)
+          .controls
+            %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "5", :name => "references" }
+              - if @finding
+                - if @finding.references
+                  #{meta_markup(@finding.references)}
     - if !@master
       .control-group
         %label.control-label{ :for => "notes" } Notes Data

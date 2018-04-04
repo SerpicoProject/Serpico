@@ -864,6 +864,7 @@ post '/report/:id/findings_add' do
           templated_finding.overview = templated_finding.translations.first(:language => @report.language).overview
           templated_finding.poc = templated_finding.translations.first(:language => @report.language).poc
           templated_finding.remediation = templated_finding.translations.first(:language => @report.language).remediation
+          templated_finding.references = templated_finding.translations.first(:language => @report.language).references
         end
     
 		templated_finding.id = nil

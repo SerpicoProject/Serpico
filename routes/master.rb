@@ -225,6 +225,8 @@ post '/master/findings/:id/edit' do
       data.delete("poc_#{translated_parts_from_finding.language}")
       translated_finding_data["remediation"] = data["remediation_#{translated_parts_from_finding.language}"]
       data.delete("remediation_#{translated_parts_from_finding.language}")
+      translated_finding_data["references"] = data["references_#{translated_parts_from_finding.language}"]
+      data.delete("references_#{translated_parts_from_finding.language}")
       if !translated_parts_from_finding.update(translated_finding_data)
         return "<p>The following error(s) were found while trying to update translated finding data: </p><p>#{translated_parts_from_finding.errors.full_messages.flatten.join(', ')}<p>"
       end
@@ -275,7 +277,7 @@ post '/master/findings/:id/add_language' do
 
   #if the finding language is undefined, we update the language "undefined"
   if finding.translations.empty?
-    translation = finding.translations.create(:finding => finding, :language => data["language"], :title => finding.title, :overview => finding.overview, :poc => finding.poc, :remediation => finding.remediation)
+    translation = finding.translations.create(:finding => finding, :language => data["language"], :title => finding.title, :overview => finding.overview, :poc => finding.poc, :remediation => finding.remediation, :references => finding.references)
   else
     translation = finding.translations.create(:finding => finding, :language => data["language"])
   end

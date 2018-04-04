@@ -100,6 +100,7 @@ end
     property :overview, String, length: 20_000, required: false
     property :poc, String, length: 20_000, required: false
     property :remediation, String, length: 20_000, required: false
+    property :references, String, length: 20_000, required: false
   
     belongs_to :finding, 'TemplateFindings', required: true
   end
