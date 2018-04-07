@@ -165,6 +165,31 @@ if !templates
 	# open up a file handle and write the attachment
 	File.open(xslt_file, 'wb') {|f| f.write(xslt) }
 
+
+  # Add Default NIST800 Template ------------------------
+	datax = Hash.new
+	datax["docx_location"] = "#{docx}"
+	datax["xslt_location"] = "#{xslt_file}"
+	datax["description"] = 	"Default NIST800 Report"
+	datax["report_type"] = "Default NIST800 Report"
+	report = Xslt.new(datax)
+	report.save
+
+	puts "Adding the Serpico Default NIST800 Template"
+
+	xslt_file = "./templates/#{rand(36**36).to_s(36)}.xslt"
+  docx = "./templates/Default NIST800 Report.docx"
+
+	xslt = generate_xslt(docx)
+	if xslt =~ /Error file DNE/
+		return "ERROR!!!!!!"
+	end
+
+	# open up a file handle and write the attachment
+	File.open(xslt_file, 'wb') {|f| f.write(xslt) }
+
+  # End NIST Template -----------------------------------
+
 	# delete the file data from the attachment
 	datax = Hash.new
 	datax["docx_location"] = "#{docx}"
