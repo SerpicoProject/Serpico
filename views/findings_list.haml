@@ -62,6 +62,13 @@
                                 - if @dread
                                   %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     #{finding.dread_total}
+
+
+                                  -#-------------------- set NIST800 rating --------------------#-
+                                - elsif @nist800
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                    #{finding.nist_rating}
+
                                 - elsif @cvss
                                   %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
                                     #{finding.cvss_total}
@@ -102,6 +109,22 @@
                   end
                 end
                 labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
+              elsif @nist800
+                @findings.each do |finding|
+                  next unless finding
+                  if finding.nist800_total >= 120 
+                    vulns["critical"] += 1
+                  elsif finding.nist800_total >= 80 and finding.nist800_total <= 90
+                    vulns["severe"] += 1
+                  elsif finding.nist800_total >= 30 and finding.nist800_total <= 60
+                    vulns["moderate"] += 1
+                  elsif finding.nist800_total >= 1 and finding.nist800_total <= 20
+                    vulns["low"] += 1
+                  else finding.nist800_total == 0
+                    vulns["informational"] += 1
+                  end
+                end
+                labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational"}
               elsif @cvss
                 if @cvssv2_scoring_override
                   @findings.each do |finding|
@@ -165,13 +188,22 @@
               :plain
                 <script src= '/js/d3.js'></script>
                 <script type= "text/javascript">
+                  if(#{@nist800}){
+                  var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}},{"label":"#{labels["label_5"]}", "value": #{vulns["informational"]}}];
+                  }else{
                   var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
+                  }
                   var w = 250;
                   var h = 250;
                   var r = h/2;
                   var iw = 60;
-                  var color = d3.scale.ordinal()
-                    .range(['#7030A0', '#DC322F', '#F89406', '#0088CC']);
+                  if(#{@nist800}){
+                    var color = d3.scale.ordinal()
+                      .range(['#c00000', '#ed7d31', '#0070c0', '#00b050', '#bfbfbf']);
+                  }else{
+                    var color = d3.scale.ordinal()
+                      .range(['#7030A0', '#DC322F', '#F89406', '#0088CC', '#008000']);
+                  }
                   var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
                   var pie = d3.layout.pie().value(function(d){return d.value;});
                   var arc = d3.svg.arc().innerRadius(r - iw).outerRadius(r);
@@ -238,6 +270,13 @@
                 - if @dread
                   %td{ :style => "text-align:center" }
                     #{finding.dread_total}
+                  
+
+                  -#-------------------- display risk score NIST800 in current findings section --------------------#-
+                - elsif @nist800
+                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                    #{finding.nist_rating}
+
                 - elsif @cvss
                   %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
                     #{finding.cvss_total}

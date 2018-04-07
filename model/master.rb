@@ -27,6 +27,7 @@ class TemplateFindings
     property :approved, Boolean, :required => false, :default => true
     property :risk, Integer, :required => false
     property :affected_hosts, String, :length => 20000, :required => false
+
     # CVSSv2
     property :av, String, :required => false
     property :ac, String, :required => false
@@ -87,8 +88,15 @@ class TemplateFindings
     property :severity_rationale, String, :length => 20000, :required => false
     property :likelihood_rationale, String, :length => 20000, :required => false
 
-    property :language, String, :required => false
+    # NIST800
+    property :nist_impact, String, :required => false
+    property :nist_likelihood, String, :required => false
+    property :nist800_total, Float, :required => false
+    property :impact_val, Float, :required => false
+    property :likelihood_val, Float, :required => false
+    property :nist_rating, String, :required => false
 
+    property :language, String, :required => false
 end
 
 class Findings
@@ -177,6 +185,14 @@ class Findings
     property :likelihood, String, :required => false
     property :severity_rationale, String, :length => 20000, :required => false
     property :likelihood_rationale, String, :length => 20000, :required => false
+
+    # NIST800
+    property :nist_impact, String, :required => false
+    property :nist_likelihood, String, :required => false
+    property :nist800_total, Float, :required => false
+    property :impact_val, Float, :required => false
+    property :likelihood_val, Float, :required => false
+    property :nist_rating, String, :required => false
 
     property :language, String, :required => false
 end

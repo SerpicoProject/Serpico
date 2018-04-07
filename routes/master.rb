@@ -16,6 +16,7 @@ get '/master/findings' do
   @cvss = config_options["cvss"]
   @cvssv3 = config_options["cvssv3"]
   @riskmatrix = config_options["riskmatrix"]
+  @nist800 = config_options["nist800"]
 
   haml :findings_list, :encode_html => true
 end
@@ -28,6 +29,7 @@ get '/master/findings/new' do
   @cvss = config_options["cvss"]
   @cvssv3 = config_options["cvssv3"]
   @riskmatrix = config_options["riskmatrix"]
+  @nist800 = config_options["nist800"]
   @nessusmap = config_options["nessusmap"]
   @vulnmap = config_options["vulnmap"]
 
@@ -38,10 +40,12 @@ end
 post '/master/findings/new' do
   data = url_escape_hash(request.POST)
 
+  # Create DREAD finding in the database
   if(config_options["dread"])
     data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
   end
 
+  # Create riskmatrix in the database
   if(config_options["riskmatrix"])
     if data["severity"] == "Low"
       severity_val = 0
@@ -60,6 +64,12 @@ post '/master/findings/new' do
     end
 
     data['risk'] = severity_val + likelihood_val
+  end
+
+  # Create NIST800 finding in the main database
+  if(config_options["nist800"]) 
+    # call nist800 helper function
+    data = nist800(data)
   end
 
   # split out any nessus mapping data
@@ -108,6 +118,7 @@ get '/master/findings/:id/edit' do
   @cvss = config_options["cvss"]
   @cvssv3 = config_options["cvssv3"]
   @riskmatrix = config_options["riskmatrix"]
+  @nist800 = config_options["nist800"]
   @nessusmap = config_options["nessusmap"]
   @burpmap = config_options["burpmap"]
   @vulnmap = config_options["vulnmap"]
@@ -161,6 +172,7 @@ post '/master/findings/:id/edit' do
   # to prevent title's from degenerating with &gt;, etc. [issue 237]
   data["title"] = data["title"].gsub('&amp;','&')
 
+  # Edit a DREAD finding
   if(config_options["dread"])
     data["dread_total"] = data["damage"].to_i + data["reproducability"].to_i + data["exploitability"].to_i + data["affected_users"].to_i + data["discoverability"].to_i
   elsif(config_options["cvss"])
@@ -169,6 +181,7 @@ post '/master/findings/:id/edit' do
     data = cvss(data, true)
   end
 
+  # Edit a riskmatrix finding
   if(config_options["riskmatrix"])
     if data["severity"] == "Low"
       severity_val = 0
@@ -187,6 +200,12 @@ post '/master/findings/:id/edit' do
     end
 
     data['risk'] = severity_val + likelihood_val
+  end
+
+  # Edit NIST800 finding in the main database
+  if(config_options["nist800"]) 
+    # call nist800 helper function
+    data = nist800(data)
   end
 
   # split out any nessus mapping data

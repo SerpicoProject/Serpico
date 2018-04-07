@@ -621,7 +621,32 @@
             - if @finding
               - if @finding.likelihood_rationale
                 #{meta_markup(@finding.likelihood_rationale)}
-    - else
+
+
+      -#------------------ Add NIST800 findings -------------------#-
+    - elsif @nist800
+      .control-group.nist800
+        %label.control-label{ :for => "nist_impact" } Impact
+        .controls
+          %select{ :name => "nist_impact" }
+            - settings.nist_impact.each do |nist_impact|
+              - if nist_impact == @finding.nist_impact
+                %option{ :selected => "selected" } #{nist_impact}
+              - else
+                %option #{nist_impact}
+      .control-group.nist800
+        %label.control-label{ :for => "nist_likelihood" } Likelihood
+        .controls
+          %select{ :name => "nist_likelihood" }
+            - settings.nist_likelihood.each do |nist_likelihood|
+              - if nist_likelihood == @finding.nist_likelihood
+                %option{ :selected => "selected" } #{nist_likelihood}
+              - else
+                %option #{nist_likelihood}
+      -#------------------------- End of add NIST800 ---------------->
+
+
+    - else 
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
@@ -635,15 +660,19 @@
                 %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
               - else
                 %option{ :value => "#{r_type}"} #{risk_types[r_type]}
-    .control-group
-      %label.control-label{ :for => "effort" } Remediation Effort
-      .controls
-        %select{ :name => "effort" }
-          - settings.effort.each do |effort|
-            - if effort == @finding.effort
-              %option{ :selected => "selected" } #{effort}
-            - else
-              %option #{effort}
+
+
+      <!-- do not show remediation effort for NIST800, however show it for all others -->
+    - if !@nist800
+      .control-group
+        %label.control-label{ :for => "effort" } Remediation Effort
+        .controls
+          %select{ :name => "effort" }
+            - settings.effort.each do |effort|
+              - if effort == @finding.effort
+                %option{ :selected => "selected" } #{effort}
+              - else
+                %option #{effort}
     .control-group
       %label.control-label{ :for => "type" } Finding Type
       .controls
