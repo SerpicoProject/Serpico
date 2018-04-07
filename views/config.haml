@@ -32,6 +32,10 @@
                 %option{ :selected => "selected" } RISKMATRIX
               - else
                 %option RISKMATRIX
+              - if @scoring == "nist800"
+                %option{ :selected => "selected" } NIST800-30
+              - else
+                %option NIST800-30
 
         - @config.each do |k,v|
           - next if k =~ /ssl_certificate/
