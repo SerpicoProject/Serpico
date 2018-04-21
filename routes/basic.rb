@@ -74,7 +74,7 @@ post '/info' do
   user.consultant_name = params[:name]
   user.consultant_company = params[:company]
   user.save
-
+  serpico_log("Consultant info updated")
   redirect to("/info")
 end
 
@@ -113,6 +113,7 @@ post '/reset' do
 
   user.update(:password => params[:new_pass])
   @message = "success"
+  serpico_log("Password successfully reset")
   haml :reset, :encode_html => true
 end
 
@@ -129,6 +130,7 @@ post '/login' do
       @del_session.destroy if @del_session
       @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
       @curr_session.save
+      serpico_log("Successful local login")
 
     end
   elsif user
@@ -149,6 +151,7 @@ post '/login' do
         @del_session.destroy if @del_session
         @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
         @curr_session.save
+        serpico_log("Successful LDAP login")
 			end
 		end
   end
@@ -158,13 +161,15 @@ end
 
 ## We use a persistent session table, one session per user; no end date
 get '/logout' do
+  #hack to display username in log after session destroyed
+  user = User.first(:username => get_username)
   if session[:session_id]
     sess = Sessions.first(:session_key => session[:session_id])
     if sess
       sess.destroy
     end
   end
-
+  serpico_log("User #{user.username} logged out")
   redirect to("/")
 end
 
