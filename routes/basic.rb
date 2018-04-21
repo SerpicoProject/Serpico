@@ -175,5 +175,6 @@ end
 
 # rejected access (admin functionality)
 get "/no_access" do
+  serpico_log("Low priv user tried to access admin resource")
   return "Sorry. You Do Not have access to this resource."
 end
