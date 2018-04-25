@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'odle'
 
 #####
 # Reporting Routes
@@ -1705,6 +1706,139 @@ get '/report/:id/presentation_export' do
 
   send_file rand_zip, type: 'zip', filename: "#{@report.report_name}.zip"
 end
+
+# import scan data
+get '/report/:id/scan_import' do
+  id = params[:id]
+  @report = get_report(id)
+
+  # bail without a report
+  redirect to('/') unless @report
+
+  haml :import_scan, encode_html: true
+end
+
+# auto add serpico findings if mapped to nessus ids
+post '/report/:id/import_scan' do
+  type = params[:type]
+
+  return 'Invalid type selected, please press Back and set the scan data type.' unless type
+
+  id = params[:id]
+  @report = get_report(id)
+
+  # bail without a report
+  redirect to('/') unless @report
+
+  xml = params[:file][:tempfile].read
+
+  # reject if the file is above a certain limit
+  if params[:file][:tempfile].size > 100000000
+    return "File too large. 100MB limit"
+  end
+
+  # use odle to get the JSON data from the XML 
+  if type == "burp"
+    json_d = Burp.new().parse(xml,"0")
+  elsif type == "nessus"
+    json_d = Nessus.new().parse(xml,"0")
+  elsif type == "msf"
+    json_d = Metasploit.new().parse(xml,"0")
+  else
+    return 'Unknown Type.' unless type
+  end
+
+  add_findings = []
+  dup_findings = []
+  autoadd_hosts = {}
+  @mappings = []
+
+  # load all findings
+  @findings = TemplateFindings.all(order: [:title.asc])
+
+  vulns = JSON.parse(json_d)
+  # parse nessus xml into hash
+  # nessus_vulns = parse_nessus_xml(nessus_xml)
+
+  # determine findings to add from vuln data
+  # host/ip is key, value is array of vuln information
+  vulns.keys.each do |i|
+    vulns[i].each do |v|
+
+      # if serpico finding id maps to nessus/burp plugin id, add to report
+      if type == "nessus"
+        @mappings = NessusMapping.all(pluginid: v["id"])
+      elsif type == "burp"
+        @mappings = BurpMapping.all(pluginid: v["id"])
+      end
+
+      # if auto_add and the finding isn't already mapped, add it
+      # TODO refactor into helper method
+      # TODO is risk scoring handled correctly?
+
+      if (params[:auto_import] == "on" or config_options['auto_import']) and (@mappings.size == 0)
+        exists = false
+        currentfindings = Findings.all(report_id: id)
+        currentfindings.each do |cf|
+          next unless cf.title == v['title']
+          exists = true
+          cf.affected_hosts = cf.affected_hosts + '<paragraph>' + i + '</paragraph>'
+          cf.save
+        end
+
+        unless exists
+          vuln = {}
+          vuln['title'] = clean(v['title'])
+          vuln['overview'] = clean(v['overview'])
+          vuln['remediation'] = clean(v['remediation'])
+          vuln['risk'] = clean(v['risk'].to_s)
+          vuln['affected_hosts'] = clean(i)
+          vuln['report_id'] = params[:id].to_i
+          g = Findings.create(vuln)
+          g.save
+        end
+      end
+
+      # add affected hosts for each finding
+      next unless @mappings
+      @mappings.each do |m|
+        if autoadd_hosts[m.templatefindings_id]
+          # only one host/url per finding (regardless of ports and urls). this should change in the future
+          unless autoadd_hosts[m.templatefindings_id].include?(i)
+            autoadd_hosts[m.templatefindings_id] << i
+          end
+        else
+          autoadd_hosts[m.templatefindings_id] = []
+          autoadd_hosts[m.templatefindings_id] << i
+        end
+        add_findings << m.templatefindings_id
+      end
+    end
+  end
+
+  add_findings = add_findings.uniq
+
+  if add_findings.empty?
+    redirect to("/report/#{id}/findings")
+  else
+    @autoadd = true
+
+    add_findings.each do |finding|
+      # if the finding already exists in the report dont add
+      currentfindings = Findings.all(report_id: id)
+      currentfindings.each do |cf|
+        next unless cf.master_id == finding.to_i
+        dup_findings << finding.to_i unless dup_findings.include?(finding.to_i)
+        add_findings.delete(finding.to_i)
+      end
+    end
+    @autoadd_hosts = autoadd_hosts
+    @dup_findings = dup_findings.uniq
+    @autoadd_findings = add_findings
+  end
+  haml :findings_add, encode_html: true
+end
+
 
 # set msf rpc settings for report
 get '/report/:id/msfsettings' do

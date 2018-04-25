@@ -1,0 +1,29 @@
+.col-md-10
+  %br
+  %h2 Import Scan Data
+  %br
+
+  %form{ :method => "post", :action => "/report/#{@report.id}/import_scan", :enctype => "multipart/form-data" }
+    %table
+      %tr
+        %td
+          %label.col-md-3{ :for => "type" }
+            File Data Type
+          %select#type{ :type => "type", :name => "type", :required => "true" }
+            %option{:disabled=>"disabled",:selected=>"selected"} Please Select
+            %option{:value => "burp"} BurpSuite
+            %option{:value => "nessus"} Nessus
+            %option{:value => "msf"} Metasploit Export (v5) 
+      %tr
+        %td
+          %input{ :type => "checkbox", :id=>"checkbox", :name => "auto_import", :checked => "" }
+            Auto Import Findings
+      %tr
+        %td
+          %label.col-md-3{ :for => "file" }
+            Upload scan data.&nbsp;
+          %input#file{ :type => "file", :name => "file" }
+    %br
+    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
+    %a.btn.btn-default{ :href => "/report/#{@report.id}" }
+      Cancel

@@ -195,3 +195,10 @@ def parse_burp_xml(xml)
   vulns['findings'] = uniq_findings(findings)
   vulns
 end
+
+# Takes in a hash of data from odle and converts to an array of findings
+# => odle is a hash with hosts as the keys and an array of findings
+
+def convert_odle(hash_data)
+  findings = []
+end
