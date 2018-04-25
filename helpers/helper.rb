@@ -200,6 +200,7 @@ def add_findings_totals(udv, findings, config_options)
   udv['moderate_tally'] = moderate
   udv['low_tally'] = low
   udv['informational_tally'] = informational
+  udv['total_tally'] = critical + high + moderate + low + informational
 
   udv
 end

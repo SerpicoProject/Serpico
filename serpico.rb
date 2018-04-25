@@ -31,18 +31,25 @@ if use_ssl
   server_options[:SSLPrivateKey] = OpenSSL::PKey::RSA.new(key_content)
   server_options[:SSLVerifyClient] = OpenSSL::SSL::VERIFY_NONE
 
-  if config_options.key?('ssl_ciphers')
-    CIPHERS = config_options['ssl_ciphers']
-    puts '|+| Ciphers:' + CIPHERS.join(',')
+  no_ssl3 = OpenSSL::SSL::OP_NO_SSLv3
+  no_ssl2 = OpenSSL::SSL::OP_NO_SSLv2
+  no_compression = OpenSSL::SSL::OP_NO_COMPRESSION
+  ssl_options = no_ssl2 + no_ssl3 + no_compression
+  server_options[:SSLOptions] = ssl_options
+  server_options[:SSLVersion] = :TLSv1_2
+
+  if(config_options.key?('ssl_ciphers'))
+      cz = config_options['ssl_ciphers']
   else
-    # SSL Ciphers
-    CIPHERS = ['ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES256-GCM-SHA384',
-               'ECDHE-RSA-AES128-CBC-SHA', 'ECDHE-RSA-AES256-CBC-SHA',
-               'AES128-GCM-SHA256', 'AES256-GCM-SHA384', 'AES128-SHA256',
-               'AES256-SHA256', 'AES128-SHA', 'AES256-SHA'].freeze
+      # SSL Ciphers
+      cz = ['ECDHE-RSA-AES128-GCM-SHA256','ECDHE-RSA-AES256-GCM-SHA384',
+           'ECDHE-RSA-AES128-CBC-SHA','ECDHE-RSA-AES256-CBC-SHA',
+           'AES128-GCM-SHA256','AES256-GCM-SHA384','AES128-SHA256',
+           'AES256-SHA256','AES128-SHA','AES256-SHA']
   end
 
-  server_options[:Ciphers] = CIPHERS
+  CIPHERS = cz.push("TLSv1.2","!aNULL","!eNULL","!SSLv2","!SSLv3")
+  server_options[:SSLCiphers] = CIPHERS.join(":")
 
 end
 

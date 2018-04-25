@@ -402,7 +402,14 @@ post '/report/:id/edit' do
   data = url_escape_hash(request.POST)
 
   @report = get_report(id)
-  @report = @report.update(data)
+
+  unless @report.update(data)
+    error = ""
+    @report.errors.each do |f|
+      error = error + f.to_s() + "<br>"
+    end
+    return "<p>The following error(s) were found while trying to update : </p>#{error}"
+  end
 
   redirect to("/report/#{id}/edit")
 end
@@ -926,7 +933,13 @@ post '/report/:id/findings/:finding_id/edit' do
   end
 
   # Update the finding with templated finding stuff
-  @finding.update(data)
+  unless @finding.update(data)
+    error = ""
+    @finding.errors.each do |f|
+      error = error + f.to_s() + "<br>"
+    end
+    return "<p>The following error(s) were found while trying to update : </p>#{error}"
+  end
 
   # because of multiple scores we need to make sure all are set
   # => leave it up to the user to make the calculation if they switch mid report
@@ -1281,6 +1294,14 @@ get '/report/:id/generate' do
   end
   # we bring all xml together
   report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
+  noko_report_xml = Nokogiri::XML(report_xml)
+  #no use to go on with report generation if report XML is malformed
+  if !noko_report_xml.errors.empty?
+    noko_report_xml.errors.each do |error|
+      error = CGI.escapeHTML(error.to_s)
+    end
+    return "<p>The following error(s) were found in report XML file : </p>#{noko_report_xml.errors.join('<br/>')}<p>This is most often because of malformed metamarkup in findings."
+  end
 
   xslt_elem = Xslt.first(report_type: @report.report_type)
 
