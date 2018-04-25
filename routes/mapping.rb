@@ -9,7 +9,7 @@ get '/mapping/:id/nessus/:mappingid/delete' do
 
   mappingid = params[:mappingid]
 
-  @map = NessusMapping.first(:templatefindings_id => id, :pluginid => mappingid)
+  @map = NessusMapping.first(templatefindings_id: id, pluginid: mappingid)
 
   @map.destroy
   redirect to("/master/findings/#{id}/edit")
@@ -22,7 +22,7 @@ get '/mapping/:id/burp/:mappingid/delete' do
 
   mappingid = params[:mappingid]
 
-  @map = BurpMapping.first(:templatefindings_id => id, :pluginid => mappingid)
+  @map = BurpMapping.first(templatefindings_id: id, pluginid: mappingid)
 
   @map.destroy
   redirect to("/master/findings/#{id}/edit")
@@ -35,7 +35,7 @@ get '/mapping/:id/vulnmap/:mappingid/delete' do
 
   mappingid = params[:mappingid]
 
-  @vulnmappings = VulnMappings.first(:templatefindings_id => id, :id => mappingid)
+  @vulnmappings = VulnMappings.first(templatefindings_id: id, id: mappingid)
   @vulnmappings.destroy
   redirect to("/master/findings/#{id}/edit")
 end
