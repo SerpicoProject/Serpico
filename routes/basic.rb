@@ -75,7 +75,9 @@ post '/info' do
   user.consultant_company = params[:company]
   user.save
 
+  serpico_log('Consultant info updated')
   redirect to('/info')
+
 end
 
 # Handles password reset
@@ -113,6 +115,7 @@ post '/reset' do
 
   user.update(password: params[:new_pass])
   @message = 'success'
+  serpico_log('Password successfully reset')
   haml :reset, encode_html: true
 end
 
@@ -129,6 +132,7 @@ post '/login' do
       @del_session.destroy if @del_session
       @curr_session = Sessions.create(username: usern.to_s, session_key: session[:session_id].to_s)
       @curr_session.save
+      serpico_log("Successful local login")
 
     end
   elsif user
@@ -147,6 +151,8 @@ post '/login' do
         @del_session.destroy if @del_session
         @curr_session = Sessions.create(username: usern.to_s, session_key: session[:session_id].to_s)
         @curr_session.save
+
+        serpico_log('Successful LDAP login')
       end
     end
   end
@@ -156,15 +162,19 @@ end
 
 ## We use a persistent session table, one session per user; no end date
 get '/logout' do
+  #hack to display username in log after session destroyed
+  user = User.first(:username => get_username)
   if session[:session_id]
     sess = Sessions.first(session_key: session[:session_id])
     sess.destroy if sess
   end
-
+  
+  serpico_log('User #{user.username} logged out')
   redirect to('/')
 end
 
 # rejected access (admin functionality)
 get '/no_access' do
+  serpico_log('Low priv user tried to access admin resource')
   return 'Sorry. You Do Not have access to this resource.'
 end
