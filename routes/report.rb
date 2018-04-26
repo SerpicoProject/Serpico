@@ -1894,7 +1894,7 @@ get '/report/:id/hosts' do
 
   msfsettings = RemoteEndpoints.first(report_id: id)
   unless msfsettings
-    return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    return "You need to install the metasploit gem (gem install msfrpc-client) and setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
   end
 
   # setup msfrpc handler
@@ -1923,7 +1923,7 @@ get '/report/:id/services' do
 
   msfsettings = RemoteEndpoints.first(report_id: id)
   unless msfsettings
-    return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    return "You need to install the metasploit gem (gem install msfrpc-client) and setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
   end
 
   # setup msfrpc handler
@@ -1953,7 +1953,7 @@ get '/report/:id/vulns' do
 
   msfsettings = RemoteEndpoints.first(report_id: id)
   unless msfsettings
-    return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    return "You need to install the metasploit gem (gem install msfrpc-client) and setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
   end
 
   # setup msfrpc handler
@@ -1990,7 +1990,7 @@ get '/report/:id/import/vulns' do
   # load msf settings
   msfsettings = RemoteEndpoints.first(report_id: id)
   unless msfsettings
-    return "You need to setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
+    return "You need to install the metasploit gem (gem install msfrpc-client) and setup a metasploit RPC connection to use this feature. Do so <a href='/report/#{id}/msfsettings'>here</a>"
   end
 
   # setup msfrpc handler

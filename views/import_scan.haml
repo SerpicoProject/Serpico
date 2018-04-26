@@ -9,6 +9,8 @@
         %td
           %label.col-md-3{ :for => "type" }
             File Data Type
+        %td
+          &nbsp;&nbsp;&nbsp;&nbsp;           
           %select#type{ :type => "type", :name => "type", :required => "true" }
             %option{:disabled=>"disabled",:selected=>"selected"} Please Select
             %option{:value => "burp"} BurpSuite
@@ -16,12 +18,27 @@
             %option{:value => "msf"} Metasploit Export (v5) 
       %tr
         %td
+          %br
+          %br
+          Options
+        %td
+          %br
+          %br
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;           
           %input{ :type => "checkbox", :id=>"checkbox", :name => "auto_import", :checked => "" }
             Auto Import Findings
       %tr
         %td
+          %br
+          %br
+          %br
           %label.col-md-3{ :for => "file" }
-            Upload scan data.&nbsp;
+            Upload scan data&nbsp;
+        %td
+          %br
+          %br
+          %br
+          &nbsp;&nbsp;&nbsp;&nbsp; 
           %input#file{ :type => "file", :name => "file" }
     %br
     %input.btn.btn-default{ :type => "submit", :value => "Upload" }
