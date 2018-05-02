@@ -13,18 +13,18 @@ class Server < Sinatra::Application
 
   set :config_options, config_options
   ## Global variables
-  set :finding_types, config_options["finding_types"]
-  set :assessment_types, ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"]
-  set :status, ["EXPLOITED"]
-  set :show_exceptions, config_options["show_exceptions"]
+  set :finding_types, config_options['finding_types']
+  set :assessment_types, ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
+  set :status, ['EXPLOITED']
+  set :show_exceptions, config_options['show_exceptions']
 
-  if config_options["effort"]
-    set :effort, config_options["effort"]
+  if config_options['effort']
+    set :effort, config_options['effort']
   else
-    set :effort, ["Quick","Planned","Involved"]
+    set :effort, %w[Quick Planned Involved]
   end
 
-  if config_options["show_exceptions"].to_s.downcase == "false" or (not config_options["show_exceptions"])
+  if config_options['show_exceptions'].to_s.casecmp('false').zero? || !(config_options['show_exceptions'])
     configure do
       disable :logging
       set :set_logging, nil
@@ -33,69 +33,69 @@ class Server < Sinatra::Application
       set :logger_out, nil
     end
 
-    server_log("Using Serpico only logging ..")
+    server_log('Using Serpico only logging ..')
   end
 
-  #Set Logging
-  if(config_options["log_file"] != "")
-    log = File.new(config_options["log_file"], "a+")
+  # Set Logging
+  if config_options['log_file'] != ''
+    log = File.new(config_options['log_file'], 'a+')
     set :logger_out, log
-    server_log("Logging set to #{config_options["log_file"]}")
+    server_log("Logging set to #{config_options['log_file']}")
   end
 
-  #Set Alignment
-  if(config_options["image_align"] == "")
-    set :alignment, "center"
+  # Set Alignment
+  if config_options['image_align'] == ''
+    set :alignment, 'center'
   else
-    set :alignment, config_options["image_align"]
+    set :alignment, config_options['image_align']
   end
 
   # CVSS
-  set :av, ["Local","Adjacent Network","Network"]
-  set :ac, ["High","Medium","Low"]
-  set :au, ["Multiple","Single","None"]
-  set :c, ["None","Partial","Complete"]
-  set :i, ["None","Partial","Complete"]
-  set :a, ["None","Partial","Complete"]
-  set :e, ["Not Defined","Unproven Exploit Exists","Proof-of-Concept Code","Functional Exploit Exists","High"]
-  set :rl, ["Not Defined","Official Fix","Temporary Fix","Workaround","Unavailable"]
-  set :rc, ["Not Defined","Unconfirmed","Uncorroborated","Confirmed"]
-  set :cdp, ["Not Defined","None","Low","Low-Medium","Medium-High","High"]
-  set :td, ["Not Defined","None","Low","Medium","High"]
-  set :cr, ["Not Defined","Low","Medium","High"]
-  set :ir, ["Not Defined","Low","Medium","High"]
-  set :ar, ["Not Defined","Low","Medium","High"]
+  set :av, ['Local', 'Adjacent Network', 'Network']
+  set :ac, %w[High Medium Low]
+  set :au, %w[Multiple Single None]
+  set :c, %w[None Partial Complete]
+  set :i, %w[None Partial Complete]
+  set :a, %w[None Partial Complete]
+  set :e, ['Not Defined', 'Unproven Exploit Exists', 'Proof-of-Concept Code', 'Functional Exploit Exists', 'High']
+  set :rl, ['Not Defined', 'Official Fix', 'Temporary Fix', 'Workaround', 'Unavailable']
+  set :rc, ['Not Defined', 'Unconfirmed', 'Uncorroborated', 'Confirmed']
+  set :cdp, ['Not Defined', 'None', 'Low', 'Low-Medium', 'Medium-High', 'High']
+  set :td, ['Not Defined', 'None', 'Low', 'Medium', 'High']
+  set :cr, ['Not Defined', 'Low', 'Medium', 'High']
+  set :ir, ['Not Defined', 'Low', 'Medium', 'High']
+  set :ar, ['Not Defined', 'Low', 'Medium', 'High']
 
   # CVSSv3
-  set :attack_vector, ["Local","Adjacent","Network","Physical"]
-  set :attack_complexity, ["Low","High"]
-  set :privileges_required, ["None","Low", "High"]
-  set :user_interaction, ["None", "Required"]
-  set :scope_cvss, ["Unchanged", "Changed"]
-  set :confidentiality, ["None","Low","High"]
-  set :integrity, ["None","Low","High"]
-  set :availability, ["None","Low","High"]
-  set :exploit_maturity, ["Not Defined","Unproven Exploit Exists","Proof-of-Concept Code","Functional Exploit Exists","High"]
-  set :remeditation_level, ["Not Defined","Official Fix","Temporary Fix","Workaround","Unavailable"]
-  set :report_confidence, ["Not Defined","Unknown","Reasonable","Confirmed"]
-  set :confidentiality_requirement, ["Not Defined","Low","Medium","High"]
-  set :integrity_requirement, ["Not Defined","Low","Medium","High"]
-  set :availability_requirement, ["Not Defined","Low","Medium","High"]
-  set :mod_attack_vector, ["Not Defined","Local","Adjacent","Network","Physical"]
-  set :mod_attack_complexity, ["Not Defined","Low","High"]
-  set :mod_privileges_required, ["Not Defined","None","Low","High"]
-  set :mod_user_interaction, ["Not Defined","None","Required"]
-  set :mod_scope, ["Not Defined","Unchanged","Changed"]
-  set :mod_confidentiality, ["Not Defined","None","Low","High"]
-  set :mod_integrity, ["Not Defined","None","Low","High"]
-  set :mod_availability, ["Not Defined","None","Low","High"]
+  set :attack_vector, %w[Local Adjacent Network Physical]
+  set :attack_complexity, %w[Low High]
+  set :privileges_required, %w[None Low High]
+  set :user_interaction, %w[None Required]
+  set :scope_cvss, %w[Unchanged Changed]
+  set :confidentiality, %w[None Low High]
+  set :integrity, %w[None Low High]
+  set :availability, %w[None Low High]
+  set :exploit_maturity, ['Not Defined', 'Unproven Exploit Exists', 'Proof-of-Concept Code', 'Functional Exploit Exists', 'High']
+  set :remeditation_level, ['Not Defined', 'Official Fix', 'Temporary Fix', 'Workaround', 'Unavailable']
+  set :report_confidence, ['Not Defined', 'Unknown', 'Reasonable', 'Confirmed']
+  set :confidentiality_requirement, ['Not Defined', 'Low', 'Medium', 'High']
+  set :integrity_requirement, ['Not Defined', 'Low', 'Medium', 'High']
+  set :availability_requirement, ['Not Defined', 'Low', 'Medium', 'High']
+  set :mod_attack_vector, ['Not Defined', 'Local', 'Adjacent', 'Network', 'Physical']
+  set :mod_attack_complexity, ['Not Defined', 'Low', 'High']
+  set :mod_privileges_required, ['Not Defined', 'None', 'Low', 'High']
+  set :mod_user_interaction, ['Not Defined', 'None', 'Required']
+  set :mod_scope, ['Not Defined', 'Unchanged', 'Changed']
+  set :mod_confidentiality, ['Not Defined', 'None', 'Low', 'High']
+  set :mod_integrity, ['Not Defined', 'None', 'Low', 'High']
+  set :mod_availability, ['Not Defined', 'None', 'Low', 'High']
 
-  #Risk Matrix
-  set :severity, ["Low","Medium","High"]
-  set :likelihood, ["Low","Medium","High"]
+  # Risk Matrix
+  set :severity, %w[Low Medium High]
+  set :likelihood, %w[Low Medium High]
 
-  if config_options["cvssv2_scoring_override"]
-    if config_options["cvssv2_scoring_override"] == "true"
+  if config_options['cvssv2_scoring_override']
+    if config_options['cvssv2_scoring_override'] == 'true'
       set :cvssv2_scoring_override, true
     end
   else
@@ -103,164 +103,156 @@ class Server < Sinatra::Application
   end
 
   ## LDAP Settings
-  if config_options["ldap"] == "true"
+  if config_options['ldap'] == 'true'
     set :ldap, true
   else
     set :ldap, false
   end
-  set :domain, config_options["ldap_domain"]
-  set :dc, config_options["ldap_dc"]
+  set :domain, config_options['ldap_domain']
+  set :dc, config_options['ldap_dc']
 
   enable :sessions
   set :session_secret, rand(36**12).to_s(36)
 
   # load the default stuff
-	Dir[File.join(File.dirname(__FILE__), "routes", "*.rb")].each { |lib| require lib }
- 	Dir[File.join(File.dirname(__FILE__), "helpers", "*.rb")].each { |lib| require lib }
- 	Dir[File.join(File.dirname(__FILE__), "lib", "*.rb")].each { |lib| require lib }
+  Dir[File.join(File.dirname(__FILE__), 'routes', '*.rb')].each { |lib| require lib }
+  Dir[File.join(File.dirname(__FILE__), 'helpers', '*.rb')].each { |lib| require lib }
+  Dir[File.join(File.dirname(__FILE__), 'lib', '*.rb')].each { |lib| require lib }
 
   # load plugins last, enables monkey patching
-  Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
+  Dir[File.join(File.dirname(__FILE__), 'plugins/**/', '*.json')].each do |lib|
     pl = JSON.parse(File.open(lib).read)
-    if pl["enabled"]
-      server_log("Loaded plugin #{pl['name']}")
-      # load the plugin
-      Dir[File.join(File.dirname(__FILE__), "plugins/#{pl['name']}/**/", "*.rb")].each{ |xlibx|
-        require xlibx
-      }
+    next unless pl['enabled']
+    server_log("Loaded plugin #{pl['name']}")
+    # load the plugin
+    Dir[File.join(File.dirname(__FILE__), "plugins/#{pl['name']}/**/", '*.rb')].each do |xlibx|
+      require xlibx
     end
-  }
+  end
 end
 
 # Helper Functions
 # msfrpc handler
 def msfrpc(report_id)
-  @msfoptions = RemoteEndpoints.first(:report_id => report_id)
+  @msfoptions = RemoteEndpoints.first(report_id: report_id)
 
   opts = {
-    :host => @msfoptions.ip,
-    :port => @msfoptions.port,
-    :user => @msfoptions.user,
-    :pass => @msfoptions.pass
+    host: @msfoptions.ip,
+    port: @msfoptions.port,
+    user: @msfoptions.user,
+    pass: @msfoptions.pass
   }
   begin
     rpc = Msf::RPC::Client.new(opts)
   rescue Exception => log
-    server_log("[!] MSF CONNECTION FAILED")
+    server_log('[!] MSF CONNECTION FAILED')
     rpc = false
   end
-  return rpc
+  rpc
 end
 
 # Return if the user has a valid session or not
 def valid_session?
-  return Sessions.is_valid?(session[:session_id])
+  Sessions.is_valid?(session[:session_id])
 end
 
 # Get the current users type
 def user_type
-  return Sessions.type(session[:session_id])
+  Sessions.type(session[:session_id])
 end
 
 # Get the current users, username
 def get_username
-  return Sessions.get_username(session[:session_id])
+  Sessions.get_username(session[:session_id])
 end
 
 # Check if the user is an administrator
 def is_administrator?
-  return true if Sessions.type(session[:session_id]) == "Administrator"
+  return true if Sessions.type(session[:session_id]) == 'Administrator'
 end
 
 # Check if the user has plugin upload capability
 def is_plugin?
-  return true if (Sessions.type(session[:session_id]) == "Administrator" and Sessions.is_plugin?(session[:session_id]) == true)
+  return true if (Sessions.type(session[:session_id]) == 'Administrator') && (Sessions.is_plugin?(session[:session_id]) == true)
 end
 
 # authentication method used by API, returns Session Key
-def auth(username,password)
-  user = User.first(:username => username)
+def auth(username, password)
+  user = User.first(username: username)
 
-  if user and user.auth_type == "Local"
-    usern = User.authenticate(username,password)
+  if user && (user.auth_type == 'Local')
+    usern = User.authenticate(username, password)
 
     if usern
       # TODO : This needs an expiration, session fixation
-      @del_session = Sessions.first(:username => "#{usern}")
+      @del_session = Sessions.first(username: usern.to_s)
       @del_session.destroy if @del_session
-      @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
+      @curr_session = Sessions.create(username: usern.to_s, session_key: session[:session_id].to_s)
       @curr_session.save
       return @curr_session.session_key
     end
   elsif user
     if options.ldap
-      #try AD authentication
+      # try AD authentication
       usern = username
-      if usern == "" or password == ""
-        return ""
-      end
+      return '' if (usern == '') || (password == '')
 
       user = "#{options.domain}\\#{username}"
-      ldap = Net::LDAP.new :host => "#{options.dc}", :port => 636, :encryption => :simple_tls, :auth => {:method => :simple, :username => user, :password => password}
+      ldap = Net::LDAP.new host: options.dc.to_s, port: 636, encryption: :simple_tls, auth: { method: :simple, username: user, password: password }
 
       if ldap.bind
         # replace the session in the session table
-        @del_session = Sessions.first(:username => "#{usern}")
+        @del_session = Sessions.first(username: usern.to_s)
         @del_session.destroy if @del_session
-        @curr_session = Sessions.create(:username => "#{usern}",:session_key => "#{session[:session_id]}")
+        @curr_session = Sessions.create(username: usern.to_s, session_key: session[:session_id].to_s)
         @curr_session.save
         return @curr_session.session_key
       else
-        server_log("|!| LDAP Authentication failed")
+        server_log('|!| LDAP Authentication failed')
       end
     end
   end
-  return ""
+  ''
 end
-
 
 # Grab a specific report
 def get_report(id)
-  begin
-    if is_administrator?
-      return Reports.first(:id => id)
-    else
-      report = Reports.first(:id => id)
-      if report
-        authors = report.authors
-        return report if report.owner == get_username
-        if authors
-          return report if authors.include?(get_username)
-        end
+  if is_administrator?
+    return Reports.first(id: id)
+  else
+    report = Reports.first(id: id)
+    if report
+      authors = report.authors
+      return report if report.owner == get_username
+      if authors
+        return report if authors.include?(get_username)
       end
     end
-  rescue Exception => log
-    # ignoring this error for now
   end
+rescue Exception => log
+  # ignoring this error for now
 end
 
 # List out the reports
 def get_reports
-  begin
-    if is_administrator?
-      return Reports.all( :order => [:id.desc])
-    else
-      reports = Reports.all( :order => [:id.desc])
-      reports_array = []
-      reports.each do |report|
-        next unless report and get_username
-        authors = report.authors
-        reports_array.push(report) if report.owner == get_username
-        if authors
-          reports_array.push(report) if authors.include?(get_username)
-        end
+  if is_administrator?
+    return Reports.all(order: [:id.desc])
+  else
+    reports = Reports.all(order: [:id.desc])
+    reports_array = []
+    reports.each do |report|
+      next unless report && get_username
+      authors = report.authors
+      reports_array.push(report) if report.owner == get_username
+      if authors
+        reports_array.push(report) if authors.include?(get_username)
       end
-      return nil unless reports_array
-      return reports_array
     end
-  rescue Exception
-    return []
+    return nil unless reports_array
+    return reports_array
   end
+rescue Exception
+  return []
 end
 
 def image_insert(docx, rand_file, image, end_xml)
@@ -268,10 +260,10 @@ def image_insert(docx, rand_file, image, end_xml)
   p_id = "d#{rand(36**7).to_s(36)}"
   name = image.description
 
-  image_file = File.open(image.filename_location,'rb')
-  img_data = image_file.read()
+  image_file = File.open(image.filename_location, 'rb')
+  img_data = image_file.read
 
-  #resize picture to fit into word if it's too big
+  # resize picture to fit into word if it's too big
   if jpeg?(img_data)
     jpeg_dimension = JPEG.new(image.filename_location)
     width = jpeg_dimension.width
@@ -279,35 +271,33 @@ def image_insert(docx, rand_file, image, end_xml)
   elsif png?(img_data)
     width = IO.read(image.filename_location)[0x10..0x18].unpack('NN')[0]
     height = IO.read(image.filename_location)[0x10..0x18].unpack('NN')[1]
-  #we don't want to break everything if another format is supported
+  # we don't want to break everything if another format is supported
   else
     width = 400
     height = 200
   end
-  while width > 710 or height > 790 do #fits nicely into word
-    width = width - (width/20)
-    height = height - (height/20)
+  while (width > 710) || (height > 790) # fits nicely into word
+    width -= (width / 20)
+    height -= (height / 20)
   end
   image_file.close
 
   # Image alignment setting
-  unless settings.alignment
-    settings.alignment = "center"
-  end
+  settings.alignment = 'center' unless settings.alignment
 
-  case settings.alignment.downcase
-    when "Left"
-      imgAlign = "left"
-    when "Right"
-      imgAlign = "right"
-    when "Center"
-      imgAlign = "center"
-    else 
-      imgAlign = "center"
-  end
-  
+  imgAlign = case settings.alignment.downcase
+             when 'Left'
+               'left'
+             when 'Right'
+               'right'
+             when 'Center'
+               'center'
+             else
+               'center'
+             end
+
   # insert picture into xml, allow the user to ignore alignment if they want
-  if settings.alignment == "ignore"
+  if settings.alignment == 'ignore'
     docx << "<w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
   else
     docx << "<w:p><w:pPr><w:jc w:val=\"#{imgAlign}\"/></w:pPr><w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict></w:p>"
@@ -318,52 +308,49 @@ def image_insert(docx, rand_file, image, end_xml)
   exists = false
 
   Zip::File.open(rand_file) do |zipfile|
-    #iterate zipfile to see if it has media dir, this could be better
+    # iterate zipfile to see if it has media dir, this could be better
     zipfile.each do |file|
-      if file.name =~ /word\/media/
-        exists = true
-      end
+      exists = true if file.name =~ /word\/media/
     end
 
     if exists
-      zipfile.get_output_stream("word/media/#{name}") {|f| f.write(img_data)}
+      zipfile.get_output_stream("word/media/#{name}") { |f| f.write(img_data) }
     else
-      zipfile.get_output_stream("word/#{name}") {|f| f.write(img_data)}
+      zipfile.get_output_stream("word/#{name}") { |f| f.write(img_data) }
     end
   end
 
   # update document.xml.rels
-  docu_rels = read_rels(rand_file,"word/_rels/document.xml.rels")
+  docu_rels = read_rels(rand_file, 'word/_rels/document.xml.rels')
 
   if exists
-    docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")
+    docu_rels = docu_rels.sub('</Relationships>', "<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/#{name}\"/></Relationships>")
   else
-    docu_rels = docu_rels.sub("</Relationships>","<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
+    docu_rels = docu_rels.sub('</Relationships>', "<Relationship Id=\"#{p_id}\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"#{name}\"/></Relationships>")
   end
 
-  docx_modify(rand_file,docu_rels,"word/_rels/document.xml.rels")
+  docx_modify(rand_file, docu_rels, 'word/_rels/document.xml.rels')
 
-  return docx
+  docx
 end
 
 # Check if the user is an administrator
-def get_plugins()
-  return plugins
+def get_plugins
+  plugins
 end
 
 def get_plugin_list
   menu = []
 
-  Dir[File.join(File.dirname(__FILE__), "plugins/**/", "*.json")].each { |lib|
+  Dir[File.join(File.dirname(__FILE__), 'plugins/**/', '*.json')].each do |lib|
     pl = JSON.parse(File.open(lib).read)
     a = {}
-    if pl["enabled"] and pl["admin_view"]
-      # add the plugin to the menu
-      a["name"] = pl["name"]
-      a["description"] = pl["description"]
-      a["link"] = pl["link"]
-      menu.push(a)
-    end
-  }
-  return menu
+    next unless pl['enabled'] && pl['admin_view']
+    # add the plugin to the menu
+    a['name'] = pl['name']
+    a['description'] = pl['description']
+    a['link'] = pl['link']
+    menu.push(a)
+  end
+  menu
 end

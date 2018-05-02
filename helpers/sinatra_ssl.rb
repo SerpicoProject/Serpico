@@ -8,20 +8,20 @@ module Sinatra
   class Application
     def self.run!
       server_options = {
-        :Port => port,
-        :SSLEnable => use_ssl,
-        :BindAddress => bind_address,
+        Port: port,
+        SSLEnable: use_ssl,
+        BindAddress: bind_address
       }
-      if (use_ssl) then
+      if use_ssl
         certificate_content = File.open(ssl_certificate).read
         key_content = File.open(ssl_key).read
         server_options[:SSLCertificate] = OpenSSL::X509::Certificate.new(certificate_content)
         server_options[:SSLPrivateKey] = OpenSSL::PKey::RSA.new(key_content)
         server_options[:SSLVerifyClient] = OpenSSL::SSL::VERIFY_NONE
       end
-      
+
       Rack::Handler::WEBrick.run self, server_options do |server|
-        [:INT, :TERM].each { |sig| trap(sig) { server.stop } }
+        %i[INT TERM].each { |sig| trap(sig) { server.stop } }
         server.threaded = settings.threaded if server.respond_to? :threaded=
         set :running, true
       end
