@@ -1,22 +1,78 @@
-.col-md-10
-  %br
-  %h2 Upload Attachment
-  %h4 Note:
-  %h4 &nbsp;&nbsp;&bullet;&nbsp;Only jpg and png are supported for screenshots
-  %h4 &nbsp;&nbsp;&bullet;&nbsp;The file name is inherited from the file.
-  %h4 &nbsp;&nbsp;&bullet;&nbsp;Multiple files can be uploaded at once.
-  - if @no_file == "1"
-    You forgot to include a file, silly
-  %br
-
+.span10
   %form{ :method => "post", :enctype => "multipart/form-data" }
+    %br
+    %h2 Upload Attachment
+    %br
+    .control-group
+      %label{ :class => "control-label", :for => "overview" }
+        %a{ :href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info' }
+          Uploading Attachment Help
+      .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+        .modal-header
+          %button{ :type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+            x
+          %h3{ :id=>"modal-label" }
+            Attachments
+        .modal-body
+          %p &bullet;&nbsp;Only jpg and png are supported for screenshots
+          %p &bullet;&nbsp;The file name is inherited from the file.
+          %p &bullet;&nbsp;jpg end png files can be directly inserted into your report template with the metacharacter " ツ "
+          %p &bullet;&nbsp;jpg end png files can be inserted into your findings by using the string " [!!screenshot_name.png!!] "
+          %p &bullet;&nbsp;Multiple files can be uploaded at once.
+          %p &bullet;&nbsp;If an attachment is uploaded as an appendice, the data it contains can be used in your documents template
+          %p
+            %b For now, only XML can be added as an appendice
+          %p
+            For exemple, if you upload a file <b>"recon.xml"</b>, which has a structure like the following :
+          %div{:style => "background-color:#F2F3F4"}
+            %p
+              &lt;host&gt;
+            %p
+              &nbsp;&nbsp;&lt;ip&gt;1.1.1.1&lt;/ip&gt;
+            %p
+              &nbsp;&nbsp;&lt;hostname&gt;www.exemple1.com&lt;/hostname&gt;
+            %p
+              &lt;/host&gt;
+            %p
+              &lt;host&gt;
+            %p
+              &nbsp;&nbsp;&lt;ip&gt;2.2.2.2&gt;&lt;/ip&gt;
+            %p
+              &nbsp;&nbsp;&lt;hostname&gt;www.exemple2.com&lt;/hostname&gt;
+            %p
+              &lt;/host&gt;
+          %p
+            then you could call this data in your document template by doing, for exemple :
+          %div{:style => "background-color:#F2F3F4"}
+            %p
+              ¬report/appendices/&lt;&lt;name_of_your_file_without_extension&gt;&gt;/host¬
+            %p
+              IP : πipπ
+            %p
+              hostname : πhostnameπ
+            %p
+              ∆
+          %p
+            %br
+            This would print in your report all the IP and hostnames contained by report.xml
+
+    - if @no_file == "1"
+      You forgot to include a file, silly
+    %br
     %table
       %tr
         %td
-          %label.col-md-3{ :for => "files" }
-            Upload Files &nbsp;
+          Upload Files &nbsp;
         %td
           %input#files{ :type => "file", :name => "files[]", :multiple => true }
+      %tr
+        %td
+          Appendice
+        %td
+          %input{ :type => 'hidden', :name => 'appendice', :value => "0"}
+          %input{ :type => 'checkbox', :name => 'appendice', :value => "1"}
+
+    %br
     %br
     %input.btn.btn-default{ :type => "submit", :value => "Upload" }
     %a.btn.btn-default{ :href => "/report/#{@report.id}/edit" }
