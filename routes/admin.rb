@@ -568,17 +568,7 @@ end
 
 # get enabled plugins
 get '/admin/admin_plugins' do
-  @menu = []
-  Dir[File.join(File.dirname(__FILE__), '../plugins/**/', '*.json')].each do |lib|
-    pl = JSON.parse(File.open(lib).read)
-    a = {}
-    next unless pl['enabled'] && pl['admin_view']
-    # add the plugin to the menu
-    a['name'] = pl['name']
-    a['description'] = pl['description']
-    a['link'] = pl['link']
-    @menu.push(a)
-  end
+  @menu = get_plugin_list('admin')
   haml :enabled_plugins, encode_html: true
 end
 

@@ -339,13 +339,17 @@ def get_plugins
   plugins
 end
 
-def get_plugin_list
+def get_plugin_list(type)
   menu = []
 
   Dir[File.join(File.dirname(__FILE__), 'plugins/**/', '*.json')].each do |lib|
     pl = JSON.parse(File.open(lib).read)
     a = {}
-    next unless pl['enabled'] && pl['admin_view']
+    if type == 'user'
+      next unless pl['enabled']
+    elsif type == 'admin'
+      next unless pl['enabled'] && pl['admin_view']
+    end
     # add the plugin to the menu
     a['name'] = pl['name']
     a['description'] = pl['description']

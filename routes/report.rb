@@ -290,7 +290,6 @@ post '/report/:id/upload_attachments' do
     datax['description'] = CGI.escapeHTML(upf[:filename]).tr(' ', '_').tr('/', '_').tr('\\', '_').tr('`', '_')
     datax['report_id'] = id
     datax['caption'] = params[:caption]
-    datax['appendice'] = params[:appendice]
     data = url_escape_hash(datax)
 
     @attachment = Attachments.new(data)
@@ -372,7 +371,7 @@ get '/report/:id/edit' do
   # Query for the first report matching the report_name
   @report = get_report(id)
   @templates = Xslt.all(order: [:report_type.asc])
-  @plugin_side_menu = get_plugin_list
+  @plugin_side_menu = get_plugin_list('user')
   @assessment_types = config_options['report_assessment_types']
   @languages = config_options['languages']
   @risk_scores = %w[Risk DREAD CVSS CVSSv3 RiskMatrix]
@@ -630,7 +629,7 @@ get '/report/:id/findings' do
 
   # Query for the first report matching the report_name
   @report = get_report(id)
-  @plugin_side_menu = get_plugin_list
+  @plugin_side_menu = get_plugin_list('user')
 
   return 'No Such Report' if @report.nil?
 
@@ -1293,21 +1292,8 @@ get '/report/:id/generate' do
       hosts_xml = hosts_xml_raw.doc.root.to_xml
     end
   end
-  # we add the xml from the attachments the user added
-  all_appendices_xml = "<appendices>\n"
-  all_appendices = Attachments.all(report_id: id, appendice: true)
-  all_appendices.each do |appendice|
-    next unless File.file?(appendice.filename_location)
-    # the filename without the extension becomes the xml tag
-    appendice_xml = "<#{appendice.filename.split('.')[0]}>"
-    appendice_xml += Nokogiri::XML(File.open(appendice.filename_location).read).root.to_xml
-    appendice_xml += "</#{appendice.filename.split('.')[0]}>"
-    all_appendices_xml += appendice_xml.to_s
-
-  end
-  all_appendices_xml += "</appendices>\n"
   # we bring all xml together
-  report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{all_appendices_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
+  report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
   noko_report_xml = Nokogiri::XML(report_xml)
   #no use to go on with report generation if report XML is malformed
   if !noko_report_xml.errors.empty?
