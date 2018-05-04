@@ -342,8 +342,7 @@ def get_plugin_list(type)
     next if not pl['enabled']
     a = {}
     if type == 'user'
-      puts pl.inspect
-      next if not pl['report_view']
+       next if not pl['report_view']
     elsif type == 'admin'
       next if not pl['admin_view']
     end
