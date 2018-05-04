@@ -334,21 +334,18 @@ def image_insert(docx, rand_file, image, end_xml)
   docx
 end
 
-# Check if the user is an administrator
-def get_plugins
-  plugins
-end
-
 def get_plugin_list(type)
   menu = []
 
   Dir[File.join(File.dirname(__FILE__), 'plugins/**/', '*.json')].each do |lib|
     pl = JSON.parse(File.open(lib).read)
+    next if not pl['enabled']
     a = {}
     if type == 'user'
-      next unless pl['enabled']
+      puts pl.inspect
+      next if not pl['report_view']
     elsif type == 'admin'
-      next unless pl['enabled'] && pl['admin_view']
+      next if not pl['admin_view']
     end
     # add the plugin to the menu
     a['name'] = pl['name']
