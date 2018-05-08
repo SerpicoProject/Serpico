@@ -371,7 +371,7 @@ get '/report/:id/edit' do
   # Query for the first report matching the report_name
   @report = get_report(id)
   @templates = Xslt.all(order: [:report_type.asc])
-  @plugin_side_menu = get_plugin_list
+  @plugin_side_menu = get_plugin_list('user')
   @assessment_types = config_options['report_assessment_types']
   @languages = config_options['languages']
   @risk_scores = %w[Risk DREAD CVSS CVSSv3 RiskMatrix NIST800]
@@ -629,7 +629,7 @@ get '/report/:id/findings' do
 
   # Query for the first report matching the report_name
   @report = get_report(id)
-  @plugin_side_menu = get_plugin_list
+  @plugin_side_menu = get_plugin_list('user')
 
   return 'No Such Report' if @report.nil?
 
