@@ -189,7 +189,9 @@ get '/admin/config' do
                'dread'
              elsif config_options['riskmatrix']
                'riskmatrix'
-             else
+             elsif config_options["nist800"]
+               'nist800'
+              else
                'default'
              end
 
@@ -231,26 +233,37 @@ post '/admin/config' do
     config_options['cvss'] = true
     config_options['cvssv3'] = false
     config_options['riskmatrix'] = false
+    config_options['nist800'] = false
   elsif params['risk_scoring'] == 'CVSSv3'
     config_options['dread'] = false
     config_options['cvss'] = false
     config_options['cvssv3'] = true
     config_options['riskmatrix'] = false
+    config_options['nist800'] = false
   elsif params['risk_scoring'] == 'DREAD'
     config_options['dread'] = true
     config_options['cvss'] = false
     config_options['cvssv3'] = false
     config_options['riskmatrix'] = false
+    config_options['nist800'] = false
   elsif params['risk_scoring'] == 'RISKMATRIX'
     config_options['dread'] = false
     config_options['cvss'] = false
     config_options['cvssv3'] = false
     config_options['riskmatrix'] = true
+    config_options['nist800'] = false
+  elsif params['risk_scoring'] == 'NIST800-30'
+  	config_options['dread'] = false
+    config_options['cvss'] = false
+    config_options['cvssv3'] = false
+    config_options['riskmatrix'] = false
+    config_options['nist800'] = true
   else
     config_options['dread'] = false
     config_options['cvss'] = false
     config_options['cvssv3'] = false
     config_options['riskmatrix'] = false
+    config_options['nist800'] = false  
   end
 
   File.open('./config.json', 'w') do |f|

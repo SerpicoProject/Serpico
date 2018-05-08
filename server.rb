@@ -66,7 +66,6 @@ class Server < Sinatra::Application
   set :ir, ['Not Defined', 'Low', 'Medium', 'High']
   set :ar, ['Not Defined', 'Low', 'Medium', 'High']
 
-  # CVSSv3
   set :attack_vector, %w[Local Adjacent Network Physical]
   set :attack_complexity, %w[Low High]
   set :privileges_required, %w[None Low High]
@@ -93,6 +92,11 @@ class Server < Sinatra::Application
   # Risk Matrix
   set :severity, %w[Low Medium High]
   set :likelihood, %w[Low Medium High]
+
+  #Nist800
+  set :nist_likelihood, ["Low","Moderate","High"]
+  set :nist_impact, ["Informational","Low","Moderate","High","Critical"]
+  # used impact from Risk Matrix
 
   if config_options['cvssv2_scoring_override']
     if config_options['cvssv2_scoring_override'] == 'true'

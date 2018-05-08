@@ -16,7 +16,7 @@ get '/master/findings' do
   @cvss = config_options['cvss']
   @cvssv3 = config_options['cvssv3']
   @riskmatrix = config_options['riskmatrix']
-
+  @nist800 = config_options['nist800']
   haml :findings_list, encode_html: true
 end
 
@@ -27,6 +27,7 @@ get '/master/findings/new' do
   @dread = config_options['dread']
   @cvss = config_options['cvss']
   @cvssv3 = config_options['cvssv3']
+  @nist800 = config_options['nist800']
   @riskmatrix = config_options['riskmatrix']
   @nessusmap = config_options['nessusmap']
   @vulnmap = config_options['vulnmap']
@@ -60,6 +61,12 @@ post '/master/findings/new' do
     end
 
     data['risk'] = severity_val + likelihood_val
+  end
+
+  # Create NIST800 finding in the main database
+  if(config_options["nist800"]) 
+    # call nist800 helper function
+    data = nist800(data)
   end
 
   # split out any nessus mapping data
@@ -103,11 +110,13 @@ end
 # Edit the templated finding
 get '/master/findings/:id/edit' do
   @master = true
+
   @languages = config_options['languages']
   @dread = config_options['dread']
   @cvss = config_options['cvss']
   @cvssv3 = config_options['cvssv3']
   @riskmatrix = config_options['riskmatrix']
+  @nist800 = config_options['nist800']
   @nessusmap = config_options['nessusmap']
   @burpmap = config_options['burpmap']
   @vulnmap = config_options['vulnmap']
@@ -173,6 +182,12 @@ post '/master/findings/:id/edit' do
     end
 
     data['risk'] = severity_val + likelihood_val
+  end
+
+  # Edit NIST800 finding in the main database
+  if(config_options["nist800"]) 
+    # call nist800 helper function
+    data = nist800(data)
   end
 
   # split out any nessus mapping data

@@ -374,7 +374,7 @@ get '/report/:id/edit' do
   @plugin_side_menu = get_plugin_list
   @assessment_types = config_options['report_assessment_types']
   @languages = config_options['languages']
-  @risk_scores = %w[Risk DREAD CVSS CVSSv3 RiskMatrix]
+  @risk_scores = %w[Risk DREAD CVSS CVSSv3 RiskMatrix NIST800]
 
   return 'No Such Report' if @report.nil?
 
@@ -635,7 +635,7 @@ get '/report/:id/findings' do
 
   @report.update(scoring: set_scoring(config_options)) unless @report.scoring
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
   @cvssv2_scoring_override = if config_options.key?('cvssv2_scoring_override')
                                config_options['cvssv2_scoring_override']
@@ -654,7 +654,7 @@ get '/report/:id/status' do
 
   return 'No Such Report' if @report.nil?
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
   ## We have to do some hackery here for wordml
   findings_xml = ''
@@ -786,6 +786,7 @@ post '/report/:id/findings_add' do
     # because of multiple scores we need to make sure all are set
     # => leave it up to the user to make the calculation if they switch mid report
     @newfinding.dread_total = 0 if @newfinding.dread_total.nil?
+    @newfinding.nist800_total = 0 if @newfinding.nist800_total == nil
     @newfinding.cvss_total = 0  if @newfinding.cvss_total.nil?
     @newfinding.risk = 0 if @newfinding.risk.nil?
 
@@ -813,7 +814,7 @@ post '/report/:id/findings_add' do
 
   serpico_log("#{@newfinding.title} added to report #{id}")
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
   haml :findings_list, encode_html: true
 end
@@ -832,7 +833,7 @@ get '/report/:id/findings/new' do
     @attaches.push(ta.description)
   end
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
   haml :create_finding, encode_html: true
 end
@@ -853,6 +854,9 @@ post '/report/:id/findings/new' do
     data = cvss(data, false)
   elsif @report.scoring.casecmp('cvssv3').zero?
     data = cvss(data, true)
+  elsif(@report.scoring.downcase == "nist800")
+    # call nist800 helper function
+    data = nist800(data)
   end
 
   data['report_id'] = id
@@ -862,7 +866,9 @@ post '/report/:id/findings/new' do
 
   # because of multiple scores we need to make sure all are set
   # => leave it up to the user to make the calculation if they switch mid report
+
   @finding.dread_total = 0 if @finding.dread_total.nil?
+  @finding.nist800_total = 0 if @finding.nist800_total == nil
   @finding.cvss_total = 0 if @finding.cvss_total.nil?
   @finding.risk = 0 if @finding.risk.nil?
   @finding.save
@@ -895,7 +901,7 @@ get '/report/:id/findings/:finding_id/edit' do
     @attaches.push(ta.description)
   end
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
   haml :findings_edit, encode_html: true
 end
@@ -930,6 +936,9 @@ post '/report/:id/findings/:finding_id/edit' do
     data = cvss(data, false)
   elsif @report.scoring.casecmp('cvssv3').zero?
     data = cvss(data, true)
+  elsif(@report.scoring.downcase == "nist800")
+    # call nist800 helper function
+    data = nist800(data)
   end
 
   # Update the finding with templated finding stuff
@@ -944,6 +953,7 @@ post '/report/:id/findings/:finding_id/edit' do
   # because of multiple scores we need to make sure all are set
   # => leave it up to the user to make the calculation if they switch mid report
   @finding.dread_total = 0 if @finding.dread_total.nil?
+  @finding.nist800_total = 0 if @finding.nist800_total == nil
   @finding.cvss_total = 0 if @finding.cvss_total.nil?
   @finding.risk = 0 if @finding.risk.nil?
   @finding.save
@@ -978,6 +988,7 @@ get '/report/:id/findings/:finding_id/upload' do
     affected_users: @finding.affected_users,
     discoverability: @finding.discoverability,
     dread_total: @finding.dread_total,
+    nist800_total: @finding.nist800_total,
     cvss_base: @finding.cvss_base,
     cvss_impact: @finding.cvss_impact,
     cvss_exploitability: @finding.cvss_exploitability,
@@ -1184,7 +1195,7 @@ get '/report/:id/generate' do
   end
   @report.save
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
   ## We have to do some hackery here for wordml
   findings_xml = ''
@@ -1561,7 +1572,7 @@ get '/report/:id/presentation' do
   # bail without a report
   redirect to('/') unless @report
 
-  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix = get_scoring_findings(@report)
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800  = get_scoring_findings(@report)
 
   # add images into presentations
   @images = []
@@ -1662,6 +1673,7 @@ get '/report/:id/presentation_export' do
     f.write htmlDoc
   end
 
+  @findings,@dread,@cvss,@cvssv3,@risk,@riskmatrix,@nist800 = get_scoring_findings(@report)
   rand_zip = Dir.pwd + "/tmp/#{rand(36**12).to_s(36)}.zip"
 
   # put the presentation and its dependencies (links, images, libraries...) in a zip file

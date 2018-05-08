@@ -77,6 +77,7 @@ def provide_null_score(finding)
   finding.affected_users = 1
   finding.discoverability = 1
   finding.dread_total = 1
+  finding.nist800_total = 0
 
   finding.cvss_total = 0
 

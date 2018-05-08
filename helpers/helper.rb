@@ -179,6 +179,20 @@ def add_findings_totals(udv, findings, config_options)
         informational += 1
        end
     end
+  elsif(config_options["nist800"])
+    findings.each do |finding|
+      if finding.nist800_total >= 120
+        critical += 1
+      elsif finding.nist800_total >= 90 and finding.nist800_total <= 80
+        high += 1
+      elsif finding.nist800_total >= 60 and finding.nist800_total <= 30
+        moderate += 1
+      elsif finding.nist800_total >= 1 and finding.nist800_total <= 20
+        low += 1
+      elsif finding.nist800_total <= 0
+        informational += 1
+      end
+	  end
   else
     findings.each do |finding|
       if finding.risk == 4
@@ -383,6 +397,62 @@ def compare_text(new_text, orig_text)
     n_t << "<modified></modified>#{new_text}"
     return n_t
   end
+end
+
+# created NIST800 helper to cut down repetitive code
+def nist800(data)
+  if data["nist_impact"] == "Informational"
+    impact_val = 0
+  elsif data["nist_impact"] == "Low"
+    impact_val = 1
+  elsif data["nist_impact"] == "Moderate"
+    impact_val = 20
+  elsif data["nist_impact"] == "High"
+    impact_val = 30
+  elsif data["nist_impact"] == "Critical"
+    impact_val = 40
+  end
+
+  if data["nist_likelihood"] == "Low"
+    likelihood_val = 1
+  elsif data["nist_likelihood"] == "Moderate"
+    likelihood_val = 2
+  elsif data["nist_likelihood"] == "High"
+    likelihood_val = 3
+  end
+
+  nist800_total = impact_val * likelihood_val
+
+  # Calulate nist total numeriacl score (Numbers used not NIST offical)
+  # I came up with the math to match this table:
+  # +------------+----------+---------------+-----+----------+----------+----------+
+  # |                                     Impact                                   |
+  # +------------+----------+---------------+-----+----------+----------+----------+
+  # |            |          | Informational | Low | Moderate | High     | Critical |
+  # +            +----------+---------------+-----+----------+----------+----------+
+  # | likeihood  | High     | Informational | Low | Moderate | High     | Critical |
+  # |            | Moderate | Informational | Low | Moderate | Moderate | High     |
+  # |            | Low      | Informational | Low | Low      | Moderate | Moderate |
+  # +------------+----------+---------------+-----+----------+----------+----------+
+
+  if nist800_total >= 120
+   nist_rating = "Critical" 
+  elsif nist800_total <= 90 and nist800_total >= 80
+   nist_rating = "High" 
+  elsif nist800_total <= 60 and nist800_total >= 30
+   nist_rating = "Moderate" 
+  elsif nist800_total <= 20 and nist800_total >= 1
+   nist_rating = "Low" 
+  elsif nist800_total == 0
+   nist_rating = "Informational" 
+  end
+
+  data['impact_val'] = impact_val
+  data['likelihood_val'] = likelihood_val
+  data['nist_rating'] = nist_rating
+  data['nist800_total'] = nist800_total
+
+  return data
 end
 
 # CVSS helper, there is a lot of hardcoded stuff
@@ -1046,7 +1116,7 @@ def cvss(data, is_cvssv3)
   data
 end
 
-# there are three scoring types; risk, dread and cvss
+# these are the scoring types; risk, dread and cvss, nist
 #    this sets a score for all three in case the user switches later
 
 def convert_score(finding)
@@ -1057,6 +1127,10 @@ def convert_score(finding)
   if finding.dread_total.nil?
     puts '|!| No DREAD score exists'
     finding.dread_total = 0
+  end
+  if finding.nist800_total.nil?
+    puts '|!| No NIST800-30 score exists'
+    finding.nist800_total = 0
   end
   if finding.risk.nil?
     puts '|!| No RISK score exists'
@@ -1074,6 +1148,7 @@ def get_scoring_findings(report)
     cvss3 = false
     risk = false
     riskmatrix = false
+    nist800 = false
   elsif report.scoring.casecmp('cvss').zero?
     findings = Findings.all(report_id: report.id, order: [:cvss_total.desc])
     dread = false
@@ -1081,6 +1156,7 @@ def get_scoring_findings(report)
     cvss3 = false
     risk = false
     riskmatrix = false
+    nist800 = false
   elsif report.scoring.casecmp('cvssv3').zero?
     findings = Findings.all(report_id: report.id, order: [:cvss_total.desc])
     dread = false
@@ -1088,6 +1164,15 @@ def get_scoring_findings(report)
     cvss3 = true
     risk = false
     riskmatrix = false
+    nist800 = false
+  elsif report.scoring.casecmp('nist800').zero?
+    findings = Findings.all(report_id: report.id, order: [:nist800_total.desc])
+    dread = false
+    cvss = false
+    cvss3 = true
+    risk = false
+    riskmatrix = false
+    nist800 = true
   elsif report.scoring.casecmp('riskmatrix').zero?
     findings = Findings.all(report_id: report.id, order: [:risk.desc])
     dread = false
@@ -1095,6 +1180,7 @@ def get_scoring_findings(report)
     cvss3 = false
     risk = false
     riskmatrix = true
+    nist800 = false
   else
     findings = Findings.all(report_id: report.id, order: [:risk.desc])
     dread = false
@@ -1102,6 +1188,7 @@ def get_scoring_findings(report)
     cvss3 = false
     risk = true
     riskmatrix = false
+    nist800 = false
   end
 
   [findings, dread, cvss, cvss3, risk, riskmatrix]
@@ -1115,9 +1202,10 @@ def set_scoring(config_options)
     return 'cvss'
   elsif config_options['cvssv3']
     return 'cvssv3'
+  elsif config_options['nist800']
+    return 'nist800'
   elsif config_options['riskmatrix']
     return 'riskmatrix'
   end
-
   'risk'
 end

@@ -85,6 +85,14 @@ class TemplateFindings
   property :severity_rationale, String, length: 20_000, required: false
   property :likelihood_rationale, String, length: 20_000, required: false
 
+  # NIST800
+  property :nist_impact, String, :required => false
+  property :nist_likelihood, String, :required => false
+  property :nist800_total, Float, :required => false
+  property :impact_val, Float, :required => false
+  property :likelihood_val, Float, :required => false
+  property :nist_rating, String, :required => false
+ 
   property :language, String, required: false
 end
 
@@ -174,6 +182,14 @@ class Findings
   property :likelihood, String, required: false
   property :severity_rationale, String, length: 20_000, required: false
   property :likelihood_rationale, String, length: 20_000, required: false
+
+  # NIST800
+  property :nist_impact, String, :required => false
+  property :nist_likelihood, String, :required => false
+  property :nist800_total, Float, :required => false
+  property :impact_val, Float, :required => false
+  property :likelihood_val, Float, :required => false
+  property :nist_rating, String, :required => false
 
   property :language, String, required: false
 end
