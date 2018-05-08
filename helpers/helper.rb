@@ -1191,7 +1191,7 @@ def get_scoring_findings(report)
     nist800 = false
   end
 
-  [findings, dread, cvss, cvss3, risk, riskmatrix]
+  [findings, dread, cvss, cvss3, risk, riskmatrix, nist800]
 end
 
 # Get the global configuration scoring algorithm and set at the report level
