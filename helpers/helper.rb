@@ -1169,7 +1169,7 @@ def get_scoring_findings(report)
     findings = Findings.all(report_id: report.id, order: [:nist800_total.desc])
     dread = false
     cvss = false
-    cvss3 = true
+    cvss3 = false
     risk = false
     riskmatrix = false
     nist800 = true
