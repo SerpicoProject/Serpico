@@ -26,6 +26,7 @@ class TemplateFindings
   property :approved, Boolean, required: false, default: true
   property :risk, Integer, required: false
   property :affected_hosts, String, length: 20_000, required: false
+  
   # CVSSv2
   property :av, String, required: false
   property :ac, String, required: false
