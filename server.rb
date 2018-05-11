@@ -92,12 +92,11 @@ class Server < Sinatra::Application
   # Risk Matrix
   set :severity, %w[Low Medium High]
   set :likelihood, %w[Low Medium High]
-
-  #Nist800
-  set :nist_likelihood, ["Low","Moderate","High"]
-  set :nist_impact, ["Informational","Low","Moderate","High","Critical"]
-  # used impact from Risk Matrix
-
+  
+  # NIST800
+  set :nist_likelihood, ['Low','Moderate','High']
+  set :nist_impact, ['nformational','Low','Moderate','High','Critical']
+  
   if config_options['cvssv2_scoring_override']
     if config_options['cvssv2_scoring_override'] == 'true'
       set :cvssv2_scoring_override, true
