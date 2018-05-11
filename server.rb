@@ -89,14 +89,13 @@ class Server < Sinatra::Application
   set :mod_integrity, ['Not Defined', 'None', 'Low', 'High']
   set :mod_availability, ['Not Defined', 'None', 'Low', 'High']
 
+  # NIST800
+  set :nist_likelihood, ['Low','Moderate','High']
+  set :nist_impact, ['nformational','Low','Moderate','High','Critical']
+  
   # Risk Matrix
   set :severity, %w[Low Medium High]
   set :likelihood, %w[Low Medium High]
-
-  #Nist800
-  set :nist_likelihood, ["Low","Moderate","High"]
-  set :nist_impact, ["Informational","Low","Moderate","High","Critical"]
-  # used impact from Risk Matrix
 
   if config_options['cvssv2_scoring_override']
     if config_options['cvssv2_scoring_override'] == 'true'
