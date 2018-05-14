@@ -95,7 +95,7 @@ class Server < Sinatra::Application
   
   # NIST800
   set :nist_likelihood, ['Low','Moderate','High']
-  set :nist_impact, ['nformational','Low','Moderate','High','Critical']
+  set :nist_impact, ['Informational','Low','Moderate','High','Critical']
   
   if config_options['cvssv2_scoring_override']
     if config_options['cvssv2_scoring_override'] == 'true'
