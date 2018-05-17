@@ -432,6 +432,26 @@
         .controls
           %textarea.input-xxlarge.allowMarkupShortcut#likelihood_rationale{ :rows => "3", :name => "likelihood_rationale" }
 
+      -#-------------------- End of add NIST800 findings in master database --------------------#-
+    - elsif @nist800
+      .control-group
+        %label.control-label{ :for => "nist_impact" } Impact
+        .controls
+          %select#nist_impact{ :name => "nist_impact" }
+            %option{ :value => "Informational" }= "Informational"
+            %option{ :value => "Low" }= "Low"
+            %option{ :value => "Moderate" }= "Moderate"
+            %option{ :value => "High" }= "High"
+            %option{ :value => "Critical" }= "Critical"
+      .control-group
+        %label.control-label{ :for => "nist_likelihood" } Likelihood
+        .controls
+          %select#nist_likelihood{ :name => "nist_likelihood" }
+            %option{ :value => "Low" }= "Low"
+            %option{ :value => "Moderate" }= "Moderate"
+            %option{ :value => "High" }= "High"
+      -#-------------------- End of add NIST800 findings in master database --------------------#-
+
     - else
       .control-group
         %label.control-label{ :for => "effort" } Remediation Effort

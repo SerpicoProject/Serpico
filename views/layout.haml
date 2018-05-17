@@ -170,7 +170,7 @@
                   %li.nav-header Enabled Plugins
                   -@plugin_side_menu.each do |item|
                     %li
-                    %a{ :href => "#{item["link"]}?report_id=#{@report.id}" } #{item["name"]}
+                      %a{ :href => "#{item["link"]}?report_id=#{@report.id}" } #{item["name"]}
 
           =yield
   - else
