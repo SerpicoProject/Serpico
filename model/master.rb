@@ -337,39 +337,6 @@ class BurpMapping
 end
 
 class Reports
-<<<<<<< HEAD
-    include DataMapper::Resource
-
-    property :id, Serial
-    property :date, String, :length => 20
-    property :report_type, String, :length => 200
-    property :report_name, String, :length => 200
-    property :assessment_type, String, :length => 200
-    property :consultant_name, String, :length => 200
-    property :consultant_company, String, :length => 200
-    property :consultant_phone, String
-    property :consultant_title, String, :length => 200
-    property :consultant_email, String, :length => 200
-    property :contact_name, String, :length => 200
-    property :contact_phone, String
-    property :contact_title, String, :length => 200
-    property :contact_email, String, :length => 200
-    property :contact_city, String
-    property :contact_address, String, :length => 200
-    property :contact_state, String
-    property :contact_zip, String
-    property :full_company_name, String, :length => 200
-    property :short_company_name, String, :length => 200
-    property :company_website, String, :length => 200
-    property :assessment_start_date, String, :length => 200
-    property :assessment_end_date, String, :length => 200
-    property :owner, String, :length => 200
-    property :authors, CommaSeparatedList, :required => false, :lazy => false
-    property :user_defined_variables, String, :length => 10000
-    property :scoring, String, :length => 100
-
-    property :language, String, required: true, default: "undefined" ,length: 50
-=======
   include DataMapper::Resource
 
   property :id, Serial
@@ -400,8 +367,7 @@ class Reports
   property :user_defined_variables, String, length: 10_000
   property :scoring, String, length: 100
 
-  property :language, String, required: false
->>>>>>> b2de4aa2bf9c337961294d6ca08ad20a3a887458
+  property :language, String, required: true, default: "undefined" ,length: 50
 end
 
 class Attachments
