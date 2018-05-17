@@ -495,7 +495,7 @@ end
 get '/admin/templates/:id/edit' do
   redirect to('/no_access') unless is_administrator?
 
-  @admind = true
+  @admin = true
   @template = Xslt.first(id: params[:id])
 
   haml :edit_template, encode_html: true
