@@ -436,6 +436,10 @@ post '/admin/templates/add' do
   begin
     xslt = generate_xslt(docx)
     xslt_components = generate_xslt_components(docx)
+  rescue TemplateVerificationError => detail
+    @error_message = CGI::escapeHTML(detail.errorString)
+    @tree = CGI::escapeHTML(detail.template_tree)
+    return haml :template_error, encode_html: true
   rescue ReportingError => detail
     error = true
   end
@@ -491,11 +495,21 @@ post '/admin/templates/add' do
   end
 end
 
+get '/admin/templates/:id/tree' do
+  redirect to('/no_access') unless is_administrator?
+  @admin = true
+  xslt = Xslt.first(id: params[:id])
+  document = read_rels(xslt.docx_location,"word/document.xml")
+  @tree = verify_document(document)
+  @tree = @tree[2]
+
+  haml :template_tree, encode_html: true
+end
 # Manage Templated Reports
 get '/admin/templates/:id/edit' do
   redirect to('/no_access') unless is_administrator?
 
-  @admin = true
+  @admind = true
   @template = Xslt.first(id: params[:id])
 
   haml :edit_template, encode_html: true

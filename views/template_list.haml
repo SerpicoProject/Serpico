@@ -36,5 +36,7 @@
                   %i.icon-trash.icon-white{ :title => "Delete Template" }
                 %a.btn.btn-info{ :href => "/admin/templates/#{template.id}/download" }
                   %i.icon-play-circle.icon-white{ :title => "Preview" }
+                %a.btn.btn-success{:href => "/admin/templates/#{template.id}/tree"}
+                  %i.icon-indent-right.icon-white{:title => 'Tree'}
         - else
           No Templates. Silly goose, how will you create reports?

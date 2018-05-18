@@ -1,0 +1,150 @@
+%link{:rel => "stylesheet", :href => "/codemirror/lib/codemirror.css"}
+%link{:rel => "stylesheet", :href => "/codemirror/theme/cobalt.css"}
+%link{:rel => "stylesheet", :href => "/codemirror/mode/Serpico/Serpico.css"}
+%link{:rel => "stylesheet", :href => "/codemirror/addon/fold/foldgutter.css"}
+
+%script{:src => "/codemirror/lib/codemirror.js"}
+%script{:src => "/codemirror/mode/Serpico/Serpico.js"}
+%script{:src => "/codemirror/addon/fold/foldgutter.js"}
+%script{:src => "/codemirror/addon/fold/foldcode.js"}
+%script{:src => "/codemirror/addon/fold/indent-fold.js"}
+
+%div{:style => "margin-left: 15%;"}
+  %br
+  %h3 Meta Language debug tree
+
+  %label{ :class => "control-label", :for => "filter_panel" }
+    %a{:href=> '#filter_panel', "data-toggle"=>'modal', :class=>'btn btn-info'}
+      Filter
+  .modal{:id=>'filter_panel', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+    .modal-body
+      %h3 Filter
+      Select the elements you want to display
+      %br
+      %input{:type => "checkbox", :class => "filter", :name => "condition"} Condition
+      %br
+      %input{:type => "checkbox", :class => "filter", :name => "loop"} Loop
+      %br
+      %input{:type => "checkbox", :class => "filter", :name => "choose"} Choose structures
+      %br
+      %input{:type => "checkbox", :class => "filter", :name => "rowloop"} Row loop
+      %br     
+      %input{:type => "checkbox", :class => "filter", :name => "variable"} Variable     
+
+  %textarea{:id => "tree"} #{@tree}
+
+  :javascript
+    var myCodeMirror = CodeMirror.fromTextArea(document.querySelector("#tree"), {readOnly: true, theme: "cobalt Serpico", lineNumbers: true, foldGutter: true, extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }}, gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]});
+    var tree = document.querySelector("#tree").value
+    var filters = document.querySelectorAll(".filter")
+    for(var i = 0 ; i<filters.length; i++)
+    filters[i].addEventListener("change",applyFilters)
+    
+    function applyFilters(){
+        
+        var cb = document.querySelectorAll(".filter")
+        var filters = {}
+        for(var i = 0 ; i<cb.length; i++){
+        filters[cb[i].name] = cb[i].checked
+        }
+        console.log(filters)
+        var newtree = ""
+        var lines = tree.split("\n")
+        var indent = 0
+
+        var rowloopStarted = false
+        var rowloopStartTab = -1
+
+        for(i=0;i<lines.length;i++){
+        line = lines[i].trim()
+        if(filters['loop']){
+            // end of loop
+            if(line[0] === "\u2206"){
+                indent--
+                for(j=0 ; j<indent ; j++)
+                    newtree += "\t" 
+                newtree += line+ "\n"
+            }
+            // start of loop (not choose)
+            if(line[0] === "\u00AC" && line.indexOf("\u00B5") === -1){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            indent++
+            }
+        }
+        if(filters['condition']){
+            // start of condition
+            if(line[0] === "\u2020"){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            indent++
+            }
+            // end of condition
+            if(line[0] === "\u00A5"){
+            indent--
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            }
+        }
+        if(filters['choose']){
+            // start of choose
+            if(line.indexOf("\u00B5") !== -1){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            indent++
+            }
+            // elem of choose
+            if(line[0] === "\u0192" || line[0] === "\u00F7"){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            }
+            // end of choose
+            if(line[0] === "\u2260" || line[0] === "\u00E5"){
+            indent--
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            }
+        }
+        if(filters['rowloop']){
+            tabs = (lines[i].match(/\t/g) || []).length
+
+            if(rowloopStarted && tabs <= rowloopStartTab){
+            indent--
+            rowloopStarted = false
+            }
+
+            if(line[0] === "\u00E6"){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            indent++
+            rowloopStarted = true
+            rowloopStartTab = tabs
+            }
+            if(line[0] === "\u221E"){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            }
+
+        }
+        if(filters['variable']){
+            if(line[0] === "\u03A9" || line[0] === "\u00A7" || line[0] === "\u03C0"){
+            for(j=0 ; j<indent ; j++)
+                newtree += "\t" 
+            newtree += line+ "\n"
+            }
+        }
+        }
+        console.log(newtree)
+        newtree = newtree.substring(0, newtree.length-1)
+        document.querySelector(".CodeMirror").remove()
+        document.querySelector("#tree").value = newtree
+        CodeMirror.fromTextArea(document.querySelector("#tree"), {readOnly: true, theme: "cobalt Serpico", lineNumbers: true, foldGutter: true, extraKeys: {"Ctrl-Q": function(cm){ cm.foldCode(cm.getCursor()); }}, gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"]});
+    }
