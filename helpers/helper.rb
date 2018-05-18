@@ -230,6 +230,10 @@ def url_escape_hash(hash)
       v = v.gsub('*-', '<bullet>')
       v = v.gsub('-*', '</bullet>')
 
+      # convert first nested bullets
+      v = v.gsub('*=', '<bullet1>')
+      v = v.gsub('=*', '</bullet1>')
+
       # convert h4
       v = v.gsub('[==', '<h4>')
       v = v.gsub('==]', '</h4>')
@@ -269,6 +273,7 @@ def meta_markup(text)
   unless text.nil?
     new_text = text.gsub('<paragraph>', '&#x000A;').gsub('</paragraph>', '')
     new_text = new_text.gsub('<bullet>', '*-').gsub('</bullet>', '-*')
+    new_text = new_text.gsub('<bullet1>', '*=').gsub('</bullet1>', '=*')
     new_text = new_text.gsub('<h4>', '[==').gsub('</h4>', '==]')
     new_text = new_text.gsub('<code>', '[[[').gsub('</code>', ']]]')
     new_text = new_text.gsub('<indented>', '[--').gsub('</indented>', '--]')
@@ -289,6 +294,8 @@ def meta_markup_unencode(findings_xml, report)
   # same for the bullets
   findings_xml = findings_xml.gsub('&lt;bullet&gt;', '<bullet>')
   findings_xml = findings_xml.gsub('&lt;/bullet&gt;', '</bullet>')
+  findings_xml = findings_xml.gsub('&lt;bullet1&gt;', '<bullet1>')
+  findings_xml = findings_xml.gsub('&lt;/bullet1&gt;', '</bullet1>')
   # same for the h4
   findings_xml = findings_xml.gsub('&lt;h4&gt;', '<h4>')
   findings_xml = findings_xml.gsub('&lt;/h4&gt;', '</h4>')
