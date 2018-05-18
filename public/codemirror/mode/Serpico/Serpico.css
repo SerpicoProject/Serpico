@@ -1,0 +1,8 @@
+.cm-s-Serpico.CodeMirror { height: 600px; }
+.cm-s-Serpico span.cm-choose { color: #c3a1f8; }
+.cm-s-Serpico span.cm-loop { color: #ff80e1; }
+.cm-s-Serpico span.cm-keyword { color: #ffee80; }
+.cm-s-Serpico span.cm-string { color: #3ad900; }
+.cm-s-Serpico span.cm-condition { color: #9effff; }
+.cm-s-Serpico span.cm-row-loop { color: #ff9900; }
+.cm-s-Serpico span.cm-error { color: #e63a2e; }

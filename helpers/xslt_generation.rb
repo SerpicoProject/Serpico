@@ -4,6 +4,7 @@ require './model/master.rb'
 require 'cgi'
 require './helpers/helper'
 
+
 # This does the heavy lifting for taking a report template and creating the resulting XSLT template.
 #   It needs a lot of love but it works for now.
 
@@ -14,6 +15,416 @@ class ReportingError < RuntimeError
   def initialize(errorString)
     @errorString = errorString
   end
+end
+
+class TemplateVerificationError < ReportingError
+	attr :template_tree
+  
+	def initialize(errorString, template_tree)
+	  super(errorString)
+	  @template_tree = template_tree
+	end
+  
+	def to_s
+	  return "#{errorString}"
+	end
+end
+
+def locate_error(error, document, position)
+	text_before = document[0..position].scan(/<w:t>.*?<\/w:t>/)
+	text_after = document[position..-1].scan(/<w:t>.*?<\/w:t>/)
+
+	error.concat(" between : \n")
+	nb_text = [text_before.count, 10].min
+
+	while nb_text != 0
+		# remove the tags before concatenate text
+		message = text_before[-1*nb_text][5..-7]
+		error.concat("#{message}, ")
+		nb_text = nb_text - 1
+	end
+	error.concat("\nand \n")
+	nb_text = [text_after.count, 10].min
+	k = 0
+	while nb_text != k
+		message = text_after[k][5..-7]
+		error.concat("#{message}, ")
+		k = k + 1
+	end
+	return error
+end
+
+def verify_document(document)
+	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|<\/w:tbl>/).map { |b| [Regexp.last_match.begin(0),b] }
+	i=0
+	buffer = []
+	tree = ""
+	error = ""
+	tree_valid = true
+	while i<metacharacters.length
+	  case metacharacters[i][1]
+		# ¬ character
+		when "¬"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "¬"
+			tree_valid = false
+			error = "Error with a ¬ character : character without pair"
+			locate_error(error, document, metacharacters[i][0])
+			tree.concat("#{tabs}¬  ←\n")
+			break
+		  end
+		  condition = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  if i+2 < metacharacters.length && metacharacters[i+2][1] == "µ"
+			tree.concat("#{tabs}¬#{condition}¬ ")
+		  else
+			tree.concat("#{tabs}¬#{condition}¬\n") 
+		  end
+		  buffer.push("¬")
+		  i = i+1
+  
+  
+		# ∆ character
+		when "∆"
+		  previous = buffer.pop()
+		  tabs = "\t" * buffer.length
+		  if previous != "¬"
+			if previous == "†"
+			  error = "error when closing condition, expected ¥, got ∆ instead"
+			elsif previous =~ /¬µ/
+			  error = "error when closing choose structure, expected ≠, got ∆ instead"
+			elsif previous =~ /µ/
+			  error = "error when closing choose structure, expected å, got ∆ instead"
+			else
+			  error = "error when closing structure, unexpected ∆"
+			end
+			locate_error(error, document, metacharacters[i][0])
+			tree_valid = false
+  
+			tree.concat("#{tabs}∆  ←\n")
+			break
+		  end
+		  tree.concat("#{tabs}∆\n")
+  
+  
+		# † character
+		when "†"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "†"
+			tree_valid = false
+			error = "Error with a † character : character without pair"
+			locate_error(error, document, metacharacters[i][0])
+			tree.concat("#{tabs}†  ←\n")
+			break
+		  end
+		  condition = document[metacharacters[i][0]+3..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  tree.concat("#{tabs}†#{condition}†\n")
+		  buffer.push("†")
+		  i = i+1
+		
+		# ¥ character
+		when "¥"
+		  previous = buffer.pop()
+		  tabs = "\t" * buffer.length
+  
+		  if previous != "†"
+			if previous == "¬"
+			  error = "error when closing loop, expected ∆, got ¥ instead"
+			elsif previous =~ /^¬µ/
+			  error = "error when closing choose structure, expected ≠, got ¥ instead"
+			elsif previous =~ /^µ/
+			  error = "error when closing choose structure, expected å, got ¥ instead"
+			else
+			  error = "error when closing structure, unexpected ¥"
+			end
+			# error.concat" at line #{document[0..metacharacters[i][0]].scan(/(?=<w:p( |>))/).count}"
+			locate_error(error, document, metacharacters[i][0])
+			tree_valid = false
+  
+			tree.concat("#{tabs}¥  ←\n") 
+			break
+		  end
+		  tree.concat("#{tabs}¥\n") 
+		
+  
+  
+		# µ character
+		when "µ"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "µ"
+			error = "Error with a µ character : character without pair"
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+			tree.concat("#{tabs}µ  ←\n")
+			break
+		  end
+		  condition = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  if buffer[-1] == "¬"
+			tree.concat("µ#{condition}µ\n")
+			buffer[-1] = "¬µ"
+		  else
+			tree.concat("#{tabs}µ#{condition}µ\n")    
+			buffer.push("µ")
+		  end
+		  i = i+1
+		
+  
+		# ƒ character
+		when "ƒ"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "ƒ"
+			error = "Error with a ƒ character : character without pair"
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+			tree.concat("#{tabs}ƒ  ←\n")
+			break
+		  end
+		  condition = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  if buffer[-1] == "µ" || buffer[-1] == "¬µ"
+			tree.concat("#{tabs}ƒ#{condition}ƒ\n")
+		  elsif buffer[-1] == "¬µ÷" || buffer[-1] == "µ÷"
+			error = "Error with a ƒ character : character must be before the ÷ character"
+			tree_valid = false
+			tree.concat("#{tabs}ƒ#{condition}ƒ  ←\n")
+			break
+		  else
+			error = "Error with a ƒ character : character must be inside a choose structure"
+			tree_valid = false
+			tree.concat("#{tabs}ƒ#{condition}ƒ  ←\n")
+			break
+		  end
+		  i = i+1
+		
+		# ÷ character
+		when "÷"
+		  tabs = "\t" * buffer.length
+		  if buffer[-1] == "µ" || buffer[-1] == "¬µ"
+			tree.concat("#{tabs}÷\n")
+			buffer[-1] = buffer[-1] + "÷"
+		  else 
+			error = "Error with a ÷ character : character must be inside a choose structure"
+			tree.concat("#{tabs}÷  ←\n")
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+	  
+		# ≠ character
+		when "≠"
+		  previous = buffer.pop()
+		  tabs = "\t" * buffer.length
+  
+		  if previous != "¬µ÷"
+			if previous == "¬"
+			  error = "error when closing loop, expected ∆, got ≠ instead"
+			elsif previous =~ /^µ/
+			  error = "error when closing choose structure, expected å, got ≠ instead"
+			elsif previous == "†"
+			  error = "error when closing condition, expected ¥, got ≠ instead"
+			elsif previous == "¬µ"
+			  error = "error when closing choose structure, missing ÷ before ≠"
+			else
+			  error = "error when closing structure, unexpected ≠"
+			end
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+  
+			tree.concat("#{tabs}≠  ←\n")
+			break
+		  end
+		  tree.concat("#{tabs}≠\n")
+	  
+		# å character
+		when "å"
+		  previous = buffer.pop()
+		  tabs = "\t" * buffer.length
+  
+		  if previous != "µ÷"
+			if previous == "¬"
+			  error = "error when closing loop, expected ∆, got å instead"
+			elsif previous =~ /¬µ/
+			  error = "error when closing choose structure, expected ≠, got å instead"
+			elsif previous == "†"
+			  error = "error when closing condition, expected ¥, got å instead"
+			elsif previous == "µ"
+			  error = "error when closing choose structure, missing ÷ before å"
+			else
+			  error = "error when closing structure, unexpected å"
+			end
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+  
+			tree.concat("#{tabs}å  ←\n")
+			break
+		  end
+		  tree.concat("#{tabs}å\n")
+		# ツ character
+		when "ツ"
+		  # check if there is anything else than π between two ツ
+		  j = 1
+		  while j+i < metacharacters.length
+			if metacharacters[j+i][1] == "ツ"
+			  break
+			elsif metacharacters[j+i][1] != "π"
+			  tree_valid = false
+			  break
+			end
+			j = j+1
+		  end
+  
+		  tabs = "\t" * buffer.length
+  
+		  if j+i == metacharacters.length || not(tree_valid)
+			error = "Error with a ツ character : character without pair"
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+			tree.concat("#{tabs}ツ  ←\n")
+			break
+		  end
+  
+		  if j.even?
+			error = "Error with a π character : character without pair"
+			tree_valid = false
+			content = document[metacharacters[i][0]+3..metacharacters[i+j][0]-1].gsub(/<.*?>/,"")
+			tree.concat("#{tabs}ツ#{content}ツ  ←\n")
+			break
+		  end
+  
+		  
+		  content = document[metacharacters[i][0]+3..metacharacters[i+j][0]-1].gsub(/<.*?>/,"")
+		  tree.concat("#{tabs}ツ#{content}ツ\n")
+		  i = i+j 
+  
+		
+  
+		# § character
+		when "§"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "§"
+			error = "Error with a § character : character without pair"
+			locate_error(error, document, metacharacters[i][0])
+			tree.concat("#{tabs}§  ←\n")
+			tree_valid = false
+			break
+		  end
+		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  tree.concat("#{tabs}§#{content}§\n")
+		  i = i+1 
+  
+  
+		# Ω character
+		when "Ω"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "Ω"
+			error = "Error with a Ω character : character without pair"
+			tree.concat("#{tabs}Ω  ←\n")
+			tree_valid = false
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+		  if buffer.grep(/^¬/).any?
+			error = "Error with a Ω character : must not be used inside loop"
+			tree_valid = false
+			content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+			tree.concat("#{tabs}Ω#{content}Ω  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  tree.concat("#{tabs}Ω#{content}Ω\n")
+		  i = i+1 
+		# π character
+		when "π"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "π" 
+			error = "Error with a π character : character without pair"
+			tree_valid = false
+			tree.concat("#{tabs}π  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+  
+		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  tree.concat("#{tabs}π#{content}π\n")
+		  i = i+1 
+  
+		# æ character
+		when "æ"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "æ" 
+			error = "Error with a æ character : character without pair"
+			tree_valid = false
+			tree.concat("#{tabs}æ  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+  
+		  condition = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+  
+		  if /<w:tbl[ >]((?<!<\/w:tbl>).)*$/.match(document[0..metacharacters[i][0]]).nil?
+			error = "Error with a æ character : character must be inside of table"
+			tree_valid = false
+			tree.concat("#{tabs}æ#{condition}æ  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+		  tree.concat("#{tabs}æ#{condition}æ\n")
+		  buffer.push("æ")
+		  i = i+1
+  
+		# ∞ character
+		when "∞"
+		  tabs = "\t" * buffer.length
+		  if metacharacters[i+1][1] != "∞" 
+			error = "Error with a ∞ character : character without pair"
+			tree_valid = false
+			tree.concat("#{tabs}∞  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+  
+		  condition = document[metacharacters[i][0]+3..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+  
+		  if buffer[-1] != "æ"
+			error = "Error with a ∞ character : character must be in a row loop"
+			tree_valid = false
+			tree.concat("#{tabs}∞#{condition}∞  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+		  tree.concat("#{tabs}∞#{condition}∞\n")
+		  i = i+1
+  
+		# end of table
+		when "<\/w:tbl>"
+		  if buffer[-1] == "æ"
+			buffer.pop()
+		  end
+  
+	  end
+	
+	  i = i+1 
+	end
+	if not(buffer.empty?) && tree_valid
+	  previous = buffer.pop()
+	  tabs = "\t" * buffer.length
+	  if previous == "†"
+		error = "error :  condition not closed, expected ¥"
+	  elsif previous == /^µ/
+		error = "error : choose structure nor closed, expected å"
+	  elsif previous == /¬µ/
+		error = "error : choose structure not closed, expected ≠"
+	  elsif previous == "¬"
+		error = "error : loop not closed, expected ∆"
+	  else
+		error = "error : structure not closed"
+	  end
+	  # locate_error(error, document, document[-1])
+	  tree.concat("#{tabs}←\n")
+	  tree_valid = false
+	end
+  
+	return tree_valid, error, tree
+  
 end
 
 def generate_xslt(docx)
@@ -36,6 +447,11 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
 	document = read_rels(docx,"word/document.xml")
 
+	tree_valid, error, tree = verify_document(document)
+	if not(tree_valid)
+	  raise TemplateVerificationError.new(error,tree)
+	end
+	
 	# fix for curly apostrophes
 	document = document.gsub(/‘/,"'")
 	document = document.gsub(/’/,"'")
@@ -629,7 +1045,7 @@ end
 # http://answers.microsoft.com/en-us/office/forum/office_2010-word/word-2010-randomly-deleting-spaces-between-words/34682f6f-7be2-4835-9c18-907b0abd5615?page=6
 # Basically we replace space with alt-255 space; go figure
 def white_space(document)
-	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>").gsub(0xE2.chr, "\'").gsub("&#39;", "\'")
+	document = document.gsub("<w:t xml:space=\"preserve\"> </w:t>","<w:t xml:space=\"preserve\"> </w:t>").gsub(0xE2.chr, "\'").gsub("&#39;", "\'")
 	return document
 end
 
