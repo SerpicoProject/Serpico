@@ -400,7 +400,8 @@ post '/report/:id/edit' do
   id = params[:id]
 
   data = url_escape_hash(request.POST)
-
+  #preventing values from degenerating with & double encoding
+  data = data.map{ |param,value| [param, value.gsub('&amp;', '&')]}
   @report = get_report(id)
 
   unless @report.update(data)
@@ -1304,7 +1305,7 @@ get '/report/:id/generate' do
     end
   end
   # we bring all xml together
-  report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
+  report_xml = "<report>#{CGI.unescapeHTML(@report.to_xml)}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
   noko_report_xml = Nokogiri::XML(report_xml)
   #no use to go on with report generation if report XML is malformed
   if !noko_report_xml.errors.empty?
