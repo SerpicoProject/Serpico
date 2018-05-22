@@ -55,7 +55,7 @@ def locate_error(error, document, position)
 end
 
 def verify_document(document)
-	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|<\/w:tbl>/).map { |b| [Regexp.last_match.begin(0),b] }
+	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|<\/w:tr>/).map { |b| [Regexp.last_match.begin(0),b] }
 	i=0
 	buffer = []
 	tree = ""
@@ -383,19 +383,12 @@ def verify_document(document)
 		  end
   
 		  condition = document[metacharacters[i][0]+3..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
-  
-		  if buffer[-1] != "æ"
-			error = "Error with a ∞ character : character must be in a row loop"
-			tree_valid = false
-			tree.concat("#{tabs}∞#{condition}∞  ←\n")
-			locate_error(error, document, metacharacters[i][0])
-			break
-		  end
+
 		  tree.concat("#{tabs}∞#{condition}∞\n")
 		  i = i+1
   
 		# end of table
-		when "<\/w:tbl>"
+		when "<\/w:tr>"
 		  if buffer[-1] == "æ"
 			buffer.pop()
 		  end
