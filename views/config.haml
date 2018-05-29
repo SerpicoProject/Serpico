@@ -42,7 +42,7 @@
           - next if k =~ /ssl_key/
           - next if k =~ /log_file/
           - next if k =~ /image_align/
-          - next if k == "cvss" or k == "dread" or k == "cvssv3" or k == "riskmatrix"
+          - next if k == "cvss" or k == "dread" or k == "cvssv3" or k == "riskmatrix" or k == "nist800"
           %tr
             %td
               %label.col-md-3{ :for => "#{k}" }
