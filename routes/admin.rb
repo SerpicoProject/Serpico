@@ -32,6 +32,7 @@ get '/admin/pull' do
 
   if File.exist?('./export.zip')
     send_file './export.zip', filename: 'export.zip', type: 'Application/octet-stream'
+    serpico_log("Copy of code exported")
   else
     'No copy of the code available. Run scripts/make_export.sh.'
   end
@@ -45,6 +46,7 @@ get '/admin/dbbackup' do
   FileUtils.copy_file('./db/master.db', filename)
   if !File.zero?(filename)
     send_file filename, filename: filename.to_s, type: 'Application/octet-stream'
+    serpico_log("DB backup created")
   else
     'No copy of the database is available. Please try again.'
     sleep(5)
@@ -63,6 +65,7 @@ get '/admin/attacments_backup' do
   end
   send_file zip_file, type: 'zip', filename: zip_file
   # File.delete(rand_zip) should the temp file be deleted?
+  serpico_log("Backup of attachments created")
 end
 
 # Create a new user
@@ -153,7 +156,7 @@ post '/admin/add_user/:id' do
 
   report.authors = authors
   report.save
-
+  serpico_log("User added to report")
   redirect to("/admin/add_user/#{params[:id]}")
 end
 
@@ -173,7 +176,7 @@ get '/admin/del_user_report/:id/:author' do
 
   report.authors = authors
   report.save
-
+  serpico_log("User removed from report")
   redirect to("/admin/add_user/#{params[:id]}")
 end
 
@@ -268,6 +271,7 @@ post '/admin/config' do
 
   File.open('./config.json', 'w') do |f|
     f.write(JSON.pretty_generate(config_options))
+    serpico_log("Configuration file modified")
   end
   redirect to('/admin/config')
 end
@@ -301,11 +305,13 @@ post '/admin/plugins' do
       plug['enabled'] = true
       File.open("./plugins/#{plug['name']}/plugin.json", 'w') do |f|
         f.write(JSON.pretty_generate(plug))
+        serpico_log("Plugin #{plug['name']} enabled")
       end
     else
       plug['enabled'] = false
       File.open("./plugins/#{plug['name']}/plugin.json", 'w') do |f|
         f.write(JSON.pretty_generate(plug))
+        serpico_log("Plugin #{plug['name']} disabled")
       end
     end
   end
@@ -337,6 +343,7 @@ post '/admin/plugin_upload' do
         if entry.name == 'plugin.json'
           configj = entry.get_input_stream.read
           config = JSON.parse(configj)
+          serpico_log("Custom plugin uploaded")
         end
       end
     end
@@ -409,6 +416,7 @@ get '/admin/delete/templates/:id' do
     @xslt.destroy
     File.delete(@xslt.xslt_location) if File.file?(@xslt.xslt_location)
     File.delete(@xslt.docx_location) if File.file?(@xslt.docx_location)
+    serpico_log("Report template deleted")
   end
   redirect to('/admin/templates')
 end
@@ -489,6 +497,7 @@ post '/admin/templates/add' do
       @component = Xslt_component.new(component)
       @component.save
     end
+    serpico_log("New report template successfully added")
     redirect to('/admin/templates')
 
     haml :add_template, encode_html: true
@@ -589,6 +598,7 @@ post '/admin/templates/edit' do
       @component = Xslt_component.new(component)
       @component.save
     end
+    serpico_log("Report template modified")
     redirect to('/admin/templates')
 end
 end
@@ -634,6 +644,7 @@ post '/admin/udo_templates' do
   @udos_templates = UserDefinedObjectTemplates.all
 
   haml :user_defined_object_templates, encode_html: true
+  serpico_log("UDO template added")
 end
 
 # edit udo template
@@ -683,5 +694,6 @@ post '/admin/udo_template/:template_id/edit' do
   end
   @udo_to_edit.udo_properties = udo_properties.to_json
   @udo_to_edit.save
+  serpico_log("UDO template modified")
   redirect to('/admin/udo_templates')
 end
