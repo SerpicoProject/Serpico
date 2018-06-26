@@ -84,7 +84,6 @@ See also:
 ## Support
 * [Wiki](https://github.com/MooseDojo/Serpico/wiki): We try to add most common questions to the wiki.
 * [Slack](https://serpicoproject.slack.com)
-* [IRC: #therealserpico](http://webchat.freenode.net/?channels=%23therealserpico&uio=d4) on freenode
 * [Issue](https://github.com/SerpicoProject/Serpico/issues/new) : If you have found a bug or would like a new feature
 * [E-mail Support](https://www.serpicoproject.com/support/): For teams of users or template related questions
 
