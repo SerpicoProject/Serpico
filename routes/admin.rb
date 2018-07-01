@@ -266,7 +266,7 @@ post '/admin/config' do
     config_options['cvss'] = false
     config_options['cvssv3'] = false
     config_options['riskmatrix'] = false
-    config_options['nist800'] = false  
+    config_options['nist800'] = false
   end
 
   File.open('./config.json', 'w') do |f|
@@ -546,11 +546,15 @@ post '/admin/templates/edit' do
   error = false
   detail = ''
   begin
-      xslt = generate_xslt(docx)
-      xslt_components = generate_xslt_components(docx)
-    rescue ReportingError => detail
-      error = true
-    end
+    xslt = generate_xslt(docx)
+    xslt_components = generate_xslt_components(docx)
+  rescue TemplateVerificationError => detail
+    @error_message = CGI::escapeHTML(detail.errorString)
+    @tree = CGI::escapeHTML(detail.template_tree)
+    return haml :template_error, encode_html: true
+  rescue ReportingError => detail
+    error = true
+  end
 
   if error
     "The report template you uploaded threw an error when parsing:<p><p> #{detail.errorString}"

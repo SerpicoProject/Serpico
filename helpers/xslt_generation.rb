@@ -1,4 +1,3 @@
-# encoding: ASCII-8BIT
 require 'rubygems'
 require './model/master.rb'
 require 'cgi'
@@ -19,12 +18,12 @@ end
 
 class TemplateVerificationError < ReportingError
 	attr :template_tree
-  
+
 	def initialize(errorString, template_tree)
 	  super(errorString)
 	  @template_tree = template_tree
 	end
-  
+
 	def to_s
 	  return "#{errorString}"
 	end
@@ -77,12 +76,12 @@ def verify_document(document)
 		  if i+2 < metacharacters.length && metacharacters[i+2][1] == "µ"
 			tree.concat("#{tabs}¬#{condition}¬ ")
 		  else
-			tree.concat("#{tabs}¬#{condition}¬\n") 
+			tree.concat("#{tabs}¬#{condition}¬\n")
 		  end
 		  buffer.push("¬")
 		  i = i+1
-  
-  
+
+
 		# ∆ character
 		when "∆"
 		  previous = buffer.pop()
@@ -99,13 +98,13 @@ def verify_document(document)
 			end
 			locate_error(error, document, metacharacters[i][0])
 			tree_valid = false
-  
+
 			tree.concat("#{tabs}∆  ←\n")
 			break
 		  end
 		  tree.concat("#{tabs}∆\n")
-  
-  
+
+
 		# † character
 		when "†"
 		  tabs = "\t" * buffer.length
@@ -120,12 +119,12 @@ def verify_document(document)
 		  tree.concat("#{tabs}†#{condition}†\n")
 		  buffer.push("†")
 		  i = i+1
-		
+
 		# ¥ character
 		when "¥"
 		  previous = buffer.pop()
 		  tabs = "\t" * buffer.length
-  
+
 		  if previous != "†"
 			if previous == "¬"
 			  error = "error when closing loop, expected ∆, got ¥ instead"
@@ -139,14 +138,14 @@ def verify_document(document)
 			# error.concat" at line #{document[0..metacharacters[i][0]].scan(/(?=<w:p( |>))/).count}"
 			locate_error(error, document, metacharacters[i][0])
 			tree_valid = false
-  
-			tree.concat("#{tabs}¥  ←\n") 
+
+			tree.concat("#{tabs}¥  ←\n")
 			break
 		  end
-		  tree.concat("#{tabs}¥\n") 
-		
-  
-  
+		  tree.concat("#{tabs}¥\n")
+
+
+
 		# µ character
 		when "µ"
 		  tabs = "\t" * buffer.length
@@ -162,12 +161,12 @@ def verify_document(document)
 			tree.concat("µ#{condition}µ\n")
 			buffer[-1] = "¬µ"
 		  else
-			tree.concat("#{tabs}µ#{condition}µ\n")    
+			tree.concat("#{tabs}µ#{condition}µ\n")
 			buffer.push("µ")
 		  end
 		  i = i+1
-		
-  
+
+
 		# ƒ character
 		when "ƒ"
 		  tabs = "\t" * buffer.length
@@ -193,26 +192,26 @@ def verify_document(document)
 			break
 		  end
 		  i = i+1
-		
+
 		# ÷ character
 		when "÷"
 		  tabs = "\t" * buffer.length
 		  if buffer[-1] == "µ" || buffer[-1] == "¬µ"
 			tree.concat("#{tabs}÷\n")
 			buffer[-1] = buffer[-1] + "÷"
-		  else 
+		  else
 			error = "Error with a ÷ character : character must be inside a choose structure"
 			tree.concat("#{tabs}÷  ←\n")
 			tree_valid = false
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
-	  
+
 		# ≠ character
 		when "≠"
 		  previous = buffer.pop()
 		  tabs = "\t" * buffer.length
-  
+
 		  if previous != "¬µ÷"
 			if previous == "¬"
 			  error = "error when closing loop, expected ∆, got ≠ instead"
@@ -227,17 +226,17 @@ def verify_document(document)
 			end
 			tree_valid = false
 			locate_error(error, document, metacharacters[i][0])
-  
+
 			tree.concat("#{tabs}≠  ←\n")
 			break
 		  end
 		  tree.concat("#{tabs}≠\n")
-	  
+
 		# å character
 		when "å"
 		  previous = buffer.pop()
 		  tabs = "\t" * buffer.length
-  
+
 		  if previous != "µ÷"
 			if previous == "¬"
 			  error = "error when closing loop, expected ∆, got å instead"
@@ -252,7 +251,7 @@ def verify_document(document)
 			end
 			tree_valid = false
 			locate_error(error, document, metacharacters[i][0])
-  
+
 			tree.concat("#{tabs}å  ←\n")
 			break
 		  end
@@ -270,9 +269,9 @@ def verify_document(document)
 			end
 			j = j+1
 		  end
-  
+
 		  tabs = "\t" * buffer.length
-  
+
 		  if j+i == metacharacters.length || not(tree_valid)
 			error = "Error with a ツ character : character without pair"
 			tree_valid = false
@@ -280,7 +279,7 @@ def verify_document(document)
 			tree.concat("#{tabs}ツ  ←\n")
 			break
 		  end
-  
+
 		  if j.even?
 			error = "Error with a π character : character without pair"
 			tree_valid = false
@@ -288,14 +287,14 @@ def verify_document(document)
 			tree.concat("#{tabs}ツ#{content}ツ  ←\n")
 			break
 		  end
-  
-		  
+
+
 		  content = document[metacharacters[i][0]+3..metacharacters[i+j][0]-1].gsub(/<.*?>/,"")
 		  tree.concat("#{tabs}ツ#{content}ツ\n")
-		  i = i+j 
-  
-		
-  
+		  i = i+j
+
+
+
 		# § character
 		when "§"
 		  tabs = "\t" * buffer.length
@@ -308,9 +307,9 @@ def verify_document(document)
 		  end
 		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
 		  tree.concat("#{tabs}§#{content}§\n")
-		  i = i+1 
-  
-  
+		  i = i+1
+
+
 		# Ω character
 		when "Ω"
 		  tabs = "\t" * buffer.length
@@ -321,45 +320,37 @@ def verify_document(document)
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
-		  if buffer.grep(/^¬/).any?
-			error = "Error with a Ω character : must not be used inside loop"
-			tree_valid = false
-			content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
-			tree.concat("#{tabs}Ω#{content}Ω  ←\n")
-			locate_error(error, document, metacharacters[i][0])
-			break
-		  end
 		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
 		  tree.concat("#{tabs}Ω#{content}Ω\n")
-		  i = i+1 
+		  i = i+1
 		# π character
 		when "π"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "π" 
+		  if metacharacters[i+1][1] != "π"
 			error = "Error with a π character : character without pair"
 			tree_valid = false
 			tree.concat("#{tabs}π  ←\n")
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
-  
+
 		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
 		  tree.concat("#{tabs}π#{content}π\n")
-		  i = i+1 
-  
+		  i = i+1
+
 		# æ character
 		when "æ"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "æ" 
+		  if metacharacters[i+1][1] != "æ"
 			error = "Error with a æ character : character without pair"
 			tree_valid = false
 			tree.concat("#{tabs}æ  ←\n")
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
-  
+
 		  condition = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
-  
+
 		  if /<w:tbl[ >]((?<!<\/w:tbl>).)*$/.match(document[0..metacharacters[i][0]]).nil?
 			error = "Error with a æ character : character must be inside of table"
 			tree_valid = false
@@ -370,32 +361,32 @@ def verify_document(document)
 		  tree.concat("#{tabs}æ#{condition}æ\n")
 		  buffer.push("æ")
 		  i = i+1
-  
+
 		# ∞ character
 		when "∞"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "∞" 
+		  if metacharacters[i+1][1] != "∞"
 			error = "Error with a ∞ character : character without pair"
 			tree_valid = false
 			tree.concat("#{tabs}∞  ←\n")
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
-  
+
 		  condition = document[metacharacters[i][0]+3..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
 
 		  tree.concat("#{tabs}∞#{condition}∞\n")
 		  i = i+1
-  
+
 		# end of table
 		when "<\/w:tr>"
 		  if buffer[-1] == "æ"
 			buffer.pop()
 		  end
-  
+
 	  end
-	
-	  i = i+1 
+
+	  i = i+1
 	end
 	if not(buffer.empty?) && tree_valid
 	  previous = buffer.pop()
@@ -415,9 +406,9 @@ def verify_document(document)
 	  tree.concat("#{tabs}←\n")
 	  tree_valid = false
 	end
-  
+
 	return tree_valid, error, tree
-  
+
 end
 
 def generate_xslt(docx)
@@ -439,12 +430,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	debug = false
 
 	document = read_rels(docx,"word/document.xml")
-
+  document.force_encoding("UTF-8")
 	tree_valid, error, tree = verify_document(document)
 	if not(tree_valid)
 	  raise TemplateVerificationError.new(error,tree)
 	end
-	
+
 	# fix for curly apostrophes
 	document = document.gsub(/‘/,"'")
 	document = document.gsub(/’/,"'")
@@ -488,7 +479,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		#<xsl:for-each select="report/reports">
 		#<w:t xml:space="preserve"> <xsl:value-of select="contact_name"/> </w:t>
 		#</xsl:for-each>
-		replace[count] = "<xsl:for-each select=\"report/reports\"><xsl:value-of select=\"#{omega.downcase}\"/></xsl:for-each>"
+		replace[count] = "<xsl:value-of select=\"/report/reports/#{omega.downcase}\"/>"
 		count = count + 1
 	end
 
@@ -1067,7 +1058,7 @@ def generate_xslt_components(docx)
 
 	components.each do |component|
 		document = read_rels(docx,component)
-
+    document.force_encoding("UTF-8")
 		# replace {} for the sake of XSL
 		document = document.gsub("{","{{").gsub("}","}}")
 
