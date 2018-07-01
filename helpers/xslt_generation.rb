@@ -1,4 +1,3 @@
-# encoding: ASCII-8BIT
 require 'rubygems'
 require './model/master.rb'
 require 'cgi'
@@ -431,7 +430,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	debug = false
 
 	document = read_rels(docx,"word/document.xml")
-
+  document.force_encoding("UTF-8")
 	tree_valid, error, tree = verify_document(document)
 	if not(tree_valid)
 	  raise TemplateVerificationError.new(error,tree)
@@ -1059,7 +1058,7 @@ def generate_xslt_components(docx)
 
 	components.each do |component|
 		document = read_rels(docx,component)
-
+    document.force_encoding("UTF-8")
 		# replace {} for the sake of XSL
 		document = document.gsub("{","{{").gsub("}","}}")
 
