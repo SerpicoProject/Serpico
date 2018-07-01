@@ -321,14 +321,6 @@ def verify_document(document)
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
-		  if buffer.grep(/^¬/).any?
-			error = "Error with a Ω character : must not be used inside loop"
-			tree_valid = false
-			content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
-			tree.concat("#{tabs}Ω#{content}Ω  ←\n")
-			locate_error(error, document, metacharacters[i][0])
-			break
-		  end
 		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
 		  tree.concat("#{tabs}Ω#{content}Ω\n")
 		  i = i+1
