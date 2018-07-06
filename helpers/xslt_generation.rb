@@ -108,7 +108,7 @@ def verify_document(document)
 		# † character
 		when "†"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "†"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != '†')
 			tree_valid = false
 			error = "Error with a † character : character without pair"
 			locate_error(error, document, metacharacters[i][0])
@@ -149,7 +149,7 @@ def verify_document(document)
 		# µ character
 		when "µ"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "µ"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != 'µ')
 			error = "Error with a µ character : character without pair"
 			tree_valid = false
 			locate_error(error, document, metacharacters[i][0])
@@ -170,7 +170,7 @@ def verify_document(document)
 		# ƒ character
 		when "ƒ"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "ƒ"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != 'ƒ')
 			error = "Error with a ƒ character : character without pair"
 			tree_valid = false
 			locate_error(error, document, metacharacters[i][0])
@@ -298,7 +298,7 @@ def verify_document(document)
 		# § character
 		when "§"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "§"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != '§')
 			error = "Error with a § character : character without pair"
 			locate_error(error, document, metacharacters[i][0])
 			tree.concat("#{tabs}§  ←\n")
@@ -313,18 +313,10 @@ def verify_document(document)
 		# Ω character
 		when "Ω"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "Ω"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != 'Ω')
 			error = "Error with a Ω character : character without pair"
 			tree.concat("#{tabs}Ω  ←\n")
 			tree_valid = false
-			locate_error(error, document, metacharacters[i][0])
-			break
-		  end
-		  if buffer.grep(/^¬/).any?
-			error = "Error with a Ω character : must not be used inside loop"
-			tree_valid = false
-			content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
-			tree.concat("#{tabs}Ω#{content}Ω  ←\n")
 			locate_error(error, document, metacharacters[i][0])
 			break
 		  end
@@ -334,7 +326,7 @@ def verify_document(document)
 		# π character
 		when "π"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "π"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != 'π')
 			error = "Error with a π character : character without pair"
 			tree_valid = false
 			tree.concat("#{tabs}π  ←\n")
@@ -349,7 +341,7 @@ def verify_document(document)
 		# æ character
 		when "æ"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "æ"
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != 'æ')
 			error = "Error with a æ character : character without pair"
 			tree_valid = false
 			tree.concat("#{tabs}æ  ←\n")
@@ -373,7 +365,7 @@ def verify_document(document)
 		# ∞ character
 		when "∞"
 		  tabs = "\t" * buffer.length
-		  if metacharacters[i+1][1] != "∞"
+      if (i == metacharacters.length - 1) || metacharacters[i + 1][1] != '∞'
 			error = "Error with a ∞ character : character without pair"
 			tree_valid = false
 			tree.concat("#{tabs}∞  ←\n")
