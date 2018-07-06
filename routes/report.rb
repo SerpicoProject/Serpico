@@ -568,30 +568,30 @@ get '/report/:id/user_defined_variables' do
   haml :user_defined_variable, encode_html: true
 end
 
-# Post user defined variables
+# TODO: this route needs proper comments, it is very confusing
 post '/report/:id/user_defined_variables' do
   data = url_escape_hash(request.POST)
 
-  # quick fix for udv not in paragraph when on only one line
-
   data.each do |k, v|
     if k =~ /variable_data/ && (v !~ /\<paragraph\>/)
-      data[k] = "<paragraph>#{v}</paragraph>"
+      data[k.strip] = "<paragraph>#{v}</paragraph>"
     end
   end
 
   variable_hash = {}
   data.each do |k, v|
     if k =~ /variable_name/
-      key = k.split('variable_name_').last.split('_').first
+      key = k.split('variable_name_').last.split('_').first.strip
 
-      # remove certain elements from name %&"<>
       v = v.tr('%', '_').gsub('&quot;', "'").gsub('&amp;', '').gsub('&gt;', '').gsub('&lt;', '')
+
       variable_hash["#{key}%#{v}"] = 'DEFAULT'
 
     end
+
+    # TODO are the next few lines ever hit? 
     next unless k =~ /variable_data/
-    key = k.split('variable_data_').last.split('_').first
+    key = k.split('variable_data_').last.split('_').first.strip
 
     variable_hash.each do |k1, _v1|
       next unless k1 =~ /%/
@@ -600,15 +600,13 @@ post '/report/:id/user_defined_variables' do
     end
   end
 
-  # remove the % and any blank values
   q = variable_hash.clone
   variable_hash.each do |k, v|
     next unless k =~ /%/
-    p k.split('%')
     if k.split('%').size == 1
       q.delete(k)
     else
-      q[k.split('%').last] = v
+      q[k.split('%').last.strip] = v
       q.delete(k)
     end
   end
