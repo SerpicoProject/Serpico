@@ -16,7 +16,7 @@ The installation options are:
 
 * [Windows Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation): Serpico can also be built and run on Windows
 
-* [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker)
+* [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker) [NEEDS TO BE UPDATED]
 
 ## Post-Installation Releases : Getting Started
 
