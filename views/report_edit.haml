@@ -39,7 +39,7 @@
                 %label.col-md-3{ :for => "report_name" }
                   Title
               %td{ :style => "width: 70%" }
-                %input#report_name{ :type => "text", :style => "width: 90%", :name => "report_name", :value => "#{@report.report_name}" }
+                %input#report_name{ :type => "text", :style => "width: 90%", :name => "report_name", :value => "#{CGI.unescapeHTML(@report.report_name)}" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "assessment_type" }
