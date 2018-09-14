@@ -91,7 +91,7 @@
                                     %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
                                       %i.icon-play-circle.icon-white{ :title => "Preview" }
                                     %a.btn.btn-danger{ :href => "/master/findings/delete/#{finding.id}" }
-                                      %i.icon-remove.icon-white{ :title => "Delete" }
+                                      %i.icon-trash.icon-white{ :title => "Delete" }
           - else
             :ruby
               vulns = Hash.new 0
@@ -112,7 +112,7 @@
               elsif @nist800
                 @findings.each do |finding|
                   next unless finding
-                  if finding.nist800_total >= 120 
+                  if finding.nist800_total >= 120
                     vulns["critical"] += 1
                   elsif finding.nist800_total >= 80 and finding.nist800_total <= 90
                     vulns["severe"] += 1
@@ -270,7 +270,7 @@
                 - if @dread
                   %td{ :style => "text-align:center" }
                     #{finding.dread_total}
-                  
+
 
                   -#-------------------- display risk score NIST800 in current findings section --------------------#-
                 - elsif @nist800
@@ -304,7 +304,7 @@
                   %a.btn.btn-inverse{ :href => "/report/#{@report.id}/findings/#{finding.id}/upload" }
                     %i.icon-arrow-up.icon-white{ :title => "Add to the findings database" }
                   %a.btn.btn-danger{ :href => "/report/#{@report.id}/findings/remove/#{finding.id}" }
-                    %i.icon-remove.icon-white{ :title => "Delete" }
+                    %i.icon-trash.icon-white{ :title => "Delete" }
             %a.btn.btn-danger#deletemultiple{ :href => "/report/#{@report.id}/findings/remove/" }
               Delete selected
   - else

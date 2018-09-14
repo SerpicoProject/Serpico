@@ -21,10 +21,10 @@
               %td
                 #{key}
             %td
-              %a.btn.btn-danger.btn-sm{ :href => "/admin/udo_templates?delete=#{udo.id}" }
-                %i.icon-remove.icon-white{ :title => "Delete #{udo.type.downcase} template" }
               %a.btn.btn-warning.btn-sm{ :href => "/admin/udo_template/#{udo.id}/edit" }
                 %i.icon-pencil.icon-white{ :title => "Edit #{udo.type.downcase} template" }
+              %a.btn.btn-danger.btn-sm{ :href => "/admin/udo_templates?delete=#{udo.id}" }
+                %i.icon-trash.icon-white{ :title => "Delete #{udo.type.downcase} template" }
 
   %br
   %br
