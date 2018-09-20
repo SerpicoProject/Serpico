@@ -23,9 +23,9 @@
               %td{ :style => "width: 30%" }
                 #{user.type} / #{user.auth_type}
               %td{ :style => "width: 40%" }
-                %a.btn.btn-danger{ :href => "/admin/delete/#{user.id}" }
-                  %i.icon-trash.icon-white{ :title => "Delete User" }
                 %a.btn.btn-warning{ :href => "/admin/edit_user/#{user.id}" }
                   %i.icon-pencil.icon-white{ :title => "Edit Password" }
+                %a.btn.btn-danger{ :href => "/admin/delete/#{user.id}" }
+                  %i.icon-trash.icon-white{ :title => "Delete User" }
         - else
           No Users. How Curious. Who are you?

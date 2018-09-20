@@ -54,7 +54,7 @@
                         #{vuln.msf_ref}
                       %td{ :align => "right" }
                         %a.btn.btn-danger.btn-sm{ :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete" }
-                          %i.icon-remove.icon-white.icon-sm{ :value => "#{vuln.msf_ref}", :type => "submit", :title => "Delete" }
+                          %i.icon-trash.icon-white.icon-sm{ :value => "#{vuln.msf_ref}", :type => "submit", :title => "Delete" }
         .control-group
           %label.control-label{ :for => "msf_ref" }
             %a.btn.btn-info{ :href => "#mymodal", "data-toggle" => "modal" }
@@ -110,7 +110,7 @@
                         #{item.pluginid}
                       %td{ :align => "right" }
                         %a.btn.btn-danger.btn-xs{ :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete" }
-                          %i.icon-remove.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
+                          %i.icon-trash.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
         .control-group
           %label.control-label{ :for => "nessus_pluginid" } Add new nessus ID mapping
           .controls
@@ -129,7 +129,7 @@
                         #{item.pluginid}
                       %td{ :align => "right" }
                         %a.btn.btn-danger.btn-xs{ :href => "/mapping/#{@finding.id}/burp/#{item.pluginid}/delete" }
-                          %i.icon-remove.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
+                          %i.icon-trash.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
         .control-group
           %label.control-label{ :for => "burp_pluginid" }
             %a{ :href => "#burpmodal", "data-toggle" => "modal" }
@@ -646,7 +646,7 @@
       -#------------------------- End of add NIST800 ---------------->
 
 
-    - else 
+    - else
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls

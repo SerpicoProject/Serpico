@@ -75,10 +75,10 @@
                   %td{ :style => "overflow:hidden;text-overflow:ellipsis;max-width: 300px;" }
                     #{meta_markup(properties[template_property_name.downcase])}
                 %td
-                  %a.btn.btn-danger.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/delete" }
-                    %i.icon-remove.icon-white{ :title => "Delete this #{udo_template.type.downcase}" }
                   %a.btn.btn-warning.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/edit" }
                     %i.icon-pencil.icon-white{ :title => "Edit this #{udo_template.type.downcase}" }
+                  %a.btn.btn-danger.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/delete" }
+                    %i.icon-trash.icon-white{ :title => "Delete this #{udo_template.type.downcase}" }
       - else
         You have no #{udo_template.type.downcase} yet !
         %br

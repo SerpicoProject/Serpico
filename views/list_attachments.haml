@@ -17,7 +17,7 @@
             %th
               Attachment Name
             %th
-              Edit
+              View
             %th
               Delete
           %tbody
@@ -32,7 +32,7 @@
                   %i.icon-play-circle.icon-white{ :title => "Preview" }
               %td
                 %a.btn.btn-danger{ :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}" }
-                  %i.icon-remove.icon-white{ :title => "Preview" }
+                  %i.icon-trash.icon-white{ :title => "Preview" }
 
   - else
     %h3 No Attachments Available.

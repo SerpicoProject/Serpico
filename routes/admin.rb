@@ -647,8 +647,8 @@ post '/admin/udo_templates' do
 
   @udos_templates = UserDefinedObjectTemplates.all
 
-  haml :user_defined_object_templates, encode_html: true
   serpico_log("UDO template added")
+  redirect to('/admin/udo_templates')
 end
 
 # edit udo template

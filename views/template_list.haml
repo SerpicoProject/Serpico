@@ -32,10 +32,10 @@
               %td{ :style => "width: 60%" }
                 %a.btn.btn-warning{ :href => "/admin/templates/#{template.id}/edit" }
                   %i.icon-pencil.icon-white{ :title => "Edit" }
-                %a.btn.btn-danger{ :href => "/admin/delete/templates/#{template.id}" }
-                  %i.icon-trash.icon-white{ :title => "Delete Template" }
                 %a.btn.btn-info{ :href => "/admin/templates/#{template.id}/download" }
                   %i.icon-play-circle.icon-white{ :title => "Preview" }
+                %a.btn.btn-danger{ :href => "/admin/delete/templates/#{template.id}" }
+                  %i.icon-trash.icon-white{ :title => "Delete Template" }
                 %a.btn.btn-success{:href => "/admin/templates/#{template.id}/tree"}
                   %i.icon-indent-right.icon-white{:title => 'Tree'}
         - else
