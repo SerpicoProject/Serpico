@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'odle'
 
 #####
 # Reporting Routes
@@ -123,6 +124,64 @@ post '/report/:id/restore_attachments' do
   end
   # File.delete(rand_zip) should the temp file be deleted?
   redirect to("/report/#{id}/edit")
+end
+
+# Odle based scan import
+get '/report/:id/import_scan_data' do
+  id = params[:id]
+
+  # Query for the first report matching the id
+  @report = get_report(id)
+
+  return 'No Such Report' if @report.nil?
+
+  @auto_import = config_options['auto_import']
+  haml :import_scan_data, encode_html: true
+end
+
+post '/report/:id/import_scan_data' do
+  type = params[:type].to_s.downcase
+
+  scan_xml = params[:file][:tempfile].read
+
+  id = params[:id]
+
+  # verify access to the report
+  @report = get_report(id)
+  return 'No Such Report' if @report.nil?
+
+  if type == 'nessus'
+    data = JSON.parse(Nessus.new.parse(scan_xml, config_options['threshold']))
+  elsif type == 'burpv1'
+    data = JSON.parse(Burp.new.parse(scan_xml, config_options['threshold']))
+  elsif type == 'metasploit'
+    data = JSON.parse(Metasploit.new.parse(scan_xml, config_options['threshold']))
+  elsif type == 'nmap'
+    data = JSON.parse(Nmap.new.parse(scan_xml, config_options['threshold']))
+  else
+    "Unknown type: #{type}"
+  end
+
+  vulns = import_odle(data)['findings']
+  return 'Data import failed or 0 findings in import file' unless vulns
+
+  vulns.each do |vuln|
+      vuln.report_id = id
+      vuln.save
+  end
+
+  # go directly to findings list menu
+  @total_added = vulns.size
+  @chart = config_options['chart']
+  @plugin_side_menu = get_plugin_list('user')
+  @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
+  @cvssv2_scoring_override = if config_options.key?('cvssv2_scoring_override')
+                               config_options['cvssv2_scoring_override']
+                             else
+                               false
+                             end
+
+  haml :findings_list
 end
 
 # upload nessus xml files to be processed

@@ -1,0 +1,30 @@
+.col-md-10
+  %br
+  %h2 Import Findings from Scan Data
+  %h3
+    This feature uses the
+    %a(title="Odle" href="https://rubygems.com/odle") odle
+    gem, check
+    %a(title="Odle" href="https://github.com/BuffaloWill/odle") here
+    for a list of supported formats.
+  %br
+    NOTE: All findings are imported via this method, Nessus and Burp plugin ids are not respected
+
+  %form{ :method => "post", :action => "/report/#{@report.id}/import_scan_data", :enctype => "multipart/form-data" }
+    %table
+      %tr
+        %td
+          %label.col-md-3{ :for => "file" }
+            Upload File
+          %input#file{ :type => "file", :name => "file" }
+      %tr
+        Scan Data Type&nbsp;
+        %select#type{ :name => "type"}
+          - %w[\  Nessus BurpV1 Metasploit NMap].each do |type|
+            %option #{type}
+    %br
+
+    %br
+    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
+    %a.btn.btn-default{ :href => "/report/#{@report.id}/findings" }
+      Cancel

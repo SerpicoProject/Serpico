@@ -2,6 +2,9 @@
   %br
   - if @newfinding
     %h2 Finding(s) Added! You rock.
+  - if @total_added
+    %h2
+      #{@total_added} findings imported. Party time!!
   %br
   %h3 Current Findings
   %br
@@ -294,7 +297,7 @@
                       #{risk_t[finding.risk]}
                     - else
                       - scr = finding.dread_total/10
-                      - scr = 4 if dread_total == 50
+                      - scr = 4 if finding.dread_total == 50
                       #{risk_t[scr]}
                 %td
                   %a.btn.btn-warning{ :href => "/report/#{@report.id}/findings/#{finding.id}/edit" }
