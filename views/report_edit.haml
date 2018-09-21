@@ -97,13 +97,13 @@
                 %label.col-md-3{ :for => "contact_state" }
                   State
               %td{ :style => "width: 70%" }
-                %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state", :value => "#{@report.contact_state}" }
+                %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state", :value => "#{CGI.unescapeHTML(@report.contact_state)}" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_zip" }
                   Company Zip
               %td{ :style => "width: 70%" }
-                %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip", :value => "#{@report.contact_zip}" }
+                %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip", :value => "#{CGI.unescapeHTML(@report.contact_zip)}" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_name" }
@@ -115,7 +115,7 @@
                 %label.col-md-3{ :for => "contact_email" }
                   Contact E-Mail
               %td{ :style => "width: 70%" }
-                %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email", :value => "#{@report.contact_email}" }
+                %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email", :value => "#{CGI.unescapeHTML(@report.contact_email)}" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_title" }
