@@ -10,7 +10,7 @@
     .control-group
       %label.control-label{ :for => "title" } Title
       .controls
-        %input{ :type => "text", :name => "title", :value => "#{@finding.title}" }
+        %input{ :type => "text", :name => "title", :value => "#{CGI.unescapeHTML(@finding.title)}" }
     -if !@master
       .control-group
         %label.control-label{ :for => "assessment_type" } Assessment Type
