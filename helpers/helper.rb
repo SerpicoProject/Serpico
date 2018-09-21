@@ -258,7 +258,7 @@ def url_escape_hash(hash)
       end
 
       v = new_v
-    elsif (k == 'remediation') || (k == 'overview') || (k == 'poc') || (k == 'affected_hosts') || (k == 'references')
+    elsif k.start_with?('remediation', 'overview', 'poc', 'affected_hosts', 'references')
       new_v = "<paragraph>#{v}</paragraph>"
       v = new_v
     end

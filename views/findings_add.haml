@@ -34,9 +34,8 @@
                       %table{ :style => "width: 100%" }
                         - @findings.each do |finding|
                           - if finding.type == type
-                            - if @languages and @languages.size > 1
-                              - next unless (finding.language == @report.language) or (@report.language == "English" and finding.language == nil)
                             %tr
+                            - if finding.translations.first.nil?
                               %td.searchable{ :style => "width: 80%", :"data-index" => "#{finding.title.downcase}" }
                                 - if @autoadd
                                   - if @autoadd_findings.include?(finding.id.to_s) and not @dup_findings.include?(finding.id)
@@ -68,9 +67,42 @@
                                   %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
                                     %i.icon-play-circle.icon-white{ :title => "Preview" }
                                 - else
+                                  %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
+                                    %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
+                            - elsif !finding.translations.first(:language => @report.language).nil?
+                              %td.searchable{ :style => "width: 80%", :"data-index" => "#{finding.translations.first(:language => @report.language).title.downcase}" }
+                                - if @autoadd
+                                  - if @autoadd_findings.include?(finding.id.to_s) and not @dup_findings.include?(finding.id)
+                                    %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}", :checked => "" }
+                                  - else
+                                    %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}" }
+                                - else
+                                  %input{ :id => "finding_#{finding.id}", :type => "checkbox", :name => "finding[]", :value => "#{finding.id}" }
+                                %label.control-label{ :for => "finding_#{finding.id}" }
+                                  #{finding.translations.first(:language => @report.language).title}
+                                - if @dup_findings
+                                  - if @dup_findings.include?(finding.id)
+                                    .label.label-warning Duplicate
+                                - if finding.translations.first(:language => @report.language).overview
+                                  %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_#{finding.id}" }
+                                  .info.collapse.out{ :id => "info_#{finding.id}" }
+                                    #{finding.translations.first(:language => @report.language).overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                                  - if @autoadd_hosts
+                                    - @autoadd_hosts.keys.each do |x|
+                                      - if finding.id == x.to_i
+                                        - @autoadd_hosts[x].each do |ip|
+                                          .label.label-default #{ip}
+                                        - iplist = @autoadd_hosts[x].join(",")
+                                        %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{iplist}" }
+                              %td.searchable{ :style => "width: 20%", :"data-index" => "#{finding.title.downcase}" }
+                                - if @master
+                                  %a.btn.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
+                                    %i.icon-pencil.icon-white{ :title => "Edit" }
                                   %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
                                     %i.icon-play-circle.icon-white{ :title => "Preview" }
-
+                                - else
+                                  %a{ :class => "btn btn-info", :href => "/master/findings/#{finding.id}/preview"}
+                                    %i{:class => 'icon-play-circle icon-white', :title => 'Preview'}
       %br
       %input.btn.btn-default{ :type => "submit", :value => "Add" }
       %a.btn.btn-default{ :href => "/report/#{@report.id}/findings" }

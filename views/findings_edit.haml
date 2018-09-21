@@ -3,14 +3,73 @@
 
 .col-md-10
   %br
-  %h2 #{@finding.title}
+  - if @report
+    %h2 #{@finding.title}
+  - if @master
+    %h2
+      - if @finding.translations.empty?
+        #{@finding.title}&nbsp;&nbsp;
+      - else
+        #{@finding.translations.first.title}&nbsp;&nbsp;
+    %label{ :class => "control-label", :for => "language_panel" }
+      %a{:href=> '#language_panel', "data-toggle"=>'modal', :class=>'btn btn-info'}
+        Language panel
+    .modal{:id=>'language_panel', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+      .modal-body
+        %h3 Language panel
+        %form{ :action => "/master/findings/#{@finding.id}/add_language", :method => "post", :class => "form-horizontal"}
+          //checking whether all language in config are supported by finding
+          - all_language_supported = true
+          - @available_languages.each do |language|
+            - if @finding.translations.first(:language => language).nil?
+              - all_language_supported = false
+          - if not all_language_supported
+            - if @finding.translations.empty?
+              In wich language is this finding :
+            - else
+              Add language to this finding:
+            %select{:name => "language"}
+              - @available_languages.each do |language|
+                - if @finding.translations.first(:language => language).nil?
+                  %option #{language}
+            - if @finding.translations.empty?
+              %input.btn.btn-default{ :type => "submit", :value => 'Define Language'}
+            -else
+              %input.btn.btn-default{ :type => "submit", :value => 'Add Language'}
+          - else
+            You can't add any new language to this finding template, as it already support every configured language.
+        - if @finding.translations.count > 1
+          %div
+            %h4 Select wich language to show
+            - @finding.translations.each do |translation|
+              %input{ :type => "checkbox", :class => "language_checkbox", :name => translation.language, :style => "margin-top: 0px;"} #{"  " + translation.language}
+              %br
+        -else
+          %div{:style => "display: none"}
+            %h4 Select wich language to show
+            - @finding.translations.each do |translation|
+              %input{ :type => "checkbox", :class => "language_checkbox", :name => translation.language, :style => "margin-top: 0px;"} #{"  " + translation.language}
+              %br
+  %br
   %br
 
   %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
-    .control-group
-      %label.control-label{ :for => "title" } Title
-      .controls
-        %input{ :type => "text", :name => "title", :value => "#{@finding.title}" }
+    - if @report
+      .control-group
+        %label.control-label{ :for => "title" } Title
+        .controls
+          %input{ :type => "text", :name => "title", :value => "#{@finding.title}" }
+    - if @master
+      - @finding.translations.each do |translation|
+        .control-group{:class => "language_#{translation.language}", :style => "display: none;"}
+          %label{ :class => "control-label", :for => "title" } Title (#{translation.language})
+          .controls
+            %input{ :type => 'text', :name => "title_#{translation.language}", :value => "#{translation.title}"}
+      - if @finding.translations.empty?
+        .control-group
+          %label{ :class => "control-label", :for => "title" } Title 
+          .controls
+            %input{ :type => 'text', :name => "title", :value => "#{@finding.title}"}      
     -if !@master
       .control-group
         %label.control-label{ :for => "assessment_type" } Assessment Type
@@ -30,17 +89,6 @@
             %input{ :type=>"checkbox", :name => "approved", :checked=>"checked" }
           - else
             %input{ :type=>"checkbox", :name => "approved" }
-    - if @master
-      - if @languages and @languages.size > 1
-        .control-group
-          %label.control-label{ :for => "language" } Language Setting
-          .controls
-            %select#language{ :name => "language" }
-              - @languages.each do |type|
-                - if @finding.language == type
-                  %option{ :selected => "selected" } #{type}
-                - else
-                  %option #{type}
       - if @vulnmap
         .control-group
           %label.control-label{ :for => "existingvulnmaps" } Vuln IDs mapped to this finding
@@ -682,95 +730,267 @@
               %option{ :selected => "selected" } #{type}
             - else
               %option #{type}
-    .control-group
-      %label.control-label{ :for => "overview" }
-        %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
-          Overview
-      .modal.modal.hide.fade#modaloverview{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
-        .modal-header
-          %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
-            x
-          %h3#modal-label
-            Meta Markup
-        .modal-body
-          %p
-            There are markup sets you can use in any field. This text is converted inside of Microsoft Word.
-            %p.text-error
-              YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
-            %b
-              Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
-          %h2
-            {{ URL }}
-          %p
-            If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
-            %br
-          %h2
-            &lt;&lt;CUSTOMER&gt;&gt;
-          %p
-            If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
-            %br
-            %br
-            %code
-              Overall &lt;&lt;CUSTOMER&gt;&gt; was found to have a strong...
-            %br
-            %br
-            Will generate the following inside of a report:
-            %br
-            %br
-            %code
-              Overall AcmeCorporation was found to have a strong...
-          %h2
-            Bullets
-          %p
-            Shortcut : CTRL + ALT + w
-            %br
-            Place the bulleted text inbetween a *- and a -* like so:
-            %br
-            %br
-            %code
-              *- Bulleted text goes here -*
-          %h2
-            Paragraph Heading Text
-          %p
-            Shortcut : CTRL + ALT + q
-            %br
-            Place the heading inbetween a [== and a ==] like so:
-            %br
-            %br
-            %code
-              [== Heading text goes here ==]
-          %h2
-            Italics
-          %p
-            Shortcut : CTRL + ALT + x
-            %br
-            Italicize the paragraph containing [~~ and a ~~]:
-            %br
-            %br
-            %code
-              [~~ Italics ~~]
-          %h2
-            Code
-          %p
-            Shortcut : CTRL + ALT + c
-            %br
-            Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
-            %br
-            %br
-            %code
-              [[[ code, code goes here ]]]
-      .controls
-        %textarea.input-xxlarge.allowMarkupShortcut#overview{ :rows => "10", :name => "overview" }
-          - if @finding
-            - if @finding.overview
-              #{meta_markup(@finding.overview)}
-    .control-group
-      %label.control-label{ :for => "pocu" } Proof of Concept
-      .controls
-        %textarea.input-xxlarge.allowMarkupShortcut#pocu{ :rows => "10", :name => "poc" }
-          - if @finding
-            - if @finding.poc
-              #{meta_markup(@finding.poc)}
+    - if @report
+      .control-group
+        %label.control-label{ :for => "overview" }
+          %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
+            Overview
+        .modal.modal.hide.fade#modaloverview{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
+          .modal-header
+            %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
+              x
+            %h3#modal-label
+              Meta Markup
+          .modal-body
+            %p
+              There are markup sets you can use in any field. This text is converted inside of Microsoft Word.
+              %p.text-error
+                YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+              %b
+                Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+            %h2
+              {{ URL }}
+            %p
+              If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
+              %br
+            %h2
+              &lt;&lt;CUSTOMER&gt;&gt;
+            %p
+              If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
+              %br
+              %br
+              %code
+                Overall &lt;&lt;CUSTOMER&gt;&gt; was found to have a strong...
+              %br
+              %br
+              Will generate the following inside of a report:
+              %br
+              %br
+              %code
+                Overall AcmeCorporation was found to have a strong...
+            %h2
+              Bullets
+            %p
+              Shortcut : CTRL + ALT + w
+              %br
+              Place the bulleted text inbetween a *- and a -* like so:
+              %br
+              %br
+              %code
+                *- Bulleted text goes here -*
+            %h2
+              Paragraph Heading Text
+            %p
+              Shortcut : CTRL + ALT + q
+              %br
+              Place the heading inbetween a [== and a ==] like so:
+              %br
+              %br
+              %code
+                [== Heading text goes here ==]
+            %h2
+              Italics
+            %p
+              Shortcut : CTRL + ALT + x
+              %br
+              Italicize the paragraph containing [~~ and a ~~]:
+              %br
+              %br
+              %code
+                [~~ Italics ~~]
+            %h2
+              Code
+            %p
+              Shortcut : CTRL + ALT + c
+              %br
+              Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+              %br
+              %br
+              %code
+                [[[ code, code goes here ]]]
+        .controls
+          %textarea.input-xxlarge.allowMarkupShortcut#overview{ :rows => '10', :name => "overview"}
+            - if @finding
+              - if @finding.overview
+                #{meta_markup(@finding.overview)}
+    - if @master
+      - @finding.translations.each do |translation|
+        .control-group{:class => "language_#{translation.language}", :style => "display: none;"}
+          %label{ :class => "control-label", :for => "overview" }
+            %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
+              Overview (#{translation.language})
+          .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+            .modal-header
+              %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+                x
+              %h3{:id=>"modal-label"}
+                Meta Markup
+            .modal-body
+              %p
+                There are four markup sets you can use in the Overview and the Remediation summary. This text is converted inside of Microsoft Word.
+                %p{:class=>"text-error"}
+                  YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+                %b
+                  Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+              %h2
+                &lt;&lt;CUSTOMER&gt;&gt;
+              %p
+                If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
+                %br
+                %br
+                %code
+                  Overall &lt;&lt;CUSTOMER&gt;&gt; was found to have a strong...
+                %br
+                %br
+                Will generate the following inside of a report:
+                %br
+                %br
+                %code
+                  Overall AcmeCorporation was found to have a strong...
+              %h2
+                Bullets
+              %p
+                Shortcut : CTRL + ALT + w
+                %br
+                Place the bulleted text inbetween a *- and a -* like so:
+                %br
+                %br
+                %code
+                  *- Bulleted text goes here -*
+              %h2
+                Paragraph Heading Text
+              %p
+                Shortcut : CTRL + ALT + q
+                %br
+                Place the heading inbetween a [== and a ==] like so:
+                %br
+                %br
+                %code
+                  [== Heading text goes here ==]
+              %h2
+                Italics
+              %p
+                Shortcut : CTRL + ALT + x
+                %br
+                Italicize the paragraph containing [~~ and a ~~]:
+                %br
+                %br
+                %code
+                  [~~ Italics ~~]
+              %h2
+                Code
+              %p
+                Shortcut : CTRL + ALT + c
+                %br
+                Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+                %br
+                %br
+                %code
+                  [[[ code, code goes here ]]]
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'overview', :name => "overview_#{translation.language}"}
+              - if @finding
+                - if @finding.overview
+                  #{meta_markup(translation.overview)}
+      - if @finding.translations.empty?
+        .control-group
+          %label{ :class => "control-label", :for => "overview" }
+            %a{:href=> '#modaloverview', "data-toggle"=>'modal', :class=>'btn btn-info'}
+              Overview
+          .modal{:id=>'modaloverview', :class=>'modal hide fade', :tabindex=>'-1', :role=>'dialog', "aria-labelledby"=>'modal-label', "aria-hidden"=>'true'}
+            .modal-header
+              %button{:type=>'button', :class=>'close', "data-dismiss"=>"modal", "aria-hidden"=>"true"}
+                x
+              %h3{:id=>"modal-label"}
+                Meta Markup
+            .modal-body
+              %p
+                There are four markup sets you can use in the Overview and the Remediation summary. This text is converted inside of Microsoft Word.
+                %p{:class=>"text-error"}
+                  YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+                %b
+                  Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+              %h2
+                &lt;&lt;CUSTOMER&gt;&gt;
+              %p
+                If you place &lt;&lt;CUSTOMER&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
+                %br
+                %br
+                %code
+                  Overall &lt;&lt;CUSTOMER&gt;&gt; was found to have a strong...
+                %br
+                %br
+                Will generate the following inside of a report:
+                %br
+                %br
+                %code
+                  Overall AcmeCorporation was found to have a strong...
+              %h2
+                Bullets
+              %p
+                Shortcut : CTRL + ALT + w
+                %br
+                Place the bulleted text inbetween a *- and a -* like so:
+                %br
+                %br
+                %code
+                  *- Bulleted text goes here -*
+              %h2
+                Paragraph Heading Text
+              %p
+                Shortcut : CTRL + ALT + q
+                %br
+                Place the heading inbetween a [== and a ==] like so:
+                %br
+                %br
+                %code
+                  [== Heading text goes here ==]
+              %h2
+                Italics
+              %p
+                Shortcut : CTRL + ALT + x
+                %br
+                Italicize the paragraph containing [~~ and a ~~]:
+                %br
+                %br
+                %code
+                  [~~ Italics ~~]
+              %h2
+                Code
+              %p
+                Shortcut : CTRL + ALT + c
+                %br
+                Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+                %br
+                %br
+                %code
+                  [[[ code, code goes here ]]]
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :id => 'overview', :name => "overview"}
+              - if @finding
+                - if @finding.overview
+                  #{meta_markup(@finding.overview)}
+    - if @report
+      .control-group
+        %label.control-label{ :for => "pocu" } Proof of Concept
+        .controls
+          %textarea.input-xxlarge.allowMarkupShortcut#pocu{ :rows => "10", :name => "poc" }
+            - if @finding
+              - if @finding.poc
+                #{meta_markup(@finding.poc)}
+    - if @master
+      - @finding.translations.each do |translation|
+        .control-group{:class => "language_#{translation.language}", :style => "display: none;"}
+          %label{ :class => "control-label", :for => "pocu" } Proof of Concept (#{translation.language})
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "poc_#{translation.language}", :id => "pocu"}
+              #{meta_markup(translation.poc)}
+      - if @finding.translations.empty?
+        .control-group
+          %label{ :class => "control-label", :for => "pocu" } Proof of Concept
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "poc", :id => "pocu"}
+              #{meta_markup(@finding.poc)} 
     - attachments=''
     - if @attaches
       - @attaches.each do |attach|
@@ -802,20 +1022,50 @@
             - if @finding
               - if @finding.affected_hosts
                 #{meta_markup(@finding.affected_hosts)}
-    .control-group
-      %label.control-label{ :for => "remediation" } Remediation
-      .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "remediation" }
-          - if @finding
-            - if @finding.remediation
+    - if @report
+      .control-group
+        %label.control-label{ :for => "remediation" } Remediation
+        .controls
+          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "remediation" }
+            - if @finding
+              - if @finding.remediation
+                #{meta_markup(@finding.remediation)}
+    - if @master
+      - @finding.translations.each do |translation|
+        .control-group{:class => "language_#{translation.language}", :style => "display: none;"}
+          %label{ :class => "control-label", :for => "remediation" } Remediation (#{translation.language})
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "remediation_#{translation.language}"}
+              #{meta_markup(translation.remediation)}
+      - if @finding.translations.empty?
+        .control-group
+          %label{ :class => "control-label", :for => "remediation" } Remediation
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "remediation"}
               #{meta_markup(@finding.remediation)}
-    .control-group
-      %label.control-label{ :for => "references" } References (One Per Line)
-      .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "5", :name => "references" }
-          - if @finding
-            - if @finding.references
-              #{meta_markup(@finding.references)}
+    - if @report
+      .control-group
+        %label{ :class => "control-label", :for => "references" } References (One Per Line)
+        .controls
+          %textarea{ :rows => '5', :class => 'input-xxlarge allowMarkupShortcut', :name => 'references'}
+            - if @finding
+              - if @finding.references
+                #{meta_markup(@finding.references)}
+    - if @master
+      - @finding.translations.each do |translation|
+        .control-group{:class => "language_#{translation.language}", :style => "display: none;"}
+          %label{ :class => "control-label", :for => "references" } References (One Per Line) (#{translation.language})
+          .controls
+            %textarea{ :rows => '10', :class => 'input-xxlarge allowMarkupShortcut', :name => "references_#{translation.language}", :id => "references"}
+              #{meta_markup(translation.references)}
+      - if @finding.translations.empty?
+        .control-group
+          %label.control-label{ :for => "references" } References (One Per Line)
+          .controls
+            %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "5", :name => "references" }
+              - if @finding
+                - if @finding.references
+                  #{meta_markup(@finding.references)}
     - if !@master
       .control-group
         %label.control-label{ :for => "notes" } Notes Data
@@ -961,3 +1211,22 @@
         updateCVSSSummary(true, false);
       });
     });
+
+    var checkbox = document.querySelectorAll(".language_checkbox")
+      for(var i = 0 ; i < checkbox.length ; i++){
+      // script allowing display of according to selected languages
+      checkbox[i].addEventListener("change", function(e){
+        elements = document.querySelectorAll(".language_" + e.target.name)
+        var style = ""
+        if(e.target.checked === true){
+          style = "display: block;"
+        }
+        else{
+          style = "display: none;"
+        }
+        for(var j = 0 ; j < elements.length ; j++){
+          elements[j].style = style;
+        }
+        })
+      }
+      checkbox[0].click()

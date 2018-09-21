@@ -95,8 +95,22 @@ class TemplateFindings
   property :nist_rating, String, :required => false
 
   property :language, String, required: false
+  has n, :translations, 'TemplateFindingsTranslation'
 end
 
+class TemplateFindingsTranslation
+    include DataMapper::Resource
+  
+    property :id, Serial
+    property :language, String, required: true, length: 100
+    property :title, String, length: 200
+    property :overview, String, length: 20_000, required: false
+    property :poc, String, length: 20_000, required: false
+    property :remediation, String, length: 20_000, required: false
+    property :references, String, length: 20_000, required: false
+  
+    belongs_to :finding, 'TemplateFindings', required: true
+  end
 class Findings
   include DataMapper::Resource
 
@@ -353,7 +367,7 @@ class Reports
   property :user_defined_variables, String, length: 10_000
   property :scoring, String, length: 100
 
-  property :language, String, required: false
+  property :language, String, required: true, default: "undefined" ,length: 50
 end
 
 class Attachments
