@@ -459,8 +459,6 @@ post '/report/:id/edit' do
   id = params[:id]
 
   data = url_escape_hash(request.POST)
-  #preventing values from degenerating with & double encoding
-  data = data.map{ |param,value| [param, value.gsub('&amp;', '&')]}
   @report = get_report(id)
 
   unless @report.update(data)
@@ -648,7 +646,7 @@ post '/report/:id/user_defined_variables' do
 
     end
 
-    # TODO are the next few lines ever hit? 
+    # TODO are the next few lines ever hit?
     next unless k =~ /variable_data/
     key = k.split('variable_data_').last.split('_').first.strip
 
@@ -985,8 +983,7 @@ post '/report/:id/findings/:finding_id/edit' do
   return error if error.size > 1
   data = url_escape_hash(request.POST)
 
-  # to prevent title's from degenerating with &gt;, etc. [issue 237]
-  data['title'] = data['title'].gsub('&amp;', '&')
+  data['title'] = data['title']
 
   if @report.scoring.casecmp('dread').zero?
     data['dread_total'] = data['damage'].to_i + data['reproducability'].to_i + data['exploitability'].to_i + data['affected_users'].to_i + data['discoverability'].to_i

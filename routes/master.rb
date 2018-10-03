@@ -64,7 +64,7 @@ post '/master/findings/new' do
   end
 
   # Create NIST800 finding in the main database
-  if(config_options["nist800"]) 
+  if(config_options["nist800"])
     # call nist800 helper function
     data = nist800(data)
   end
@@ -153,8 +153,7 @@ post '/master/findings/:id/edit' do
 
   data['approved'] = data['approved'] == 'on'
 
-  # to prevent title's from degenerating with &gt;, etc. [issue 237]
-  data['title'] = data['title'].gsub('&amp;', '&')
+  data['title'] = data['title']
 
   if config_options['dread']
     data['dread_total'] = data['damage'].to_i + data['reproducability'].to_i + data['exploitability'].to_i + data['affected_users'].to_i + data['discoverability'].to_i
@@ -185,7 +184,7 @@ post '/master/findings/:id/edit' do
   end
 
   # Edit NIST800 finding in the main database
-  if(config_options["nist800"]) 
+  if(config_options["nist800"])
     # call nist800 helper function
     data = nist800(data)
   end
