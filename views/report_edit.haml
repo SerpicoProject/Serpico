@@ -67,79 +67,118 @@
                 %label.col-md-3{ :for => "full_company_name" }
                   Full Company Name
               %td{ :style => "width: 70%" }
-                %input#full_company_name{ :type => "text", :style => "width: 90%", :name => "full_company_name", :value => "#{CGI.unescapeHTML(@report.full_company_name)}" }
+                - if @report.full_company_name
+                  %input#full_company_name{ :type => "text", :style => "width: 90%", :name => "full_company_name", :value => "#{CGI.unescapeHTML(@report.full_company_name)}" }
+                -else
+                  %input#full_company_name{ :type => "text", :style => "width: 90%", :name => "full_company_name" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "short_company_name" }
                   Short Company Name
               %td{ :style => "width: 70%" }
-                %input#short_company_name{ :type => "text", :style => "width: 90%", :name => "short_company_name", :value => "#{CGI.unescapeHTML(@report.short_company_name)}" }
+                - if @report.short_company_name
+                  %input#short_company_name{ :type => "text", :style => "width: 90%", :name => "short_company_name", :value => "#{CGI.unescapeHTML(@report.short_company_name)}" }
+                -else
+                  %input#short_company_name{ :type => "text", :style => "width: 90%", :name => "short_company_name" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "company_website" }
                   Company Website
               %td{ :style => "width: 70%" }
-                %input#company_website{ :type => "text", :style => "width: 90%", :name => "company_website", :value => "#{CGI.unescapeHTML(@report.company_website)}" }
+                - if @report.company_website
+                  %input#company_website{ :type => "text", :style => "width: 90%", :name => "company_website", :value => "#{CGI.unescapeHTML(@report.company_website)}" }
+                -else
+                  %input#company_website{ :type => "text", :style => "width: 90%", :name => "company_website" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_address" }
                   Company Address
               %td{ :style => "width: 70%" }
-                %input#contact_address{ :type => "text", :style => "width: 90%", :name => "contact_address", :value => "#{CGI.unescapeHTML(@report.contact_address)}" }
+                - if @report.contact_address
+                  %input#contact_address{ :type => "text", :style => "width: 90%", :name => "contact_address", :value => "#{CGI.unescapeHTML(@report.contact_address)}" }
+                -else
+                  %input#contact_address{ :type => "text", :style => "width: 90%", :name => "contact_address" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_city" }
                   Company City
               %td{ :style => "width: 70%" }
-                %input#contact_city{ :type => "text", :style => "width: 90%", :name => "contact_city", :value => "#{CGI.unescapeHTML(@report.contact_city)}" }
+                - if @report.contact_city
+                  %input#contact_city{ :type => "text", :style => "width: 90%", :name => "contact_city", :value => "#{CGI.unescapeHTML(@report.contact_city)}" }
+                -else
+                  %input#contact_city{ :type => "text", :style => "width: 90%", :name => "contact_city" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_state" }
                   State
               %td{ :style => "width: 70%" }
-                %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state", :value => "#{CGI.unescapeHTML(@report.contact_state)}" }
+                - if @report.contact_state
+                  %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state", :value => "#{CGI.unescapeHTML(@report.contact_state)}" }
+                -else
+                  %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_zip" }
                   Company Zip
               %td{ :style => "width: 70%" }
-                %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip", :value => "#{CGI.unescapeHTML(@report.contact_zip)}" }
+                - if @report.contact_zip
+                  %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip", :value => "#{CGI.unescapeHTML(@report.contact_zip)}" }
+                -else
+                  %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_name" }
                   Contact Name
               %td{ :style => "width: 70%" }
-                %input#contact_name{ :type => "text", :style => "width: 90%", :name => "contact_name", :value => "#{CGI.unescapeHTML(@report.contact_name)}" }
+                - if @report.contact_name
+                  %input#contact_name{ :type => "text", :style => "width: 90%", :name => "contact_name", :value => "#{CGI.unescapeHTML(@report.contact_name)}" }
+                -else
+                  %input#contact_name{ :type => "text", :style => "width: 90%", :name => "contact_name" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_email" }
                   Contact E-Mail
               %td{ :style => "width: 70%" }
-                %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email", :value => "#{CGI.unescapeHTML(@report.contact_email)}" }
+                - if @report.contact_email
+                  %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email", :value => "#{CGI.unescapeHTML(@report.contact_email)}" }
+                -else
+                  %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_title" }
                   Contact Title
               %td{ :style => "width: 70%" }
-                %input#contact_title{ :type => "text", :style => "width: 90%", :name => "contact_title", :value => "#{CGI.unescapeHTML(@report.contact_title)}" }
+                - if @report.contact_title
+                  %input#contact_title{ :type => "text", :style => "width: 90%", :name => "contact_title", :value => "#{CGI.unescapeHTML(@report.contact_title)}" }
+                -else
+                  %input#contact_title{ :type => "text", :style => "width: 90%", :name => "contact_title" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "contact_phone" }
                   Contact Phone
               %td{ :style => "width: 70%" }
-                %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone", :value => "#{@report.contact_phone}" }
+                - if @report.contact_title
+                  %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone", :value => "#{@report.contact_phone}" }
+                -else
+                  %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "assessment_start_date" }
                   Assessment Start Date
               %td{ :style => "width: 70%" }
-                %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date", :value => "#{@report.assessment_start_date}" }
+                - if @report.contact_title
+                  %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date", :value => "#{@report.assessment_start_date}" }
+                -else
+                  %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date" }
             %tr
               %td{ :style => "width: 30%" }
                 %label.col-md-3{ :for => "assessment_end_date" }
                   Assessment End Date
               %td{ :style => "width: 70%" }
-                %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date", :value => "#{@report.assessment_end_date}" }
+                - if @report.contact_title
+                  %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date", :value => "#{@report.assessment_end_date}" }
+                -else
+                  %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date" }
 
       %input{ :type => "hidden", :name => "id", :value => "#{@report.id}" }
 
