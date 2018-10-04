@@ -157,7 +157,7 @@
                 %label.col-md-3{ :for => "contact_phone" }
                   Contact Phone
               %td{ :style => "width: 70%" }
-                - if @report.contact_title
+                - if @report.contact_phone
                   %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone", :value => "#{@report.contact_phone}" }
                 -else
                   %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone" }
@@ -166,7 +166,7 @@
                 %label.col-md-3{ :for => "assessment_start_date" }
                   Assessment Start Date
               %td{ :style => "width: 70%" }
-                - if @report.contact_title
+                - if @report.assessment_start_date
                   %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date", :value => "#{@report.assessment_start_date}" }
                 -else
                   %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date" }
@@ -175,7 +175,7 @@
                 %label.col-md-3{ :for => "assessment_end_date" }
                   Assessment End Date
               %td{ :style => "width: 70%" }
-                - if @report.contact_title
+                - if @report.assessment_end_date
                   %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date", :value => "#{@report.assessment_end_date}" }
                 -else
                   %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date" }
