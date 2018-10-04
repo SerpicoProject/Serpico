@@ -1013,15 +1013,16 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
     omega = compress(omega)
 
-		replace[count] = "#{CGI::unescapeHTML(omega)}"
-
     # Word puts the XSLT code block into a paragraph node.
     # If we want this to be paragraph agnostic so we can use it in any context (Ex. to change the color of a single
     # table cell) we can use the ⁂! modifier
     # This will remove the <w:p> and </w:p> that are wrapping our code block
     if omega[0] == "!"
       replace[count-1] = replace[count-1][0..replace[count-1].rindex(/<w:p[ >]/)-1]
+  		replace[count] = "#{CGI::unescapeHTML(omega[1..-1])}"
       replace[count+1] = replace[count+1][replace[count+1].index("</w:p>")+"</w:p>".length..-1]
+    else
+  		replace[count] = "#{CGI::unescapeHTML(omega)}"
     end
 
     count = count + 1
