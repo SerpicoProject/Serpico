@@ -54,7 +54,7 @@ def locate_error(error, document, position)
 end
 
 def verify_document(document)
-	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|<\/w:tr>/).map { |b| [Regexp.last_match.begin(0),b] }
+	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|⁂|<\/w:tr>/).map { |b| [Regexp.last_match.begin(0),b] }
 	i=0
 	buffer = []
 	tree = ""
