@@ -29,8 +29,14 @@ external database through `docker-compose` or `docker run -v`.
 ## Running with `docker run`
 
 ```
-# In the foreground
-docker run --rm -p 8443 -v"$(pwd)":/Serpico/db -it serpico
+# Create a new container called "serpico" and run it in the foreground
+docker run --name serpico -p 8443:8443 -v"$(pwd)":/Serpico/db -it serpico
+
+# Stop the container when you no longer need it
+docker stop serpico
+
+# Start it again when you need it. It will keep its state.
+docker start serpico
 ```
 
 This will store the database locally at `$PWD/master.db` Please note that the
