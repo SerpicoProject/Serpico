@@ -3,6 +3,7 @@ cert.pem
 key.pem
 tmp/*
 templates/*
+log/*.log
 attachments/*
 config.json
 plugins/*
