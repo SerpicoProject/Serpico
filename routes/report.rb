@@ -939,6 +939,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
   # Query for the first report matching the report_name
   @report = get_report(id)
+  @states = config_options['finding_states']
 
   return 'No Such Report' if @report.nil?
 
@@ -969,6 +970,7 @@ post '/report/:id/findings/:finding_id/edit' do
 
   # Query for the report
   @report = get_report(id)
+  @states = config_options['finding_states']
 
   return 'No Such Report' if @report.nil?
 
@@ -984,6 +986,10 @@ post '/report/:id/findings/:finding_id/edit' do
   data = url_escape_hash(request.POST)
 
   data['title'] = data['title']
+
+  if @states
+      data['state'] =  @states.find_index(data['state'])
+  end
 
   if @report.scoring.casecmp('dread').zero?
     data['dread_total'] = data['damage'].to_i + data['reproducability'].to_i + data['exploitability'].to_i + data['affected_users'].to_i + data['discoverability'].to_i

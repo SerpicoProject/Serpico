@@ -12,6 +12,16 @@
       .controls
         %input{ :type => "text", :name => "title", :value => "#{CGI.unescapeHTML(@finding.title)}" }
     -if !@master
+      - if @states
+        .control-group
+          %label.control-label{ :for => "state" } State
+          .controls
+            %select{ :name => "state" }
+              - @states.each do |state|
+                - if @finding and @finding.state and state == @states[@finding.state]
+                  %option{ :selected => "selected" } #{state}
+                - else
+                  %option #{state}
       .control-group
         %label.control-label{ :for => "assessment_type" } Assessment Type
         .controls

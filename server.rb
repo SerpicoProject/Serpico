@@ -14,6 +14,7 @@ class Server < Sinatra::Application
   set :config_options, config_options
   ## Global variables
   set :finding_types, config_options['finding_types']
+  set :finding_states, config_options['finding_states']
   set :assessment_types, ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
   set :status, ['EXPLOITED']
   set :show_exceptions, config_options['show_exceptions']
@@ -92,11 +93,11 @@ class Server < Sinatra::Application
   # Risk Matrix
   set :severity, %w[Low Medium High]
   set :likelihood, %w[Low Medium High]
-  
+
   # NIST800
   set :nist_likelihood, ['Low','Moderate','High']
   set :nist_impact, ['Informational','Low','Moderate','High','Critical']
-  
+
   if config_options['cvssv2_scoring_override']
     if config_options['cvssv2_scoring_override'] == 'true'
       set :cvssv2_scoring_override, true
