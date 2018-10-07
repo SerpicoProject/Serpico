@@ -6,26 +6,26 @@ require './helpers/image.rb'
 require './helpers/helper.rb'
 require 'zip'
 require 'net/ldap'
+require './config'
 
 class Server < Sinatra::Application
   # import config options
-  config_options = JSON.parse(File.read('./config.json'))
 
-  set :config_options, config_options
+  set :config_options, Config
   ## Global variables
-  set :finding_types, config_options['finding_types']
-  set :finding_states, config_options['finding_states']
+  set :finding_types, Config['finding_types']
+  set :finding_states, Config['finding_states']
   set :assessment_types, ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
   set :status, ['EXPLOITED']
-  set :show_exceptions, config_options['show_exceptions']
+  set :show_exceptions, Config['show_exceptions']
 
-  if config_options['effort']
-    set :effort, config_options['effort']
+  if Config['effort']
+    set :effort, Config['effort']
   else
     set :effort, %w[Quick Planned Involved]
   end
 
-  if config_options['show_exceptions'].to_s.casecmp('false').zero? || !(config_options['show_exceptions'])
+  if Config['show_exceptions'].to_s.casecmp('false').zero? || !(Config['show_exceptions'])
     configure do
       disable :logging
       set :set_logging, nil
@@ -38,17 +38,17 @@ class Server < Sinatra::Application
   end
 
   # Set Logging
-  if config_options['log_file'] != ''
-    log = File.new(config_options['log_file'], 'a+')
+  if Config['log_file'] != ''
+    log = File.new(Config['log_file'], 'a+')
     set :logger_out, log
-    server_log("Logging set to #{config_options['log_file']}")
+    server_log("Logging set to #{Config['log_file']}")
   end
 
   # Set Alignment
-  if config_options['image_align'] == ''
+  if Config['image_align'] == ''
     set :alignment, 'center'
   else
-    set :alignment, config_options['image_align']
+    set :alignment, Config['image_align']
   end
 
   # CVSS
@@ -98,8 +98,8 @@ class Server < Sinatra::Application
   set :nist_likelihood, ['Low','Moderate','High']
   set :nist_impact, ['Informational','Low','Moderate','High','Critical']
 
-  if config_options['cvssv2_scoring_override']
-    if config_options['cvssv2_scoring_override'] == 'true'
+  if Config['cvssv2_scoring_override']
+    if Config['cvssv2_scoring_override'] == 'true'
       set :cvssv2_scoring_override, true
     end
   else
@@ -107,13 +107,13 @@ class Server < Sinatra::Application
   end
 
   ## LDAP Settings
-  if config_options['ldap'] == 'true'
+  if Config['ldap'] == 'true'
     set :ldap, true
   else
     set :ldap, false
   end
-  set :domain, config_options['ldap_domain']
-  set :dc, config_options['ldap_dc']
+  set :domain, Config['ldap_domain']
+  set :dc, Config['ldap_dc']
 
   enable :sessions
   set :session_secret, rand(36**12).to_s(36)

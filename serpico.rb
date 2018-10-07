@@ -3,21 +3,21 @@ require 'webrick/https'
 require 'openssl'
 require 'json'
 require './server.rb'
-config_options = JSON.parse(File.read('./config.json'))
+require './config'
 
 ## SSL Settings
-ssl_certificate = config_options['ssl_certificate']
-ssl_key = config_options['ssl_key']
-use_ssl = config_options['use_ssl']
-port = config_options['port']
-bind_address = config_options['bind_address']
+ssl_certificate = Config['ssl_certificate']
+ssl_key = Config['ssl_key']
+use_ssl = Config['use_ssl']
+port = Config['port']
+bind_address = Config['bind_address']
 
 server_options = {
   Port: port,
   Host: bind_address
 }
 
-if config_options['show_exceptions'].to_s.casecmp('false').zero? || !(config_options['show_exceptions'])
+if Config['show_exceptions'].to_s.casecmp('false').zero? || !(Config['show_exceptions'])
   puts "|+| [#{DateTime.now.strftime('%d/%m/%Y %H:%M')}] Sending Webrick logging to /dev/null.."
   server_options[:Logger] = WEBrick::Log.new(File.open(File::NULL, 'w'))
   server_options[:AccessLog] = []
@@ -38,8 +38,8 @@ if use_ssl
   server_options[:SSLOptions] = ssl_options
   server_options[:SSLVersion] = :TLSv1_2
 
-  if(config_options.key?('ssl_ciphers'))
-      cz = config_options['ssl_ciphers']
+  if(Config.key?('ssl_ciphers'))
+      cz = Config['ssl_ciphers']
   else
       # SSL Ciphers
       cz = ['ECDHE-RSA-AES128-GCM-SHA256','ECDHE-RSA-AES256-GCM-SHA384',

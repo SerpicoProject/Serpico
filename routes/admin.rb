@@ -1,11 +1,10 @@
 require 'sinatra'
 require 'zip'
-
-config_options = JSON.parse(File.read('./config.json'))
+require './config'
 
 # set the report_assessment_types for <1.2 versions of Serpico
-unless config_options['report_assessment_types']
-  config_options['report_assessment_types'] = ['Network Internal', 'External', 'Web application', 'Physical', 'Social engineering', 'Configuration audit']
+unless Config['report_assessment_types']
+  Config['report_assessment_types'] = ['Network Internal', 'External', 'Web application', 'Physical', 'Social engineering', 'Configuration audit']
 end
 
 ######
@@ -183,16 +182,16 @@ end
 get '/admin/config' do
   redirect to('/no_access') unless is_administrator?
 
-  @config = config_options
-  @scoring = if config_options['cvss']
+  @config = Config
+  @scoring = if Config['cvss']
                'cvss'
-             elsif config_options['cvssv3']
+             elsif Config['cvssv3']
                'cvssv3'
-             elsif config_options['dread']
+             elsif Config['dread']
                'dread'
-             elsif config_options['riskmatrix']
+             elsif Config['riskmatrix']
                'riskmatrix'
-             elsif config_options["nist800"]
+             elsif Config["nist800"]
                'nist800'
               else
                'default'
@@ -209,68 +208,68 @@ post '/admin/config' do
   rat = params['report_assessment_types'].split(',')
   lang = params['languages'].delete(' ').split(',')
 
-  config_options['effort'] = params['effort'].split(',') if params['effort']
+  Config['effort'] = params['effort'].split(',') if params['effort']
 
-  config_options['finding_types'] = ft
-  config_options['user_defined_variables'] = udv
-  config_options['port'] = params['port']
-  config_options['report_assessment_types'] = rat
-  config_options['languages'] = lang
-  config_options['use_ssl'] = params['use_ssl'] ? true : false
-  config_options['bind_address'] = params['bind_address']
-  config_options['ldap'] = params['ldap'] ? true : false
-  config_options['ldap_domain'] = params['ldap_domain']
-  config_options['ldap_dc'] = params['ldap_dc']
-  config_options['burpmap'] = params['burpmap'] ? true : false
-  config_options['nessusmap'] = params['nessusmap'] ? true : false
-  config_options['vulnmap'] = params['vulnmap'] ? true : false
-  config_options['logo'] = params['logo']
-  config_options['auto_import'] = params['auto_import'] ? true : false
-  config_options['chart'] = params['chart'] ? true : false
-  config_options['threshold'] = params['threshold']
-  config_options['show_exceptions'] = params['show_exceptions'] ? true : false
-  config_options['cvssv2_scoring_override'] = params['cvssv2_scoring_override'] ? true : false
+  Config['finding_types'] = ft
+  Config['user_defined_variables'] = udv
+  Config['port'] = params['port']
+  Config['report_assessment_types'] = rat
+  Config['languages'] = lang
+  Config['use_ssl'] = params['use_ssl'] ? true : false
+  Config['bind_address'] = params['bind_address']
+  Config['ldap'] = params['ldap'] ? true : false
+  Config['ldap_domain'] = params['ldap_domain']
+  Config['ldap_dc'] = params['ldap_dc']
+  Config['burpmap'] = params['burpmap'] ? true : false
+  Config['nessusmap'] = params['nessusmap'] ? true : false
+  Config['vulnmap'] = params['vulnmap'] ? true : false
+  Config['logo'] = params['logo']
+  Config['auto_import'] = params['auto_import'] ? true : false
+  Config['chart'] = params['chart'] ? true : false
+  Config['threshold'] = params['threshold']
+  Config['show_exceptions'] = params['show_exceptions'] ? true : false
+  Config['cvssv2_scoring_override'] = params['cvssv2_scoring_override'] ? true : false
 
   if params['risk_scoring'] == 'CVSSv2'
-    config_options['dread'] = false
-    config_options['cvss'] = true
-    config_options['cvssv3'] = false
-    config_options['riskmatrix'] = false
-    config_options['nist800'] = false
+    Config['dread'] = false
+    Config['cvss'] = true
+    Config['cvssv3'] = false
+    Config['riskmatrix'] = false
+    Config['nist800'] = false
   elsif params['risk_scoring'] == 'CVSSv3'
-    config_options['dread'] = false
-    config_options['cvss'] = false
-    config_options['cvssv3'] = true
-    config_options['riskmatrix'] = false
-    config_options['nist800'] = false
+    Config['dread'] = false
+    Config['cvss'] = false
+    Config['cvssv3'] = true
+    Config['riskmatrix'] = false
+    Config['nist800'] = false
   elsif params['risk_scoring'] == 'DREAD'
-    config_options['dread'] = true
-    config_options['cvss'] = false
-    config_options['cvssv3'] = false
-    config_options['riskmatrix'] = false
-    config_options['nist800'] = false
+    Config['dread'] = true
+    Config['cvss'] = false
+    Config['cvssv3'] = false
+    Config['riskmatrix'] = false
+    Config['nist800'] = false
   elsif params['risk_scoring'] == 'RISKMATRIX'
-    config_options['dread'] = false
-    config_options['cvss'] = false
-    config_options['cvssv3'] = false
-    config_options['riskmatrix'] = true
-    config_options['nist800'] = false
+    Config['dread'] = false
+    Config['cvss'] = false
+    Config['cvssv3'] = false
+    Config['riskmatrix'] = true
+    Config['nist800'] = false
   elsif params['risk_scoring'] == 'NIST800-30'
-  	config_options['dread'] = false
-    config_options['cvss'] = false
-    config_options['cvssv3'] = false
-    config_options['riskmatrix'] = false
-    config_options['nist800'] = true
+  	Config['dread'] = false
+    Config['cvss'] = false
+    Config['cvssv3'] = false
+    Config['riskmatrix'] = false
+    Config['nist800'] = true
   else
-    config_options['dread'] = false
-    config_options['cvss'] = false
-    config_options['cvssv3'] = false
-    config_options['riskmatrix'] = false
-    config_options['nist800'] = false
+    Config['dread'] = false
+    Config['cvss'] = false
+    Config['cvssv3'] = false
+    Config['riskmatrix'] = false
+    Config['nist800'] = false
   end
 
   File.open('./config.json', 'w') do |f|
-    f.write(JSON.pretty_generate(config_options))
+    f.write(JSON.pretty_generate(Config))
     serpico_log("Configuration file modified")
   end
   redirect to('/admin/config')
