@@ -418,6 +418,8 @@ get '/report/remove/:id' do
     findings.destroy
     udos.destroy
     report.destroy
+
+    PluginNotifier.instance.notify_report_deleted(id)
   end
   serpico_log("Report deleted, Report #{id}")
   redirect to('/reports/list')
@@ -1371,8 +1373,12 @@ get '/report/:id/generate' do
 
   end
   all_appendices_xml += "</appendices>\n"
+
+  # We notify all the plugins to get their output and add it to the report xml
+  plugins_xml = PluginNotifier.instance.notify_report_generated(id)
+
   # we bring all xml together
-  report_xml = "<report>#{CGI.unescapeHTML(@report.to_xml)}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}#{all_appendices_xml}</report>"
+  report_xml = "<report>#{CGI.unescapeHTML(@report.to_xml)}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}#{all_appendices_xml}#{plugins_xml}</report>"
   noko_report_xml = Nokogiri::XML(report_xml)
   #no use to go on with report generation if report XML is malformed
   if !noko_report_xml.errors.empty?
