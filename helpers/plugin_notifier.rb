@@ -1,3 +1,4 @@
+require 'sinatra'
 require 'singleton'
 
 # This class is used to reproduce an Observer-like design pattern
@@ -27,18 +28,18 @@ class PluginNotifier
     @plugins.remove observed_plugin
   end
 
-  def notify_report_generated(report_id)
+  def notify_report_generated(report_object)
     returned_xml = "<plugins>\n"
 
     @plugins.each { |observer|
-      returned_xml << observer.notify_report_generated(report_id)
+      returned_xml << observer.notify_report_generated(report_object)
     }
 
     returned_xml << "</plugins>\n"
     return returned_xml
   end
 
-  def notify_report_deleted(report_id)
-    @plugins.each { |observer| observer.notify_report_deleted(report_id) }
+  def notify_report_deleted(report_object)
+    @plugins.each { |observer| observer.notify_report_deleted(report_object) }
   end
 end

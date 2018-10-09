@@ -414,12 +414,14 @@ get '/report/remove/:id' do
     # get all findings and udos associated with the report
     findings = Findings.all(report_id: id)
     udos = UserDefinedObjects.all(report_id: id)
+
+    # Notify the plugins that the report will be deleted
+    PluginNotifier.instance.notify_report_deleted(report)
+
     # delete the entries
     findings.destroy
     udos.destroy
     report.destroy
-
-    PluginNotifier.instance.notify_report_deleted(id)
   end
   serpico_log("Report deleted, Report #{id}")
   redirect to('/reports/list')
@@ -1375,7 +1377,7 @@ get '/report/:id/generate' do
   all_appendices_xml += "</appendices>\n"
 
   # We notify all the plugins to get their output and add it to the report xml
-  plugins_xml = PluginNotifier.instance.notify_report_generated(id)
+  plugins_xml = PluginNotifier.instance.notify_report_generated(@report)
 
   # we bring all xml together
   report_xml = "<report>#{CGI.unescapeHTML(@report.to_xml)}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}#{all_appendices_xml}#{plugins_xml}</report>"
