@@ -65,9 +65,9 @@ GEM
     json_pure (1.8.6)
     metasm (1.0.3)
     mini_portile2 (2.3.0)
-    msfrpc-client (1.1.1)
-      msgpack (~> 1)
-      rex (~> 2)
+    msfrpc-client (1.0.3)
+      msgpack (~> 0.5.8)
+      librex (~> 0.0.70)
     msgpack (1.2.4)
     multi_json (1.13.1)
     mustermann (1.0.3)
@@ -110,7 +110,7 @@ DEPENDENCIES
   do_sqlite3 (= 0.10.17)
   haml
   json
-  msfrpc-client (= 1.1.1)
+  msfrpc-client (= 1.0.3)
   net-ldap (~> 0.11)
   nokogiri (= 1.8.1)
   odle
