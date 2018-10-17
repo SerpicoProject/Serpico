@@ -771,29 +771,6 @@
           - if @finding
             - if @finding.poc
               #{meta_markup(@finding.poc)}
-    - attachments=''
-    - if @attaches
-      - @attaches.each do |attach|
-        - attachments = attachments + "{name: '#{attach}'},"
-    / autosuggest code is care of bootstrap-suggest.js
-    :javascript
-      var files = [
-        #{attachments}
-      ];
-        $('#pocu').suggest('[', {
-          data: files,
-          filter: {
-              casesensitive: true,
-              limit: 10
-            },
-          map: function(file) {
-            return {
-              value: '!!'+file.name+'!!]',
-              text: '<strong>'+file.name+'</strong>'
-            }
-          }
-        })
-
     - if !@master
       .control-group
         %label.control-label{ :for => "affected_hosts" } Affected Hosts/URLs
@@ -805,7 +782,7 @@
     .control-group
       %label.control-label{ :for => "remediation" } Remediation
       .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "remediation" }
+        %textarea.input-xxlarge.allowMarkupShortcut#remediation{ :rows => "10", :name => "remediation" }
           - if @finding
             - if @finding.remediation
               #{meta_markup(@finding.remediation)}
@@ -822,9 +799,9 @@
         %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_2" }
         .info.collapse.out#info_2
           %label
-            Notes
+            Notesnotes
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "notes" }
+          %textarea.input-xxlarge.allowMarkupShortcut#notes{ :rows => "10", :name => "notes" }
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
@@ -855,6 +832,31 @@
     %input.btn.btn-default{ :type => "submit", :value => "Save" }
     %a.btn.btn-default{ :href => "#{id_r}" }
       Cancel
+
+
+- if @attaches
+  - attachments=''
+  - @attaches.each do |attach|
+    - attachments = attachments + "{name: '#{attach}'},"
+  / autosuggest code is care of bootstrap-suggest.js
+  :javascript
+    var files = [
+      #{attachments}
+    ];
+    var suggestSettings =
+    $('#pocu, #overview, #remediation, #notes').suggest('[', {
+      data: files,
+      filter: {
+        casesensitive: true,
+        limit: 10
+      },
+      map: function(file) {
+        return {
+          value: '!!'+file.name+'!!]',
+          text: '<strong>'+file.name+'</strong>'
+          }
+      }
+    })
 
 -if @cvss
   :javascript
