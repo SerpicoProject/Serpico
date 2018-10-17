@@ -3,7 +3,10 @@
 
 .col-md-10
   %br
-  %h2 #{@finding.title}
+  - if @finding
+    %h2 #{@finding.title}
+  - else
+    %h2 New Finding
   %br
 
   %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
@@ -765,9 +768,9 @@
             - if @finding.overview
               #{meta_markup(@finding.overview)}
     .control-group
-      %label.control-label{ :for => "pocu" } Proof of Concept
+      %label.control-label{ :for => "poc" } Proof of Concept
       .controls
-        %textarea.input-xxlarge.allowMarkupShortcut#pocu{ :rows => "10", :name => "poc" }
+        %textarea.input-xxlarge.allowMarkupShortcut#poc{ :rows => "10", :name => "poc" }
           - if @finding
             - if @finding.poc
               #{meta_markup(@finding.poc)}
@@ -780,7 +783,7 @@
       var files = [
         #{attachments}
       ];
-        $('#pocu').suggest('[', {
+        $('#poc').suggest('[', {
           data: files,
           filter: {
               casesensitive: true,
@@ -798,52 +801,52 @@
       .control-group
         %label.control-label{ :for => "affected_hosts" } Affected Hosts/URLs
         .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "3", :name => "affected_hosts" }
+          %textarea.input-xxlarge.allowMarkupShortcut#affected_hosts{ :rows => "3", :name => "affected_hosts" }
             - if @finding
               - if @finding.affected_hosts
                 #{meta_markup(@finding.affected_hosts)}
     .control-group
       %label.control-label{ :for => "remediation" } Remediation
       .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "remediation" }
+        %textarea.input-xxlarge.allowMarkupShortcut#remediation{ :rows => "10", :name => "remediation" }
           - if @finding
             - if @finding.remediation
               #{meta_markup(@finding.remediation)}
     .control-group
       %label.control-label{ :for => "references" } References (One Per Line)
       .controls
-        %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "5", :name => "references" }
+        %textarea.input-xxlarge.allowMarkupShortcut#references{ :rows => "5", :name => "references" }
           - if @finding
             - if @finding.references
               #{meta_markup(@finding.references)}
     - if !@master
       .control-group
-        %label.control-label{ :for => "notes" } Notes Data
+        %label.control-label Notes Data
         %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_2" }
         .info.collapse.out#info_2
-          %label
+          %label{ :for => "notes" }
             Notes
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "notes" }
+          %textarea.input-xxlarge.allowMarkupShortcut#notes{ :rows => "10", :name => "notes" }
             - if @finding
               - if @finding.notes
                 #{meta_markup(@finding.notes)}
     - if !@master
       .control-group
-        %label.control-label{ :for => "preso" } Presentation Data
+        %label.control-label Presentation Data
         %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_1" }
         .info.collapse.out#info_1
-          %label
+          %label{ :for => "presentation_points" }
             Presentation Points (One Per Line)
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "presentation_points" }
+          %textarea.input-xxlarge.allowMarkupShortcut#presentation_points{ :rows => "10", :name => "presentation_points" }
             - if @finding
               - if @finding.presentation_points
                 #{meta_markup(@finding.presentation_points)}
-          %label
+          %label{ :for => "presentation_rem_points" }
             Presentation Remediation Points (One Per Line)
           .controls
-          %textarea.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "presentation_rem_points" }
+          %textarea.input-xxlarge.allowMarkupShortcut#presentation_rem_points{ :rows => "10", :name => "presentation_rem_points" }
             - if @finding
               - if @finding.presentation_rem_points
                 #{meta_markup(@finding.presentation_rem_points)}

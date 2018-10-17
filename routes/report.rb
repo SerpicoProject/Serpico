@@ -891,7 +891,7 @@ get '/report/:id/findings/new' do
 
   @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
-  haml :create_finding, encode_html: true
+  haml :findings_edit, encode_html: true
 end
 
 # Create the finding in the DB
