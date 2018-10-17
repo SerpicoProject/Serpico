@@ -59,12 +59,16 @@ get '/report/:id/attachments' do
   @screenshot_names_from_findings = {}
   # fetching screenshots names in findings
   findings = Findings.all(report_id: id)
+
   findings.each do |find|
-    next unless find.poc
+    next unless find.overview or find.poc or find.remediation or find.notes
+
+    text = find.overview + find.poc + find.remediation + find.notes
+
     @screenshot_names_from_findings[find.id] = []
     # for each finding, we extract the screenshot name in the poc field.
     # screenshot names are like this : [!!screenshotnames.png!!]
-    find.poc.to_s.split('<paragraph>').each do |pp|
+    text.to_s.split('<paragraph>').each do |pp|
       next unless pp =~ /\[\!\!/
       @screenshot_names_from_findings[find.id] << pp.split('[!!')[1].split('!!]').first
     end
