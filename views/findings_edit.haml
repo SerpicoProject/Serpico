@@ -13,26 +13,10 @@
     .control-group
       %label.control-label{ :for => "title" } Title
       .controls
-        %input{ :type => "text", :name => "title", :value => "#{CGI.unescapeHTML(@finding.title)}" }
-    -if !@master
-      .control-group
-        %label.control-label{ :for => "assessment_type" } Assessment Type
-        .controls
-          %select{ :name => "assessment_type" }
-            - settings.assessment_types.each do |type|
-              - if @finding
-                - if type == @finding.assessment_type
-                  %option{ :selected => "selected" } #{type}
-                - else
-                  %option #{type}
-    -if @master
-      .control-group
-        %label.control-label{ :for => "approved" } Approved
-        .controls
-          -if @finding.approved
-            %input{ :type=>"checkbox", :name => "approved", :checked=>"checked" }
-          - else
-            %input{ :type=>"checkbox", :name => "approved" }
+        - if @finding
+          %input#title{ :type => "text", :name => "title", :value => "#{CGI.unescapeHTML(@finding.title)}", :require => true }
+        -else
+          %input#title{ :type => "text", :name => "title", :require => true }
     - if @master
       - if @languages and @languages.size > 1
         .control-group
@@ -40,29 +24,57 @@
           .controls
             %select#language{ :name => "language" }
               - @languages.each do |type|
-                - if @finding.language == type
+                - if @finding and @finding.language == type
                   %option{ :selected => "selected" } #{type}
                 - else
                   %option #{type}
+    - if !@master
+      .control-group
+        %label.control-label{ :for => "assessment_type" } Assessment Type
+        .controls
+          %select#assessment_type{ :name => "assessment_type" }
+            - settings.assessment_types.each do |type|
+              - if @finding and type == @finding.assessment_type
+                %option{ :selected => "selected" } #{type}
+              - else
+                %option #{type}
+    .control-group
+      %label.control-label{ :for => "type" } Finding Type
+      .controls
+        %select#type{ :name => "type" }
+          - settings.finding_types.each do |type|
+            - if @finding and type == @finding.type
+              %option{ :selected => "selected" } #{type}
+            - else
+              %option #{type}
+    -if @master
+      .control-group
+        %label.control-label{ :for => "approved" } Approved
+        .controls
+          -if @finding and @finding.approved
+            %input#approved{ :type => "checkbox", :name => "approved", :checked => "checked" }
+          - else
+            %input#approved{ :type => "checkbox", :name => "approved" }
       - if @vulnmap
-        .control-group
-          %label.control-label{ :for => "existingvulnmaps" } Vuln IDs mapped to this finding
-          .controls
-            .table
-              %table{ :style => "width: 220px" }
-                - @vulnmaps.each do |vuln|
-                  - if vuln.msf_ref
-                    %tr
-                      %td
-                        #{vuln.msf_ref}
-                      %td{ :align => "right" }
-                        %a.btn.btn-danger.btn-sm{ :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete" }
-                          %i.icon-trash.icon-white.icon-sm{ :value => "#{vuln.msf_ref}", :type => "submit", :title => "Delete" }
+        - if @vulnmaps
+          .control-group
+            %label.control-label{ :for => "existingvulnmaps" } Vuln IDs mapped to this finding
+            .controls
+              .table
+                %table{ :style => "width: 220px" }
+                  - @vulnmaps.each do |vuln|
+                    - if vuln.msf_ref
+                      %tr
+                        %td
+                          #{vuln.msf_ref}
+                        %td{ :align => "right" }
+                          %a.btn.btn-danger.btn-sm{ :href => "/mapping/#{@finding.id}/vulnmap/#{vuln.id}/delete" }
+                            %i.icon-trash.icon-white.icon-sm{ :value => "#{vuln.msf_ref}", :type => "submit", :title => "Delete" }
         .control-group
           %label.control-label{ :for => "msf_ref" }
-            %a.btn.btn-info{ :href => "#mymodal", "data-toggle" => "modal" }
+            %a.btn.btn-info{ :href => "#vuln_mapping_modal", "data-toggle" => "modal" }
               Add new Vuln ID mapping
-          .modal.modal.hide.fade#mymodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
+          .modal.hide.fade#vuln_mapping_modal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
             .modal-header
               %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
                 x
@@ -100,44 +112,47 @@
           .controls
             %input{ :type => "text", :name => "msf_ref" }
       - if @nessusmap
-        .control-group
-          %label.control-label{ :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
-          .controls
-            .table
-              %table{ :style => "width: 220px" }
-                %tbody
-                - @nessus.each do |item|
-                  - if item.pluginid
-                    %tr
-                      %td
-                        #{item.pluginid}
-                      %td{ :align => "right" }
-                        %a.btn.btn-danger.btn-xs{ :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete" }
-                          %i.icon-trash.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
+        - if @nessus
+          .control-group
+            %label.control-label{ :for => "existingnessusmaps" } Nessus IDs Mapped to this finding
+            .controls
+              .table
+                %table{ :style => "width: 220px" }
+                  %tbody
+                  - @nessus.each do |item|
+                    - if item.pluginid
+                      %tr
+                        %td
+                          #{item.pluginid}
+                        %td{ :align => "right" }
+                          %a.btn.btn-danger.btn-xs{ :href => "/mapping/#{@finding.id}/nessus/#{item.pluginid}/delete" }
+                            %i.icon-trash.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
         .control-group
           %label.control-label{ :for => "nessus_pluginid" } Add new nessus ID mapping
           .controls
-            %input{ :type => "text", :name => "nessus_pluginid" }
+            %input#nessus_pluginid{ :type => "text", :name => "nessus_pluginid" }
       - if @burpmap
-        .control-group
-          %label.control-label{ :for => "existingburpmaps" } Burp IDs Mapped to this finding
-          .controls
-            .table
-              %table{ :style => "width: 220px" }
-                %tbody
-                - @burp.each do |item|
-                  - if item.pluginid
-                    %tr
-                      %td
-                        #{item.pluginid}
-                      %td{ :align => "right" }
-                        %a.btn.btn-danger.btn-xs{ :href => "/mapping/#{@finding.id}/burp/#{item.pluginid}/delete" }
-                          %i.icon-trash.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
+        - if @burp
+          .control-group
+            %label.control-label{ :for => "existingburpmaps" }
+              Burp IDs Mapped to this finding
+            .controls
+              .table
+                %table{ :style => "width: 220px" }
+                  %tbody
+                  - @burp.each do |item|
+                    - if item.pluginid
+                      %tr
+                        %td
+                          #{item.pluginid}
+                        %td{ :align => "right" }
+                          %a.btn.btn-danger.btn-xs{ :href => "/mapping/#{@finding.id}/burp/#{item.pluginid}/delete" }
+                            %i.icon-trash.icon-white{ :value => "#{item.pluginid}", :type => "submit", :title => "Delete" }
         .control-group
           %label.control-label{ :for => "burp_pluginid" }
-            %a{ :href => "#burpmodal", "data-toggle" => "modal" }
+            %a.btn.btn-info{ :href => "#burp_mapping_modal", "data-toggle" => "modal" }
               Add new Burp ID mapping
-          .modal.modal.hide.fade#burpmodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
+          .modal.hide.fade#burp_mapping_modal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
             .modal-header
               %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
                 x
@@ -155,31 +170,46 @@
       .control-group
         %label.control-label{ :for => "damage" } Damage
         .controls
-          %input{ :type => "number", :min => "1", :max => "10", :name => "damage", :value => "#{@finding.damage}", :required => true }
+          - if @finding
+            %input#damage{ :type => "number", :min => "1", :max => "10", :name => "damage", :value => "#{@finding.damage}", :required => true }
+          -else
+            %input#damage{ :type => "number", :min => "1", :max => "10", :name => "damage", :value => "1", :required => true }
       .control-group
         %label.control-label{ :for => "reproducability" } Reproducibility
         .controls
-          %input{ :type => "number", :min => "1", :max => "10", :name => "reproducability", :value => "#{@finding.reproducability}", :required => true }
+          - if @finding
+            %input#reproducability{ :type => "number", :min => "1", :max => "10", :name => "reproducability", :value => "#{@finding.reproducability}", :required => true }
+          -else
+            %input#reproducability{ :type => "number", :min => "1", :max => "10", :name => "reproducability", :value => "1", :required => true }
       .control-group
         %label.control-label{ :for => "exploitability" } Exploitability
         .controls
-          %input{ :type => "number", :min => "1", :max => "10", :name => "exploitability", :value => "#{@finding.exploitability}", :required => true }
+          - if @finding
+            %input#exploitability{ :type => "number", :min => "1", :max => "10", :name => "exploitability", :value => "#{@finding.exploitability}", :required => true }
+          -else
+            %input#exploitability{ :type => "number", :min => "1", :max => "10", :name => "exploitability", :value => "1", :required => true }
       .control-group
         %label.control-label{ :for => "affected_users" } Affected Users
         .controls
-          %input{ :type => "number", :min => "1", :max => "10", :name => "affected_users", :value => "#{@finding.affected_users}", :required => true }
+          - if @finding
+            %input#affected_users{ :type => "number", :min => "1", :max => "10", :name => "affected_users", :value => "#{@finding.affected_users}", :required => true }
+          -else
+            %input#affected_users{ :type => "number", :min => "1", :max => "10", :name => "affected_users", :value => "1", :required => true }
       .control-group
         %label.control-label{ :for => "discoverability" } Discoverability
         .controls
-          %input{ :type => "number", :min => "1", :max => "10", :name => "discoverability", :value => "#{@finding.discoverability}", :required => true }
+          - if @finding
+            %input#discoverability{ :type => "number", :min => "1", :max => "10", :name => "discoverability", :value => "#{@finding.discoverability}", :required => true }
+          -else
+            %input#discoverability{ :type => "number", :min => "1", :max => "10", :name => "discoverability", :value => "1", :required => true }
     - elsif @cvss
       .control-group
         %label.control-label{ :for => "attack_vector" }
-          %a.btn.btn-info{ :href=> "#mymodal", "data-toggle" => "modal" }
+          %a.btn.btn-info{ :href => "#cvss_modal", "data-toggle" => "modal" }
             CVSS Vector String
         .controls
           %input.form-control#vs{ :type => "text", :placeholder => "CVSS Vector String", :style => "width:35em" }
-        .modal.modal.hide.fade#mymodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
+        .modal.hide.fade#cvss_modal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
           .modal-header
             %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
               x
@@ -212,13 +242,12 @@
             .results
               %span.score
               %span.severity
-
       .control-group.cvss2
         %label.control-label{ :for => "av" } Access Vector
         .controls
           %select#av{ :name => "av", "data-cvss-tag" => "AV" }
             - settings.av.each do |av|
-              - if av == @finding.av
+              - if @finding and av == @finding.av
                 %option{ :selected => "selected" } #{av}
               - else
                 %option #{av}
@@ -227,7 +256,7 @@
         .controls
           %select#ac{ :name => "ac", "data-cvss-tag" => "AC" }
             - settings.ac.each do |ac|
-              - if ac == @finding.ac
+              - if @finding and ac == @finding.ac
                 %option{ :selected => "selected" } #{ac}
               - else
                 %option #{ac}
@@ -236,7 +265,7 @@
         .controls
           %select#au{ :name => "au", "data-cvss-tag" => "AU" }
             - settings.au.each do |au|
-              - if au == @finding.au
+              - if @finding and au == @finding.au
                 %option{ :selected => "selected" } #{au}
               - else
                 %option #{au}
@@ -245,7 +274,7 @@
         .controls
           %select#c{ :name => "c", "data-cvss-tag" => "C" }
             - settings.c.each do |c|
-              - if c == @finding.c
+              - if @finding and c == @finding.c
                 %option{ :selected => "selected" } #{c}
               - else
                 %option #{c}
@@ -254,7 +283,7 @@
         .controls
           %select#i{ :name => "i", "data-cvss-tag" => "I" }
             - settings.i.each do |i|
-              - if i == @finding.i
+              - if @finding and i == @finding.i
                 %option{ :selected => "selected" } #{i}
               - else
                 %option #{i}
@@ -263,7 +292,7 @@
         .controls
           %select#a{ :name => "a", "data-cvss-tag" => "A" }
             - settings.a.each do |a|
-              - if a == @finding.a
+              - if @finding and a == @finding.a
                 %option{ :selected => "selected" } #{a}
               - else
                 %option #{a}
@@ -272,7 +301,7 @@
         .controls
           %select#e{ :name => "e", "data-cvss-tag" => "E" }
             - settings.e.each do |e|
-              - if e == @finding.e
+              - if @finding and e == @finding.e
                 %option{ :selected => "selected" } #{e}
               - else
                 %option #{e}
@@ -281,7 +310,7 @@
         .controls
           %select#rl{ :name => "rl", "data-cvss-tag" => "RL" }
             - settings.rl.each do |rl|
-              - if rl == @finding.rl
+              - if @finding and rl == @finding.rl
                 %option{ :selected => "selected" } #{rl}
               - else
                 %option #{rl}
@@ -290,7 +319,7 @@
         .controls
           %select#rc{ :name => "rc", "data-cvss-tag" => "RC" }
             - settings.rc.each do |rc|
-              - if rc == @finding.rc
+              - if @finding and rc == @finding.rc
                 %option{ :selected => "selected" } #{rc}
               - else
                 %option #{rc}
@@ -299,7 +328,7 @@
         .controls
           %select#cdp{ :name => "cdp", "data-cvss-tag" => "CDP" }
             - settings.cdp.each do |cdp|
-              - if cdp == @finding.cdp
+              - if @finding and cdp == @finding.cdp
                 %option{ :selected => "selected" } #{cdp}
               - else
                 %option #{cdp}
@@ -308,7 +337,7 @@
         .controls
           %select#td{ :name => "td", "data-cvss-tag" => "TD" }
             - settings.td.each do |td|
-              - if td == @finding.td
+              - if @finding and td == @finding.td
                 %option{ :selected => "selected" } #{td}
               - else
                 %option #{td}
@@ -317,7 +346,7 @@
         .controls
           %select#cr{ :name => "cr", "data-cvss-tag" => "CR" }
             - settings.cr.each do |cr|
-              - if cr == @finding.cr
+              - if @finding and cr == @finding.cr
                 %option{ :selected => "selected" } #{cr}
               - else
                 %option #{cr}
@@ -326,7 +355,7 @@
         .controls
           %select#ir{ :name => "ir", "data-cvss-tag" => "IR" }
             - settings.ir.each do |ir|
-              - if ir == @finding.ir
+              - if @finding and ir == @finding.ir
                 %option{ :selected => "selected" } #{ir}
               - else
                 %option #{ir}
@@ -335,18 +364,18 @@
         .controls
           %select#ar{ :name => "ar", "data-cvss-tag" => "AR" }
             - settings.ar.each do |ar|
-              - if ar == @finding.ar
+              - if @finding and ar == @finding.ar
                 %option{ :selected => "selected" } #{ar}
               - else
                 %option #{ar}
     - elsif @cvssv3
       .control-group.cvss3
         %label.control-label{ :for => "attack_vector" }
-          %a.btn.btn-info{ :href => "#mymodal", "data-toggle" => "modal" }
+          %a.btn.btn-info{ :href => "#cvss_modal", "data-toggle" => "modal" }
             CVSS Vector String
         .controls
-          %input.form-control#vs{ :type => "text", :placeholder=>"CVSS Vector String", :style=>"width:35em" }
-        .modal.modal.hide.fade#mymodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
+          %input.form-control#vs{ :type => "text", :placeholder => "CVSS Vector String", :style => "width:35em" }
+        .modal.hide.fade#cvss_modal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
           .modal-header
             %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
               x
@@ -383,9 +412,9 @@
       .control-group.cvss3
         %label.control-label{ :for => "attack_vector" } Attack Vector
         .controls
-          %select#attack_vector{ :name => "attack_vector", "data-cvss-tag" => "AV"  }
+          %select#attack_vector{ :name => "attack_vector", "data-cvss-tag" => "AV" }
             - settings.attack_vector.each do |attack_vector|
-              - if attack_vector == @finding.attack_vector
+              - if @finding and attack_vector == @finding.attack_vector
                 %option{ :selected => "selected" } #{attack_vector}
               - else
                 %option #{attack_vector}
@@ -394,7 +423,7 @@
         .controls
           %select#attack_complexity{ :name => "attack_complexity", "data-cvss-tag" => "AC" }
             - settings.attack_complexity.each do |attack_complexity|
-              - if attack_complexity == @finding.attack_complexity
+              - if @finding and attack_complexity == @finding.attack_complexity
                 %option{ :selected => "selected" } #{attack_complexity}
               - else
                 %option #{attack_complexity}
@@ -403,7 +432,7 @@
         .controls
           %select#privileges_required{ :name => "privileges_required", "data-cvss-tag" => "PR" }
             - settings.privileges_required.each do |privileges_required|
-              - if privileges_required == @finding.privileges_required
+              - if @finding and privileges_required == @finding.privileges_required
                 %option{ :selected => "selected" } #{privileges_required}
               - else
                 %option #{privileges_required}
@@ -412,16 +441,16 @@
         .controls
           %select#user_interaction{ :name => "user_interaction", "data-cvss-tag" => "UI" }
             - settings.user_interaction.each do |user_interaction|
-              - if user_interaction == @finding.user_interaction
+              - if @finding and user_interaction == @finding.user_interaction
                 %option{ :selected => "selected" } #{user_interaction}
               - else
                 %option #{user_interaction}
       .control-group.cvss3
         %label.control-label{ :for => "scope_cvss" } Scope
         .controls
-          %select#scope{ :name => "scope_cvss", "data-cvss-tag" => "S"  }
+          %select#scope{ :name => "scope_cvss", "data-cvss-tag" => "S" }
             - settings.scope_cvss.each do |scope_cvss|
-              - if scope_cvss == @finding.scope_cvss
+              - if @finding and scope_cvss == @finding.scope_cvss
                 %option{ :selected => "selected" } #{scope_cvss}
               - else
                 %option #{scope_cvss}
@@ -430,7 +459,7 @@
         .controls
           %select#confidentiality-impact{ :name => "confidentiality", "data-cvss-tag" => "C" }
             - settings.confidentiality.each do |confidentiality|
-              - if confidentiality == @finding.confidentiality
+              - if @finding and confidentiality == @finding.confidentiality
                 %option{ :selected => "selected" } #{confidentiality}
               - else
                 %option #{confidentiality}
@@ -439,7 +468,7 @@
         .controls
           %select#integrity{ :name => "integrity", "data-cvss-tag" => "I" }
             - settings.integrity.each do |integrity|
-              - if integrity == @finding.integrity
+              - if @finding and integrity == @finding.integrity
                 %option{ :selected => "selected" } #{integrity}
               - else
                 %option #{integrity}
@@ -448,16 +477,16 @@
         .controls
           %select#availability{ :name => "availability", "data-cvss-tag" => "A" }
             - settings.availability.each do |availability|
-              - if availability == @finding.availability
+              - if @finding and availability == @finding.availability
                 %option{ :selected => "selected" } #{availability}
               - else
                 %option #{availability}
       .control-group.cvss3
         %label.control-label{ :for => "exploit_maturity" } Exploit Code Maturity
         .controls
-          %select#exploit_maturity{ :name => "exploit_maturity", "data-cvss-tag" => "E"  }
+          %select#exploit_maturity{ :name => "exploit_maturity", "data-cvss-tag" => "E" }
             - settings.exploit_maturity.each do |exploit_maturity|
-              - if exploit_maturity == @finding.exploit_maturity
+              - if @finding and exploit_maturity == @finding.exploit_maturity
                 %option{ :selected => "selected" } #{exploit_maturity}
               - else
                 %option #{exploit_maturity}
@@ -466,7 +495,7 @@
         .controls
           %select#remeditation_level{ :name => "remeditation_level", "data-cvss-tag" => "RL" }
             - settings.remeditation_level.each do |remeditation_level|
-              - if remeditation_level == @finding.remeditation_level
+              - if @finding and remeditation_level == @finding.remeditation_level
                 %option{ :selected => "selected" } #{remeditation_level}
               - else
                 %option #{remeditation_level}
@@ -475,7 +504,7 @@
         .controls
           %select#report_confidence{ :name => "report_confidence", "data-cvss-tag" => "RC" }
             - settings.report_confidence.each do |report_confidence|
-              - if report_confidence == @finding.report_confidence
+              - if @finding and report_confidence == @finding.report_confidence
                 %option{ :selected => "selected" } #{report_confidence}
               - else
                 %option #{report_confidence}
@@ -484,7 +513,7 @@
         .controls
           %select#confidentiality_requirement{ :name => "confidentiality_requirement", "data-cvss-tag" => "CR" }
             - settings.confidentiality_requirement.each do |confidentiality_requirement|
-              - if confidentiality_requirement == @finding.confidentiality_requirement
+              - if @finding and confidentiality_requirement == @finding.confidentiality_requirement
                 %option{ :selected => "selected" } #{confidentiality_requirement}
               - else
                 %option #{confidentiality_requirement}
@@ -493,7 +522,7 @@
         .controls
           %select#integrity_requirement{ :name => "integrity_requirement", "data-cvss-tag" => "IR" }
             - settings.integrity_requirement.each do |integrity_requirement|
-              - if integrity_requirement == @finding.integrity_requirement
+              - if @finding and integrity_requirement == @finding.integrity_requirement
                 %option{ :selected => "selected" } #{integrity_requirement}
               - else
                 %option #{integrity_requirement}
@@ -502,7 +531,7 @@
         .controls
           %select#availability_requirement{ :name => "availability_requirement", "data-cvss-tag" => "AR" }
             - settings.availability_requirement.each do |availability_requirement|
-              - if availability_requirement == @finding.availability_requirement
+              - if @finding and availability_requirement == @finding.availability_requirement
                 %option{ :selected => "selected" } #{availability_requirement}
               - else
                 %option #{availability_requirement}
@@ -511,7 +540,7 @@
         .controls
           %select#mod_attack_vector{ :name => "mod_attack_vector", "data-cvss-tag" => "MAV" }
             - settings.mod_attack_vector.each do |mod_attack_vector|
-              - if mod_attack_vector == @finding.mod_attack_vector
+              - if @finding and mod_attack_vector == @finding.mod_attack_vector
                 %option{ :selected => "selected" } #{mod_attack_vector}
               - else
                 %option #{mod_attack_vector}
@@ -520,7 +549,7 @@
         .controls
           %select#mod_attack_complexity{ :name => "mod_attack_complexity", "data-cvss-tag" => "MAC" }
             - settings.mod_attack_complexity.each do |mod_attack_complexity|
-              - if mod_attack_complexity == @finding.mod_attack_complexity
+              - if @finding and mod_attack_complexity == @finding.mod_attack_complexity
                 %option{ :selected => "selected" } #{mod_attack_complexity}
               - else
                 %option #{mod_attack_complexity}
@@ -529,7 +558,7 @@
         .controls
           %select#mod_privileges_required{ :name => "mod_privileges_required", "data-cvss-tag" => "MPR" }
             - settings.mod_privileges_required.each do |mod_privileges_required|
-              - if mod_privileges_required == @finding.mod_privileges_required
+              - if @finding and mod_privileges_required == @finding.mod_privileges_required
                 %option{ :selected => "selected" } #{mod_privileges_required}
               - else
                 %option #{mod_privileges_required}
@@ -538,7 +567,7 @@
         .controls
           %select#mod_user_interaction{ :name => "mod_user_interaction", "data-cvss-tag" => "MUI" }
             - settings.mod_user_interaction.each do |mod_user_interaction|
-              - if mod_user_interaction == @finding.mod_user_interaction
+              - if @finding and mod_user_interaction == @finding.mod_user_interaction
                 %option{ :selected => "selected" } #{mod_user_interaction}
               - else
                 %option #{mod_user_interaction}
@@ -547,7 +576,7 @@
         .controls
           %select#mod_scope{ :name => "mod_scope", "data-cvss-tag" => "MS" }
             - settings.mod_scope.each do |mod_scope|
-              - if mod_scope == @finding.mod_scope
+              - if @finding and mod_scope == @finding.mod_scope
                 %option{ :selected => "selected" } #{mod_scope}
               - else
                 %option #{mod_scope}
@@ -556,7 +585,7 @@
         .controls
           %select#mod_confidentiality{ :name => "mod_confidentiality", "data-cvss-tag" => "MC" }
             - settings.mod_confidentiality.each do |mod_confidentiality|
-              - if mod_confidentiality == @finding.mod_confidentiality
+              - if @finding and mod_confidentiality == @finding.mod_confidentiality
                 %option{ :selected => "selected" } #{mod_confidentiality}
               - else
                 %option #{mod_confidentiality}
@@ -565,7 +594,7 @@
         .controls
           %select#mod_integrity{ :name => "mod_integrity", "data-cvss-tag" => "MI" }
             - settings.mod_integrity.each do |mod_integrity|
-              - if mod_integrity == @finding.mod_integrity
+              - if @finding and mod_integrity == @finding.mod_integrity
                 %option{ :selected => "selected" } #{mod_integrity}
               - else
                 %option #{mod_integrity}
@@ -574,7 +603,7 @@
         .controls
           %select#mod_availability{ :name => "mod_availability", "data-cvss-tag" => "MA" }
             - settings.mod_availability.each do |mod_availability|
-              - if mod_availability == @finding.mod_availability
+              - if @finding and mod_availability == @finding.mod_availability
                 %option{ :selected => "selected" } #{mod_availability}
               - else
                 %option #{mod_availability}
@@ -582,22 +611,22 @@
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
-          %select{ :name => "risk" }
+          %select#risk{ :name => "risk" }
             - risk_types = ["None", "Low", "Moderate", "High", "Critical"]
-              - if !@finding.risk
-                - @finding.risk = @finding.dread_total/10
-                - @finding.risk = 4 if dread_total == 50
-              - [0,1,2,3,4].each do |r_type|
-              - if r_type == @finding.risk
+            - if @finding and !@finding.risk
+              - @finding.risk = @finding.dread_total/10
+              - @finding.risk = 4 if dread_total == 50
+            - [0,1,2,3,4].each do |r_type|
+              - if @finding and r_type == @finding.risk
                 %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
               - else
                 %option{ :value => "#{r_type}"} #{risk_types[r_type]}
       .control-group
         %label.control-label{ :for => "severity" } Severity
         .controls
-          %select{ :name => "severity" }
+          %select#severity{ :name => "severity" }
             - settings.severity.each do |severity|
-              - if severity == @finding.severity
+              - if @finding and severity == @finding.severity
                 %option{ :selected => "selected" } #{severity}
               - else
                 %option #{severity}
@@ -605,15 +634,14 @@
         %label.control-label{ :for => "severity_rationale" } Severity Rationale
         .controls
           %textarea.input-xxlarge.allowMarkupShortcut#severity_rationale{ :rows => "3", :name => "severity_rationale" }
-            - if @finding
-              - if @finding.severity_rationale
-                #{meta_markup(@finding.severity_rationale)}
+            - if @finding and @finding.severity_rationale
+              #{meta_markup(@finding.severity_rationale)}
       .control-group
         %label.control-label{ :for => "likelihood" } Likelihood
         .controls
-          %select{ :name => "likelihood" }
+          %select#likelihood{ :name => "likelihood" }
             - settings.likelihood.each do |likelihood|
-              - if likelihood == @finding.likelihood
+              - if @finding and likelihood == @finding.likelihood
                 %option{ :selected => "selected" } #{likelihood}
               - else
                 %option #{likelihood}
@@ -621,28 +649,27 @@
         %label.control-label{ :for => "likelihood_rationale" } Likelihood Rationale
         .controls
           %textarea.input-xxlarge.allowMarkupShortcut#likelihood_rationale{ :rows => "3", :name => "likelihood_rationale" }
-            - if @finding
-              - if @finding.likelihood_rationale
-                #{meta_markup(@finding.likelihood_rationale)}
+            - if @finding and  @finding.likelihood_rationale
+              #{meta_markup(@finding.likelihood_rationale)}
 
 
       -#------------------ Add NIST800 findings -------------------#-
     - elsif @nist800
-      .control-group.nist800
+      .control-group
         %label.control-label{ :for => "nist_impact" } Impact
         .controls
-          %select{ :name => "nist_impact" }
+          %select#nist_impact{ :name => "nist_impact" }
             - settings.nist_impact.each do |nist_impact|
-              - if nist_impact == @finding.nist_impact
+              - if @finding and nist_impact == @finding.nist_impact
                 %option{ :selected => "selected" } #{nist_impact}
               - else
                 %option #{nist_impact}
-      .control-group.nist800
+      .control-group
         %label.control-label{ :for => "nist_likelihood" } Likelihood
         .controls
-          %select{ :name => "nist_likelihood" }
+          %select#nist_likelihood{ :name => "nist_likelihood" }
             - settings.nist_likelihood.each do |nist_likelihood|
-              - if nist_likelihood == @finding.nist_likelihood
+              - if @finding and nist_likelihood == @finding.nist_likelihood
                 %option{ :selected => "selected" } #{nist_likelihood}
               - else
                 %option #{nist_likelihood}
@@ -653,13 +680,13 @@
       .control-group
         %label.control-label{ :for => "risk" } Vulnerability Risk Level
         .controls
-          %select{ :name => "risk" }
+          %select#risk{ :name => "risk" }
             - risk_types = ["Informational", "Low", "Moderate", "High", "Critical"]
-            - if !@finding.risk
+            - if @finding and !@finding.risk
               - @finding.risk = @finding.dread_total/10
               - @finding.risk = 4 if @finding.dread_total == 50
             - [0,1,2,3,4].each do |r_type|
-              - if r_type == @finding.risk
+              - if @finding and r_type == @finding.risk
                 %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
               - else
                 %option{ :value => "#{r_type}"} #{risk_types[r_type]}
@@ -670,26 +697,17 @@
       .control-group
         %label.control-label{ :for => "effort" } Remediation Effort
         .controls
-          %select{ :name => "effort" }
+          %select#effort{ :name => "effort" }
             - settings.effort.each do |effort|
-              - if effort == @finding.effort
+              - if @finding and effort == @finding.effort
                 %option{ :selected => "selected" } #{effort}
               - else
                 %option #{effort}
     .control-group
-      %label.control-label{ :for => "type" } Finding Type
-      .controls
-        %select{ :name => "type" }
-          - settings.finding_types.each do |type|
-            - if type == @finding.type
-              %option{ :selected => "selected" } #{type}
-            - else
-              %option #{type}
-    .control-group
       %label.control-label{ :for => "overview" }
-        %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
+        %a.btn.btn-info{ :href => "#modaloverview", "data-toggle" => "modal" }
           Overview
-      .modal.modal.hide.fade#modaloverview{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
+      .modal.hide.fade#modaloverview{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true"}
         .modal-header
           %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
             x
@@ -764,92 +782,64 @@
               [[[ code, code goes here ]]]
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#overview{ :rows => "10", :name => "overview" }
-          - if @finding
-            - if @finding.overview
-              #{meta_markup(@finding.overview)}
+          - if @finding and @finding.overview
+            #{meta_markup(@finding.overview)}
     .control-group
       %label.control-label{ :for => "poc" } Proof of Concept
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#poc{ :rows => "10", :name => "poc" }
-          - if @finding
-            - if @finding.poc
-              #{meta_markup(@finding.poc)}
-    - attachments=''
-    - if @attaches
-      - @attaches.each do |attach|
-        - attachments = attachments + "{name: '#{attach}'},"
-    / autosuggest code is care of bootstrap-suggest.js
-    :javascript
-      var files = [
-        #{attachments}
-      ];
-        $('#poc').suggest('[', {
-          data: files,
-          filter: {
-              casesensitive: true,
-              limit: 10
-            },
-          map: function(file) {
-            return {
-              value: '!!'+file.name+'!!]',
-              text: '<strong>'+file.name+'</strong>'
-            }
-          }
-        })
-
+          - if @finding and @finding.poc
+            #{meta_markup(@finding.poc)}
     - if !@master
       .control-group
         %label.control-label{ :for => "affected_hosts" } Affected Hosts/URLs
         .controls
-          %textarea.input-xxlarge.allowMarkupShortcut#affected_hosts{ :rows => "3", :name => "affected_hosts" }
-            - if @finding
-              - if @finding.affected_hosts
-                #{meta_markup(@finding.affected_hosts)}
+          %textarea.input-xxlarge.allowMarkupShortcut#affected_hosts{ :rows => "10", :name => "affected_hosts" }
+            - if @finding and @finding.affected_hosts
+              #{meta_markup(@finding.affected_hosts)}
     .control-group
       %label.control-label{ :for => "remediation" } Remediation
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#remediation{ :rows => "10", :name => "remediation" }
-          - if @finding
-            - if @finding.remediation
-              #{meta_markup(@finding.remediation)}
+          - if @finding and @finding.remediation
+            #{meta_markup(@finding.remediation)}
     .control-group
       %label.control-label{ :for => "references" } References (One Per Line)
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#references{ :rows => "5", :name => "references" }
-          - if @finding
-            - if @finding.references
-              #{meta_markup(@finding.references)}
+          - if @finding and @finding.references
+            #{meta_markup(@finding.references)}
     - if !@master
       .control-group
-        %label.control-label Notes Data
-        %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_2" }
+        %label.control-label{ "data-toggle" => "collapse", "data-target" => "#info_2" }
+          Notes Data
+          %i.icon-chevron-down
+        %br
         .info.collapse.out#info_2
           %label{ :for => "notes" }
             Notes
-          .controls
           %textarea.input-xxlarge.allowMarkupShortcut#notes{ :rows => "10", :name => "notes" }
-            - if @finding
-              - if @finding.notes
-                #{meta_markup(@finding.notes)}
+            - if @finding and @finding.notes
+              #{meta_markup(@finding.notes)}
     - if !@master
       .control-group
-        %label.control-label Presentation Data
-        %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_1" }
+        %label.control-label{ "data-toggle" => "collapse", "data-target" => "#info_1" }
+          Presentation Data
+          %i.icon-chevron-down
+        %br
         .info.collapse.out#info_1
           %label{ :for => "presentation_points" }
             Presentation Points (One Per Line)
-          .controls
           %textarea.input-xxlarge.allowMarkupShortcut#presentation_points{ :rows => "10", :name => "presentation_points" }
-            - if @finding
-              - if @finding.presentation_points
-                #{meta_markup(@finding.presentation_points)}
+            - if @finding and @finding.presentation_points
+              #{meta_markup(@finding.presentation_points)}
+          %br
+          %br
           %label{ :for => "presentation_rem_points" }
             Presentation Remediation Points (One Per Line)
-          .controls
           %textarea.input-xxlarge.allowMarkupShortcut#presentation_rem_points{ :rows => "10", :name => "presentation_rem_points" }
-            - if @finding
-              - if @finding.presentation_rem_points
-                #{meta_markup(@finding.presentation_rem_points)}
+            - if @finding and @finding.presentation_rem_points
+              #{meta_markup(@finding.presentation_rem_points)}
 
 
     - id_r = @report ? "/report/#{@report.id}/findings" : "/master/findings"
@@ -858,6 +848,30 @@
     %input.btn.btn-default{ :type => "submit", :value => "Save" }
     %a.btn.btn-default{ :href => "#{id_r}" }
       Cancel
+
+
+- attachments=''
+- if @attaches
+  - @attaches.each do |attach|
+    - attachments = attachments + "{name: '#{attach}'},"
+  / autosuggest code is care of bootstrap-suggest.js
+  :javascript
+    var files = [
+      #{attachments}
+    ];
+    $('#poc').suggest('[', {
+      data: files,
+      filter: {
+          casesensitive: true,
+          limit: 10
+        },
+      map: function(file) {
+        return {
+          value: '!!'+file.name+'!!]',
+          text: '<strong>'+file.name+'</strong>'
+        }
+      }
+    })
 
 -if @cvss
   :javascript

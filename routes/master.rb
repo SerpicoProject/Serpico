@@ -30,9 +30,10 @@ get '/master/findings/new' do
   @nist800 = config_options['nist800']
   @riskmatrix = config_options['riskmatrix']
   @nessusmap = config_options['nessusmap']
+  @burpmap = config_options['burpmap']
   @vulnmap = config_options['vulnmap']
 
-  haml :create_finding, encode_html: true
+  haml :findings_edit, encode_html: true
 end
 
 # Create the finding in the DB
@@ -71,13 +72,18 @@ post '/master/findings/new' do
 
   # split out any nessus mapping data
   nessusdata = {}
-  nessusdata['pluginid'] = data['pluginid']
-  data.delete('pluginid')
+  nessusdata['pluginid'] = data['nessus_pluginid']
+  data.delete('nessus_pluginid')
 
   # split out any vuln mapping data
   vulnmapdata = {}
   vulnmapdata['msf_ref'] = data['msf_ref']
   data.delete('msf_ref')
+
+  # split out any burp mapping data
+  burpdata = {}
+  burpdata['pluginid'] = data['burp_pluginid']
+  data.delete('burp_pluginid')
 
   @finding = TemplateFindings.new(data)
   @finding.save
@@ -96,6 +102,13 @@ post '/master/findings/new' do
     vulnmapdata['templatefindings_id'] = @finding.id
     @vulnmappings = VulnMappings.new(vulnmapdata)
     @vulnmappings.save
+  end
+
+  # save burp mapping data to db
+  if config_options['burpmap']
+    burpdata['templatefindings_id'] = @finding.id
+    @burp = BurpMapping.new(burpdata)
+    @burp.save
   end
 
   if config_options['cvss']
