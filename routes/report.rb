@@ -21,7 +21,7 @@ get '/reports/list' do
   # allow the user to set their logo in the configuration options
   @logo = config_options['logo']
 
-  haml :reports_list, encode_html: true
+  haml :reports_list
 end
 
 # Create a report
@@ -29,7 +29,7 @@ get '/report/new' do
   @templates = Xslt.all
   @assessment_types = config_options['report_assessment_types']
   @languages = config_options['languages']
-  haml :new_report, encode_html: true
+  haml :new_report
 end
 
 # Create a report
@@ -78,7 +78,7 @@ get '/report/:id/attachments' do
   xslt = Xslt.first(report_type: @report.report_type)
   @screenshot_names_from_report = xslt.screenshot_names
   @screenshot_names_from_findings
-  haml :list_attachments, encode_html: true
+  haml :list_attachments
 end
 
 get '/report/:id/export_attachments' do
@@ -102,7 +102,7 @@ get '/report/:id/restore_attachments' do
   @report = get_report(@id)
   return 'No Such Report' if @report.nil?
 
-  haml :restore_attachments, encode_html: true
+  haml :restore_attachments
 end
 
 post '/report/:id/restore_attachments' do
@@ -140,7 +140,7 @@ get '/report/:id/import_scan_data' do
   return 'No Such Report' if @report.nil?
 
   @auto_import = config_options['auto_import']
-  haml :import_scan_data, encode_html: true
+  haml :import_scan_data
 end
 
 post '/report/:id/import_scan_data' do
@@ -197,7 +197,7 @@ get '/report/:id/import_nessus' do
   # Query for the first report matching the id
   @report = get_report(id)
 
-  haml :import_nessus, encode_html: true
+  haml :import_nessus
 end
 
 # auto add serpico findings if mapped to nessus ids
@@ -294,7 +294,7 @@ post '/report/:id/import_autoadd' do
     @dup_findings = dup_findings.uniq
     @autoadd_findings = add_findings
   end
-  haml :findings_add, encode_html: true
+  haml :findings_add
 end
 
 # upload burp xml files to be processed
@@ -306,7 +306,7 @@ get '/report/:id/import_burp' do
   # Query for the first report matching the id
   @report = get_report(id)
 
-  haml :import_burp, encode_html: true
+  haml :import_burp
 end
 
 # Upload attachment menu
@@ -320,7 +320,7 @@ get '/report/:id/upload_attachments' do
   return 'No Such Report' if @report.nil?
 
   @attachments = Attachments.all(report_id: id)
-  haml :upload_attachments, encode_html: true
+  haml :upload_attachments
 end
 
 post '/report/:id/upload_attachments' do
@@ -443,7 +443,7 @@ get '/report/:id/edit' do
 
   @report.update(scoring: set_scoring(config_options)) unless @report.scoring
 
-  haml :report_edit, encode_html: true
+  haml :report_edit
 end
 
 # Edit the Report's main information; Name, Consultant, etc.
@@ -455,7 +455,7 @@ get '/report/:id/additional_features' do
 
   return 'No Such Report' if @report.nil?
 
-  haml :additional_features, encode_html: true
+  haml :additional_features
 end
 
 # Edit a report
@@ -488,7 +488,7 @@ get '/report/:id/udo/manage' do
   end
   @udos_templates = UserDefinedObjectTemplates.all
 
-  haml :user_defined_object_manage, encode_html: true
+  haml :user_defined_object_manage
 end
 
 # Create new user defined objects. Get => the user chose the udo values
@@ -500,7 +500,7 @@ get '/report/:id/udo/:udo_template_id/create' do
   @udo_template = UserDefinedObjectTemplates.get(params[:udo_template_id])
   return 'no Such UDO Template' if @udo_template.nil?
   @udo_template_properties = JSON.parse(@udo_template.udo_properties)
-  haml :user_defined_object_create, encode_html: true
+  haml :user_defined_object_create
 end
 
 # Create new user defined objects. Post => the UDO is stored in database
@@ -554,7 +554,7 @@ get '/report/:id/udo/:udo_id/edit' do
   @udo_template = UserDefinedObjectTemplates.get(@udo_to_edit.template_id)
   @udo_template_properties = JSON.parse(@udo_template.udo_properties)
   @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
-  haml :user_defined_object_edit, encode_html: true
+  haml :user_defined_object_edit
 end
 
 # Edit an UDO. Post => value stored in db
@@ -626,7 +626,7 @@ get '/report/:id/user_defined_variables' do
     @user_variables = config_options['user_defined_variables']
   end
 
-  haml :user_defined_variable, encode_html: true
+  haml :user_defined_variable
 end
 
 # TODO: this route needs proper comments, it is very confusing
@@ -702,7 +702,7 @@ get '/report/:id/findings' do
                              else
                                false
                              end
-  haml :findings_list, encode_html: true
+  haml :findings_list
 end
 
 # Generate a status report from the current findings
@@ -816,7 +816,7 @@ get '/report/:id/findings_add' do
   # Query for all Findings
   @findings = TemplateFindings.all(approved: true, order: [:title.asc])
 
-  haml :findings_add, encode_html: true
+  haml :findings_add
 end
 
 # Add a finding to the report
@@ -876,7 +876,7 @@ post '/report/:id/findings_add' do
 
   @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
-  haml :findings_list, encode_html: true
+  haml :findings_list
 end
 
 # Create a new finding in the report
@@ -895,7 +895,7 @@ get '/report/:id/findings/new' do
 
   @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
-  haml :create_finding, encode_html: true
+  haml :create_finding
 end
 
 # Create the finding in the DB
@@ -963,7 +963,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
   @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
-  haml :findings_edit, encode_html: true
+  haml :findings_edit
 end
 
 # Edit a finding in the report
@@ -1578,7 +1578,7 @@ get '/report/:id/text_status' do
   # add the findings
   @findings = Findings.all(report_id: id)
 
-  haml :text_status, encode_html: true
+  haml :text_status
 end
 
 # generate an asciidoc version of current findings
@@ -1665,7 +1665,7 @@ get '/report/:id/presentation' do
     end
   end
 
-  haml :presentation, encode_html: true, layout: false
+  haml :presentation, layout: false
 end
 
 # export presentation of current report in html format, inside a zip
@@ -1801,7 +1801,7 @@ get '/report/:id/msfsettings' do
   @vulnmap = config_options['vulnmap']
   @msfsettings = RemoteEndpoints.first(report_id: id)
 
-  haml :msfsettings, encode_html: true
+  haml :msfsettings
 end
 
 # set msf rpc settings for report
@@ -1859,7 +1859,7 @@ get '/report/:id/hosts' do
   res = rpc.call('db.hosts', limit: 10_000)
   @hosts = res['hosts']
 
-  haml :dbhosts, encode_html: true
+  haml :dbhosts
 end
 
 # display services from msf db
@@ -1889,7 +1889,7 @@ get '/report/:id/services' do
   res = rpc.call('db.services', limit: 10_000, only_up: true)
   @services = res['services']
 
-  haml :dbservices, encode_html: true
+  haml :dbservices
 end
 
 # display vulns from msf db
@@ -1918,7 +1918,7 @@ get '/report/:id/vulns' do
   res = rpc.call('db.vulns', limit: 10_000)
   @vulns = res['vulns']
 
-  haml :dbvulns, encode_html: true
+  haml :dbvulns
 end
 
 # autoadd vulns from msf db
@@ -2004,7 +2004,7 @@ get '/report/:id/import/vulns' do
     @dup_findings = dup_findings.uniq
     @autoadd_findings = add_findings
   end
-  haml :findings_add, encode_html: true
+  haml :findings_add
 end
 
 # get enabled plugins
@@ -2026,5 +2026,5 @@ get '/report/:id/report_plugins' do
     a['link'] = pl['link']
     @menu.push(a)
   end
-  haml :enabled_plugins, encode_html: true
+  haml :enabled_plugins
 end
