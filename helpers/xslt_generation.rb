@@ -779,10 +779,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     paragraph_style_index = line.reverse.index("<w:pPr>".reverse)
     paragraph_index = line.reverse.index(/[ >]p:w</)
 
-    if paragraph_style_index < paragraph_index
-      paragraph_style_index = paragraph_style_index + "<w:pPr>".length
-      paragraph_style_end_index = line.reverse.index("</w:pPr>".reverse)
-      paragraph_style = line.reverse[paragraph_style_end_index, (paragraph_style_index - paragraph_style_end_index)].reverse
+    if paragraph_style_index and paragraph_index
+      if paragraph_style_index < paragraph_index
+        paragraph_style_index = paragraph_style_index + "<w:pPr>".length
+        paragraph_style_end_index = line.reverse.index("</w:pPr>".reverse)
+        paragraph_style = line.reverse[paragraph_style_end_index, (paragraph_style_index - paragraph_style_end_index)].reverse
+      end
     end
 
     otherwise_results << line.gsub('÷',"</w:t></w:r></w:p></xsl:when><xsl:otherwise><w:p>" + paragraph_style + "<w:r><w:t>")
