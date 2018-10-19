@@ -59,12 +59,16 @@ get '/report/:id/attachments' do
   @screenshot_names_from_findings = {}
   # fetching screenshots names in findings
   findings = Findings.all(report_id: id)
+
   findings.each do |find|
-    next unless find.poc
+    next unless find.overview or find.poc or find.remediation or find.notes
+
+    text = find.overview + find.poc + find.remediation + find.notes
+
     @screenshot_names_from_findings[find.id] = []
     # for each finding, we extract the screenshot name in the poc field.
     # screenshot names are like this : [!!screenshotnames.png!!]
-    find.poc.to_s.split('<paragraph>').each do |pp|
+    text.to_s.split('<paragraph>').each do |pp|
       next unless pp =~ /\[\!\!/
       @screenshot_names_from_findings[find.id] << pp.split('[!!')[1].split('!!]').first
     end
@@ -885,7 +889,7 @@ get '/report/:id/findings/new' do
   temp_attaches = Attachments.all(report_id: params[:id])
   @attaches = []
   temp_attaches.each do |ta|
-    next unless ta.description =~ /png/i || ta.description =~ /jpg/i
+    next unless ta.description =~ /\.png$/i || ta.description =~ /\.jpg$/i || ta.description =~ /\.jpeg$/i
     @attaches.push(ta.description)
   end
 
@@ -953,7 +957,7 @@ get '/report/:id/findings/:finding_id/edit' do
   temp_attaches = Attachments.all(report_id: id)
   @attaches = []
   temp_attaches.each do |ta|
-    next unless ta.description =~ /png/i || ta.description =~ /jpg/i
+    next unless ta.description =~ /\.png$/i || ta.description =~ /\.jpg$/i || ta.description =~ /\.jpeg$/i
     @attaches.push(ta.description)
   end
 
