@@ -6,3 +6,4 @@ templates/*
 attachments/*
 config.json
 plugins/*
+log/

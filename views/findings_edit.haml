@@ -850,8 +850,8 @@
       Cancel
 
 
-- attachments=''
 - if @attaches
+  - attachments=''
   - @attaches.each do |attach|
     - attachments = attachments + "{name: '#{attach}'},"
   / autosuggest code is care of bootstrap-suggest.js
@@ -859,12 +859,13 @@
     var files = [
       #{attachments}
     ];
-    $('#poc').suggest('[', {
+    var suggestSettings =
+    $('#poc, #overview, #remediation, #notes').suggest('[', {
       data: files,
       filter: {
-          casesensitive: true,
-          limit: 10
-        },
+        casesensitive: true,
+        limit: 10
+      },
       map: function(file) {
         return {
           value: '!!'+file.name+'!!]',

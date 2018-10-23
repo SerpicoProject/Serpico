@@ -54,7 +54,7 @@ get '/info' do
     @user.save
   end
 
-  haml :info, encode_html: true
+  haml :info
 end
 
 # Save the consultant information into the database
@@ -84,7 +84,7 @@ end
 get '/reset' do
   redirect '/reports/list' unless valid_session?
 
-  haml :reset, encode_html: true
+  haml :reset
 end
 
 # Handles the password reset
@@ -116,7 +116,7 @@ post '/reset' do
   user.update(password: params[:new_pass])
   @message = 'success'
   serpico_log('Password successfully reset')
-  haml :reset, encode_html: true
+  haml :reset
 end
 
 post '/login' do
@@ -168,7 +168,7 @@ get '/logout' do
     sess = Sessions.first(session_key: session[:session_id])
     sess.destroy if sess
   end
-  
+
   serpico_log('User #{user.username} logged out')
   redirect to('/')
 end

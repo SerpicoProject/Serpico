@@ -16,14 +16,14 @@ get '/admin/' do
   redirect to('/no_access') unless is_administrator?
   @admin = true
 
-  haml :admin, encode_html: true
+  haml :admin
 end
 
 get '/admin/add_user' do
   redirect to('/no_access') unless is_administrator?
   @admin = true
 
-  haml :add_user, encode_html: true
+  haml :add_user
 end
 
 # serve a copy of the code
@@ -101,14 +101,14 @@ get '/admin/list_user' do
   @users = User.all
   @plugin = is_plugin?
 
-  haml :list_user, encode_html: true
+  haml :list_user
 end
 
 get '/admin/edit_user/:id' do
   redirect to('/no_access') unless is_administrator?
 
   @user = User.first(id: params[:id])
-  haml :add_user, encode_html: true
+  haml :add_user
 end
 
 get '/admin/delete/:id' do
@@ -133,7 +133,7 @@ get '/admin/add_user/:id' do
 
   @admin = true if is_administrator?
 
-  haml :add_user_report, encode_html: true
+  haml :add_user_report
 end
 
 post '/admin/add_user/:id' do
@@ -198,7 +198,7 @@ get '/admin/config' do
                'default'
              end
 
-  haml :config, encode_html: true
+  haml :config
 end
 
 post '/admin/config' do
@@ -288,7 +288,7 @@ get '/admin/plugins' do
   @admin = true if is_administrator?
   @plugin = true if is_plugin?
 
-  haml :plugins, encode_html: true
+  haml :plugins
 end
 
 # enable plugins
@@ -383,7 +383,7 @@ get '/admin/templates' do
   # Query for all Findings
   @templates = Xslt.all(order: [:report_type.asc])
 
-  haml :template_list, encode_html: true
+  haml :template_list
 end
 
 # Manage Templated Reports
@@ -392,7 +392,7 @@ get '/admin/templates/add' do
 
   @admin = true
 
-  haml :add_template, encode_html: true
+  haml :add_template
 end
 
 # Manage Templated Reports
@@ -447,7 +447,7 @@ post '/admin/templates/add' do
   rescue TemplateVerificationError => detail
     @error_message = CGI::escapeHTML(detail.errorString)
     @tree = CGI::escapeHTML(detail.template_tree)
-    return haml :template_error, encode_html: true
+    return haml :template_error
   rescue ReportingError => detail
     error = true
   end
@@ -500,7 +500,7 @@ post '/admin/templates/add' do
     serpico_log("New report template successfully added")
     redirect to('/admin/templates')
 
-    haml :add_template, encode_html: true
+    haml :add_template
   end
 end
 
@@ -512,7 +512,7 @@ get '/admin/templates/:id/tree' do
   @tree = verify_document(document)
   @tree = @tree[2]
 
-  haml :template_tree, encode_html: true
+  haml :template_tree
 end
 # Manage Templated Reports
 get '/admin/templates/:id/edit' do
@@ -521,7 +521,7 @@ get '/admin/templates/:id/edit' do
   @admin = true
   @template = Xslt.first(id: params[:id])
 
-  haml :edit_template, encode_html: true
+  haml :edit_template
 end
 
 # Manage Templated Reports
@@ -551,7 +551,7 @@ post '/admin/templates/edit' do
   rescue TemplateVerificationError => detail
     @error_message = CGI::escapeHTML(detail.errorString)
     @tree = CGI::escapeHTML(detail.template_tree)
-    return haml :template_error, encode_html: true
+    return haml :template_error
   rescue ReportingError => detail
     error = true
   end
@@ -610,7 +610,7 @@ end
 # get enabled plugins
 get '/admin/admin_plugins' do
   @menu = get_plugin_list('admin')
-  haml :enabled_plugins, encode_html: true
+  haml :enabled_plugins
 end
 
 get '/admin/udo_templates' do
@@ -623,7 +623,7 @@ get '/admin/udo_templates' do
     udo_template.destroy
   end
   @udos_templates = UserDefinedObjectTemplates.all
-  haml :user_defined_object_templates, encode_html: true
+  haml :user_defined_object_templates
 end
 
 post '/admin/udo_templates' do
@@ -657,7 +657,7 @@ get '/admin/udo_template/:template_id/edit' do
   @udo_to_edit = UserDefinedObjectTemplates.get(params[:template_id])
   return 'No such UDO Template' if @udo_to_edit.nil?
   @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
-  haml :udo_template_edit, encode_html: true
+  haml :udo_template_edit
 end
 
 post '/admin/udo_template/:template_id/edit' do
