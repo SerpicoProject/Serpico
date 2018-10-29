@@ -25,5 +25,9 @@ class Config
         Config._get_config() unless @config
         return @config.key?(key)
     end
+
+    def self.each(&block)
+        @config.each(&block)
+    end
 end
 
