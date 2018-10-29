@@ -17,7 +17,7 @@ get '/master/findings' do
   @cvssv3 = Config['cvssv3']
   @riskmatrix = Config['riskmatrix']
   @nist800 = Config['nist800']
-  haml :findings_list, encode_html: true
+  haml :findings_list
 end
 
 # Create a new templated finding
@@ -32,7 +32,7 @@ get '/master/findings/new' do
   @nessusmap = Config['nessusmap']
   @vulnmap = Config['vulnmap']
 
-  haml :create_finding, encode_html: true
+  haml :create_finding
 end
 
 # Create the finding in the DB
@@ -136,7 +136,7 @@ get '/master/findings/:id/edit' do
 
   return 'No Such Finding' if @finding.nil?
 
-  haml :findings_edit, encode_html: true
+  haml :findings_edit
 end
 
 # Edit a finding

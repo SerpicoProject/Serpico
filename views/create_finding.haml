@@ -559,28 +559,6 @@
       %label.control-label{ :for => "poc" } Proof of Concept
       .controls
         %textarea.input-xxlarge.allowMarkupShortcut#poc{ :rows => "10", :name => "poc" }
-    - attachments=''
-    - if @attaches
-      - @attaches.each do |attach|
-        - attachments = attachments + "{name: '#{attach}' },"
-    / autosuggest code is care of bootstrap-suggest.js
-    :javascript
-      var files = [
-        #{attachments}
-      ];
-        $('#pocu').suggest('[', {
-          data: files,
-          filter: {
-              casesensitive: true,
-              limit: 10
-            },
-          map: function(file) {
-            return {
-              value: '!!'+file.name+'!!]',
-              text: '<strong>'+file.name+'</strong>'
-            }
-          }
-        })
     - if !@master
       .control-group
         %label.control-label{ :for => "affected_hosts" } Affected Hosts
@@ -632,6 +610,30 @@
     %input.btn.btn-default{ :type => "submit", :value => "Save" }
     %a.btn.btn-default{ :href => "#{id_r}" }
       Cancel
+
+- if @attaches
+  - attachments=''
+  - @attaches.each do |attach|
+    - attachments = attachments + "{name: '#{attach}'},"
+  / autosuggest code is care of bootstrap-suggest.js
+  :javascript
+    var files = [
+      #{attachments}
+    ];
+    var suggestSettings =
+    $('#poc, #overview, #remediation, #notes').suggest('[', {
+      data: files,
+      filter: {
+        casesensitive: true,
+        limit: 10
+      },
+      map: function(file) {
+        return {
+          value: '!!'+file.name+'!!]',
+          text: '<strong>'+file.name+'</strong>'
+          }
+      }
+    })
 
 -if @cvss
   :javascript
