@@ -29,5 +29,9 @@ class Config
     def self.each(&block)
         @config.each(&block)
     end
+
+    def self.to_json(*a)
+        return @config.to_json
+    end
 end
 
