@@ -14,7 +14,13 @@ class Server < Sinatra::Application
   set :config_options, config_options
   ## Global variables
   set :finding_types, config_options['finding_types']
-  set :assessment_types, ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
+
+  # set the report_assessment_types for <= 1.3.0 versions of Serpico
+  unless config_options['findings_assessment_types']
+    config_options['findings_assessment_types'] = ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
+  end
+  set :assessment_types, config_options['findings_assessment_types']
+
   set :status, ['EXPLOITED']
   set :show_exceptions, config_options['show_exceptions']
 
@@ -92,11 +98,11 @@ class Server < Sinatra::Application
   # Risk Matrix
   set :severity, %w[Low Medium High]
   set :likelihood, %w[Low Medium High]
-  
+
   # NIST800
   set :nist_likelihood, ['Low','Moderate','High']
   set :nist_impact, ['Informational','Low','Moderate','High','Critical']
-  
+
   if config_options['cvssv2_scoring_override']
     if config_options['cvssv2_scoring_override'] == 'true'
       set :cvssv2_scoring_override, true
