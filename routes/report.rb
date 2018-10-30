@@ -63,7 +63,19 @@ get '/report/:id/attachments' do
   findings.each do |find|
     next unless find.overview or find.poc or find.remediation or find.notes
 
-    text = find.overview + find.poc + find.remediation + find.notes
+    text = ""
+    if find.overview
+      text = text + find.overview
+    end
+    if find.poc
+      text = text + find.poc
+    end
+    if find.remediation
+      text = text + find.remediation
+    end
+    if find.notes
+      text = text + find.notes
+    end
 
     @screenshot_names_from_findings[find.id] = []
     # for each finding, we extract the screenshot name in the poc field.
