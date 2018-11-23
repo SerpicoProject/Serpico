@@ -54,7 +54,7 @@ def locate_error(error, document, position)
 end
 
 def verify_document(document)
-	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|<\/w:tr>/).map { |b| [Regexp.last_match.begin(0),b] }
+	metacharacters = document.enum_for(:scan,/Ω|§|¬|π|æ|∞|†|µ|ƒ|÷|å|≠|∆|¥|ツ|⁂|<\/w:tr>/).map { |b| [Regexp.last_match.begin(0),b] }
 	i=0
 	buffer = []
 	tree = ""
@@ -377,6 +377,25 @@ def verify_document(document)
 
 		  tree.concat("#{tabs}∞#{condition}∞\n")
 		  i = i+1
+
+
+		# ⁂ character
+    # =>  XSLT Code Blocks
+		when "⁂"
+		  tabs = "\t" * buffer.length
+      if (i == metacharacters.length - 1) || (metacharacters[i + 1][1] != '⁂')
+			error = "Error with a ⁂ character : character without pair"
+			tree_valid = false
+			tree.concat("#{tabs}⁂  ←\n")
+			locate_error(error, document, metacharacters[i][0])
+			break
+		  end
+
+		  content = document[metacharacters[i][0]+2..metacharacters[i+1][0]-1].gsub(/<.*?>/,"")
+		  tree.concat("#{tabs}⁂#{content}⁂\n")
+		  i = i+1
+
+
 
 		# end of table
 		when "<\/w:tr>"
@@ -974,8 +993,47 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 		document = document.sub('∆',"</w:t></w:r></w:p>#{end_ifs}</xsl:for-each><w:p><w:r><w:t>")
 	end
 
-###############################
-# ツ - Placeholder for image
+
+
+  ###########################
+  # ⁂ - an XSLT block insert
+
+  replace = document.split('⁂')
+
+  if (((replace.size-1) % 2) != 0)
+    raise ReportingError.new("Uneven number of ⁂. This is usually caused by a mismatch in a variable.")
+  end
+
+  count = 0
+  replace.each do |omega|
+    if (count % 2) == 0
+      count = count + 1
+      next
+    end
+
+    omega = compress(omega)
+
+    # Word puts the XSLT code block into a paragraph node.
+    # If we want this to be paragraph agnostic so we can use it in any context (Ex. to change the color of a single
+    # table cell) we can use the ⁂! modifier
+    # This will remove the <w:p> and </w:p> that are wrapping our code block
+    if omega[0] == "!"
+      replace[count-1] = replace[count-1][0..replace[count-1].rindex(/<w:p[ >]/)-1]
+  		replace[count] = "#{CGI::unescapeHTML(omega[1..-1])}"
+      replace[count+1] = replace[count+1][replace[count+1].index("</w:p>")+"</w:p>".length..-1]
+    else
+  		replace[count] = "#{CGI::unescapeHTML(omega)}"
+    end
+
+    count = count + 1
+  end
+
+  document = replace.join("")
+
+
+
+	###############################
+	# ツ - Placeholder for image
 
 	replace = document.split('ツ')
 
