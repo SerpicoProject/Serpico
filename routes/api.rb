@@ -1,8 +1,8 @@
 require 'sinatra'
+require './config'
 
 ##### Simple API Components - Read-Only for now
 
-config_options = JSON.parse(File.read('./config.json'))
 
 # returns an API session key
 post '/v1/session' do

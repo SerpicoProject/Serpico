@@ -1,7 +1,6 @@
 require 'sinatra'
+require './config'
 ### Basic Routes
-
-config_options = JSON.parse(File.read('./config.json'))
 
 # Used for 404 responses
 not_found do
@@ -136,14 +135,14 @@ post '/login' do
 
     end
   elsif user
-    if config_options['ldap'].to_s == 'true'
+    if Config['ldap'].to_s == 'true'
       # try AD authentication
       usern = params[:username]
       data = url_escape_hash(request.POST)
       redirect to('/') if (usern == '') || (params[:password] == '')
 
-      user = "#{config_options['ldap_domain']}\\#{data['username']}"
-      ldap = Net::LDAP.new host: (config_options['ldap_dc']).to_s, port: 636, encryption: :simple_tls, auth: { method: :simple, username: user, password: params[:password] }
+      user = "#{Config['ldap_domain']}\\#{data['username']}"
+      ldap = Net::LDAP.new host: (Config['ldap_dc']).to_s, port: 636, encryption: :simple_tls, auth: { method: :simple, username: user, password: params[:password] }
 
       if ldap.bind
         # replace the session in the session table

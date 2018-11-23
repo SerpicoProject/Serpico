@@ -1,15 +1,15 @@
 require 'sinatra'
 require 'odle'
+require './config'
 
 #####
 # Reporting Routes
 #####
 
-config_options = JSON.parse(File.read('./config.json'))
 
 # set the report_assessment_types for <1.2 versions of Serpico
-unless config_options['report_assessment_types']
-  config_options['report_assessment_types'] = ['Network Internal', 'External', 'Web application', 'Physical', 'Social engineering', 'Configuration audit']
+unless Config['report_assessment_types']
+  Config['report_assessment_types'] = ['Network Internal', 'External', 'Web application', 'Physical', 'Social engineering', 'Configuration audit']
 end
 
 # List current reports
@@ -19,7 +19,7 @@ get '/reports/list' do
   @admin = true if is_administrator?
 
   # allow the user to set their logo in the configuration options
-  @logo = config_options['logo']
+  @logo = Config['logo']
 
   haml :reports_list
 end
@@ -27,8 +27,8 @@ end
 # Create a report
 get '/report/new' do
   @templates = Xslt.all
-  @assessment_types = config_options['report_assessment_types']
-  @languages = config_options['languages']
+  @assessment_types = Config['report_assessment_types']
+  @languages = Config['languages']
   haml :new_report
 end
 
@@ -40,7 +40,7 @@ post '/report/new' do
   data['date'] = DateTime.now.strftime '%m/%d/%Y'
 
   @report = Reports.new(data)
-  @report.scoring = set_scoring(config_options)
+  @report.scoring = set_scoring(Config)
   @report.save
 
   # compensate for datamappers oddness
@@ -151,8 +151,13 @@ get '/report/:id/import_scan_data' do
 
   return 'No Such Report' if @report.nil?
 
+<<<<<<< HEAD
+  @auto_import = Config['auto_import']
+  haml :import_scan_data, encode_html: true
+=======
   @auto_import = config_options['auto_import']
   haml :import_scan_data
+>>>>>>> 21ba51183fd326f6e434bfebb716806fc285982c
 end
 
 post '/report/:id/import_scan_data' do
@@ -167,13 +172,13 @@ post '/report/:id/import_scan_data' do
   return 'No Such Report' if @report.nil?
 
   if type == 'nessus'
-    data = JSON.parse(Nessus.new.parse(scan_xml, config_options['threshold']))
+    data = JSON.parse(Nessus.new.parse(scan_xml, Config['threshold']))
   elsif type == 'burpv1'
-    data = JSON.parse(Burp.new.parse(scan_xml, config_options['threshold']))
+    data = JSON.parse(Burp.new.parse(scan_xml, Config['threshold']))
   elsif type == 'metasploit'
-    data = JSON.parse(Metasploit.new.parse(scan_xml, config_options['threshold']))
+    data = JSON.parse(Metasploit.new.parse(scan_xml, Config['threshold']))
   elsif type == 'nmap'
-    data = JSON.parse(Nmap.new.parse(scan_xml, config_options['threshold']))
+    data = JSON.parse(Nmap.new.parse(scan_xml, Config['threshold']))
   else
     "Unknown type: #{type}"
   end
@@ -188,11 +193,11 @@ post '/report/:id/import_scan_data' do
 
   # go directly to findings list menu
   @total_added = vulns.size
-  @chart = config_options['chart']
+  @chart = Config['chart']
   @plugin_side_menu = get_plugin_list('user')
   @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
-  @cvssv2_scoring_override = if config_options.key?('cvssv2_scoring_override')
-                               config_options['cvssv2_scoring_override']
+  @cvssv2_scoring_override = if Config.key?('cvssv2_scoring_override')
+                               Config['cvssv2_scoring_override']
                              else
                                false
                              end
@@ -204,7 +209,7 @@ end
 get '/report/:id/import_nessus' do
   id = params[:id]
 
-  @nessusmap = config_options['nessusmap']
+  @nessusmap = Config['nessusmap']
 
   # Query for the first report matching the id
   @report = get_report(id)
@@ -219,7 +224,7 @@ post '/report/:id/import_autoadd' do
   xml = params[:file][:tempfile].read
   if xml =~ /^<NessusClientData_v2>/ && type == 'nessus'
     import_nessus = true
-    vulns = parse_nessus_xml(xml, config_options['threshold'])
+    vulns = parse_nessus_xml(xml, Config['threshold'])
   elsif xml =~ /^<issues burpVersion/ && type == 'burp'
     import_burp = true
     vulns = parse_burp_xml(xml)
@@ -281,7 +286,7 @@ post '/report/:id/import_autoadd' do
 
   # create new findings from an import
   # TODO: This will duplicate if the user already has a nessus id mapped
-  if config_options['auto_import']
+  if Config['auto_import']
     vulns['findings'].each do |vuln|
       vuln.report_id = id
       vuln.save
@@ -313,7 +318,7 @@ end
 get '/report/:id/import_burp' do
   id = params[:id]
 
-  @burpmap = config_options['burpmap']
+  @burpmap = Config['burpmap']
 
   # Query for the first report matching the id
   @report = get_report(id)
@@ -447,13 +452,13 @@ get '/report/:id/edit' do
   @report = get_report(id)
   @templates = Xslt.all(order: [:report_type.asc])
   @plugin_side_menu = get_plugin_list('user')
-  @assessment_types = config_options['report_assessment_types']
-  @languages = config_options['languages']
+  @assessment_types = Config['report_assessment_types']
+  @languages = Config['languages']
   @risk_scores = %w[Risk DREAD CVSS CVSSv3 RiskMatrix NIST800]
 
   return 'No Such Report' if @report.nil?
 
-  @report.update(scoring: set_scoring(config_options)) unless @report.scoring
+  @report.update(scoring: set_scoring(Config)) unless @report.scoring
 
   haml :report_edit
 end
@@ -625,8 +630,8 @@ get '/report/:id/user_defined_variables' do
     @user_variables = JSON.parse(@report.user_defined_variables)
 
     # add in the global UDV from config
-    if !config_options['user_defined_variables'].empty? && !@user_variables.include?(config_options['user_defined_variables'][0])
-      config_options['user_defined_variables'].each do |key, _value|
+    if !Config['user_defined_variables'].empty? && !@user_variables.include?(Config['user_defined_variables'][0])
+      Config['user_defined_variables'].each do |key, _value|
         @user_variables.store(key, '')
       end
     end
@@ -635,7 +640,7 @@ get '/report/:id/user_defined_variables' do
       @user_variables[k] = meta_markup(v) if v
     end
   else
-    @user_variables = config_options['user_defined_variables']
+    @user_variables = Config['user_defined_variables']
   end
 
   haml :user_defined_variable
@@ -695,7 +700,7 @@ end
 
 # Findings List Menu
 get '/report/:id/findings' do
-  @chart = config_options['chart']
+  @chart = Config['chart']
   @report = true
   id = params[:id]
 
@@ -705,12 +710,12 @@ get '/report/:id/findings' do
 
   return 'No Such Report' if @report.nil?
 
-  @report.update(scoring: set_scoring(config_options)) unless @report.scoring
+  @report.update(scoring: set_scoring(Config)) unless @report.scoring
 
   @findings, @dread, @cvss, @cvssv3, @risk, @riskmatrix,@nist800 = get_scoring_findings(@report)
 
-  @cvssv2_scoring_override = if config_options.key?('cvssv2_scoring_override')
-                               config_options['cvssv2_scoring_override']
+  @cvssv2_scoring_override = if Config.key?('cvssv2_scoring_override')
+                               Config['cvssv2_scoring_override']
                              else
                                false
                              end
@@ -823,7 +828,7 @@ get '/report/:id/findings_add' do
 
   return 'No Such Report' if @report.nil?
 
-  @languages = config_options['languages']
+  @languages = Config['languages']
 
   # Query for all Findings
   @findings = TemplateFindings.all(approved: true, order: [:title.asc])
@@ -955,6 +960,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
   # Query for the first report matching the report_name
   @report = get_report(id)
+  @states = Config['finding_states']
 
   return 'No Such Report' if @report.nil?
 
@@ -985,6 +991,7 @@ post '/report/:id/findings/:finding_id/edit' do
 
   # Query for the report
   @report = get_report(id)
+  @states = Config['finding_states']
 
   return 'No Such Report' if @report.nil?
 
@@ -1000,6 +1007,10 @@ post '/report/:id/findings/:finding_id/edit' do
   data = url_escape_hash(request.POST)
 
   data['title'] = data['title']
+
+  if @states
+      data['state'] =  @states.find_index(data['state'])
+  end
 
   if @report.scoring.casecmp('dread').zero?
     data['dread_total'] = data['damage'].to_i + data['reproducability'].to_i + data['exploitability'].to_i + data['affected_users'].to_i + data['discoverability'].to_i
@@ -1245,7 +1256,7 @@ get '/report/:id/generate' do
 
   return 'No Such Report' if @report.nil?
 
-  @report.update(scoring: set_scoring(config_options)) unless @report.scoring
+  @report.update(scoring: set_scoring(Config)) unless @report.scoring
 
   user = User.first(username: get_username)
 
@@ -1308,7 +1319,7 @@ get '/report/:id/generate' do
   # adding the udvs to the XML
 
   # update udv_hash with findings totals
-  udv_hash = add_findings_totals(udv_hash, @findings, config_options)
+  udv_hash = add_findings_totals(udv_hash, @findings, Config)
 
   udv = "<udv>\n"
   udv_hash.each do |key, value|
@@ -1810,7 +1821,7 @@ get '/report/:id/msfsettings' do
   # bail without a report
   redirect to('/') unless @report
 
-  @vulnmap = config_options['vulnmap']
+  @vulnmap = Config['vulnmap']
   @msfsettings = RemoteEndpoints.first(report_id: id)
 
   haml :msfsettings
@@ -1824,7 +1835,7 @@ post '/report/:id/msfsettings' do
   # bail without a report
   redirect to('/') unless @report
 
-  return 'Metasploit integration not enabled' unless config_options['vulnmap']
+  return 'Metasploit integration not enabled' unless Config['vulnmap']
 
   msfsettings = RemoteEndpoints.first(report_id: id)
 
@@ -1849,7 +1860,7 @@ end
 get '/report/:id/hosts' do
   id = params[:id]
   @report = get_report(id)
-  @vulnmap = config_options['vulnmap']
+  @vulnmap = Config['vulnmap']
 
   # bail without a report
   redirect to('/') unless @report
@@ -1878,7 +1889,7 @@ end
 get '/report/:id/services' do
   id = params[:id]
   @report = get_report(id)
-  @vulnmap = config_options['vulnmap']
+  @vulnmap = Config['vulnmap']
 
   # bail without a report
   redirect to('/') unless @report
@@ -1908,7 +1919,7 @@ end
 get '/report/:id/vulns' do
   id = params[:id]
   @report = get_report(id)
-  @vulnmap = config_options['vulnmap']
+  @vulnmap = Config['vulnmap']
 
   # bail without a report
   redirect to('/') unless @report
@@ -1943,7 +1954,7 @@ get '/report/:id/import/vulns' do
 
   return 'No Such Report' if @report.nil?
 
-  return 'Metasploit integration not enabled.' unless config_options['vulnmap']
+  return 'Metasploit integration not enabled.' unless Config['vulnmap']
 
   add_findings = []
   dup_findings = []
@@ -1994,7 +2005,7 @@ get '/report/:id/import/vulns' do
 
   # create new findings from an import
   # TODO: This will duplicate if the user already has a nessus id mapped
-  if config_options['auto_import']
+  if Config['auto_import']
     p 'auto_import function not supported with MSF intergration'
   end
 

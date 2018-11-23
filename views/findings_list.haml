@@ -16,8 +16,11 @@
           %thead
             %th{ :style => "width: 2%" }
               %input.checkbox#checkall{ :type => "checkbox" }
-            %th{ :style => "width: 50%" }
+            %th{ :style => "width: 43%" }
               Title
+            - if settings.finding_states
+              %th{ :style => "text-align:center; width: 7%" }
+                State
             %th{ :style => "text-align:center; width: 7%" }
               Risk
             %th{ :style => "text-align:center; width: 10%" }
@@ -270,10 +273,17 @@
                             #{finding.notes.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                           - else
                             None.
+                -# Show finding state if the list of states is configured. #-
+                - if settings.finding_states != nil
+                  %td{ :style => "text-align:center" }
+                    - if finding.state
+                      #{settings.finding_states[finding.state] || settings.finding_states[0]}
+                    - else
+                      -# Default to the first state #-
+                      #{settings.finding_states[0]}
                 - if @dread
                   %td{ :style => "text-align:center" }
                     #{finding.dread_total}
-
 
                   -#-------------------- display risk score NIST800 in current findings section --------------------#-
                 - elsif @nist800

@@ -1,6 +1,5 @@
 require 'sinatra'
-
-config_options = JSON.parse(File.read('./config.json'))
+require './config'
 
 # Delete a mapping from finding
 get '/mapping/:id/nessus/:mappingid/delete' do
