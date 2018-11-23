@@ -193,6 +193,7 @@ class Findings
   property :nist_rating, String, :required => false
 
   property :language, String, required: false
+  property :state, Integer, required: false
 end
 
 class TemplateReports

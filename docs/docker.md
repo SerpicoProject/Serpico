@@ -44,6 +44,14 @@ path to the database on the host [must be absolute][1].
 
 [1]: https://docs.docker.com/engine/reference/run/#volume-shared-filesystems
 
+## docker-compose
+
+The `docker-compose.yml` in the repository is aimed at development use. It will
+provision the ruby environment inside the container and mount the repository as
+the docker application, allowing for reloading the source code by simply
+restarting the container. The dockerfile `docker/dev.dockerfile` is used by
+compose.
+
 ## Caveats
 
 This is a work in progress, so a few things are currently not supported.
@@ -52,4 +60,6 @@ This is a work in progress, so a few things are currently not supported.
   `first_time.rb` will not run, and there won't be any certificates for SSL.
 - `config.json` is not exposed to the host so customization requires rebuilding
   the image or accessing it with `docker exec bash`.
+- `docker-compose up` will not automatically reload the backend when `.rb`
+  files are changed. This is a possible improvement.
 

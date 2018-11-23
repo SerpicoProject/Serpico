@@ -1,0 +1,13 @@
+version: '3'
+services:
+  serpico:
+    environment:
+      - SRP_ADMIN=administrator
+      - SRP_FINDINGS=yes
+    build:
+      dockerfile: docker/dev.dockerfile
+      context: .
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./:/Serpico
