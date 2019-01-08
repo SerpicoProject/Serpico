@@ -42,6 +42,7 @@
 
   ],
   "report_assessment_types": ["Network Internal","External","Web application","Physical","Social engineering","Configuration audit"],
+  "findings_assessment_types": ["External", "Internal", "Internal/External", "Wireless", "Web Application", "DoS"],
   "threshold": "2",
   "log_file": "./log/serpico.log",
   "show_exceptions": false,

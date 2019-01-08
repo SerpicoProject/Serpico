@@ -14,8 +14,14 @@ class Server < Sinatra::Application
   set :config_options, config_options
   ## Global variables
   set :finding_types, config_options['finding_types']
+
+  # set the report_assessment_types for <= 1.3.0 versions of Serpico
+  unless config_options['findings_assessment_types']
+    config_options['findings_assessment_types'] = ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
+  end
+  set :assessment_types, config_options['findings_assessment_types']
   set :finding_states, config_options['finding_states']
-  set :assessment_types, ['External', 'Internal', 'Internal/External', 'Wireless', 'Web Application', 'DoS']
+  
   set :status, ['EXPLOITED']
   set :show_exceptions, config_options['show_exceptions']
 
