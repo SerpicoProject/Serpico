@@ -63,7 +63,19 @@ get '/report/:id/attachments' do
   findings.each do |find|
     next unless find.overview or find.poc or find.remediation or find.notes
 
-    text = find.overview + find.poc + find.remediation + find.notes
+    text = ""
+    if find.overview
+      text = text + find.overview
+    end
+    if find.poc
+      text = text + find.poc
+    end
+    if find.remediation
+      text = text + find.remediation
+    end
+    if find.notes
+      text = text + find.notes
+    end
 
     @screenshot_names_from_findings[find.id] = []
     # for each finding, we extract the screenshot name in the poc field.
@@ -943,6 +955,7 @@ get '/report/:id/findings/:finding_id/edit' do
 
   # Query for the first report matching the report_name
   @report = get_report(id)
+  @states = config_options['finding_states']
 
   return 'No Such Report' if @report.nil?
 
@@ -973,6 +986,7 @@ post '/report/:id/findings/:finding_id/edit' do
 
   # Query for the report
   @report = get_report(id)
+  @states = config_options['finding_states']
 
   return 'No Such Report' if @report.nil?
 
@@ -988,6 +1002,10 @@ post '/report/:id/findings/:finding_id/edit' do
   data = url_escape_hash(request.POST)
 
   data['title'] = data['title']
+
+  if @states
+      data['state'] =  @states.find_index(data['state'])
+  end
 
   if @report.scoring.casecmp('dread').zero?
     data['dread_total'] = data['damage'].to_i + data['reproducability'].to_i + data['exploitability'].to_i + data['affected_users'].to_i + data['discoverability'].to_i

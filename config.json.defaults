@@ -29,6 +29,11 @@
     "Logging and Auditing",
     "Imported"
   ],
+  "finding_states": [
+    "Draft",
+    "Under Review",
+    "Completed"
+  ],
   "logo": "/img/logo_1.svg",
   "auto_import": false,
   "chart": true,
