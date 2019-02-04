@@ -56,6 +56,7 @@
             Cancel
 
 :javascript
+  var removeBtnPrefix = "remove";
   $(document).ready(function(){
       var next = 1;
       $(".add-more").click(function(e){
@@ -65,20 +66,20 @@
           next = next + 1;
           var newIn = '<input autocomplete="off" placeholder="Property Name '+ next +'" class="input form-control" id="field' + next + '" name="property_' + next + '" type="text">';
           var newInput = $(newIn);
-          var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+          var removeBtn = '<button id="' + removeBtnPrefix + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
           var removeButton = $(removeBtn);
           $(addto).after(newInput);
           $(addRemove).after(removeButton);
           $("#field" + next).attr('data-source',$(addto).attr('data-source'));
           $("#count").val(next);
 
-              $('.remove-me').click(function(e){
-                  e.preventDefault();
-                  var fieldNum = this.id.charAt(this.id.length-1);
-                  var fieldID = "#field" + fieldNum;
-                  $(this).remove();
-                  $(fieldID).remove();
-              });
+          $('.remove-me').click(function(e){
+              e.preventDefault();
+              var fieldNum = this.id.substring(removeBtnPrefix.length,this.id.length);
+              var fieldID = "#field" + fieldNum;
+              $(this).remove();
+              $(fieldID).remove();
+          });
       });
   });
 
