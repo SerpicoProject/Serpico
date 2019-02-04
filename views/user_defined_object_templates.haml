@@ -75,6 +75,15 @@
               $('.remove-me').click(function(e){
                   e.preventDefault();
                   var fieldNum = this.id.charAt(this.id.length-1);
+                  var length_a = this.id.length;
+                  if(length_a > 7){
+                  var i =2;
+                  while(length_a>7){
+                  fieldNum = this.id.charAt(this.id.length-i) + fieldNum;
+                  i = i+1;
+                  length_a = length_a -1;
+                  }
+                  }
                   var fieldID = "#field" + fieldNum;
                   $(this).remove();
                   $(fieldID).remove();
