@@ -21,7 +21,7 @@ class Server < Sinatra::Application
   end
   set :assessment_types, config_options['findings_assessment_types']
   set :finding_states, config_options['finding_states']
-  
+
   set :status, ['EXPLOITED']
   set :show_exceptions, config_options['show_exceptions']
 
@@ -308,9 +308,9 @@ def image_insert(docx, rand_file, image, end_xml)
 
   # insert picture into xml, allow the user to ignore alignment if they want
   if settings.alignment == 'ignore'
-    docx << "<w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict>"
+    docx << "<w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\" o:title=\"\"/></v:shape></w:pict>"
   else
-    docx << "<w:p><w:pPr><w:jc w:val=\"#{imgAlign}\"/></w:pPr><w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\"/></v:shape></w:pict></w:p>"
+    docx << "<w:p><w:pPr><w:jc w:val=\"#{imgAlign}\"/></w:pPr><w:pict><v:shape id=\"myShape_#{p_id}\" type=\"#_x0000_t75\" style=\"width:#{width}; height:#{height}\"><v:imagedata r:id=\"#{p_id}\" o:title=\"\"/></v:shape></w:pict></w:p>"
   end
   docx << end_xml
 
