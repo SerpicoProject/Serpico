@@ -4,8 +4,8 @@ After=network.target auditd.service
 
 [Service]
 WorkingDirectory=/opt/Serpico
-Environment=GEM_HOME=/usr/local/rvm/gems/ruby-2.1.5
-ExecStart=/usr/local/rvm/rubies/ruby-2.1.5/bin/ruby serpico.rb &
+Environment=GEM_HOME=/home/$USER/.rvm/gems/ruby-2.3.3
+ExecStart=/usr/share/rvm/rubies/ruby-2.3.3/bin/ruby /opt/Serpico/serpico.rb &
 ExecStop=/usr/bin/pkill -f serpico.rb
 #ExecReload=/etc/init.d/serpico restart
 KillMode=process
@@ -14,3 +14,5 @@ Restart=on-failure
 [Install]
 WantedBy=default.target
 Alias=serpico
+
+#using rvm 1.29.7
