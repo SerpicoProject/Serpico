@@ -627,6 +627,10 @@ get '/admin/udo_templates' do
     udo_template.destroy
   end
   @udos_templates = UserDefinedObjectTemplates.all
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   haml :user_defined_object_templates
 end
 
