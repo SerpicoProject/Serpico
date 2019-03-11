@@ -1,4 +1,25 @@
 /*
+ *   This section of the stylesheet comes from https://codepen.io/gungorbudak/pen/ooKNpz
+ *
+ */
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    display: block;
+    z-index: 2;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+/*
  *   This section of the stylesheet comes from the https://getbootstrap.com/docs/4.3/examples/dashboard/
  *   bootstrap example.
  *
@@ -73,5 +94,14 @@ body {
  */
 
  [role="main"] {
-   padding-top: 85px; /* Space for fixed navbar */
+   padding-top: 80px; /* Space for fixed navbar */
  }
+
+
+ /*
+  *   This section of the stylesheet contains custom CSS.
+  *
+  */
+.pointer {
+  cursor: pointer;
+}

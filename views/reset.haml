@@ -1,36 +1,25 @@
-.col-md-10
-  - if @message
-    - if @message == "success"
-      %br
-      %h2 Password Successfully Changed
-      %br
-  - else
-    %br
-    %h2 Change Password
-    %br
+- if @message and @message == "success"
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Password Successfully Changed
+- else
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Change Password
 
-    %form{ :method => "post" }
-      %table
-        %tr
-          %td
-            %label.col-md-3{ :for => "old_pass" }
-              Old Password &nbsp;
-          %td
-            %input#old_pass{ :type => "password", :name => "old_pass", :value=> "", :autocomplete => "off" }
-        %tr
-          %td
-            %label.col-md-3{ :for => "new_pass" }
-              New Password &nbsp;
-          %td
-            %input#new_pass{ :type => "password", :name => "new_pass", :value=> "", :autocomplete => "off" }
-        %tr
-          %td
-            %label.col-md-3{ :for => "new_pass_confirm" }
-              Confirm New Password &nbsp;
-          %td
-            %input#new_pass_confirm{ :type => "password", :name => "new_pass_confirm", :value => "", :autocomplete => "off" }
+  %form{ :method => "post" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "old_pass" } Old Password
+      .col-lg-4
+        %input#old_pass.form-control{ :type => "password", :name => "old_pass", :value=> "", :autocomplete => "off" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "new_pass" } New Password
+      .col-lg-4
+        %input#new_pass.form-control{ :type => "password", :name => "new_pass", :value=> "", :autocomplete => "off" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "new_pass_confirm" } Confirm New Password
+      .col-lg-4
+        %input#new_pass_confirm.form-control{ :type => "password", :name => "new_pass_confirm", :value=> "", :autocomplete => "off" }
 
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Save" }
-      %a.btn.btn-default{ :href => "/reports/list" }
-        Cancel
+    %br
+    %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+    %a.btn.btn-secondary{ :href => "/reports/list" }
+      Cancel

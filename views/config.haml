@@ -1,64 +1,57 @@
-.col-md-10
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Configuration Options (Must Restart After Changes)
+
+%form{ :method => "post", :action => "/admin/config" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "risk_scoring" } Risk Scoring Algorithm
+    .col-lg-4
+      %select#risk_scoring.custom-select{ :name => "risk_scoring" }
+        - if @scoring == "default"
+          %option{ :selected => "selected" } Default
+        - else
+          %option Default Scoring
+        - if @scoring == "dread"
+          %option{ :selected => "selected" } DREAD
+        - else
+          %option DREAD
+        - if @scoring == "cvss"
+          %option{ :selected => "selected" } CVSSv2
+        - else
+          %option CVSSv2
+        - if @scoring == "cvssv3"
+          %option{ :selected => "selected" } CVSSv3
+        - else
+          %option CVSSv3
+        - if @scoring == "riskmatrix"
+          %option{ :selected => "selected" } RISKMATRIX
+        - else
+          %option RISKMATRIX
+        - if @scoring == "nist800"
+          %option{ :selected => "selected" } NIST800-30
+        - else
+          %option NIST800-30
+
+  - @config.each do |k,v|
+    - next if k =~ /ssl_certificate/
+    - next if k =~ /ssl_key/
+    - next if k =~ /log_file/
+    - next if k =~ /image_align/
+    - next if k == "cvss" or k == "dread" or k == "cvssv3" or k == "riskmatrix" or k == "nist800"
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "#{k}" } #{k}
+      .col-lg-4
+        - if (v == false) or (v == true) or (v == "false") or (v == "true")
+          .form-check
+            - if (v == true) or (v == "true")
+              %input.form-check-input{ :id => "#{k}", :type => "checkbox", :name => "#{k}", :checked => "checked" }
+            - else
+              %input.form-check-input{ :id => "#{k}", :type => "checkbox", :name => "#{k}" }
+        - elsif v.instance_of? Array
+          %input.form-control{ :id => "#{k}", :type => "text", :name => "#{k}", :value => "#{v.join(',')}" }
+        - else
+          %input.form-control{ :id => "#{k}", :type => "text", :name => "#{k}", :value => "#{v}" }
+
   %br
-  %h2 Configuration Options (Must Restart After Changes)
-  %br
-
-  %form{ :method => "post", :action => "/admin/config" }
-    %form
-      %table
-        %tr
-          %td
-            %label.col-md-3{ :for => "risk_scoring" }
-              Risk Scoring Algorithm
-          %td
-            %select#risk_scoring{ :name => "risk_scoring" }
-              - if @scoring == "default"
-                %option{ :selected => "selected" } Default
-              - else
-                %option Default Scoring
-              - if @scoring == "dread"
-                %option{ :selected => "selected" } DREAD
-              - else
-                %option DREAD
-              - if @scoring == "cvss"
-                %option{ :selected => "selected" } CVSSv2
-              - else
-                %option CVSSv2
-              - if @scoring == "cvssv3"
-                %option{ :selected => "selected" } CVSSv3
-              - else
-                %option CVSSv3
-              - if @scoring == "riskmatrix"
-                %option{ :selected => "selected" } RISKMATRIX
-              - else
-                %option RISKMATRIX
-              - if @scoring == "nist800"
-                %option{ :selected => "selected" } NIST800-30
-              - else
-                %option NIST800-30
-
-        - @config.each do |k,v|
-          - next if k =~ /ssl_certificate/
-          - next if k =~ /ssl_key/
-          - next if k =~ /log_file/
-          - next if k =~ /image_align/
-          - next if k == "cvss" or k == "dread" or k == "cvssv3" or k == "riskmatrix" or k == "nist800"
-          %tr
-            %td
-              %label.col-md-3{ :for => "#{k}" }
-                #{k}
-            %td
-              - if (v == false) or (v == true) or (v == "false") or (v == "true")
-                - if (v == true) or (v == "true")
-                  %input{ :id => "#{k}", :type => "checkbox", :name => "#{k}", :checked => "checked" }
-                - else
-                  %input{ :id => "#{k}", :type => "checkbox", :name => "#{k}" }
-              - elsif v.instance_of? Array
-                %input{ :id => "#{k}", :type => "text", :name => "#{k}", :value => "#{v.join(',')}" }
-              - else
-                %input{ :id => "#{k}", :type => "text", :name => "#{k}", :value => "#{v}" }
-
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Save" }
-      %a.btn.btn-default{ :href => "/admin/" }
-        Cancel
+  %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+  %a.btn.btn-secondary{ :href => "/admin/" }
+    Cancel

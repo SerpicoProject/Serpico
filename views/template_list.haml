@@ -1,42 +1,41 @@
-.col-md-10
-  %br
-  %h3 Current Templates
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Current Templates
 
+- if @templates
   .table.table-striped
     %table{ :style => "width: 80%" }
+      %thead
+        %tr
+          %td{ :style => "width: 30%" }
+            %b Report Type
+          %td{ :style => "width: 30%" }
+            %b Description
+          %td{ :style => "width: 25%" }
+            %b Template Type
+          %td.text-right{ :style => "width: 15%" }
+            %b Actions
       %tbody
-        - if @templates
+        - @templates.each do |template|
           %tr
-            %td{ :style => "width: 30%" }
-              %b Report Type
-            %td{ :style => "width: 30%" }
-              %b Description
-            %td{ :style => "width: 30%" }
-              %b Template Type
-            %td{ :style => "width: 10%" }
-              %b
-          - @templates.each do |template|
-            %tr
-              %td{ :style => "width: 30%" }
-                #{template.report_type}
-              %td{ :style => "width: 15%" }
-                #{template.description}
-              %td{ :style => "width: 15%" }
-                - if template.finding_template
-                  Finding Template
-                - elsif template.status_template
-                  Status Template
-                - else
-                  Report Template
-              %td{ :style => "width: 60%" }
-                %a.btn.btn-warning{ :href => "/admin/templates/#{template.id}/edit" }
-                  %i.icon-pencil.icon-white{ :title => "Edit" }
-                %a.btn.btn-info{ :href => "/admin/templates/#{template.id}/download" }
-                  %i.icon-play-circle.icon-white{ :title => "Preview" }
-                %a.btn.btn-danger{ :href => "/admin/delete/templates/#{template.id}" }
-                  %i.icon-trash.icon-white{ :title => "Delete Template" }
-                %a.btn.btn-success{:href => "/admin/templates/#{template.id}/tree"}
-                  %i.icon-indent-right.icon-white{:title => 'Tree'}
-        - else
-          No Templates. Silly goose, how will you create reports?
+            %td
+              #{template.report_type}
+            %td
+              #{template.description}
+            %td
+              - if template.finding_template
+                Finding Template
+              - elsif template.status_template
+                Status Template
+              - else
+                Report Template
+            %td.text-right
+              %a.btn.btn-sm.btn-warning{ :href => "/admin/templates/#{template.id}/edit" }
+                %i.fas.fa-pencil-alt{ :title => "Edit" }
+              %a.btn.btn-sm.btn-info{ :href => "/admin/templates/#{template.id}/download" }
+                %i.far.fa-play-circle{ :title => "Preview" }
+              %a.btn.btn-sm.btn-danger{ :href => "/admin/delete/templates/#{template.id}" }
+                %i.far.fa-trash-alt{ :title => "Delete Template" }
+              %a.btn.btn-sm.btn-success{:href => "/admin/templates/#{template.id}/tree"}
+                %i.fas.fa-indent{:title => 'Tree'}
+- else
+  No Templates. Silly goose, how will you create reports?

@@ -609,6 +609,10 @@ end
 
 # get enabled plugins
 get '/admin/admin_plugins' do
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   @menu = get_plugin_list('admin')
   haml :enabled_plugins
 end

@@ -1,34 +1,35 @@
-.col-md-10
-  %br
-  %h2 Editing #{@report.report_name} Report
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Editing #{@report.report_name} Report
 
-  %form{ :method => "post", :action => "/admin/add_user/#{@report.id}" }
-    %h3 Current Authors
-    .table.table-striped
-      %table{ :style => "width: 50%" }
-        %tr
-          %td
-            #{@report.owner}
-          %td
-            &nbsp;
-        - if @report.authors
-          - @report.authors.each do |user|
-            %tr
-              %td
-                #{user}
-              %td
-                %a.btn.btn-danger{ :href => "/admin/del_user_report/#{@report.id}/#{user}" }
-                  %i.icon-trash.icon-white{ :title => "Remove Author" }
+%h2.h4 Current Authors
+.table-responsive.col-6.px-0
+  %table.table.table-striped.table-sm
+    %tbody
+      %tr
+        %td
+          #{@report.owner}
+        %td
+          &nbsp;
+      - if @report.authors
+        - @report.authors.each do |user|
+          %tr
+            %td
+              #{user}
+            %td.text-right
+              %a.btn.btn-sm.btn-danger{ :href => "/admin/del_user_report/#{@report.id}/#{user}" }
+                %i.far.fa-trash-alt{ :title => "Remove Author" }
 
-    %br
-    %label.col-md-3{ :for => "author" }
-      Add Collaborator
-      %select#author{ :name => "author" }
+%br
+
+%form{ :method => "post", :action => "/admin/add_user/#{@report.id}" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "author" } Add Collaborator
+    .col-lg-4
+      %select#author.custom-select{ :name => "author" }
         - @users.each do |user|
           %option #{user.username}
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Add" }
-    %a.btn.btn-default{ :href => "/reports/list" }
-      Cancel
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Add" }
+  %a.btn.btn-secondary{ :href => "/reports/list" }
+    Cancel

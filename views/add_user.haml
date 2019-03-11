@@ -1,68 +1,55 @@
-.col-md-10
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
   - if @user
-    %h2 Edit User
+    %h1.h2 Edit User
   - else
-    %h2 Add User
+    %h1.h2 Add User
+
+%form{ :method => "post", :action => "/admin/add_user" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "username" } Username
+    .col-lg-4
+      - if @user
+        %input#username.form-control{ :type => "text", :name => "username", :value => "#{@user.username}" }
+      - else
+        %input#username.form-control{ :type => "text", :name => "username" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "password" } Password (Not required for AD Auth Type)
+    .col-lg-4
+      %input#password.form-control{ :type => "password", :name => "password" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "auth_type" } Authorization Type
+    .col-lg-4
+      %select#auth_type.custom-select{ :name => "auth_type" }
+        - if @user
+          - if @user.auth_type == "AD"
+            %option{ :selected => "selected" } AD
+          - else
+            %option AD
+          - if @user.auth_type == "Local"
+            %option{ :selected => "selected" } Local
+          - else
+            %option Local
+        - else
+          %option{ :selected => "selected" } AD
+          %option Local
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "type" } User Level
+    .col-lg-4
+      %select#type.custom-select{ :name => "type" }
+        - if @user
+          - if @user.type == "Administrator"
+            %option{ :selected => "selected" } Administrator
+          - else
+            %option Administrator
+          - if @user.type == "User"
+            %option{ :selected => "selected" } User
+          - else
+            %option User
+        - else
+          %option{ :selected => "selected" } User
+          %option Administrator
+
   %br
-
-  %form{ :method => "post", :action => "/admin/add_user" }
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "username" }
-            Username &nbsp;
-        %td
-          - if @user
-            %input#username{ :type => "text", :name => "username", :value => "#{@user.username}" }
-          - else
-            %input#username{ :type => "text", :name => "username" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "password" }
-            Password (Not required for AD Auth Type)
-        %td
-          %input#password{ :type => "password", :name => "password" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "auth_type" }
-            Authorization Type
-        %td
-          - if @user
-            %select#auth_type{ :name => "auth_type" }
-              - if @user.auth_type == "AD"
-                %option{ :selected => "selected" } AD
-              - else
-                %option AD
-              - if @user.auth_type == "Local"
-                %option{ :selected => "selected" } Local
-              - else
-                %option Local
-          - else
-            %select#auth_type{ :name => "auth_type" }
-              %option{ :selected => "selected" } AD
-              %option Local
-      %tr
-        %td
-          %label.col-md-3{ :for => "type" }
-            User Level
-        %td
-          - if @user
-            %select#type{ :name => "type" }
-              - if @user.type == "Administrator"
-                %option{ :selected => "selected" } Administrator
-              - else
-                %option Administrator
-              - if @user.type == "User"
-                %option{ :selected => "selected" } User
-              - else
-                %option User
-          - else
-            %select#type{ :name => "type" }
-              %option{ :selected => "selected" } User
-              %option Administrator
-
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Add" }
-    %a.btn.btn-default{ :href => "/admin/list_user" }
-      Cancel
+  %input.btn.btn-primary{ :type => "submit", :value => "Add" }
+  %a.btn.btn-secondary{ :href => "/admin/list_user" }
+    Cancel
