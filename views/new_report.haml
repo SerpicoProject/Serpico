@@ -1,64 +1,49 @@
-.col-md-10
-  %form{ :method => "post" }
-    %br
-    %h2 Create Report (or <a href="/report/import">Import</a>)
-    %br
-    - if @templates.size > 0
-      %table
-        %tr
-          %td
-            %label.col-md-3{ :for => "report_name" }
-              Title &nbsp;
-          %td
-            %input#report_name{ :type => "text", :name => "report_name" }
-        - if @languages
-          %tr
-            %td
-              %label.col-md-3{ :for => "language" }
-                Language &nbsp;
-            %td
-              %select#language{ :name => "language" }
-                - @languages.each do |lang|
-                  %option #{lang}
-        %tr
-          %td
-            %label.col-md-3{ :for => "full_company_name" }
-              Full Company Name &nbsp;
-          %td
-            %input#full_company_name{ :type => "text", :name => "full_company_name" }
-        %tr
-          %td
-            %label.col-md-3{ :for => "short_company_name" }
-              Short Company Name &nbsp;
-          %td
-            %input#short_company_name{ :type => "text", :name => "short_company_name" }
-        %tr
-        %tr
-          %td
-            %label.col-md-3{ :for => "assessment_type" }
-              Assessment Type &nbsp;
-          %td
-            %select#assessment_type{ :name => "assessment_type" }
-              - @assessment_types.each do |assessment_type|
-                %option #{assessment_type}
-        %tr
-          %td{ :style => "width: 30%" }
-            %label.col-md-3{ :for => "report_type" }
-              Report Type
-          %td{ :style => "width: 70%" }
-            %select#report_type{ :name => "report_type" }
-              - @templates.each do |template|
-                - if template.finding_template == false and template.status_template == false
-                  - if @report and template.report_type == @report.report_type
-                    %option{ :selected => "selected" } #{type}
-                  - else
-                    %option #{template.report_type}
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Create Report (or <a href="/report/import">Import</a>)
 
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Save" }
-      %a.btn.btn-default{ :href => "/" }
-        Cancel
+%form{ :method => "post" }
+  - if @templates.size > 0
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "report_name" } Title
+      .col-lg-4
+        %input#report_name.form-control{ :type => "text", :name => "report_name", :required => "" }
+    - if @languages
+      .form-group.row
+        %label.col-lg-2.col-form-label{ :for => "language" } Language
+        .col-lg-4
+          %select#language.custom-select{ :name => "language" }
+            - @languages.each do |lang|
+              %option #{lang}
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "full_company_name" } Full Company Name
+      .col-lg-4
+        %input#full_company_name.form-control{ :type => "text", :name => "full_company_name" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "short_company_name" } Short Company Name
+      .col-lg-4
+        %input#short_company_name.form-control{ :type => "text", :name => "short_company_name" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "assessment_type" } Assessment Type
+      .col-lg-4
+        %select#assessment_type.custom-select{ :name => "assessment_type" }
+          - @assessment_types.each do |assessment_type|
+            %option #{assessment_type}
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "report_type" } Report Type
+      .col-lg-4
+        %select#report_type.custom-select{ :name => "report_type" }
+          - @templates.each do |template|
+            - if template.finding_template == false and template.status_template == false
+              - if @report and template.report_type == @report.report_type
+                %option{ :selected => "selected" } #{type}
+              - else
+                %option #{template.report_type}
 
-    - else
-      %h4
-        Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-
+    %br
+    %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+    %a.btn.btn-secondary{ :href => "/" }
+      Cancel
+
+  - else
+    %h4
+      Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-

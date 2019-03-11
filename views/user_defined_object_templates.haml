@@ -1,59 +1,54 @@
-.col-md-10
-  %br
-  - if @udos_templates.empty?
-    %h3
-      It appears you do not have any user defined objects. Would you like to add some?
-    %br
-  - else
-    %h3
-      User Defined Object template list :
-    %br
-    - @udos_templates.each do |udo|
-      %div.w3-padding
-        %table.table-striped.padding
-          %tr
-            %td
-              %strong
-                %i
-                  #{udo.type}
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 User Defined Objects
+
+- if @udos_templates.empty?
+  %h2.h5 It appears you do not have any user defined objects. Would you like to add some?
+- else
+  %h2.h4 User Defined Object template list :
+  .table.table-striped
+    %table
+      - @udos_templates.each do |udo|
+        %tr
+          %td
+            %strong
+              %i
+                #{udo.type}
+          %td
             - udo_properties = JSON.parse(udo.udo_properties)
             - udo_properties.each do |key, value|
+              &ensp; #{key}
+          %td
+            %a.btn.btn-small.btn-warning.btn-sm{ :href => "/admin/udo_template/#{udo.id}/edit" }
+              %i.fas.fa-pencil-alt{ :title => "Edit #{udo.type.downcase} template" }
+            %a.btn.btn-small.btn-danger.btn-sm{ :href => "/admin/udo_templates?delete=#{udo.id}" }
+              %i.far.fa-trash-alt{ :title => "Delete #{udo.type.downcase} template" }
+
+%br
+%br
+%h2.h4 Add an User Defined Object template :
+#fields.control-group
+  %label.control-label{ :for => "field1" }
+  #profs.controls
+    %form.input-append{ :method => "post" }
+      #field
+        .table.table-striped
+          %table
+            %tr
               %td
-                #{key}
-            %td
-              %a.btn.btn-warning.btn-sm{ :href => "/admin/udo_template/#{udo.id}/edit" }
-                %i.icon-pencil.icon-white{ :title => "Edit #{udo.type.downcase} template" }
-              %a.btn.btn-danger.btn-sm{ :href => "/admin/udo_templates?delete=#{udo.id}" }
-                %i.icon-trash.icon-white{ :title => "Delete #{udo.type.downcase} template" }
-
-  %br
-  %br
-  %h3
-    Add an User Defined Object template :
-  %br
-    #fields.control-group
-      %label.control-label{ :for => "field1" }
-      #profs.controls
-        %form.input-append{ :method => "post" }
-          #field
-            .table.table-striped
-              %table
-                %tr
-                  %td
-                    Object Type:&nbsp;
-                  %td
-                    %input#object_name{ :type => "text", :style => "width: 90%", :name => "object_type", :placeholder => "Object Type", :required => true }
-                %tr
-                  %td
-                    Object Properties Names:&nbsp;
-                  %td
-                    %input#field1.input{ "data-items" => "8", :name => "property_1", :placeholder => "Property Name 1", :type => "text", :required => true, :autocomplete => "off" }
-                    %button#b1.btn.add-more{ :type => "button" } +
-
-          %br
-          %input.btn.btn-default{ :type => "submit", :value => "Save", :name => "action" }
-          %a.btn.btn-default{ :href => "/" }
-            Cancel
+                Object Type:
+              %td
+                %input#object_name.form-control{ :type => "text", :name => "object_type", :placeholder => "Object Type", :required => true }
+            %tr
+              %td
+                Object Properties Names:
+              %td
+                %input#field1.input{ "data-items" => "8", :name => "property_1", :placeholder => "Property Name 1", :type => "text", :required => true, :autocomplete => "off" }
+                %button#b1.btn.btn-sm.btn-success.add-more.ml-0{ :type => "button" }
+                  %i.fas.fa-plus
+      %br
+      %input.btn.btn-primary{ :type => "submit", :value => "Save", :name => "action" }
+      %a.btn.btn-secondary{ :href => "/" }
+        Cancel
 
 :javascript
   var removeBtnPrefix = "remove";
@@ -64,9 +59,9 @@
           var addto = "#field" + next;
           var addRemove = "#field" + (next);
           next = next + 1;
-          var newIn = '<input autocomplete="off" placeholder="Property Name '+ next +'" class="input form-control" id="field' + next + '" name="property_' + next + '" type="text">';
+          var newIn = '<input autocomplete="off" placeholder="Property Name '+ next +'" class="input" id="field' + next + '" name="property_' + next + '" type="text">';
           var newInput = $(newIn);
-          var removeBtn = '<button id="' + removeBtnPrefix + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+          var removeBtn = '<button id="' + removeBtnPrefix + (next - 1) + '" class="btn btn-sm btn-danger remove-me ml-1" ><i class="fas fa-minus"></i></button><div id="divClear' + (next - 1) + '"></div>';
           var removeButton = $(removeBtn);
           $(addto).after(newInput);
           $(addRemove).after(removeButton);
@@ -82,10 +77,3 @@
           });
       });
   });
-
-:plain
-  <style>
-    .padding>tbody>tr>td, .mytable>tbody>tr>th, .mytable>tfoot>tr>td, .mytable>tfoot>tr>th, .mytable>thead>tr>td, .mytable>thead>tr>th {
-        padding: 8px;
-    }
-  </style>

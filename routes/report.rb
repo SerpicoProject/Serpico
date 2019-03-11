@@ -29,6 +29,10 @@ get '/report/new' do
   @templates = Xslt.all
   @assessment_types = config_options['report_assessment_types']
   @languages = config_options['languages']
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   haml :new_report
 end
 
