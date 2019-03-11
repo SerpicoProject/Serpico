@@ -29,7 +29,7 @@
                 %i.far.fa-file-word
                 List Reports
             %li.nav-item
-              %a.nav-link{ :href => "/reports/new" }
+              %a.nav-link{ :href => "/report/new" }
                 %i.far.fa-edit
                 New Report
           %ul.navbar-nav.ml-auto
@@ -51,10 +51,10 @@
                 %i.fas.fa-sign-out-alt
                 Logout
 
-      %div.container-fluid
-        %div.row
+      .container-fluid
+        .row
           %nav.col-md-2.d-none.d-md-block.bg-light.sidebar
-            %div.sidebar-sticky
+            .sidebar-sticky
               - if @master
                 %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
                   %span Findings Menu
@@ -124,6 +124,8 @@
                     %li.nav-item
                       %a.nav-link{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
                     %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/findings_add" } Add Finding from Templates
+                    %li.nav-item
                       %a.nav-link{ :href => "/report/#{@report.id}/findings/new" } Create New Finding
                     %li.nav-item
                       %a.nav-link{ :href => "/report/#{@report.id}/findings/new" } Import Findings from Scan Data **<em>Beta</em>**
@@ -156,9 +158,9 @@
                     %ul.nav.flex-column
                       %li.nav-item
                         %a.nav-link{ :href => "#{item["link"]}?report_id=#{@report.id}" } #{item["name"]}
-          %main.col-md-9.ml-sm-auto.col-lg-10.px-4{ :role => "main" }
+          %main.col-md-9.ml-sm-auto.col-lg-10.px-4.mb-5{ :role => "main" }
             - if @master
-              %div.alert.alert-danger
+              .alert.alert-danger
                 %strong WARNING
                 %br
                 You are editing the Templates Database
@@ -170,10 +172,10 @@
       %link{ :href => "/css/signin.css", :rel => "stylesheet" }/
       %form.form-signin{ :action => "/login", :method => "POST", :role => "form" }
         %img.mb-4{ :src => "#{@logo}", :height => 245, :width =>  300 }
-        %div.form-label-group.mb-2
+        .form-label-group.mb-2
           %label.sr-only{ :for => "username" } Username
           %input#username.form-control{ :autofocus => "", :placeholder => "Username", :required => "", :type => "text", :name=> "username" }
-        %div.form-label-group.mb-4
+        .form-label-group.mb-4
           %label.sr-only{ :for => "password" } Password
           %input#password.form-control{ :placeholder => "Password", :required => "", :type => "password", :name=> "password", :autocomplete => "off" }
         %button.btn.btn-lg.btn-primary.btn-block{ :type => "submit" } Sign in

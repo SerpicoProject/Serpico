@@ -1,36 +1,33 @@
-.col-md-10
-  %br
-  %h2 Available Plugins (Must Restart After Changes)
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Available Plugins (Must Restart After Changes)
 
-  %form{ :method => "post" }
-    - if @plugins.size > 0
-      %form
-        %table
-          - @plugins.each do |plug|
-            - next unless plug["name"]
-            %tr
-              %td
-                %h3
-                  #{plug["name"]}&nbsp;&nbsp;&nbsp;
-              %td
-                #{plug["description"]}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              %td
-                - if (plug["enabled"] == false) or (plug["enabled"] == true) or (plug["enabled"] == "false") or (plug["enabled"] == "true")
-                  - if (plug["enabled"] == true) or (plug["enabled"] == "true")
-                    %input{ :type => "checkbox", :name => "#{plug['name']}", :checked => "checked" }
-                  - else
-                    %input{ :type => "checkbox", :name => "#{plug['name']}" }
-        %input{ :type => "submit", :value => "Save" }
-        %a{ :href => "/admin/" }
-          %input{ :type => "button", :value => "Cancel" }
-    - else
-      No plugins found.
-  #{@plugin}
-  - if @admin == true and @plugin == true
-    %h2 Upload a plugin (Must Restart After Upload)
-    %form{ :method => "post", :enctype => "multipart/form-data", :action => "/admin/plugin_upload" }
+%form{ :method => "post" }
+  - if @plugins.size > 0
+    %form
+      - @plugins.each do |plug|
+        - next unless plug["name"]
+        .form-group.row
+          .col-lg-2
+            %b #{plug["name"]}
+          .col-lg-6 #{plug["description"]}
+          .col-lg-2
+            - if (plug["enabled"] == false) or (plug["enabled"] == true) or (plug["enabled"] == "false") or (plug["enabled"] == "true")
+              - if (plug["enabled"] == true) or (plug["enabled"] == "true")
+                %input.form-check-input{ :type => "checkbox", :name => "#{plug['name']}", :checked => "checked" }
+              - else
+                %input.form-check-input{ :type => "checkbox", :name => "#{plug['name']}" }
+
       %br
-        %input{ :type => "file", :name => "files[]", :multiple => true}
-      %br
-        %input{ :type => "submit", :value => "Upload" }
+      %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+      %a.btn.btn-secondary{ :type => "button", :href => "/admin/" }
+        Cancel
+  - else
+    No plugins found.
+#{@plugin}
+- if @admin == true and @plugin == true
+  %h2 Upload a plugin (Must Restart After Upload)
+  %form{ :method => "post", :enctype => "multipart/form-data", :action => "/admin/plugin_upload" }
+    %br
+      %input{ :type => "file", :name => "files[]", :multiple => true}
+    %br
+      %input{ :type => "submit", :value => "Upload" }
