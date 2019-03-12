@@ -1,36 +1,33 @@
-.col-md-10
-  %br
-  - if @findings
-    - if @autoadd
-      %h3 Auto Add Findings
-      %h4
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; The following findings were automatically selected to be added to your report.
-    - else
-      %h3 Templated Findings
-      %h4
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Add findings from the template database to your report.
-    %br
+- if @findings
+  - if @autoadd
+    .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+      %h1.h2 Auto Add Findings
+    %h2.h5 The following findings were automatically selected to be added to your report.
+  - else
+    .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+      %h1.h2 Templated Findings
+    %h2.h5 Add findings from the template database to your report.
 
-    %input.form-control#search{ :type => "text", :placeholder => "Finding Name Search" }
-    %style#search_style
-    %span.input-group-btn
-    %form.form-inline{ :method => "post", :action => "/report/#{@report.id}/findings_add" }
-      .table
-        %table{ :style => "width: 90%" }
-          %tbody
-          - settings.finding_types.each do |type|
-            %tr
-              %td{ :colspan => "2" }
-                %b
-                  #{type}
-                %i.icon-list#actionButton{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
-                - col = "collapse out"
-                - @findings.each do |finding|
-                  - if finding.type == type
-                    - col = "collapse in"
-                .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class => "#{col}" }
+  .form-group.has-search.row.mt-5
+    .col-6
+      %span.fa.fa-search.form-control-feedback
+      %input#search.form-control{ :type => "text", :placeholder => "Finding Name Search" }
+  %style#search_style
+  
+  %form{ :method => "post", :action => "/report/#{@report.id}/findings_add" }
+    .table.table-sm
+      %table{ :style => "width: 90%" }
+        %tbody
+        - settings.finding_types.each do |type|
+          %tr
+            %td{ :colspan => "2" }
+              %b.pointer{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
+                #{type}
+                %i.fas.fa-list
+              -if @findings.any?{|finding| finding.type === type}
+                .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class => "collapse in show" }
                   - if @findings.size > 0
-                    .table.table-hover
+                    .table.table-hover.table-sm
                       %table{ :style => "width: 100%" }
                         - @findings.each do |finding|
                           - if finding.type == type
@@ -51,7 +48,7 @@
                                   - if @dup_findings.include?(finding.id)
                                     .label.label-warning Duplicate
                                 - if finding.overview
-                                  %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_#{finding.id}" }
+                                  %i.fas.fa-chevron-down.pointer{ "data-toggle" => "collapse", "data-target" => "#info_#{finding.id}" }
                                   .info.collapse.out{ :id => "info_#{finding.id}" }
                                     #{finding.overview.gsub("<paragraph>","<br />").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
                                   - if @autoadd_hosts
@@ -63,17 +60,16 @@
                                         %input{ :type => "hidden", :name => "finding#{finding.id.to_s}", :value => "#{iplist}" }
                               %td.searchable{ :style => "width: 20%", :"data-index" => "#{finding.title.downcase}" }
                                 - if @master
-                                  %a.btn.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
-                                    %i.icon-pencil.icon-white{ :title => "Edit" }
-                                  %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
-                                    %i.icon-play-circle.icon-white{ :title => "Preview" }
+                                  %a.btn.btn-sm.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
+                                    %i.fas.fa-pencil-alt{ :title => "Edit" }
+                                  %a.btn.btn-sm.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
+                                    %i.far.fa-play-circle{ :title => "Preview" }
                                 - else
-                                  %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
-                                    %i.icon-play-circle.icon-white{ :title => "Preview" }
+                                  %a.btn.btn-sm.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
+                                    %i.far.fa-play-circle{ :title => "Preview" }
 
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Add" }
-      %a.btn.btn-default{ :href => "/report/#{@report.id}/findings" }
-        Cancel
-  - else
-    No Findings Available
+    %input.btn.btn-primary{ :type => "submit", :value => "Add" }
+    %a.btn.btn-secondary{ :href => "/report/#{@report.id}/findings" }
+      Cancel
+- else
+  No Findings Available

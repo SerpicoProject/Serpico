@@ -1,5 +1,5 @@
 %link{ :href => "/css/bootstrap-suggest.css", :rel => "stylesheet" }/
-%script{ :src => "/js/bootstrap-suggest.js" }
+%script{ :src => "/js/bootstrap-suggest.min.js" }
 
 .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
   %h1.h2 New Finding
@@ -73,19 +73,21 @@
       %label.col-lg-2.col-form-label{ :for => "attack_vector" }
         %a.btn.btn-info{ :href=> "#mymodal", "data-toggle" => "modal" }
           CVSS Vector String
+      #mymodal.modal.modal.hide.fade{ :tabindex =>  "-1", :role => "dialog" }
+        .modal-dialog.modal-lg{ :role => "document" }
+          .modal-content
+            .modal-header
+              %h3#modal-label
+                CVSS Vector String
+              %button.close{ :type=> "button", "data-dismiss" => "modal", "aria-label" => "Close" }
+                &times;
+            .modal-body
+              %link{ :rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/cvss.css" }
+              %script{ :src => "/js/cvsscalc20.js" }
+              %script{ :src => "/js/cvss.js" }
+              %div#cvssboard
       .col-lg-4
         %input.form-control#vs.form-control{ :type => "text", :placeholder=> "CVSS Vector String", :style=> "width:35em" }
-      .modal.modal.hide.fade#mymodal{ :tabindex=> "-1", :role=> "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
-        .modal-header
-          %button.close{ :type=> "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
-            x
-          %h3#modal-label
-            CVSS Vector String
-        .modal-body
-          %link{ :rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/cvss.css" }
-          %script{ :src => "/js/cvsscalc20.js" }
-          %script{ :src => "/js/cvss.js" }
-          %div#cvssboard
     %span.input-group-btn
     .form-group.row.cvss2
       %label.col-lg-2.col-form-label{ :for => "baseScore" } Base Score
@@ -231,19 +233,21 @@
       %label.col-lg-2.col-form-label{ :for => "attack_vector" }
         %a.btn.btn-info{ :href=> "#mymodal", "data-toggle" => "modal" }
           CVSS Vector String
+      #mymodal.modal.modal.hide.fade{ :tabindex =>  "-1", :role => "dialog" }
+        .modal-dialog.modal-lg{ :role => "document" }
+          .modal-content
+            .modal-header
+              %h3#modal-label
+                CVSS Vector String
+              %button.close{ :type=> "button", "data-dismiss" => "modal", "aria-label" => "Close" }
+                &times;
+            .modal-body
+              %link{ :rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/cvss.css" }
+              %script{ :src => "/js/cvsscalc30.js" }
+              %script{ :src => "/js/cvss3.js" }
+              %div#cvssboard
       .col-lg-4
         %input.form-control#vs.form-control{ :type => "text", :placeholder=> "CVSS Vector String", :style=> "width:35em" }
-      .modal.modal.hide.fade#mymodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
-        .modal-header
-          %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
-            x
-          %h3#modal-label
-            CVSS Vector String
-        .modal-body
-          %link{ :rel => "stylesheet", :type => "text/css", :media => "all", :href => "/css/cvss.css" }
-          %script{ :src => "/js/cvsscalc30.js" }
-          %script{ :src => "/js/cvss3.js" }
-          %div#cvssboard
     %span.input-group-btn
     .form-group.row.cvss3
       %label.col-lg-2.col-form-label{ :for => "attack_vector" } Base Score
@@ -288,7 +292,7 @@
     .form-group.row.cvss3
       %label.col-lg-2.col-form-label{ :for => "user_interaction" } User Interaction
       .col-lg-4
-        %select#user_interaction{ :name => "user_interaction", "data-cvss-tag" => "UI" }
+        %select#user_interaction.custom-select{ :name => "user_interaction", "data-cvss-tag" => "UI" }
           - settings.user_interaction.each do |user_interaction|
             %option #{user_interaction}
     .form-group.row.cvss3
@@ -477,79 +481,81 @@
     %label.col-lg-2.col-form-label{ :for => "overview" }
       %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
         Overview
-    .modal.modal.hide.fade#modaloverview{ :tabindex=> "-1", :role=> "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => "true" }
-      .modal-header
-        %button.close{ :type=> "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
-          x
-        %h3#modal-label
-          Meta Markup
-      .modal-body
-        %p
-          There are markup sets you can use in any field. This text is converted inside of Microsoft Word.
-          %p.text-error
-            YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
-          %b
-            Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
-        %h2
-          {{ URL }}
-        %p
-          If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
-          %br
-        %h2
-          &lt;&lt;full_company_name&gt;&gt;
-        %p
-          If you place &lt;&lt;full_company_name&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
-          %br
-          %br
-          %code
-            Overall &lt;&lt;full_company_name&gt;&gt; was found to have a strong...
-          %br
-          %br
-          Will generate the following inside of a report:
-          %br
-          %br
-          %code
-            Overall AcmeCorporation was found to have a strong...
-        %h2
-          Bullets
-        %p
-          Shortcut : CTRL + ALT + w
-          %br
-          Place the bulleted text inbetween a *- and a -* like so:
-          %br
-          %br
-          %code
-            *- Bulleted text goes here -*
-        %h2
-          Paragraph Heading Text
-        %p
-          Shortcut : CTRL + ALT + q
-          %br
-          Place the heading inbetween a [== and a ==] like so:
-          %br
-          %br
-          %code
-            [== Heading text goes here ==]
-        %h2
-          Italics
-        %p
-          Shortcut : CTRL + ALT + x
-          %br
-          Italicize the paragraph containing [~~ and a ~~]:
-          %br
-          %br
-          %code
-            [~~ Italics ~~]
-        %h2
-          Code
-        %p
-          Shortcut : CTRL + ALT + c
-          %br
-          Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
-          %br
-          %br
-          %code
-            [[[ code, code goes here ]]]
+    .modal.modal.hide.fade#modaloverview{ :tabindex=> "-1", :role=> "dialog" }
+      .modal-dialog.modal-lg{ :role => "document" }
+        .modal-content
+          .modal-header
+            %h3#modal-label
+              Meta Markup
+            %button.close{ :type=> "button", "data-dismiss" => "modal", "aria-label" => "Close" }
+              &times;
+          .modal-body
+            %p
+              There are markup sets you can use in any field. This text is converted inside of Microsoft Word.
+              %p.text-error
+                YOU MUST CLOSE ALL TAGS. OTHERWISE YOU CAN DESTROY ALL TEXT FORMATTING. SEE EXAMPLES BELOW.
+              %b
+                Review the finding "TEST - Markup Tester" for a clear example. As always, press preview to see the finding in Word.
+            %h2
+              {{ URL }}
+            %p
+              If you place {{ URL }} in any field the text will be hyperlinked, otherwise hyperlinking is ignored.
+              %br
+            %h2
+              &lt;&lt;full_company_name&gt;&gt;
+            %p
+              If you place &lt;&lt;full_company_name&gt;&gt; in a finding the customer name will be substituted in the finding. This is particularly helpful in the Templated Findings.
+              %br
+              %br
+              %code
+                Overall &lt;&lt;full_company_name&gt;&gt; was found to have a strong...
+              %br
+              %br
+              Will generate the following inside of a report:
+              %br
+              %br
+              %code
+                Overall AcmeCorporation was found to have a strong...
+            %h2
+              Bullets
+            %p
+              Shortcut : CTRL + ALT + w
+              %br
+              Place the bulleted text inbetween a *- and a -* like so:
+              %br
+              %br
+              %code
+                *- Bulleted text goes here -*
+            %h2
+              Paragraph Heading Text
+            %p
+              Shortcut : CTRL + ALT + q
+              %br
+              Place the heading inbetween a [== and a ==] like so:
+              %br
+              %br
+              %code
+                [== Heading text goes here ==]
+            %h2
+              Italics
+            %p
+              Shortcut : CTRL + ALT + x
+              %br
+              Italicize the paragraph containing [~~ and a ~~]:
+              %br
+              %br
+              %code
+                [~~ Italics ~~]
+            %h2
+              Code
+            %p
+              Shortcut : CTRL + ALT + c
+              %br
+              Place code inbetween a [[[ and a ]]] like below. CODE CANNOT STRETCH MULTIPLE LINES.
+              %br
+              %br
+              %code
+                [[[ code, code goes here ]]]
 
     .col-lg-4
       %textarea#overview.form-control.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "overview" }
@@ -578,7 +584,7 @@
       #info_2.info.collapse.out.col-4
         %label{ :for => "notes" }
           Notes
-        %textarea#notes.form-control.input-xxlarge.allowMarkupShortcut{ :rows => "10", :name => "notes" }
+        %textarea#notes.form-control.input-xxlarge.allowMarkupShortcut.form-control{ :rows => "10", :name => "notes" }
           - if @finding
             - if @finding.notes
               #{meta_markup(@finding.notes)}

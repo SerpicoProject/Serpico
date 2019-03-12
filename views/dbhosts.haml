@@ -1,33 +1,33 @@
-.col-md-10
-  - if not @vulnmap
-    Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
-  - else
-    %h2 Hosts
-    This is a read-only view of the first 10k hosts within Metasploits database.
-    %br
-    %br
-    .table.table-hover
-      %table{ :style => "width: 90%" }
-        %thead
-          %tr
-            %td
-              %b IP Address
-            %td
-              %b Hostname
-            %td
-              %b Platform
-            %td
-              %b Info
-        %tbody
-          - if @hosts
-            - @hosts.each do |host|
-              %tr
-                %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["address"]}" }
-                  #{host["address"]}
-                %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["name"]}" }
-                  #{host["name"]}
-                %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["os_name"]}" }
-                  #{host["os_name"]}
-                  #{host["os_sp"]}
-                %td.searchable{ :style => "width: 40%", :"data-index" => "#{host["info"]}" }
-                  #{host["info"]}
+- if not @vulnmap
+  %h1.h5 Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
+- else
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Hosts
+  This is a read-only view of the first 10k hosts within Metasploits database.
+  %br
+  %br
+  .table-responsive.col-6.px-0
+    %table.table.table-striped.table-sm
+      %thead
+        %tr
+          %td
+            %b IP Address
+          %td
+            %b Hostname
+          %td
+            %b Platform
+          %td
+            %b Info
+      %tbody
+        - if @hosts
+          - @hosts.each do |host|
+            %tr
+              %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["address"]}" }
+                #{host["address"]}
+              %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["name"]}" }
+                #{host["name"]}
+              %td.searchable{ :style => "width: 20%", :"data-index" => "#{host["os_name"]}" }
+                #{host["os_name"]}
+                #{host["os_sp"]}
+              %td.searchable{ :style => "width: 40%", :"data-index" => "#{host["info"]}" }
+                #{host["info"]}

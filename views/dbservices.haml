@@ -1,36 +1,36 @@
-.col-md-10
-  - if not @vulnmap
-    Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
-  - else
-    %h2 services
-    This is a read-only view of the first 10k opened services within Metasploits database.
-    %br
-    %br
-    .table.table-hover
-      %table{ :style => "width: 90%" }
-        %thead
-          %tr
-            %td
-              %b IP Address
-            %td
-              %b service Port
-            %td
-              %b service Name
-            %td
-              %b State
-            %td
-              %b Info
-        %tbody
-          - if @services
-            - @services.each do |service|
-              %tr
-                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["host"]}" }
-                  #{service["host"]}
-                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["port"]}" }
-                  #{service["port"]}
-                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["proto"]}" }
-                  #{service["name"]}
-                %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["state"]}" }
-                  #{service["state"]}
-                %td.searchable{ :style => "width: 40%", :"data-index" => "#{service["info"]}" }
-                  #{service["info"]}
+- if not @vulnmap
+  %h1.h5 Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
+- else
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Services
+  This is a read-only view of the first 10k opened services within Metasploits database.
+  %br
+  %br
+  .table-responsive.col-6.px-0
+    %table.table.table-striped.table-sm
+      %thead
+        %tr
+          %td
+            %b IP Address
+          %td
+            %b service Port
+          %td
+            %b service Name
+          %td
+            %b State
+          %td
+            %b Info
+      %tbody
+        - if @services
+          - @services.each do |service|
+            %tr
+              %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["host"]}" }
+                #{service["host"]}
+              %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["port"]}" }
+                #{service["port"]}
+              %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["proto"]}" }
+                #{service["name"]}
+              %td.searchable{ :style => "width: 15%", :"data-index" => "#{service["state"]}" }
+                #{service["state"]}
+              %td.searchable{ :style => "width: 40%", :"data-index" => "#{service["info"]}" }
+                #{service["info"]}
