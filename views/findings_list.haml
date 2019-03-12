@@ -7,7 +7,7 @@
   %h2.h4 #{@total_added} findings imported. Party time!!
 
 - if not @findings.empty?
-  .table
+  .table.table-sm
     %table#mytable{ :style => "table-layout: fixed; width: 90%;" }
       - if !@master
         %thead
@@ -40,61 +40,58 @@
           - settings.finding_types.each do |type|
             %tr
               %td{ :colspan => "3" }
-                %b
+                %b.pointer{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
                   #{type}
-                %i.fas.fa-list{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
-                - col = "collapse out"
-                - @findings.each do |finding|
-                  - if finding.type == type
-                    - col = "collapse in"
-                .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class =>"#{col}" }
-                  - if @findings.size > 0
-                    .table.table-hover
-                      %table{ :style => "width: 100%" }
-                        - @findings.each do |finding|
-                          - if finding.type == type
-                            -if @master and !finding.approved
-                              -@class="error"
-                            - else
-                              -@class=""
-                            %tr{ :class => "#{@class}" }
-                              %td.searchable{ :"data-index" => "#{finding.title.downcase}", :style => "width: 1%" }
-                                %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}" }
-                              %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase}" }
-                                #{finding.title}
-                              - if @dread
-                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                  #{finding.dread_total}
-
-
-                                -#-------------------- set NIST800 rating --------------------#-
-                              - elsif @nist800
-                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
-                                  #{finding.nist_rating}
-
-                              - elsif @cvss
-                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                  #{finding.cvss_total}
-                              - elsif @cvssv3
-                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                  #{finding.cvss_total}
+                  %i.fas.fa-list
+                -if @findings.any?{|finding| finding.type === type}
+                  .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class =>"collapse in show" }
+                    - if @findings.size > 0
+                      .table.table-hover.table-sm
+                        %table{ :style => "width: 100%" }
+                          - @findings.each do |finding|
+                            - if finding.type == type
+                              -if @master and !finding.approved
+                                -@class="error"
                               - else
-                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                  - risk_t = ["Informational","Low","Moderate","High","Critical"]
-                                  - if finding.risk
-                                    #{risk_t[finding.risk]}
-                                  - if @dread
-                                    - scr = finding.dread_total/10
-                                    - scr = 4 if dread_total == 50
-                                    #{risk_t[scr]}
-                              - if @master
-                                %td.searchable{ :style => "text-align:center; width: 20%", :"data-index" => "#{finding.title.downcase}" }
-                                  %a.btn.btn-sm.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
-                                    %i.fas.fa-pencil-alt{ :title => "Edit" }
-                                  %a.btn.btn-sm.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
-                                    %i.far.fa-play-circle{ :title => "Preview" }
-                                  %a.btn.btn-sm.btn-danger{ :href => "/master/findings/delete/#{finding.id}" }
-                                    %i.far.fa-trash-alt{ :title => "Delete" }
+                                -@class=""
+                              %tr{ :class => "#{@class}" }
+                                %td.searchable{ :"data-index" => "#{finding.title.downcase}", :style => "width: 1%" }
+                                  %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}" }
+                                %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase}" }
+                                  #{finding.title}
+                                - if @dread
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                    #{finding.dread_total}
+
+
+                                  -#-------------------- set NIST800 rating --------------------#-
+                                - elsif @nist800
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                    #{finding.nist_rating}
+
+                                - elsif @cvss
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                    #{finding.cvss_total}
+                                - elsif @cvssv3
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                    #{finding.cvss_total}
+                                - else
+                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                    - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                                    - if finding.risk
+                                      #{risk_t[finding.risk]}
+                                    - if @dread
+                                      - scr = finding.dread_total/10
+                                      - scr = 4 if dread_total == 50
+                                      #{risk_t[scr]}
+                                - if @master
+                                  %td.searchable{ :style => "text-align:center; width: 20%", :"data-index" => "#{finding.title.downcase}" }
+                                    %a.btn.btn-sm.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
+                                      %i.fas.fa-pencil-alt{ :title => "Edit" }
+                                    %a.btn.btn-sm.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
+                                      %i.far.fa-play-circle{ :title => "Preview" }
+                                    %a.btn.btn-sm.btn-danger{ :href => "/master/findings/delete/#{finding.id}" }
+                                      %i.far.fa-trash-alt{ :title => "Delete" }
         - else
           :ruby
             vulns = Hash.new 0
@@ -320,7 +317,7 @@
                 %a.btn.btn-sm.btn-danger{ :href => "/report/#{@report.id}/findings/remove/#{finding.id}" }
                   %i.far.fa-trash-alt{ :title => "Delete" }
 - else
-  No Findings Available
+  %h2.h5 No Findings Available
 
 :javascript
   function confirmUploaded(evt) {
