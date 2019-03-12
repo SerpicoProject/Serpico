@@ -1,30 +1,32 @@
-.col-md-10
-  %br
-  %h2 Import Findings from Scan Data XML File
-  %h3
-    This feature uses the
-    %a(title="Odle" href="https://rubygems.com/odle") odle
-    gem, check
-    %a(title="Odle" href="https://github.com/BuffaloWill/odle") here
-    for a list of supported formats.
-  %br
-    NOTE: All findings are imported via this method, Nessus and Burp plugin ids are not respected
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Import Findings from Scan Data XML File
 
-  %form{ :method => "post", :action => "/report/#{@report.id}/import_scan_data", :enctype => "multipart/form-data" }
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            Upload File
-          %input#file{ :type => "file", :name => "file" }
-      %tr
-        Scan Data Type&nbsp;
-        %select#type{ :name => "type"}
-          - %w[\  Nessus BurpV1 Metasploit NMap].each do |type|
-            %option #{type}
-    %br
+%h2.h5
+  This feature uses the
+  %a(title="Odle" href="https://rubygems.com/odle") odle
+  gem, check
+  %a(title="Odle" href="https://github.com/BuffaloWill/odle") here
+  for a list of supported formats.
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
-    %a.btn.btn-default{ :href => "/report/#{@report.id}/findings" }
-      Cancel
+%p NOTE: All findings are imported via this method, Nessus and Burp plugin ids are not respected
+
+%br
+
+%form{ :method => "post", :action => "/report/#{@report.id}/import_scan_data", :enctype => "multipart/form-data" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "auth_type" } Authorization Type
+    .col-lg-4
+      %select#type.custom-select{ :name => "type"}
+        - %w[\  Nessus BurpV1 Metasploit NMap].each do |type|
+          %option #{type}
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "file" } Upload File
+    .col-lg-4
+      .custom-file
+        %input#file.custom-file-input{ :type => "file", :name => "file", :required => true }
+        %label.custom-file-label{ :for => "file" } Choose file
+
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Upload" }
+  %a.btn.btn-secondary{ :href => "/report/#{@report.id}/findings" }
+    Cancel

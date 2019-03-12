@@ -1,22 +1,21 @@
-.col-md-10
-  - if not @burpmap
-    Burp Auto Mapping not enabled. Contact your administrator to enable.
-  - else
-    %br
-    %h2 Auto Add Findings from Burp scanner report (XML only)
-    %br
+- if not @burpmap
+  %h1.h5 Burp Auto Mapping not enabled. Contact your administrator to enable.
+- else
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Auto Add Findings from Burp scanner report (XML only)
 
-    %form{ :method => "post", :action => "/report/#{@report.id}/import_autoadd", :enctype => "multipart/form-data" }
-      %table
-        %tr
-          %td
-            %label.col-md-3{ :for => "file" }
-              Upload burp scanner report file (XML only).&nbsp;
-            %input#file{ :type => "file", :name => "file" }
-      %br
-      %input{ :type => "hidden", :name => "type", :value => "burp" }
+  %form{ :method => "post", :action => "/report/#{@report.id}/import_autoadd", :enctype => "multipart/form-data" }
+    %input{ :type => "hidden", :name => "type", :value => "burp" }
+    .form-group.row
+      %label.col.col-form-label{ :for => "file" } Upload burp scanner report file (XML only).
 
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Upload" }
-      %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
-        Cancel
+    .form-group.row
+      .col-lg-4
+        .custom-file
+          %input#file.custom-file-input{ :type => "file", :name => "file", :required => true }
+          %label.custom-file-label{ :for => "file" } Choose file
+
+    %br
+    %input.btn.btn-primary{ :type => "submit", :value => "Upload" }
+    %a.btn.btn-secondary{ :href => "/report/#{@report.id}/additional_features" }
+      Cancel

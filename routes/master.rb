@@ -312,6 +312,7 @@ end
 
 # Import a findings database
 get '/master/import' do
+  @master = true
   haml :import_templates
 end
 

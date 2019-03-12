@@ -1,57 +1,56 @@
-.col-md-10
-  - if not @vulnmap
-    Vulnerability Mapping not enabled. Contact your administrator to enable (vulnmap configuration setting)
-  - else
-    %br
-    .row
-      .alert.alert-info
-        .fa.fa-exclamation-circle
-        &nbsp;Remember to start your metasploit RPC daemon by running the following command in your terminal:
-        %b msfrpcd -U $username -P $password --ssl
+- if not @vulnmap
+  %h1.h5 Vulnerability Mapping not enabled. Contact your administrator to enable (vulnmap configuration setting)
+- else
+  .row
+    .alert.alert-info
+      .fa.fa-exclamation-circle
+      &nbsp;Remember to start your metasploit RPC daemon by running the following command in your terminal:
+      %b msfrpcd -U $username -P $password --ssl
 
-    %h2 Metasploit RPC Settings
-    %br
-    %h4 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Specify the metasploit RPC settings for this report.
-    %br
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Metasploit RPC Settings
 
-    %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
-      .control-group
-        %label.control-label{ :for => "ip" } IP Address
-        .controls
-          - if @msfsettings and @msfsettings.ip
-            %input#ip{ :type => "text", :name => "ip", :value => "#{@msfsettings.ip}" }
-          - else
-            %input#ip{ :type => "text", :name => "ip", :value => "" }
-      .control-group
-        %label.control-label{ :for => "port" } Port
-        .controls
-          - if @msfsettings and @msfsettings.port
-            %input#port{ :type => "text", :name => "port", :value => "#{@msfsettings.port}" }
-          -else
-            %input#port{ :type => "text", :name => "port", :value => "" }
-      .control-group
-        %label.control-label{ :for => "user" } Username
-        .controls
-          - if @msfsettings and @msfsettings.user
-            %input#user{ :type => "text", :name => "user", :value => "#{@msfsettings.user}" }
-          - else
-            %input#user{ :type => "text", :name => "user", :value => "" }
-      .control-group
-        %label.control-label{ :for => "pass" } Password
-        .controls
-          - if @msfsettings and @msfsettings.pass
-            %input#pass{ :type => "password", :name => "pass", :value => "#{@msfsettings.pass}" }
-          - else
-            %input#pass{ :type => "password", :name => "pass", :value => "" }
-      .control-group
-        %label.control-label{ :for => "workspace" } Workspace
-        .controls
-          - if @msfsettings and @msfsettings.workspace
-            %input#workspace{ :type => "text", :name => "workspace", :value => "#{@msfsettings.workspace}" }
-          - else
-            %input#workspace{ :type => "text", :name => "workspace", :value => "" }
+  %h1.h5 Specify the metasploit RPC settings for this report.
+  %br
 
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Save" }
-      %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
-        Cancel
+  %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "ip" } IP Address
+      .col-lg-4
+        - if @msfsettings and @msfsettings.ip
+          %input#ip.form-control{ :type => "text", :name => "ip", :value => "#{@msfsettings.ip}" }
+        - else
+          %input#ip.form-control{ :type => "text", :name => "ip", :value => "" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "port" } Port
+      .col-lg-4
+        - if @msfsettings and @msfsettings.port
+          %input#port.form-control{ :type => "text", :name => "port", :value => "#{@msfsettings.port}" }
+        -else
+          %input#port.form-control{ :type => "text", :name => "port", :value => "" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "user" } Username
+      .col-lg-4
+        - if @msfsettings and @msfsettings.user
+          %input#user.form-control{ :type => "text", :name => "user", :value => "#{@msfsettings.user}" }
+        - else
+          %input#user.form-control{ :type => "text", :name => "user", :value => "" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "pass" } Password
+      .col-lg-4
+        - if @msfsettings and @msfsettings.pass
+          %input#pass.form-control{ :type => "password", :name => "pass", :value => "#{@msfsettings.pass}" }
+        - else
+          %input#pass.form-control{ :type => "password", :name => "pass", :value => "" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "workspace" } Workspace
+      .col-lg-4
+        - if @msfsettings and @msfsettings.workspace
+          %input#workspace.form-control{ :type => "text", :name => "workspace", :value => "#{@msfsettings.workspace}" }
+        - else
+          %input#workspace.form-control{ :type => "text", :name => "workspace", :value => "" }
+
+    %br
+    %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+    %a.btn.btn-secondary{ :href => "/report/#{@report.id}/additional_features" }
+      Cancel
