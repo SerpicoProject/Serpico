@@ -1,71 +1,36 @@
-.col-md-10
-  %br
-  %h2 Report Name: #{@report.report_name}
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Report Name: #{@report.report_name}
 
-  %form{ :method => "post" }
-    - if @user_variables == ""
-      %h3
-        It appears you do not have any user defied variables. Would you like to add some?
-      %br
-      %h3
-        Add user defined variables
-      %br
-      .table.table-striped
-        %table
-          %tr
-            %td
-              %label.col-md-3{ :for => "variable_name" }
-                Variable Name:&nbsp;
-            %td
-              %input#variable_name{ :type => "text", :style => "width: 90%", :name => "variable_name_0_" }
-          %tr
-            %td
-              %label.col-md-3{ :for => "variable_data" }
-                Variable data:&nbsp;
-            %td
-              %textarea.input-xxlarge#variable_data{ :rows => "10", :name => "variable_data_0_" }
+%form{ :method => "post" }
+  - if @user_variables
+    - i = 0
+    - w = 66
+    - @user_variables.each do | variables_name, variables_data|
+      .striped-rows
+        .form-group.row
+          %label.col-lg-2.col-form-label{ :for => "variable_name_#{w}_" } Variable Name:
+          .col-lg-4.striped-col
+            %input.form-control{ :id => "variable_name_#{w}_", :type => "text", :name =>"variable_name_#{w}_", :value => "#{variables_name}" }
+        .form-group.row
+          %label.col-lg-2.col-form-label{ :for => "variable_data_#{w}_" } Variable data:
+          .col-lg-4.striped-col
+            %textarea.form-control{ :id => "variable_data_#{w}_", :name => "variable_data_#{w}_" }
+              #{variables_data}
         %br
-    - else
-      - i = 0
-      - w = 66
-      - @user_variables.each do | variables_name, variables_data|
-        .table.table-striped
-          %table
-            %tr
-              %td
-                %label.col-md-3{ :for => "variable_name_#{w}_" }
-                  Variable Name:&nbsp;
-              %td
-                %input{ :id => "variable_name_#{w}_", :type => "text", :style => "width: 90%", :name =>"variable_name_#{w}_", :value => "#{variables_name}" }
-            %tr
-              %td
-                %label.col-md-3{ :for => "variable_data_#{w}_" }
-                  Variable data:&nbsp;
-              %td
-                %textarea{ :id => "variable_data_#{w}_", :name => "variable_data_#{w}_" }
-                  #{variables_data}
-          %br
-          - w = w + 1
-      %h3
-        Add addtional user defined variables
-      .table.table-striped
-        %table
-          %tr
-            %td
-              %label.col-md-3{ :for => "variable_name_#{i}_" }
-                Variable Name:&nbsp;
-            %td
-              %input{ :id => "variable_name_#{i}_", :type => "text", :style => "width: 90%", :name =>"variable_name_#{i}_" }
-          %tr
-            %td
-              %label.col-md-3{ :for => "variable_data_#{i}_" }
-                Variable data:&nbsp;
-            %td
-              %textarea.input-xxlarge{ :id => "variable_data_#{i}_", :rows => "10", :name => "variable_data_#{i}_" }
-        %br
-        - i = i + 1
+        - w = w + 1
+  %h2.h5 Add user defined variables
+  .striped-rows
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "variable_name_#{i}_" } Variable Name:
+      .col-lg-4.striped-col
+        %input.form-control{ :id => "variable_name_#{i}_", :type => "text", :name =>"variable_name_#{i}_" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "variable_data_#{i}_" } Variable data:
+      .col-lg-4.striped-col
+        %textarea.form-control{ :id => "variable_data_#{i}_", :rows => "10", :name => "variable_data_#{i}_" }
+    %br
+    - i = i + 1
 
-    %input.btn.btn-default{ :type => "submit", :value => "Save" }
-    %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
-      Cancel
+  %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+  %a.btn.btn-secondary{ :href => "/report/#{@report.id}/additional_features" }
+    Cancel

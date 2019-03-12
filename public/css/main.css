@@ -105,3 +105,22 @@ body {
 .pointer {
   cursor: pointer;
 }
+
+.striped-rows > .row.form-group {
+  margin-bottom: 0rem;
+  margin-left: 15px;
+}
+
+.striped-rows > .row:nth-of-type(odd) *[class*=' col'],
+.striped-rows > .row:nth-of-type(odd) *[class^='col'] {
+  background-color: #efefef;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.striped-rows > .row:nth-of-type(even) *[class*=' col'],
+.striped-rows > .row:nth-of-type(even) *[class^='col'] {
+  background-color: #ffffff;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}

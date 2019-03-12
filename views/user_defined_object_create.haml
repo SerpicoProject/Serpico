@@ -1,22 +1,16 @@
-%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
-%script{:src => "/js/bootstrap-suggest.js"}
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Create new #{@udo_template.type}
 
-.col-md-10
+%form{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
+  - @udo_template_properties.each do |param_name, param_default_value|
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "param_#{param_name}" }
+        %b #{param_name}
+      .col-lg-4.striped-col
+        %textarea.allowMarkupShortcut.form-control{ :id => "param_#{param_name}", :name => "param_#{param_name}", :rows => "2" }
+          #{meta_markup(param_default_value)}
+
   %br
-  %h3 Create new #{@udo_template.type}
-  %br
-
-  %form{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
-    - @udo_template_properties.each do |param_name, param_default_value|
-      .control-group
-        %label.control-label{ :for => "param_#{param_name}" }
-          %strong
-            #{param_name}
-        .controls
-          %textarea.allowMarkupShortcut.input-large{ :id => "param_#{param_name}", :type => "textarea", :name => "param_#{param_name}", :rows => "2" }
-            #{meta_markup(param_default_value)}
-
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Save", :name => "action" }
-    %a.btn.btn-default{ :href => "/report/#{@report.id}/udo/manage" }
-      Cancel
+  %input.btn.btn-primary{ :type => "submit", :value => "Save", :name => "action" }
+  %a.btn.btn-secondary{ :href => "/report/#{@report.id}/udo/manage" }
+    Cancel
