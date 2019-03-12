@@ -574,6 +574,7 @@ get '/report/:id/udo/:udo_id/edit' do
   @udo_template = UserDefinedObjectTemplates.get(@udo_to_edit.template_id)
   @udo_template_properties = JSON.parse(@udo_template.udo_properties)
   @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
+
   haml :user_defined_object_edit
 end
 

@@ -1,69 +1,64 @@
-%link{:href => "/css/bootstrap-suggest.css", :rel => "stylesheet"}/
 %link{:href => "/css/dynamic-fields.css", :rel => "stylesheet"}/
-%script{:src => "/js/bootstrap-suggest.js"}
 
-.col-md-10
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Editing object " #{@udo_to_edit.type} "
+
+%h2.h4 Existing properties
+
+%form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
+  - @udo_to_edit_properties.each do |param_name, value|
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "prop_#{param_name}" } Property Name
+      .col-lg-4
+        %input.form-control{ :id => "prop_#{param_name}", :value => "#{param_name}", :name => "prop_#{param_name}" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "default_#{param_name}" } Default Value
+      .col-lg-4
+        %textarea.allowMarkupShortcut.input-large.form-control{ :id => "default_#{param_name}", :name => "default_#{param_name}", :rows => "3" }
+          #{meta_markup(value)}
+
+  %h2.h4 Existing properties
+
+  %div{ "data-role" => "dynamic-fields" }
+    .form-container
+      .form-group.row
+        %label.col-lg-2.col-form-label{ :for => "prop_new_1" } New Property Name
+        .col-lg-4
+          %input#prop_new_1.form-control{ :type => "text", :name => "prop_new_1" }
+      .form-group.row
+        %label.col-lg-2.col-form-label{ :for => "default_new_1" } Default Value
+        .col-lg-4
+          %textarea#default_new_1.allowMarkupShortcut.input-large.form-control{ :name => "default_new_1", :rows => "3" }
+      %button.btn.btn-sm.btn-danger{ "data-role" => "remove" }
+        %span.fas.fa-minus
+      %button.btn.btn-sm.btn-info{ "data-role" => "add" }
+        %span.fas.fa-plus
+
   %br
-  %h3 Editing object " #{@udo_to_edit.type} "
-  %h4 Existing properties
-  %br
-
-  %form.form-horizontal{ :method => "post", :enctype => "application/x-www-form-urlencoded" }
-    - @udo_to_edit_properties.each do |param_name, value|
-      .control-group
-        %label.control-label{ :for => "prop_#{param_name}" } Property Name
-        .controls
-          %input{ :id => "prop_#{param_name}", :value => "#{param_name}", :name => "prop_#{param_name}" }
-      .control-group
-        %label.control-label{ :for => "default_#{param_name}" } Default Value
-        .controls
-          %textarea.allowMarkupShortcut.input-large{ :id => "default_#{param_name}", :name => "default_#{param_name}", :rows => "3" }
-            #{meta_markup(value)}
-
-    %br
-    %h4 Add properties
-    %br
-
-    %div{ "data-role" => "dynamic-fields" }
-      .form-inline
-        .control-group
-          %label.control-label{ :for => "prop_new_1" } New Property Name
-          .controls
-            %input#field-name.form-control#prop_new_1{ :type => "text", :name => "prop_new_1" }
-        .control-group
-          %label.control-label{ :for => "default_new_1" } Default Value
-          .controls
-            %textarea.allowMarkupShortcut.input-large#default_new_1{ :name => "default_new_1", :rows => "3" }
-        %button.btn.btn-danger{ "data-role" => "remove" }
-          %span.icon-minus
-        %button.btn.btn-info{ "data-role" => "add" }
-          %span.icon-plus
-
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Edit", :name => "action" }
-    %a.btn.btn-default{ :href => "/admin/udo_templates" }
-      Cancel
+  %input.btn.btn-primary{ :type => "submit", :value => "Edit", :name => "action" }
+  %a.btn.btn-secondary{ :href => "/admin/udo_templates" }
+    Cancel
 
 :javascript
   $(function() {
       // Remove button click
       $(document).on(
           'click',
-          '[data-role="dynamic-fields"] > .form-inline [data-role="remove"]',
+          '[data-role="dynamic-fields"] > .form-container [data-role="remove"]',
           function(e) {
               e.preventDefault();
-              $(this).closest('.form-inline').remove();
+              $(this).closest('.form-container').remove();
           }
       );
       // Add button click
       $(document).on(
           'click',
-          '[data-role="dynamic-fields"] > .form-inline [data-role="add"]',
+          '[data-role="dynamic-fields"] > .form-container [data-role="add"]',
           function(e) {
               e.preventDefault();
               var container = $(this).closest('[data-role="dynamic-fields"]');
-              new_field_group = container.children().filter('.form-inline:first-child').clone();
-              var i = container.children().filter('.form-inline').size() + 1;
+              new_field_group = container.children().filter('.form-container:first-child').clone();
+              var i = container.children().filter('.form-container').size() + 1;
               new_field_group.find('label').each(function(){
                 if ($(this).attr('for').startsWith("prop_new_")) {
                   $(this).attr('for','prop_new_'+i);

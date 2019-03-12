@@ -1,169 +1,140 @@
-.col-md-10
-  %br
-  - if @newfinding
-    %h2 Finding(s) Added! You rock.
-  - if @total_added
-    %h2
-      #{@total_added} findings imported. Party time!!
-  %br
-  %h3 Current Findings
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Current Findings
 
-  - if not @findings.empty?
-    .table
-      %table#mytable{ :style => "table-layout: fixed; width: 90%;" }
-        - if !@master
-          %thead
-            %th{ :style => "width: 2%" }
-              %input.checkbox#checkall{ :type => "checkbox" }
-            %th{ :style => "width: 43%" }
-              Title
-            - if settings.finding_states
-              %th{ :style => "text-align:center; width: 7%" }
-                State
+- if @newfinding
+  %h2.h4 Finding(s) Added! You rock.
+- if @total_added
+  %h2.h4 #{@total_added} findings imported. Party time!!
+
+- if not @findings.empty?
+  .table
+    %table#mytable{ :style => "table-layout: fixed; width: 90%;" }
+      - if !@master
+        %thead
+          %th{ :style => "width: 2%" }
+            %input.checkbox#checkall{ :type => "checkbox" }
+          %th{ :style => "width: 43%" }
+            Title
+          - if settings.finding_states
             %th{ :style => "text-align:center; width: 7%" }
-              Risk
-            %th{ :style => "text-align:center; width: 10%" }
-              Actions
-        %tbody
-          - if @master
-            %input.form-control#search{ :type => "text", :placeholder => "Finding Name Search" }
+              State
+          %th{ :style => "text-align:center; width: 7%" }
+            Risk
+          %th{ :style => "text-align:center; width: 10%" }
+            Actions
+      %tbody
+        - if @master
+          %input.form-control#search{ :type => "text", :placeholder => "Finding Name Search" }
+          %br
+          %br
+          %div
+            %th{ :style => "width: 20%" }
+              Select All Findings &nbsp;&nbsp;&nbsp;&nbsp;
+              %input.checkbox#checkall{ :type => "checkbox" }
+            %a.btn.btn-danger#deletemultiple{ :href => "/master/findings/delete/" }
+              Delete selected
             %br
-            %br
-            %div
-              %th{ :style => "width: 20%" }
-                Select All Findings &nbsp;&nbsp;&nbsp;&nbsp;
-                %input.checkbox#checkall{ :type => "checkbox" }
-              %a.btn.btn-danger#deletemultiple{ :href => "/master/findings/delete/" }
-                Delete selected
-            %br
-            %style#search_style
-            %span.input-group-btn
-            &nbsp;
-            - settings.finding_types.each do |type|
-              %tr
-                %td{ :colspan => "3" }
-                  %b
-                    #{type}
-                  %i.icon-list#actionButton{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
-                  - col = "collapse out"
-                  - @findings.each do |finding|
-                    - if finding.type == type
-                      - col = "collapse in"
-                  .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class =>"#{col}" }
-                    - if @findings.size > 0
-                      .table.table-hover
-                        %table{ :style => "width: 100%" }
-                          - @findings.each do |finding|
-                            - if finding.type == type
-                              -if @master and !finding.approved
-                                -@class="error"
+          %style#search_style
+          %span.input-group-btn
+          &nbsp;
+          - settings.finding_types.each do |type|
+            %tr
+              %td{ :colspan => "3" }
+                %b
+                  #{type}
+                %i.fas.fa-list{ "data-toggle" => "collapse", "data-target" => "#findings_list_#{type.gsub(' ','_')}" }
+                - col = "collapse out"
+                - @findings.each do |finding|
+                  - if finding.type == type
+                    - col = "collapse in"
+                .findings_list{ :id => "findings_list_#{type.gsub(' ','_')}", :class =>"#{col}" }
+                  - if @findings.size > 0
+                    .table.table-hover
+                      %table{ :style => "width: 100%" }
+                        - @findings.each do |finding|
+                          - if finding.type == type
+                            -if @master and !finding.approved
+                              -@class="error"
+                            - else
+                              -@class=""
+                            %tr{ :class => "#{@class}" }
+                              %td.searchable{ :"data-index" => "#{finding.title.downcase}", :style => "width: 1%" }
+                                %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}" }
+                              %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase}" }
+                                #{finding.title}
+                              - if @dread
+                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                  #{finding.dread_total}
+
+
+                                -#-------------------- set NIST800 rating --------------------#-
+                              - elsif @nist800
+                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                                  #{finding.nist_rating}
+
+                              - elsif @cvss
+                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                  #{finding.cvss_total}
+                              - elsif @cvssv3
+                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                  #{finding.cvss_total}
                               - else
-                                -@class=""
-                              %tr{ :class => "#{@class}" }
-                                %td.searchable{ :"data-index" => "#{finding.title.downcase}", :style => "width: 1%" }
-                                  %input.checkbox{ :type=>"checkbox", :name=>"#{finding.id}" }
-                                %td.searchable{ :style => "width: 70%", :"data-index" => "#{finding.title.downcase}" }
-                                  #{finding.title}
-                                - if @dread
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                    #{finding.dread_total}
-
-
-                                  -#-------------------- set NIST800 rating --------------------#-
-                                - elsif @nist800
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
-                                    #{finding.nist_rating}
-
-                                - elsif @cvss
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                    #{finding.cvss_total}
-                                - elsif @cvssv3
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                    #{finding.cvss_total}
-                                - else
-                                  %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
-                                    - risk_t = ["Informational","Low","Moderate","High","Critical"]
-                                    - if finding.risk
-                                      #{risk_t[finding.risk]}
-                                    - if @dread
-                                      - scr = finding.dread_total/10
-                                      - scr = 4 if dread_total == 50
-                                      #{risk_t[scr]}
-                                - if @master
-                                  %td.searchable{ :style => "text-align:center; width: 20%", :"data-index" => "#{finding.title.downcase}" }
-                                    %a.btn.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
-                                      %i.icon-pencil.icon-white{ :title => "Edit" }
-                                    %a.btn.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
-                                      %i.icon-play-circle.icon-white{ :title => "Preview" }
-                                    %a.btn.btn-danger{ :href => "/master/findings/delete/#{finding.id}" }
-                                      %i.icon-trash.icon-white{ :title => "Delete" }
-          - else
-            :ruby
-              vulns = Hash.new 0
-              if @dread
-                @findings.each do |finding|
-                  next unless finding
-                  if finding.dread_total > 39
-                    vulns["critical"] += 1
-                  elsif finding.dread_total < 40 && finding.dread_total > 24
-                    vulns["severe"] += 1
-                  elsif finding.dread_total < 25 && finding.dread_total > 10
-                    vulns["moderate"] += 1
-                  else finding.dread_total < 10 && finding.dread_total > 0
-                    vulns["low"] += 1
-                  end
+                                %td.searchable{ :style => "width: 10%", :"data-index" => "#{finding.title.downcase}" }
+                                  - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                                  - if finding.risk
+                                    #{risk_t[finding.risk]}
+                                  - if @dread
+                                    - scr = finding.dread_total/10
+                                    - scr = 4 if dread_total == 50
+                                    #{risk_t[scr]}
+                              - if @master
+                                %td.searchable{ :style => "text-align:center; width: 20%", :"data-index" => "#{finding.title.downcase}" }
+                                  %a.btn.btn-sm.btn-warning{ :href => "/master/findings/#{finding.id}/edit" }
+                                    %i.fas.fa-pencil-alt{ :title => "Edit" }
+                                  %a.btn.btn-sm.btn-info{ :href => "/master/findings/#{finding.id}/preview" }
+                                    %i.far.fa-play-circle{ :title => "Preview" }
+                                  %a.btn.btn-sm.btn-danger{ :href => "/master/findings/delete/#{finding.id}" }
+                                    %i.far.fa-trash-alt{ :title => "Delete" }
+        - else
+          :ruby
+            vulns = Hash.new 0
+            if @dread
+              @findings.each do |finding|
+                next unless finding
+                if finding.dread_total > 39
+                  vulns["critical"] += 1
+                elsif finding.dread_total < 40 && finding.dread_total > 24
+                  vulns["severe"] += 1
+                elsif finding.dread_total < 25 && finding.dread_total > 10
+                  vulns["moderate"] += 1
+                else finding.dread_total < 10 && finding.dread_total > 0
+                  vulns["low"] += 1
                 end
-                labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
-              elsif @nist800
-                @findings.each do |finding|
-                  next unless finding
-                  if finding.nist800_total >= 120
-                    vulns["critical"] += 1
-                  elsif finding.nist800_total >= 80 and finding.nist800_total <= 90
-                    vulns["severe"] += 1
-                  elsif finding.nist800_total >= 30 and finding.nist800_total <= 60
-                    vulns["moderate"] += 1
-                  elsif finding.nist800_total >= 1 and finding.nist800_total <= 20
-                    vulns["low"] += 1
-                  else finding.nist800_total == 0
-                    vulns["informational"] += 1
-                  end
+              end
+              labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
+            elsif @nist800
+              @findings.each do |finding|
+                next unless finding
+                if finding.nist800_total >= 120
+                  vulns["critical"] += 1
+                elsif finding.nist800_total >= 80 and finding.nist800_total <= 90
+                  vulns["severe"] += 1
+                elsif finding.nist800_total >= 30 and finding.nist800_total <= 60
+                  vulns["moderate"] += 1
+                elsif finding.nist800_total >= 1 and finding.nist800_total <= 20
+                  vulns["low"] += 1
+                else finding.nist800_total == 0
+                  vulns["informational"] += 1
                 end
-                labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational"}
-              elsif @cvss
-                if @cvssv2_scoring_override
-                  @findings.each do |finding|
-                    next unless finding
-                    if finding.cvss_total >= 9.0
-                      vulns["critical"] += 1
-                    elsif finding.cvss_total >= 7.0
-                      vulns["severe"] += 1
-                    elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
-                      vulns["moderate"] += 1
-                    elsif finding.cvss_total <= 3.9
-                      vulns["low"] += 1
-                    end
-                  end
-                else
-                  @findings.each do |finding|
-                    next unless finding
-                    if finding.cvss_total >= 7.0
-                      vulns["severe"] += 1
-                    elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
-                      vulns["moderate"] += 1
-                    elsif finding.cvss_total <= 3.9
-                      vulns["low"] += 1
-                    end
-                  end
-                end
-                labels = {"label_1" => "Critical (N/A)", "label_2" => "Severe", "label_3" => "Moderate",  "label_4" => "Low" }
-              elsif @cvssv3
+              end
+              labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational"}
+            elsif @cvss
+              if @cvssv2_scoring_override
                 @findings.each do |finding|
                   next unless finding
                   if finding.cvss_total >= 9.0
                     vulns["critical"] += 1
-                  elsif finding.cvss_total >= 7.0 and finding.cvss_total <= 8.9
+                  elsif finding.cvss_total >= 7.0
                     vulns["severe"] += 1
                   elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
                     vulns["moderate"] += 1
@@ -171,164 +142,192 @@
                     vulns["low"] += 1
                   end
                 end
-                labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
               else
                 @findings.each do |finding|
                   next unless finding
-                  if finding.risk == 4
-                    vulns["critical"] += 1
-                  elsif finding.risk == 3
+                  if finding.cvss_total >= 7.0
                     vulns["severe"] += 1
-                  elsif finding.risk == 2
+                  elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
                     vulns["moderate"] += 1
-                  else finding.risk == 1
+                  elsif finding.cvss_total <= 3.9
                     vulns["low"] += 1
                   end
                 end
-                labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
               end
-            - if @chart
-              %div{ :id =>"chart" }
-              %br
-              //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
-              :plain
-                <script src= '/js/d3.js'></script>
-                <script type= "text/javascript">
-                  if(#{@nist800}){
-                  var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}},{"label":"#{labels["label_5"]}", "value": #{vulns["informational"]}}];
-                  }else{
-                  var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
-                  }
-                  var w = 250;
-                  var h = 250;
-                  var r = h/2;
-                  var iw = 60;
-                  if(#{@nist800}){
-                    var color = d3.scale.ordinal()
-                      .range(['#c00000', '#ed7d31', '#0070c0', '#00b050', '#bfbfbf']);
-                  }else{
-                    var color = d3.scale.ordinal()
-                      .range(['#7030A0', '#DC322F', '#F89406', '#0088CC', '#008000']);
-                  }
-                  var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
-                  var pie = d3.layout.pie().value(function(d){return d.value;});
-                  var arc = d3.svg.arc().innerRadius(r - iw).outerRadius(r);
-                  var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
+              labels = {"label_1" => "Critical (N/A)", "label_2" => "Severe", "label_3" => "Moderate",  "label_4" => "Low" }
+            elsif @cvssv3
+              @findings.each do |finding|
+                next unless finding
+                if finding.cvss_total >= 9.0
+                  vulns["critical"] += 1
+                elsif finding.cvss_total >= 7.0 and finding.cvss_total <= 8.9
+                  vulns["severe"] += 1
+                elsif finding.cvss_total >= 4.0 and finding.cvss_total <= 6.9
+                  vulns["moderate"] += 1
+                elsif finding.cvss_total <= 3.9
+                  vulns["low"] += 1
+                end
+              end
+              labels = {"label_1" => "Critical", "label_2" => "Severe", "label_3" => "Moderate", "label_4" => "Low" }
+            else
+              @findings.each do |finding|
+                next unless finding
+                if finding.risk == 4
+                  vulns["critical"] += 1
+                elsif finding.risk == 3
+                  vulns["severe"] += 1
+                elsif finding.risk == 2
+                  vulns["moderate"] += 1
+                else finding.risk == 1
+                  vulns["low"] += 1
+                end
+              end
+              labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
+            end
+          - if @chart
+            %div{ :id =>"chart" }
+            %br
+            //cred to http://jsfiddle.net/ragingsquirrel3/qkHK6 for this
+            :plain
+              <script src= '/js/d3.js'></script>
+              <script type= "text/javascript">
+                if(#{@nist800}){
+                var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}},{"label":"#{labels["label_5"]}", "value": #{vulns["informational"]}}];
+                }else{
+                var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
+                }
+                var w = 250;
+                var h = 250;
+                var r = h/2;
+                var iw = 60;
+                if(#{@nist800}){
+                  var color = d3.scale.ordinal()
+                    .range(['#c00000', '#ed7d31', '#0070c0', '#00b050', '#bfbfbf']);
+                }else{
+                  var color = d3.scale.ordinal()
+                    .range(['#7030A0', '#DC322F', '#F89406', '#0088CC', '#008000']);
+                }
+                var vis = d3.select('#chart').append("svg:svg").data([data]).attr("width", w).attr("height", h).append("svg:g").attr("transform", "translate(" + r + "," + r + ")");
+                var pie = d3.layout.pie().value(function(d){return d.value;});
+                var arc = d3.svg.arc().innerRadius(r - iw).outerRadius(r);
+                var arcs = vis.selectAll("g.slice").data(pie).enter().append("svg:g").attr("class", "slice");
 
-                  arcs.append("svg:path")
-                    .attr("fill", function(d, i){
-                      return color(i);
-                      })
-                    .attr("stroke", "white")
-                    .attr("stroke-width", 2.0)
-                    .attr("d", function (d) {
-                      console.log(arc(d));
-                      return arc(d);
-                    });
-                  arcs.append("svg:text").attr("transform", function(d){
-                    d.innerRadius = 0;
-                    d.outerRadius = r;
-                    return "translate(" + arc.centroid(d) + ")";});
+                arcs.append("svg:path")
+                  .attr("fill", function(d, i){
+                    return color(i);
+                    })
+                  .attr("stroke", "white")
+                  .attr("stroke-width", 2.0)
+                  .attr("d", function (d) {
+                    console.log(arc(d));
+                    return arc(d);
+                  });
+                arcs.append("svg:text").attr("transform", function(d){
+                  d.innerRadius = 0;
+                  d.outerRadius = r;
+                  return "translate(" + arc.centroid(d) + ")";});
 
-                  var legend = d3.select("#chart").append("svg")
-                    .attr("class", "legend")
-                    .attr("width", r)
-                    .attr("height", r * 2)
-                    .selectAll("g")
-                    .data(color.domain().slice())
-                    .enter().append("g")
-                    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+                var legend = d3.select("#chart").append("svg")
+                  .attr("class", "legend")
+                  .attr("width", r)
+                  .attr("height", r * 2)
+                  .selectAll("g")
+                  .data(color.domain().slice())
+                  .enter().append("g")
+                  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
-                  legend.append("rect")
-                    .attr("width", 18)
-                    .attr("height", 18)
-                    .style("fill", color);
+                legend.append("rect")
+                  .attr("width", 18)
+                  .attr("height", 18)
+                  .style("fill", color);
 
-                  legend.append("text")
-                    .attr("x", 24)
-                    .attr("y", 9)
-                    .attr("dy", ".35em")
-                    .text(function( d,i ) {return data[i].label +": " + data[i].value })
-                    .style("font-size","px");
-                </script>
-              %br
-              %br
-            - @findings.each do |finding|
-              %tr{ :class => "#{@class}" }
-                %td
-                  %input.checkbox{ :type => "checkbox", :name => "#{finding.id}" }
-                %td{ :style => "width:60%; max-width: 0px" }
-                  #{finding.title}
-                  - if finding.overview
-                    %i.icon-chevron-down#actionButton{ "data-toggle" => "collapse", "data-target" => "#info_#{finding.id}" }
-                    .info.collapse.out{ :id => "info_#{finding.id}" }
-                      #{finding.overview.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
-                      - if !@master
-                        - if finding.notes
-                          %br
-                          %br
-                          %b
-                            %u Notes
-                          - if finding.notes.length > 1
-                            #{finding.notes.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
-                          - else
-                            None.
-                -# Show finding state if the list of states is configured. #-
-                - if settings.finding_states != nil
-                  %td{ :style => "text-align:center" }
-                    - if finding.state
-                      #{settings.finding_states[finding.state] || settings.finding_states[0]}
-                    - else
-                      -# Default to the first state #-
-                      #{settings.finding_states[0]}
-                - if @dread
-                  %td{ :style => "text-align:center" }
-                    #{finding.dread_total}
-
-                  -#-------------------- display risk score NIST800 in current findings section --------------------#-
-                - elsif @nist800
-                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
-                    #{finding.nist_rating}
-
-                - elsif @cvss
-                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
-                    #{finding.cvss_total}
-                - elsif @cvssv3
-                  %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
-                    #{finding.cvss_total}
-                - elsif @riskmatrix
-                  %td{ :style => "text-align:center" }
-                    - risk_t = ["None","Low","Moderate","High","Critical"]
-                    #{risk_t[finding.risk]}
-                - else
-                  %td{ :style => "text-align:center" }
-                    - risk_t = ["Informational","Low","Moderate","High","Critical"]
-                    - if finding.risk
-                      #{risk_t[finding.risk]}
-                    - else
-                      - scr = finding.dread_total/10
-                      - scr = 4 if finding.dread_total == 50
-                      #{risk_t[scr]}
-                %td
-                  %a.btn.btn-warning{ :href => "/report/#{@report.id}/findings/#{finding.id}/edit" }
-                    %i.icon-pencil.icon-white{ :title => "Edit" }
-                  %a.btn.btn-info{ :href => "/report/#{@report.id}/findings/#{finding.id}/preview" }
-                    %i.icon-play-circle.icon-white{ :title => "Preview" }
-                  %a.btn.btn-inverse{ :href => "/report/#{@report.id}/findings/#{finding.id}/upload" }
-                    %i.icon-arrow-up.icon-white{ :title => "Add to the findings database" }
-                  %a.btn.btn-danger{ :href => "/report/#{@report.id}/findings/remove/#{finding.id}" }
-                    %i.icon-trash.icon-white{ :title => "Delete" }
-            %a.btn.btn-danger#deletemultiple{ :href => "/report/#{@report.id}/findings/remove/" }
+                legend.append("text")
+                  .attr("x", 24)
+                  .attr("y", 9)
+                  .attr("dy", ".35em")
+                  .text(function( d,i ) {return data[i].label +": " + data[i].value })
+                  .style("font-size","px");
+              </script>
+            %br
+            %br
+            %a#deletemultiple.btn.btn-danger{ :href => "/report/#{@report.id}/findings/remove/" }
               Delete selected
-  - else
-    No Findings Available
+            %br
+            %br
+          - @findings.each do |finding|
+            %tr{ :class => "#{@class}" }
+              %td
+                %input.checkbox{ :type => "checkbox", :name => "#{finding.id}" }
+              %td{ :style => "width:60%; max-width: 0px" }
+                #{finding.title}
+                - if finding.overview
+                  %i.fas.fa-chevron-down{ "data-toggle" => "collapse", "data-target" => "#info_#{finding.id}" }
+                  .info.collapse.out{ :id => "info_#{finding.id}" }
+                    #{finding.overview.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                    - if !@master
+                      - if finding.notes
+                        %br
+                        %br
+                        %b
+                          %u Notes
+                        - if finding.notes.length > 1
+                          #{finding.notes.gsub("<paragraph>","<br/>").gsub("</paragraph>","").gsub("<bullet>","&#x2022;").gsub("</bullet>","")}
+                        - else
+                          None.
+              -# Show finding state if the list of states is configured. #-
+              - if settings.finding_states != nil
+                %td{ :style => "text-align:center" }
+                  - if finding.state
+                    #{settings.finding_states[finding.state] || settings.finding_states[0]}
+                  - else
+                    -# Default to the first state #-
+                    #{settings.finding_states[0]}
+              - if @dread
+                %td{ :style => "text-align:center" }
+                  #{finding.dread_total}
+
+                -#-------------------- display risk score NIST800 in current findings section --------------------#-
+              - elsif @nist800
+                %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase.gsub(' ','')}" }
+                  #{finding.nist_rating}
+
+              - elsif @cvss
+                %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
+                  #{finding.cvss_total}
+              - elsif @cvssv3
+                %td.searchable{ :style => "text-align:center", :"data-index" => "#{finding.title.downcase}" }
+                  #{finding.cvss_total}
+              - elsif @riskmatrix
+                %td{ :style => "text-align:center" }
+                  - risk_t = ["None","Low","Moderate","High","Critical"]
+                  #{risk_t[finding.risk]}
+              - else
+                %td{ :style => "text-align:center" }
+                  - risk_t = ["Informational","Low","Moderate","High","Critical"]
+                  - if finding.risk
+                    #{risk_t[finding.risk]}
+                  - else
+                    - scr = finding.dread_total/10
+                    - scr = 4 if finding.dread_total == 50
+                    #{risk_t[scr]}
+              %td
+                %a.btn.btn-sm.btn-warning{ :href => "/report/#{@report.id}/findings/#{finding.id}/edit" }
+                  %i.fas.fa-pencil-alt{ :title => "Edit" }
+                %a.btn.btn-sm.btn-info{ :href => "/report/#{@report.id}/findings/#{finding.id}/preview" }
+                  %i.far.fa-play-circle{ :title => "Preview" }
+                %a.btn.btn-sm.btn-dark{ :href => "/report/#{@report.id}/findings/#{finding.id}/upload" }
+                  %i.fas.fa-arrow-up{ :title => "Add to the findings database" }
+                %a.btn.btn-sm.btn-danger{ :href => "/report/#{@report.id}/findings/remove/#{finding.id}" }
+                  %i.far.fa-trash-alt{ :title => "Delete" }
+- else
+  No Findings Available
 
 :javascript
   function confirmUploaded(evt) {
     alert('Nice work! Finding uploaded to the local database.');
   }
 
-  var inverseElements = $('a.btn-inverse');
+  var inverseElements = $('a.btn-dark');
   for (var index = 0, length = inverseElements.length; index < length; index++) {
     inverseElements[index].addEventListener('click', confirmUploaded, false);
   }

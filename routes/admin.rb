@@ -665,6 +665,10 @@ get '/admin/udo_template/:template_id/edit' do
   @udo_to_edit = UserDefinedObjectTemplates.get(params[:template_id])
   return 'No such UDO Template' if @udo_to_edit.nil?
   @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   haml :udo_template_edit
 end
 
