@@ -51,7 +51,7 @@
                           - @findings.each do |finding|
                             - if finding.type == type
                               -if @master and !finding.approved
-                                -@class="error"
+                                -@class="table-danger"
                               - else
                                 -@class=""
                               %tr{ :class => "#{@class}" }
