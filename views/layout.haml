@@ -1,20 +1,10 @@
 !!!
 %html{ :lang => "en" }
   %head
-    %script{ :src => "/js/jquery-3.1.1.js" }
+    %script{ :src => "/js/jquery-3.3.1.min.js" }
     %script{ :src => "/js/jquery-migrate-3.0.0.min.js" }
-    %script{ :src => "/js/bootstrap-collapse.js" }
-    %script{ :src => "/js/bootstrap-transition.js" }
-    %script{ :src => "/js/bootstrap-alert.js" }
-    %script{ :src => "/js/bootstrap-modal.js" }
-    %script{ :src => "/js/bootstrap-dropdown.js" }
-    %script{ :src => "/js/bootstrap-scrollspy.js" }
-    %script{ :src => "/js/bootstrap-tab.js" }
-    %script{ :src => "/js/bootstrap-tooltip.js" }
-    %script{ :src => "/js/bootstrap-popover.js" }
-    %script{ :src => "/js/bootstrap-button.js" }
-    %script{ :src => "/js/bootstrap-carousel.js" }
-    %script{ :src => "/js/bootstrap-typeahead.js" }
+
+    %script{ :src => "/bootstrap-4.3.1/js/bootstrap.js" }
     %script{ :src => "/js/format_shortcut.js" }
     %script{ :src => "/js/helpers.js" }
 
@@ -22,167 +12,170 @@
     %title Serpico
     %meta{ :content => "", :name => "description" }/
     %meta{ :content => "", :name => "author" }/
-    %link{ :href => "/css/bootstrap.css", :rel => "stylesheet" }/
-    %link{ :href => "/css/bootstrap-responsive.css", :rel => "stylesheet" }/
-    %link{ :href => "/css/font-awesome.css", :rel => "stylesheet" }/
-    :css
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
-      .padded {
-        padding-top: 20px;
-        padding-bottom: 5px;
-        padding-left: 5px;
-        padding-right: 0px;
-      }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
-      .orange {
-        background-color: #ffa500;
-      }
-      .btn-navbar.padded {
-        margin-top: 22px;
-      }
 
-      @media (max-width: 979px) {
-        body {
-          padding-top: 0px;
-        }
-      }
+    %link{ :href => "/css/main.css", :rel => "stylesheet" }/
+    %link{ :href => "/bootstrap-4.3.1/css/bootstrap.css", :rel => "stylesheet" }/
+    %link{ :href => "/fontawesome-5.7.2/css/all.css", :rel => "stylesheet" }/
 
-      %link{ :href => "/css/bootstrap-responsive.css", :rel => "stylesheet" }
   - if valid_session?
     %body
-      .navbar.navbar-fixed-top
-        .navbar-inner
-          %ul.nav.padded
-            %li
-              %a.fa.fa-file-word-o{ :href => "/reports/list" } &nbsp;List Reports
-            %li
-              %a.fa.fa-pencil-square-o{ :href => "/report/new" } &nbsp;New Report
+      %nav.navbar.navbar-dark.fixed-top.bg-dark.navbar-expand-md.shadow
+        %button.navbar-toggler{ :type => "button", "data-toggle" => "collapse", "data-target" => "#navbarCollapse", "aria-controls" => "navbarCollapse", "aria-expanded" => "false", "aria-label" => "Toggle navigation" }
+          %span.navbar-toggler-icon
+        %div#navbarCollapse.collapse.navbar-collapse
+          %ul.navbar-nav.mr-auto
+            %li.nav-item
+              %a.nav-link{ :href => "/reports/list" }
+                %i.far.fa-file-word
+                List Reports
+            %li.nav-item
+              %a.nav-link{ :href => "/report/new" }
+                %i.far.fa-edit
+                New Report
+          %ul.navbar-nav.ml-auto
+            - if is_administrator?
+              %li.nav-item.text-nowrap
+                %a.nav-link{ :href => "/master/findings" }
+                  %i.fas.fa-sitemap
+                  Findings Database
+            %li.nav-item.text-nowrap
+              %a.nav-link{ :href => "/info" }
+                %i.fas.fa-info-circle
+                Consultant Information
+            %li.nav-item.text-nowrap
+              %a.nav-link{ :href => "/reset" }
+                %i.far.fa-life-ring
+                Change Password
+            %li.nav-item.text-nowrap
+              %a.nav-link{ :href => "/logout" }
+                %i.fas.fa-sign-out-alt
+                Logout
 
-          %a.btn.btn-navbar.padded{ "data-toggle" => "collapse", "data-target" => ".nav-collapse" }
-            %span.icon-bar
-            %span.icon-bar
-            %span.icon-bar
-
-          .nav-collapse.collapse
-            %ul.nav.pull-right.padded
-              - if is_administrator?
-                %li
-                  %a.fa.fa-sitemap{ :href => "/master/findings" } &nbsp;Findings Database
-                %li
-                  %a.fa.fa-reorder{ :href => "/admin/" } &nbsp;Administration
-              %li
-                %a.fa.fa-tasks{ :href => "/info" } &nbsp;Consultant Information
-              %li
-                %a.fa.fa-support{ :href => "/reset" } &nbsp;Change Password
-              %li
-                %a.fa.fa-external-link-square{ :href => "/logout" } &nbsp;Logout
-
-      <br>
       .container-fluid
-        - if @master
-          %div.alert.alert-danger
-            %strong WARNING
-            %br
-            You are editing the Templates Database
-          %br
-        .row-fluid
-          .span2
-            %br
-            - if @master
-              %ul.nav.nav-list
-                %li.nav-header Findings Menu
-                %li
-                  %a{ :href => "/master/findings" } List Current Findings
-                %li
-                  %a{ :href => "/master/findings/new" } Add Finding
-              %ul.nav.nav-list
-                %li.nav-header Database Functions
-                %li
-                  %a{ :href => "/master/export" } Export Current Findings
-                %li
-                  %a{ :href => "/master/import" } Import Findings
-            - elsif @admin
-              %ul.nav.nav-list
-                %li.nav-header Admin User Menu
-                %li
-                  %a{ :href => "/admin/add_user" } Add User
-                %li
-                  %a{ :href => "/admin/list_user" } List Users
-                %li.nav-header Admin Report Template Menu
-                %li
-                  %a{ :href => "/admin/templates/add" } Add Report Template
-                %li
-                  %a{ :href => "/admin/templates" } List Report Templates
-                %li
-                  %a{ :href => "/admin/udo_templates" } Manage UDOs templates for reports
-                %li.nav-header Plugin Menu
-                %li
-                  %a{ :href => "/admin/plugins" } Enable/Disable Plugins
-                %li
-                  %a{ :href => "/admin/admin_plugins" } Administrator Specific Plugins
-                %li.nav-header Maintenance Menu
-                %li
-                  %a{ :href => "/admin/config" } Modify Configurations
-                %li
-                  %a{ :href => "/admin/dbbackup" } Backup Master Database
-                  %a{ :href => "/admin/attacments_backup" } Backup All Attachments
+        .row
+          %nav.col-md-2.d-none.d-md-block.bg-light.sidebar
+            .sidebar-sticky
+              - if @master
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Findings Menu
+                %ul.nav.flex-column
+                  %li.nav-item
+                    %a.nav-link{ :href => "/master/findings" } List Current Findings
+                  %li.nav-item
+                    %a.nav-link{ :href => "/master/findings/new" } Add Finding
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Database Functions
+                %ul.nav.flex-column
+                  %li.nav-item
+                    %a.nav-link{ :href => "/master/export" } Export Current Findings
+                  %li.nav-item
+                    %a.nav-link{ :href => "/master/import" } Import Findings
+
+              - elsif @admin
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Admin User Menu
+                %ul.nav.flex-column
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/add_user" } Add User
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/list_user" } List Users
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Admin Report Template Menu
+                %ul.nav.flex-column
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/templates/add" } Add Report Template
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/templates" } List Report Templates
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/udo_templates" } Manage UDOs templates for reports
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Plugin Menu
+                %ul.nav.flex-column
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/plugins" } Enable/Disable Plugins
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/admin_plugins" } Administrator Specific Plugins
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Maintenance Menu
+                %ul.nav.flex-column
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/config" } Modify Configurations
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/dbbackup" } Backup Master Database
+                  %li.nav-item
+                    %a.nav-link{ :href => "/admin/attacments_backup" } Backup All Attachments
+
                 - @version = File.open("VERSION.txt").read()
-                %li.nav-header Serpico Version: #{@version}
+                %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                  %span Serpico Version: #{@version}
 
-            - else
-              - if @report
-                %ul.nav.nav-list
-                  %li.nav-header
-                    #{@report.report_name}
-                  %li
-                    %a{ :href => "/report/#{@report.id}/edit" } Edit Report Information
-                  %li
-                    %a{ :href => "/report/#{@report.id}/generate" } Generate Report
-                    %li.nav-header Findings
-                  %li
-                    %a{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
-                  %li
-                    %a{ :href => "/report/#{@report.id}/findings_add" } Add Finding from Templates
-                  %li
-                    %a{ :href => "/report/#{@report.id}/findings/new" } Create New Finding
-                  %li
-                    %a{ :href => "/report/#{@report.id}/import_scan_data" } Import Findings from Scan Data **<em>Beta</em>**
-                  %li.nav-header Attachments
-                  %li
-                    %a{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
-                  %li
-                    %a{ :href => "/report/#{@report.id}/attachments" } List Attachments
-                  %li.nav-header Metasploit Data Management
-                  %li
-                    %a{ :href => "/report/#{@report.id}/hosts" } Hosts
-                  %li
-                    %a{ :href => "/report/#{@report.id}/vulns" } Vulnerabilities
-                  %li
-                    %a{ :href => "/report/#{@report.id}/services" } Services
-                  %li.nav-header Additional
-                  %li
-                    %a{ :href => "/report/#{@report.id}/additional_features" } Additional Features
-              - if @plugin_side_menu
-                %ul.nav.nav-list
-                  %li.nav-header Enabled Plugins
+              - else
+                - if @report
+                  %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                    %span #{@report.report_name}
+                  %ul.nav.flex-column
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/edit" } Edit Report Information
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/generate" } Generate Report
+                  %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                    %span Findings
+                  %ul.nav.flex-column
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/findings" } List Current Report Findings
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/findings_add" } Add Finding from Templates
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/findings/new" } Create New Finding
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/import_scan_data" } Import Findings from Scan Data **<em>Beta</em>**
+                  %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                    %span Attachments
+                  %ul.nav.flex-column
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/upload_attachments" } Upload New Attachment
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/attachments" } List Attachments
+                  %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                    %span Metasploit Data Management
+                  %ul.nav.flex-column
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/hosts" } Hosts
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/vulns" } Vulnerabilities
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/services" } Services
+                  %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                    %span Additional
+                  %ul.nav.flex-column
+                    %li.nav-item
+                      %a.nav-link{ :href => "/report/#{@report.id}/additional_features" } Additional Features
+
+                - if @plugin_side_menu
+                  %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-muted
+                    %span Enabled Plugins
                   -@plugin_side_menu.each do |item|
-                    %li
-                      %a{ :href => "#{item["link"]}?report_id=#{@report.id}" } #{item["name"]}
+                    %ul.nav.flex-column
+                      %li.nav-item
+                        %a.nav-link{ :href => "#{item["link"]}?report_id=#{@report.id}" } #{item["name"]}
+          %main.col-md-9.ml-sm-auto.col-lg-10.px-4.mb-5{ :role => "main" }
+            - if @master
+              .alert.alert-danger
+                %strong WARNING
+                %br
+                You are editing the Templates Database
+              %br
+            =yield
 
-          =yield
   - else
-    %body
-    %link{ :href => "/css/signin.css", :rel => "stylesheet", :type => "text/css" }
-    .container
-    %form.form-signin{ :action => "/login", :method => "POST", :role => "form" }
-      %img.text-center{ :src => "#{@logo}", :height => 150, :width =>  500 }
-      %br
-      %br
-      %input.form-control.btn-block{ :autofocus => "", :placeholder => "Username", :required => "", :type => "text", :name=> "username" }
-      %input.form-control.btn-block{ :placeholder => "Password", :required => "", :type => "password", :name=> "password", :autocomplete => "off" }
-      %button.btn.btn-signin.btn-block.form-control{ :type => "submit" } Sign in
+    %body.text-center
+      %link{ :href => "/css/signin.css", :rel => "stylesheet" }/
+      %form.form-signin{ :action => "/login", :method => "POST", :role => "form" }
+        %img.mb-4{ :src => "#{@logo}", :height => 245, :width =>  300 }
+        .form-label-group.mb-2
+          %label.sr-only{ :for => "username" } Username
+          %input#username.form-control{ :autofocus => "", :placeholder => "Username", :required => "", :type => "text", :name=> "username" }
+        .form-label-group.mb-4
+          %label.sr-only{ :for => "password" } Password
+          %input#password.form-control{ :placeholder => "Password", :required => "", :type => "password", :name=> "password", :autocomplete => "off" }
+        %button.btn.btn-lg.btn-primary.btn-block{ :type => "submit" } Sign in

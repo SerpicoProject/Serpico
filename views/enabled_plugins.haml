@@ -1,19 +1,13 @@
-.col-md-10
-  %br
-  %h2 Administrator Specific Plugins
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Administrator Specific Plugins
 
-  - if @menu.size > 0
-    .table
-      %table{ :style => "width: 90%" }
-        %tbody
-          - @menu.each do |item|
-            %tr
-              %td
-                #{item["name"]}
-              %td
-                #{item["description"]}
-              %td
-                %a{ :href => "#{item["link"]}" } #{item["name"]}
-  - else
-    No administrator specific plugins found.
+- if @menu.size > 0
+  - @menu.each do |item|
+    .form-group.row
+      .col-lg-2
+        %b #{item["name"]}
+      .col-lg-6 #{item["description"]}
+      .col-lg-2
+        %a{ :href => "#{item["link"]}" } #{item["name"]}
+- else
+  No administrator specific plugins found.

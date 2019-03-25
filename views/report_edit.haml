@@ -1,192 +1,151 @@
-.col-md-10
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 #{@report.report_name}
+
+- if @templates.size > 0
+  %h2.h4
+    Modify the information that will appear in the report.
+  %br
   %form{ :method => "post" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "report_type" } Report Type
+      .col-lg-4
+        %select#report_type.custom-select{ :name => "report_type" }
+          - @templates.each do |template|
+            - if template.finding_template == false and template.status_template == false
+              - if template.report_type == @report.report_type
+                %option{ :selected => "selected" } #{template.report_type}
+              - else
+                %option #{template.report_type}
+    - if @languages and @languages.size > 1
+      .form-group.row
+        %label.col-lg-2.col-form-label{ :for => "language" } Language
+        .col-lg-4
+          %select#language.custom-select{ :name => "language" }
+            - @languages.each do |language|
+              - if language == @report.language
+                %option{ :selected => "selected" } #{language}
+              - else
+                %option #{language}
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "report_name" } Title
+      .col-lg-4
+        %input#report_name.form-control{ :type => "text", :name => "report_name", :value => "#{CGI.unescapeHTML(@report.report_name)}", :required => true }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "assessment_type" } Assessment Type
+      .col-lg-4
+        %select#assessment_type.custom-select{ :name => "assessment_type" }
+          - @assessment_types.each do |assessment_type|
+            - if assessment_type == @report.assessment_type
+              %option{ :selected => "selected" } #{assessment_type}
+            - else
+              %option #{assessment_type}
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "scoring" } Scoring Type
+      .col-lg-4
+        %select#scoring.custom-select{ :name => "scoring" }
+          - @risk_scores.each do |risk_score|
+            - if risk_score.downcase == @report.scoring.downcase
+              %option{ :selected => "selected" } #{risk_score}
+            - else
+              %option #{risk_score}
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "full_company_name" } Full Company Name
+      .col-lg-4
+        - if @report.full_company_name
+          %input#full_company_name.form-control{ :type => "text", :name => "full_company_name", :value => "#{CGI.unescapeHTML(@report.full_company_name)}" }
+        -else
+          %input#full_company_name.form-control{ :type => "text", :name => "full_company_name" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "short_company_name" } Short Company Name
+      .col-lg-4
+        - if @report.short_company_name
+          %input#short_company_name.form-control{ :type => "text", :name => "short_company_name", :value => "#{CGI.unescapeHTML(@report.short_company_name)}" }
+        -else
+          %input#short_company_name.form-control{ :type => "text", :name => "short_company_name" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "company_website" } Company Website
+      .col-lg-4
+        - if @report.company_website
+          %input#company_website.form-control{ :type => "text", :name => "company_website", :value => "#{CGI.unescapeHTML(@report.company_website)}" }
+        -else
+          %input#company_website.form-control{ :type => "text", :name => "company_website" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_address" } Company Address
+      .col-lg-4
+        - if @report.contact_address
+          %input#contact_address.form-control{ :type => "text", :name => "contact_address", :value => "#{CGI.unescapeHTML(@report.contact_address)}" }
+        -else
+          %input#contact_address.form-control{ :type => "text", :name => "contact_address" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_city" } Company City
+      .col-lg-4
+        - if @report.contact_city
+          %input#contact_city.form-control{ :type => "text", :name => "contact_city", :value => "#{CGI.unescapeHTML(@report.contact_city)}" }
+        -else
+          %input#contact_city.form-control{ :type => "text", :name => "contact_city" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_state" } State
+      .col-lg-4
+        - if @report.contact_state
+          %input#contact_state.form-control{ :type => "text", :name => "contact_state", :value => "#{CGI.unescapeHTML(@report.contact_state)}" }
+        -else
+          %input#contact_state.form-control{ :type => "text", :name => "contact_state" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_zip" } Company Zip
+      .col-lg-4
+        - if @report.contact_zip
+          %input#contact_zip.form-control{ :type => "text", :name => "contact_zip", :value => "#{CGI.unescapeHTML(@report.contact_zip)}" }
+        -else
+          %input#contact_zip.form-control{ :type => "text", :name => "contact_zip" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_zip" } Contact Name
+      .col-lg-4
+        - if @report.contact_name
+          %input#contact_name.form-control{ :type => "text", :name => "contact_name", :value => "#{CGI.unescapeHTML(@report.contact_name)}" }
+        -else
+          %input#contact_name.form-control{ :type => "text", :name => "contact_name" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_email" } Contact E-Mail
+      .col-lg-4
+        - if @report.contact_email
+          %input#contact_email.form-control{ :type => "email", :name => "contact_email", :value => "#{CGI.unescapeHTML(@report.contact_email)}" }
+        -else
+          %input#contact_email.form-control{ :type => "email", :name => "contact_email" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_title" } Contact Title
+      .col-lg-4
+        - if @report.contact_title
+          %input#contact_title.form-control{ :type => "text", :name => "contact_title", :value => "#{CGI.unescapeHTML(@report.contact_title)}" }
+        -else
+          %input#contact_title.form-control{ :type => "text", :name => "contact_title" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "contact_phone" } Contact Phone
+      .col-lg-4
+        - if @report.contact_phone
+          %input#contact_phone.form-control{ :type => "tel", :name => "contact_phone", :value => "#{@report.contact_phone}" }
+        -else
+          %input#contact_phone.form-control{ :type => "tel", :name => "contact_phone" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "assessment_start_date" } Assessment Start Date
+      .col-lg-4
+        - if @report.assessment_start_date
+          %input#assessment_start_date.form-control{ :type => "date", :name => "assessment_start_date", :value => "#{@report.assessment_start_date}" }
+        -else
+          %input#assessment_start_date.form-control{ :type => "date", :name => "assessment_start_date" }
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "assessment_end_date" } Assessment End Date
+      .col-lg-4
+        - if @report.assessment_end_date
+          %input#assessment_end_date.form-control{ :type => "date", :name => "assessment_end_date", :value => "#{@report.assessment_end_date}" }
+        -else
+          %input#assessment_end_date.form-control{ :type => "date", :name => "assessment_end_date" }
+
+    %input{ :type => "hidden", :name => "id", :value => "#{@report.id}" }
+
     %br
-    %h2 #{@report.report_name}
-    %br
-    - if @templates.size > 0
-      %h4
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modify the information that will appear in the report.
-      %br
-      .table.table-striped
-        %table{ :style => "width: 70%" }
-          %tbody
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "report_type" }
-                  Report Type
-              %td{ :style => "width: 70%" }
-                %select#report_type{ :name => "report_type" }
-                  - @templates.each do |template|
-                    - if template.finding_template == false and template.status_template == false
-                      - if template.report_type == @report.report_type
-                        %option{ :selected => "selected" } #{template.report_type}
-                      - else
-                        %option #{template.report_type}
-            - if @languages and @languages.size > 1
-              %tr
-                %td{ :style => "width: 30%" }
-                  %label.col-md-3{ :for => "language" }
-                    Language
-                %td{ :style => "width: 70%" }
-                  %select#language{ :name => "language" }
-                    - @languages.each do |language|
-                      - if language == @report.language
-                        %option{ :selected => "selected" } #{language}
-                      - else
-                        %option #{language}
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "report_name" }
-                  Title
-              %td{ :style => "width: 70%" }
-                %input#report_name{ :type => "text", :style => "width: 90%", :name => "report_name", :value => "#{CGI.unescapeHTML(@report.report_name)}" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "assessment_type" }
-                  Assessment Type
-              %td{ :style => "width: 70%" }
-                %select#assessment_type{ :name => "assessment_type" }
-                  - @assessment_types.each do |assessment_type|
-                    - if assessment_type == @report.assessment_type
-                      %option{ :selected => "selected" } #{assessment_type}
-                    - else
-                      %option #{assessment_type}
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "scoring" }
-                  Scoring Type
-              %td{ :style => "width: 70%" }
-                %select#scoring{ :name => "scoring" }
-                  - @risk_scores.each do |risk_score|
-                    - if risk_score.downcase == @report.scoring.downcase
-                      %option{ :selected => "selected" } #{risk_score}
-                    - else
-                      %option #{risk_score}
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "full_company_name" }
-                  Full Company Name
-              %td{ :style => "width: 70%" }
-                - if @report.full_company_name
-                  %input#full_company_name{ :type => "text", :style => "width: 90%", :name => "full_company_name", :value => "#{CGI.unescapeHTML(@report.full_company_name)}" }
-                -else
-                  %input#full_company_name{ :type => "text", :style => "width: 90%", :name => "full_company_name" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "short_company_name" }
-                  Short Company Name
-              %td{ :style => "width: 70%" }
-                - if @report.short_company_name
-                  %input#short_company_name{ :type => "text", :style => "width: 90%", :name => "short_company_name", :value => "#{CGI.unescapeHTML(@report.short_company_name)}" }
-                -else
-                  %input#short_company_name{ :type => "text", :style => "width: 90%", :name => "short_company_name" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "company_website" }
-                  Company Website
-              %td{ :style => "width: 70%" }
-                - if @report.company_website
-                  %input#company_website{ :type => "text", :style => "width: 90%", :name => "company_website", :value => "#{CGI.unescapeHTML(@report.company_website)}" }
-                -else
-                  %input#company_website{ :type => "text", :style => "width: 90%", :name => "company_website" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_address" }
-                  Company Address
-              %td{ :style => "width: 70%" }
-                - if @report.contact_address
-                  %input#contact_address{ :type => "text", :style => "width: 90%", :name => "contact_address", :value => "#{CGI.unescapeHTML(@report.contact_address)}" }
-                -else
-                  %input#contact_address{ :type => "text", :style => "width: 90%", :name => "contact_address" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_city" }
-                  Company City
-              %td{ :style => "width: 70%" }
-                - if @report.contact_city
-                  %input#contact_city{ :type => "text", :style => "width: 90%", :name => "contact_city", :value => "#{CGI.unescapeHTML(@report.contact_city)}" }
-                -else
-                  %input#contact_city{ :type => "text", :style => "width: 90%", :name => "contact_city" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_state" }
-                  State
-              %td{ :style => "width: 70%" }
-                - if @report.contact_state
-                  %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state", :value => "#{CGI.unescapeHTML(@report.contact_state)}" }
-                -else
-                  %input#contact_state{ :type => "text", :style => "width: 90%", :name => "contact_state" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_zip" }
-                  Company Zip
-              %td{ :style => "width: 70%" }
-                - if @report.contact_zip
-                  %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip", :value => "#{CGI.unescapeHTML(@report.contact_zip)}" }
-                -else
-                  %input#contact_zip{ :type => "text", :style => "width: 90%", :name => "contact_zip" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_name" }
-                  Contact Name
-              %td{ :style => "width: 70%" }
-                - if @report.contact_name
-                  %input#contact_name{ :type => "text", :style => "width: 90%", :name => "contact_name", :value => "#{CGI.unescapeHTML(@report.contact_name)}" }
-                -else
-                  %input#contact_name{ :type => "text", :style => "width: 90%", :name => "contact_name" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_email" }
-                  Contact E-Mail
-              %td{ :style => "width: 70%" }
-                - if @report.contact_email
-                  %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email", :value => "#{CGI.unescapeHTML(@report.contact_email)}" }
-                -else
-                  %input#contact_email{ :type => "email", :style => "width: 90%", :name => "contact_email" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_title" }
-                  Contact Title
-              %td{ :style => "width: 70%" }
-                - if @report.contact_title
-                  %input#contact_title{ :type => "text", :style => "width: 90%", :name => "contact_title", :value => "#{CGI.unescapeHTML(@report.contact_title)}" }
-                -else
-                  %input#contact_title{ :type => "text", :style => "width: 90%", :name => "contact_title" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "contact_phone" }
-                  Contact Phone
-              %td{ :style => "width: 70%" }
-                - if @report.contact_phone
-                  %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone", :value => "#{@report.contact_phone}" }
-                -else
-                  %input#contact_phone{ :type => "tel", :style => "width: 90%", :name => "contact_phone" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "assessment_start_date" }
-                  Assessment Start Date
-              %td{ :style => "width: 70%" }
-                - if @report.assessment_start_date
-                  %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date", :value => "#{@report.assessment_start_date}" }
-                -else
-                  %input#assessment_start_date{ :type => "date", :style => "width: 90%", :name => "assessment_start_date" }
-            %tr
-              %td{ :style => "width: 30%" }
-                %label.col-md-3{ :for => "assessment_end_date" }
-                  Assessment End Date
-              %td{ :style => "width: 70%" }
-                - if @report.assessment_end_date
-                  %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date", :value => "#{@report.assessment_end_date}" }
-                -else
-                  %input#assessment_end_date{ :type => "date", :style => "width: 90%", :name => "assessment_end_date" }
+    %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+    %a.btn.btn-secondary{ :href => "/report/#{@report.id}/edit" }
+      Cancel
 
-      %input{ :type => "hidden", :name => "id", :value => "#{@report.id}" }
-
-      %br
-      %input.btn.btn-default{ :type => "submit", :value => "Save" }
-      %a.btn.btn-default{ :href => "/report/#{@report.id}/edit" }
-        Cancel
-
-    - else
-      %h3
-        Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-
+- else
+  %h2.h4 Hrm, there don't seem to be any report templates. An admin will need to <a href="/admin/templates/add">add</a> one -_-

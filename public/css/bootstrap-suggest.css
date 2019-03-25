@@ -1,23 +1,26 @@
+/*!
+ * bootstra-suggest -  v2.0.1 (https://github.com/lodev09/bootstrap-suggest#readme)
+ * Copyright 2013-2019 Jovanni Lo (lodev09@gmail.com)
+ * Licensed under MIT (https://github.com/lodev09/bootstrap-suggest/blob/master/LICENSE)
+ */
+
 .suggest {
-    top: 7px;
-    z-index: 30;
-    text-align: left;
+  /* position: relative; */
+  top: 7px;
+  z-index: 30;
+  text-align: left;
 }
-.suggest>.dropdown-menu {
-    margin-top: 15px;
-    position: absolute;
-    padding: 0;
+
+.suggest > .dropdown-menu {
+  margin-top: 15px;
+  position: absolute;
 }
-.suggest>.dropdown-menu>li {
-    border-bottom: 1px solid #eee;
+
+.suggest > .dropdown-menu > a.dropdown-item {
+  border-top: 1px solid #eeeeee;
+  padding: 5px 10px;
 }
-.suggest>.dropdown-menu>li>a {
-    padding: 5px 10px;
-    cursor: default;
-}
-.suggest>.dropdown-menu>li>a:hover *, .suggest>.dropdown-menu>li.active>a * {
-    color: inherit!important;
-}
-.suggest>.dropdown-menu>li:last-child {
-    border-bottom: 0;
+
+.suggest > .dropdown-menu > a.dropdown-item:first-child {
+  border-top: 0;
 }

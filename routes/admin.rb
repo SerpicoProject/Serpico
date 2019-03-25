@@ -609,6 +609,10 @@ end
 
 # get enabled plugins
 get '/admin/admin_plugins' do
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   @menu = get_plugin_list('admin')
   haml :enabled_plugins
 end
@@ -623,6 +627,10 @@ get '/admin/udo_templates' do
     udo_template.destroy
   end
   @udos_templates = UserDefinedObjectTemplates.all
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   haml :user_defined_object_templates
 end
 
@@ -657,6 +665,10 @@ get '/admin/udo_template/:template_id/edit' do
   @udo_to_edit = UserDefinedObjectTemplates.get(params[:template_id])
   return 'No such UDO Template' if @udo_to_edit.nil?
   @udo_to_edit_properties = JSON.parse(@udo_to_edit.udo_properties)
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   haml :udo_template_edit
 end
 

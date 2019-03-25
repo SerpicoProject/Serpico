@@ -1,55 +1,56 @@
-.span9.indent3
-  %br
-    .table.table-striped#mytable
-      %table{ :style => "width: 80%" }
-        %tbody
-          - if @reports.size > 0
-            %input.form-control#search{ :type => "text", :placeholder => "Report Name Search" }
-            %style#search_style
-            %span.input-group-btn
-            %br
-            %br
-            %a.btn.btn-danger#deletemultiple{ :href => "/report/remove/" }
-              Delete selected
-            %br
-            %br
-            %trd
-              %th
-                %input.checkbox#checkall{ :type => "checkbox" }
-              %th{ :style => "width: 60%" }
-                Report Name
-              %th{ :style => "width: 10%" }
-                Customer
-              %th{ :style => "width: 10%" }
-                Owner
-              %th{ :style => "width: 20%" }
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Actions
-            - @reports.each do |report|
-              %tr
-                %td.searchable{ :"data-index" => "#{report.report_name.downcase}" }
-                  %input.checkbox{ :type => "checkbox", :name => "#{report.id}" }
-                %td.searchable{ :style => "width: 70%", :"data-index" => "#{report.report_name.downcase}" }
-                  #{report.report_name}
-                %td.searchable{ :style => "width: 10%", :"data-index" => "#{report.report_name.downcase}" }
-                  #{report.full_company_name}
-                %td.searchable{ :style => "width: 10%", :"data-index" => "#{report.report_name.downcase}" }
-                  #{report.owner}
-                %td.searchable{ :style => "width: 20%", :"data-index" => "#{report.report_name.downcase}" }
-                  - if @master
-                    %a.btn.btn-warning{ :href => "/master/reports/#{finding.id}" }
-                      %i.icon-pencil.icon-white{ :title => "Edit" }
-                    %a.btn.btn-info{ :href => "/master/reports/#{report.id}/generate" }
-                      %i.icon-play-circle.icon-white{ :title => "Preview" }
-                  - else
-                    %a.btn.btn-warning{ :href => "/report/#{report.id}/edit" }
-                      %i.icon-pencil.icon-white{ :title => "Edit" }
-                    %a.btn.btn-info{ :href => "/report/#{report.id}/generate" }
-                      %i.icon-play-circle.icon-white{ :title => "Preview" }
-                    %a.btn.btn-danger{ :href => "/report/remove/#{report.id}" }
-                      %i.icon-trash.icon-white{ :title => "Delete" }
-                    %a.btn.btn-inverse{ :href => "/admin/add_user/#{report.id}" }
-                      %i.icon-user.icon-white{ :title => "Add Author" }
+- if @reports.size > 0
+  .form-group.has-search.row.mt-5
+    .col-6
+      %span.fa.fa-search.form-control-feedback
+      %input#search.form-control{ :type => "text", :placeholder => "Report Name Search" }
 
-          - else
-            %h4
-              You have no reports, how about <a href="/report/new">creating</a> or <a href="/report/import">importing</a> one...
+  %style#search_style
+  %br
+  %a.btn.btn-danger#deletemultiple{ :href => "/report/remove/" }
+    Delete selected
+  %br
+  %br
+
+  #mytable.table.table-striped{ :style => "width: 80%" }
+    %table
+      %thead
+        %tr
+          %th
+            %input.checkbox#checkall{ :type => "checkbox" }
+          %th{ :style => "width: 65%" }
+            Report Name
+          %th{ :style => "width: 10%" }
+            Customer
+          %th{ :style => "width: 10%" }
+            Owner
+          %th.text-right{ :style => "width: 15%" }
+            Actions
+      %tbody
+        - @reports.each do |report|
+          %tr
+            %td.searchable{ :"data-index" => "#{report.report_name.downcase}" }
+              %input.checkbox{ :type => "checkbox", :name => "#{report.id}" }
+            %td.searchable{ :"data-index" => "#{report.report_name.downcase}" }
+              #{report.report_name}
+            %td.searchable{ :"data-index" => "#{report.report_name.downcase}" }
+              #{report.full_company_name}
+            %td.searchable{ :"data-index" => "#{report.report_name.downcase}" }
+              #{report.owner}
+            %td.searchable.text-right{ :"data-index" => "#{report.report_name.downcase}" }
+              - if @master
+                %a.btn.btn-sm.btn-warning{ :href => "/master/reports/#{finding.id}" }
+                  %i.fas.fa-pencil-alt{ :title => "Edit" }
+                %a.btn.btn-sm.btn-info{ :href => "/master/reports/#{report.id}/generate" }
+                  %i.far.fa-play-circle{ :title => "Preview" }
+              - else
+                %a.btn.btn-sm.btn-warning{ :href => "/report/#{report.id}/edit" }
+                  %i.fas.fa-pencil-alt{ :title => "Edit" }
+                %a.btn.btn-sm.btn-info{ :href => "/report/#{report.id}/generate" }
+                  %i.far.fa-play-circle{ :title => "Preview" }
+                %a.btn.btn-sm.btn-danger{ :href => "/report/remove/#{report.id}" }
+                  %i.far.fa-trash-alt{ :title => "Delete" }
+                %a.btn.btn-sm.btn-dark{ :href => "/admin/add_user/#{report.id}" }
+                  %i.fas.fa-user{ :title => "Add Author" }
+
+- else
+  %h1.h4 You have no reports, how about <a href="/report/new">creating</a> or <a href="/report/import">importing</a> one...

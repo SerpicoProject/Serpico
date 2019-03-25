@@ -1,17 +1,17 @@
-.col-md-10
-  %br
-  %h2 Import Report
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Import Report
 
-  %form{ :method => "post", :enctype=>"multipart/form-data" }
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            Upload JSON Report - Please be careful. This must have been exported from the UI.&nbsp;
-          %input#file{ :type => "file", :name => "file" }
+%form{ :method => "post", :enctype=>"multipart/form-data" }
+  .form-group.row
+    %label.col.col-form-label{ :for => "file" } Upload JSON Report - Please be careful. This must have been exported from the UI.
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
-    %a.btn.btn-default{ :href => "/" }
-      Cancel
+  .form-group.row
+    .col-lg-4
+      .custom-file
+        %input#file.custom-file-input{ :type => "file", :name => "file", :required => true }
+        %label.custom-file-label{ :for => "file" } Choose file
+
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Upload" }
+  %a.btn.btn-secondary{ :href => "/" }
+    Cancel

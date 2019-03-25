@@ -1,20 +1,16 @@
-.col-md-10
-  %br
-  %h2 Restore attachments from Attachments Export
-  %h4 Note: the restore file MUST be a zip file from the Attachments Export
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Restore attachments from Attachments Export
 
-  %form{ :method => "post", :enctype=>"multipart/form-data" }
-    - if @no_file == "1"
-      You forgot to include a file, silly
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            Upload &nbsp;
-          %input#file{ :type => "file", :name => "file" }
+%h2.h5 Note: the restore file MUST be a zip file from the Attachments Export
+%br
+%form{ :method => "post", :enctype=>"multipart/form-data" }
+  .form-group.row
+    .col-lg-4
+      .custom-file
+        %input#file.custom-file-input{ :type => "file", :name => "file", :required => true }
+        %label.custom-file-label{ :for => "file" } Choose file
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
-    %a.btn.btn-default{ :href => "/report/#{@report.id}/additional_features" }
-      Cancel
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Upload" }
+  %a.btn.btn-secondary{ :href => "/report/#{@report.id}/additional_features" }
+    Cancel

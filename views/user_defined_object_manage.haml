@@ -1,14 +1,14 @@
-.col-md-10
-  .control-group
-    %label.control-label{ :for => "overview" }
-      %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
-        UDOs Overview
-    .modal.modal.hide.fade#modaloverview{ :tabindex =>  "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => true }
+%label.control-label{ :for => "overview" }
+  %a.btn.btn-info{ :href=> "#modaloverview", "data-toggle" => "modal" }
+    UDOs Overview
+.modal.modal.hide.fade#modaloverview{ :tabindex =>  "-1", :role => "dialog" }
+  .modal-dialog.modal-lg{ :role => "document" }
+    .modal-content
       .modal-header
-        %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
-          x
         %h3#modal-label
           User Defined Objects
+        %button.close{ :type => "button", "data-dismiss" => "modal", "aria-label" => "Close" }
+          &times;
       .modal-body
         %p
           An User Defined Object can be anything that is usually tied to more than one information : contact (mail, name, role...), applications (URL, IP, Name...).
@@ -35,23 +35,24 @@
           %p
             %strong
               Meta markup is support by UDOs
+%br
+%br
+- if @udo_template_created
+  %h2.h5 New #{@udo_template_created.type} object created !
   %br
-  - if @udo_template_created
-    %h3 New #{@udo_template_created.type} object created !
-    %br
-    %br
-  - if not @udos_templates.empty?
-    - @udos_templates.each do |udo_template|
-      - i = 1
-      %hr
-      %h4
-        #{udo_template.type}
-        %a.btn.btn-info.btn-small{ :href => "/report/#{@id}/udo/#{udo_template.id}/create" }
-          %i.icon-plus.icon-white{ :title => "Create new #{udo_template.type}" }
-      - udos_linked_to_current_template = UserDefinedObjects.all(:template_id => udo_template.id, :report_id => @id)
-      - if not udos_linked_to_current_template.empty?
-        .table.table-striped
-          %table{ :style => "white-space: nowrap; table-layout: fixed" }
+- if not @udos_templates.empty?
+  - @udos_templates.each do |udo_template|
+    - i = 1
+    %hr
+    %h3.h4
+      #{udo_template.type}
+      %a.btn.btn-sm.btn-info{ :href => "/report/#{@id}/udo/#{udo_template.id}/create" }
+        %i.fas.fa-plus{ :title => "Create new #{udo_template.type}" }
+    - udos_linked_to_current_template = UserDefinedObjects.all(:template_id => udo_template.id, :report_id => @id)
+    - if not udos_linked_to_current_template.empty?
+      .table.table-striped
+        %table{ :style => "white-space: nowrap; table-layout: fixed" }
+          %thead
             %tr
               %td
                 %strong
@@ -65,6 +66,7 @@
               %td
                 %strong
                   Actions
+          %tbody
             - udos_linked_to_current_template.each do |udo|
               %tr
                 %td
@@ -75,15 +77,14 @@
                   %td{ :style => "overflow:hidden;text-overflow:ellipsis;max-width: 300px;" }
                     #{meta_markup(properties[template_property_name.downcase])}
                 %td
-                  %a.btn.btn-warning.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/edit" }
-                    %i.icon-pencil.icon-white{ :title => "Edit this #{udo_template.type.downcase}" }
-                  %a.btn.btn-danger.btn-small{ :href => "/report/#{@id}/udo/#{udo.id}/delete" }
-                    %i.icon-trash.icon-white{ :title => "Delete this #{udo_template.type.downcase}" }
-      - else
-        You have no #{udo_template.type.downcase} yet !
-        %br
-        %br
+                  %a.btn.btn-warning.btn-sm{ :href => "/report/#{@id}/udo/#{udo.id}/edit" }
+                    %i.fas.fa-pencil-alt{ :title => "Edit this #{udo_template.type.downcase}" }
+                  %a.btn.btn-danger.btn-sm{ :href => "/report/#{@id}/udo/#{udo.id}/delete" }
+                    %i.far.fa-trash-alt{ :title => "Delete this #{udo_template.type.downcase}" }
+    - else
+      You have no #{udo_template.type.downcase} yet !
       %br
-  - else
-    %h4
-      No UDO Template. Ask your administrator to create the UDO templates you want to use in your report.
+      %br
+    %br
+- else
+  %h1.h4 No UDO Template. Ask your administrator to create the UDO templates you want to use in your report.

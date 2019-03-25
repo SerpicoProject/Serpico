@@ -54,6 +54,9 @@ get '/info' do
     @user.save
   end
 
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   haml :info
 end
 
@@ -83,6 +86,9 @@ end
 # Handles password reset
 get '/reset' do
   redirect '/reports/list' unless valid_session?
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
 
   haml :reset
 end
@@ -115,6 +121,10 @@ post '/reset' do
 
   user.update(password: params[:new_pass])
   @message = 'success'
+
+  @admin = true if is_administrator?
+  @plugin = true if is_plugin?
+
   serpico_log('Password successfully reset')
   haml :reset
 end

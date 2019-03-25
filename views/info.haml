@@ -1,42 +1,29 @@
-.col-md-10
-  %br
-  %h2 Consultant Information
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Consultant Information
 
-  %form{ :method => "post" }
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "company" }
-            Consultant Company &nbsp;
-        %td
-          %input#company{ :type => "text", :name => "company", :value=> "#{@user.consultant_company}" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "name" }
-            Consultant Name &nbsp;
-        %td
-          %input#name{ :type => "text", :name => "name", :value=> "#{@user.consultant_name}" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "email" }
-            Email &nbsp;
-        %td
-          %input#email{ :type => "text", :name => "email", :value => "#{@user.consultant_email}" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "phone" }
-            Phone &nbsp;
-        %td
-          %input#phone{ :type => "text", :name => "phone", :value => "#{@user.consultant_phone}" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "title" }
-            Title &nbsp;
-        %td
-          %input#title{ :type => "text", :name => "title", :value => "#{@user.consultant_title}" }
+%form{ :method => "post" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "company" } Consultant Company
+    .col-lg-4
+      %input#company.form-control{ :type => "text", :name => "company", :value=> "#{@user.consultant_company}" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "name" } Consultant Name
+    .col-lg-4
+      %input#name.form-control{ :type => "text", :name => "name", :value=> "#{@user.consultant_name}" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "email" } Email
+    .col-lg-4
+      %input#email.form-control{ :type => "text", :name => "email", :value => "#{@user.consultant_email}" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "phone" } Phone
+    .col-lg-4
+      %input#phone.form-control{ :type => "text", :name => "phone", :value => "#{@user.consultant_phone}" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "title" } Title
+    .col-lg-4
+      %input#title.form-control{ :type => "text", :name => "title", :value => "#{@user.consultant_title}" }
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Save" }
-    %a.btn.btn-default{ :href => "/" }
-      Cancel
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Save" }
+  %a.btn.btn-secondary{ :href => "/" }
+    Cancel

@@ -1,31 +1,28 @@
-.col-md-10
-  %br
-  %h3 Current Users
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Current Users
 
+- if @users
   .table.table-striped
-    %table{ :style => "width: 40%" }
+    %table{ :style => "width: 50%" }
+      %thead
+        %tr
+          %td{ :style => "width: 40%" }
+            %b Username
+          %td{ :style => "width: 34%" }
+            %b Level/Authentication Type
+          %td.text-right{ :style => "width: 15%" }
+            %b Actions
       %tbody
-        - if @users
+        - @users.each do |user|
           %tr
-            %td{ :style => "width: 30%" }
-              %b
-                Username
-            %td{ :style => "width: 30%" }
-              %b
-                Level/Authentication Type
-            %td{ :style => "width: 40%" }
-              Actions
-          - @users.each do |user|
-            %tr
-              %td{ :style => "width: 30%" }
-                #{user.username}
-              %td{ :style => "width: 30%" }
-                #{user.type} / #{user.auth_type}
-              %td{ :style => "width: 40%" }
-                %a.btn.btn-warning{ :href => "/admin/edit_user/#{user.id}" }
-                  %i.icon-pencil.icon-white{ :title => "Edit Password" }
-                %a.btn.btn-danger{ :href => "/admin/delete/#{user.id}" }
-                  %i.icon-trash.icon-white{ :title => "Delete User" }
-        - else
-          No Users. How Curious. Who are you?
+            %td
+              #{user.username}
+            %td
+              #{user.type} / #{user.auth_type}
+            %td.text-right
+              %a.btn.btn-sm.btn-warning{ :href => "/admin/edit_user/#{user.id}" }
+                %i.fas.fa-pencil-alt{ :title => "Edit Password" }
+              %a.btn.btn-sm.btn-danger{ :href => "/admin/delete/#{user.id}" }
+                %i.far.fa-trash-alt{ :title => "Delete User" }
+- else
+  No Users. How Curious. Who are you?

@@ -1,61 +1,93 @@
-.col-md-10
+- if not @attachments.empty?
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2  Current Attachments
   %br
-  - if not @attachments.empty?
-    %br
-      %h3
-        Current Attachments
-      %br
-      %a.btn.btn-danger#deletemultiple{ :href => "/report/#{@report.id}/attachments/delete/" }
-        Delete selected
-      %br
-      %br
-      .table.table-striped
-        %table#mytable
-          %thead
-            %th
-              %input#checkall{ :type => "checkbox" }
-            %th
-              Attachment Name
-            %th
-              View
-            %th
-              Delete
-          %tbody
-          - @attachments.each do |attachment|
-            %tr
-              %td
-                %input.checkbox{ :type => "checkbox", :name => "#{attachment.id}" }
-              %td{ :style => "width: 70%" }
-                #{attachment.description}
-              %td
-                %a.btn.btn-info{ :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}" }
-                  %i.icon-play-circle.icon-white{ :title => "Preview" }
-              %td
-                %a.btn.btn-danger{ :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}" }
-                  %i.icon-trash.icon-white{ :title => "Preview" }
+  %a.btn.btn-danger#deletemultiple{ :href => "/report/#{@report.id}/attachments/delete/" }
+    Delete selected
+  %br
+  %br
+  .table.table-striped
+    %table#mytable
+      %thead
+        %th
+          %input#checkall{ :type => "checkbox" }
+        %th
+          Attachment Name
+        %th
+          View
+        %th
+          Delete
+      %tbody
+      - @attachments.each do |attachment|
+        %tr
+          %td
+            %input.checkbox{ :type => "checkbox", :name => "#{attachment.id}" }
+          %td{ :style => "width: 70%" }
+            #{attachment.description}
+          %td
+            %a.btn.btn-sm.btn-info{ :href => "/report/#{attachment.report_id}/attachments/#{attachment.id}" }
+              %i.far.fa-play-circle{ :title => "Preview" }
+          %td
+            %a.btn.btn-sm.btn-danger{ :href => "/report/#{attachment.report_id}/attachments/delete/#{attachment.id}" }
+              %i.far.fa-trash-alt{ :title => "Preview" }
 
-  - else
-    %h3 No Attachments Available.
+- else
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 No Attachments Available
+%br
+- if not @screenshot_names_from_report.to_s.empty?
+  %h2.h4 The following screenshot variables were found in your report template:
   %br
-  - if not @screenshot_names_from_report.to_s.empty?
-    %h3 The following screenshot variables were found in your report template:
-    %br
-    .table.table-striped
-      %table
-        %tbody
-          %col{ :align => "left" }
-          %col{ :align => "center" }
+  .table.table-striped
+    %table
+      %thead
+        %tr
+          %td
+            %strong
+              Screenshot Name
+          %td
+            %strong
+              Uploaded?
+      %tbody
+        - @screenshot_names_from_report.split(",").each do |ss|
           %tr
             %td
-              %strong
-                Screenshot Name
-            %td
-              %strong
-                Uploaded?
-          - @screenshot_names_from_report.split(",").each do |ss|
+              #{ss}
+            %td{ :style => "text-align: center" }
+              - found = false
+              - @attachments.each do |att|
+                - if att.description.downcase == ss.downcase
+                  - found = true
+                  %i.fa.fa-check{ :style => "color:green" }
+              - if found == false
+                %i.fa.fa-times{ :style => "color:red" }
+%br
+- if not @screenshot_names_from_findings.to_s.empty?
+  %h2.h4 The following screenshot variables were found in your report findings:
+  %br
+  .table.table-striped
+    %table
+      %thead
+        %tr
+          %td
+            %strong
+              Screenshot Name
+          %td
+            %strong
+              From Finding
+          %td
+            %strong
+              Uploaded?
+      %tbody
+        - @screenshot_names_from_findings.each do |id, screenshots|
+          - find = Findings.first(id: id)
+          - screenshots.each do |ss|
             %tr
               %td
                 #{ss}
+              %td
+                %a{ :href => "/report/#{find.report_id}/findings/#{find.id}/edit#pocu" }
+                  #{find.title}
               %td{ :style => "text-align: center" }
                 - found = false
                 - @attachments.each do |att|
@@ -64,38 +96,3 @@
                     %i.fa.fa-check{ :style => "color:green" }
                 - if found == false
                   %i.fa.fa-times{ :style => "color:red" }
-  %br
-  - if not @screenshot_names_from_findings.to_s.empty?
-    %h3 The following screenshot variables were found in your report findings:
-    %br
-    .table.table-striped
-      %table
-        %tbody
-          %col{ :align => "left" }
-          %col{ :align => "center" }
-          %tr
-            %td
-              %strong
-                Screenshot Name
-            %td
-              %strong
-                From Finding
-            %td
-              %strong
-                Uploaded?
-          - @screenshot_names_from_findings.each do |id, screenshots|
-            - find = Findings.first(id: id)
-            - screenshots.each do |ss|
-              %tr
-                %td
-                  #{ss}
-                %td
-                  <a href=/report/#{find.report_id}/findings/#{find.id}/edit#pocu> #{find.title}</a>
-                %td{ :style => "text-align: center" }
-                  - found = false
-                  - @attachments.each do |att|
-                    - if att.description.downcase == ss.downcase
-                      - found = true
-                      %i.fa.fa-check{ :style => "color:green" }
-                  - if found == false
-                    %i.fa.fa-times{ :style => "color:red" }

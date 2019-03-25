@@ -1,23 +1,23 @@
-.col-md-10
-  %br
-  %h2 Upload Templated Findings
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Upload Templated Findings
 
-  %form{ :method => "post", :enctype => "multipart/form-data" }
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            Upload JSON File - Please be careful. This must have been exported from the UI.&nbsp;
-          %input#file{ :type => "file", :name => "file" }
-      %tr
-        %td
-          %br
-          &nbsp;&nbsp;&nbsp;
-          %input{ :type => "checkbox", :name => "approved" }
-          Automatically Approve Imported Findings. By default you should manually approve findings, this overrides that.
+.form-group.row
+  %p.ml-3 Upload JSON File - Please be careful. This must have been exported from the UI.&nbsp;
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Upload" }
-    %a.btn.btn-default{ :href => "/master/findings" }
-      Cancel
+%form{ :method => "post", :enctype => "multipart/form-data" }
+  .form-group.row
+    .col-lg-4
+      .custom-file
+        %input#file.custom-file-input{ :type => "file", :name => "file", :required => true }
+        %label.custom-file-label{ :for => "file" } Choose file
+
+  .form-group.row
+    .col
+      .form-check
+        %input#approved.form-check-input{ :type => "checkbox", :name => "approved" }
+        %label.form-check-label.pl-2{ :for => "approved" } Automatically Approve Imported Findings. By default you should manually approve findings, this overrides that.
+
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Upload" }
+  %a.btn.btn-secondary{ :href => "/master/findings" }
+    Cancel

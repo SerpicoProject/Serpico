@@ -1,51 +1,56 @@
-.col-md-10
-  - if not @vulnmap
-    Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
-  - else
-    %h2 Vulnerabilities
-    This is a read-only view of the first 10k vulnerabilities within Metasploits database.
-    %p
-    %label.control-label
-      %a.btn.btn-info{ :href => "#vulninfomodal", "data-toggle" => "modal" }
-        More Info
-    .modal.hide.fade#vulninfomodal{ :tabindex => "-1", :role => "dialog", "aria-labelledby" => "modal-label", "aria-hidden" => true }
-      .modal-header
-        %button.close{ :type => "button", "data-dismiss" => "modal", "aria-hidden" => "true" }
-          x
-        %h3#modal-label
-          Metasploit Auto Mapping Vulnerabilities
-      .modal-body
-        To automatically add vulnerabilities from the Metasploit database into your report, you'll need to have one of the reference codes mapped to an existing Serpico finding.
-        %p
-        A reference code can be added by editing the
-        %b Vuln ID
-        field of a finding in the Findings Database.
-        %p
-        %a.btn.btn-default{ :href=> "/master/findings" }
-          Go to Findings Database
-        %p
-    %br
-    .table.table-hover
-      %table{ :style => "width: 90%" }
-        %thead
-          %tr
-            %td
-              %b Vulnerability
-            %td
-              %b Host
-            %td
-              %b Port
-            %td
-              %b References
-        %tbody
-          - if @vulns
-            - @vulns.each do |vuln|
-              %tr
-                %td.searchable{ :style => "width: 50%", :"data-index" => "#{vuln["name"]}" }
-                  #{vuln["name"]}
-                %td.searchable{ :style => "width: 10%", :"data-index" => "#{vuln["host"]}" }
-                  #{vuln["host"]}
-                %td.searchable{ :style => "width: 5%", :"data-index" => "#{vuln["port"]}" }
-                  #{vuln["port"]}
-                %td.searchable{ :style => "width: 35%", :"data-index" => "#{vuln["refs"]}" }
-                  #{vuln["refs"]}
+- if not @vulnmap
+  %h1.h5 Metasploit integration not enabled. Contact your administrator to enable (vulnmap configuration setting)
+- else
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+    %h1.h2 Vulnerabilities
+  This is a read-only view of the first 10k vulnerabilities within Metasploits database.
+  %br
+  %br
+
+  %label.control-label
+    %a.btn.btn-info{ :href => "#vulninfomodal", "data-toggle" => "modal" }
+      More Info
+
+  .modal.modal.hide.fade#vulninfomodal{ :tabindex =>  "-1", :role => "dialog" }
+    .modal-dialog.modal-lg{ :role => "document" }
+      .modal-content
+        .modal-header
+          %h3#modal-label
+            Metasploit Auto Mapping Vulnerabilities
+          %button.close{ :type => "button", "data-dismiss" => "modal", "aria-label" => "Close" }
+            &times;
+        .modal-body
+          To automatically add vulnerabilities from the Metasploit database into your report, you'll need to have one of the reference codes mapped to an existing Serpico finding.
+          %p
+          A reference code can be added by editing the
+          %b Vuln ID
+          field of a finding in the Findings Database.
+          %p
+          %a.btn.btn-primary{ :href=> "/master/findings" }
+            Go to Findings Database
+          %p
+
+  .table-responsive.col-6.px-0
+    %table.table.table-striped.table-sm
+      %thead
+        %tr
+          %td
+            %b Vulnerability
+          %td
+            %b Host
+          %td
+            %b Port
+          %td
+            %b References
+      %tbody
+        - if @vulns
+          - @vulns.each do |vuln|
+            %tr
+              %td.searchable{ :style => "width: 50%", :"data-index" => "#{vuln["name"]}" }
+                #{vuln["name"]}
+              %td.searchable{ :style => "width: 10%", :"data-index" => "#{vuln["host"]}" }
+                #{vuln["host"]}
+              %td.searchable{ :style => "width: 5%", :"data-index" => "#{vuln["port"]}" }
+                #{vuln["port"]}
+              %td.searchable{ :style => "width: 35%", :"data-index" => "#{vuln["refs"]}" }
+                #{vuln["refs"]}

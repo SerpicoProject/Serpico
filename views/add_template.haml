@@ -1,42 +1,33 @@
-.col-md-10
-  %br
-  %h2 Add Template
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Add Template
 
-  %form{ :method => "post", :action => "/admin/templates/add", :enctype => "multipart/form-data" }
-    %table
-      %tr
-        %td
-          %label.col-md-3{ :for => "report_type" }
-            Report Type &nbsp;
-        %td
-          %input#report_type{ :type => "text", :name => "report_type", :required => true }
-      %tr
-        %td
-          %label.col-md-3{ :for => "description" }
-            File Description &nbsp;
-        %td
-          %input#description{ :type => "text", :name => "description" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "finding_template" }
-            Finding Template &nbsp;
-        %td
-          %input#finding_template{ :type => "checkbox", :name => "finding_template" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "status_template" }
-            Status Template &nbsp;
-        %td
-          %input#status_template{ :type => "checkbox", :name => "status_template" }
-      %tr
-        %td
-          %label.col-md-3{ :for => "file" }
-            DOCX
-        %td
-          %input#file{ :type => "file", :name => "file" }
+%form{ :method => "post", :action => "/admin/templates/add", :enctype => "multipart/form-data" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "report_type" } Report Type
+    .col-lg-4
+      %input#report_type.form-control{ :type => "text", :name => "report_type", :required => true }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "description" } File Description
+    .col-lg-4
+      %input#description.form-control{ :type => "text", :name => "description" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "finding_template" } Finding Template
+    .col-lg-4
+      .form-check
+        %input#finding_template.form-check-input{ :type => "checkbox", :name => "finding_template" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "status_template" } Status Template
+    .col-lg-4
+      .form-check
+        %input#status_template.form-check-input{ :type => "checkbox", :name => "status_template" }
+  .form-group.row
+    %label.col-lg-2.col-form-label{ :for => "file" } DOCX
+    .col-lg-4
+      .custom-file
+        %input#file.custom-file-input{ :type => "file", :name => "file", :required => true }
+        %label.custom-file-label{ :for => "file" } Choose file
 
-    %br
-    %input.btn.btn-default{ :type => "submit", :value => "Add" }
-    %a.btn.btn-default{ :href => "/admin/templates" }
-      Cancel
+  %br
+  %input.btn.btn-primary{ :type => "submit", :value => "Add" }
+  %a.btn.btn-secondary{ :href => "/admin/templates" }
+    Cancel

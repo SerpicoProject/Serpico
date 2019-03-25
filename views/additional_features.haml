@@ -1,42 +1,40 @@
-.col-md-10
-  %br
-  %h2 Additional Features
-  %br
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+  %h1.h2 Additional Features
 
-  %a{ :href => "/report/#{@report.id}/user_defined_variables" } Manage User Defined Variables
-  %br
-  %a{ :href => "/report/#{@report.id}/udo/manage" } Manage User Defined Objects
-  %br
-  %a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments must be exported separately)
-  %br
-  %a{ :href => "/report/#{@report.id}/export_attachments" } Export Attachments
-  %br
-  %a{ :href => "/report/#{@report.id}/restore_attachments" } Restore Attachments
-  %br
-  %a{ :href => "/report/#{@report.id}/msfsettings" } Configure a Metasploit RPC Connection
+%a{ :href => "/report/#{@report.id}/user_defined_variables" } Manage User Defined Variables
+%br
+%a{ :href => "/report/#{@report.id}/udo/manage" } Manage User Defined Objects
+%br
+%a{ :href => "/report/#{@report.id}/export" } Export Current Report (Warning: Attachments must be exported separately)
+%br
+%a{ :href => "/report/#{@report.id}/export_attachments" } Export Attachments
+%br
+%a{ :href => "/report/#{@report.id}/restore_attachments" } Restore Attachments
+%br
+%a{ :href => "/report/#{@report.id}/msfsettings" } Configure a Metasploit RPC Connection
 
-  %br
-  %br
+%br
+%br
 
-  %a{ :href => "/report/#{@report.id}/import/vulns" } Auto Add Vulnerabilities from Metasploit DB
-  %br
-  %a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML (Deprecated - Use MSF RPC)
-  %br
-  %a{ :href => "/report/#{@report.id}/import_burp" } Auto Add Findings from a Burp XML scanner report
+%a{ :href => "/report/#{@report.id}/import/vulns" } Auto Add Vulnerabilities from Metasploit DB
+%br
+%a{ :href => "/report/#{@report.id}/import_nessus" } Auto Add Findings from a Nessus XML (Deprecated - Use MSF RPC)
+%br
+%a{ :href => "/report/#{@report.id}/import_burp" } Auto Add Findings from a Burp XML scanner report
 
-  %br
-  %br
+%br
+%br
 
-  %a{ :href => "/report/#{@report.id}/status" } Generate Status Report
-  %br
-  %a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report
-  %br
-  %a{ :href => "/report/#{@report.id}/csv_export" } Generate Findings CSV (Pipe Delimited)
-  %br
-  %a{ :href => "/report/#{@report.id}/asciidoc_status" } Generate AsciiDoc of Current Findings
-  %br
-  %a{ :href => "/report/#{@report.id}/presentation" } Generate Presentation from Report
-  %br
-  %a{ :href => "/report/#{@report.id}/presentation?print-pdf" } Generate Presentation to PDF (NOTE: Print and Save to PDF to view)
-  %br
-  %a{ :href => "/report/#{@report.id}/presentation_export" } Export Presentation to HTML
+%a{ :href => "/report/#{@report.id}/status" } Generate Status Report
+%br
+%a{ :href => "/report/#{@report.id}/text_status" } Generate Text Only Status Report
+%br
+%a{ :href => "/report/#{@report.id}/csv_export" } Generate Findings CSV (Pipe Delimited)
+%br
+%a{ :href => "/report/#{@report.id}/asciidoc_status" } Generate AsciiDoc of Current Findings
+%br
+%a{ :href => "/report/#{@report.id}/presentation" } Generate Presentation from Report
+%br
+%a{ :href => "/report/#{@report.id}/presentation?print-pdf" } Generate Presentation to PDF (NOTE: Print and Save to PDF to view)
+%br
+%a{ :href => "/report/#{@report.id}/presentation_export" } Export Presentation to HTML

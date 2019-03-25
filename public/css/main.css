@@ -1,0 +1,126 @@
+/*
+ *   This section of the stylesheet comes from https://codepen.io/gungorbudak/pen/ooKNpz
+ *
+ */
+
+.has-search .form-control {
+    padding-left: 2.375rem;
+}
+
+.has-search .form-control-feedback {
+    position: absolute;
+    display: block;
+    z-index: 2;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.375rem;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
+
+/*
+ *   This section of the stylesheet comes from the https://getbootstrap.com/docs/4.3/examples/dashboard/
+ *   bootstrap example.
+ *
+ */
+
+body {
+  font-size: .875rem;
+}
+
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100; /* Behind the navbar */
+  padding: 56px 0 0; /* Height of navbar */
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar-sticky {
+  position: relative;
+  top: 0;
+  height: calc(100vh - 56px);
+  padding-top: .5rem;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+@supports ((position: -webkit-sticky) or (position: sticky)) {
+  .sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+}
+
+.sidebar .nav-link {
+  font-weight: 500;
+  color: #333;
+}
+
+.sidebar .nav-link .feather {
+  margin-right: 4px;
+  color: #999;
+}
+
+.sidebar .nav-link.active {
+  color: #007bff;
+}
+
+.sidebar .nav-link:hover .feather,
+.sidebar .nav-link.active .feather {
+  color: inherit;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+/*
+ * Content
+ */
+
+ [role="main"] {
+   padding-top: 80px; /* Space for fixed navbar */
+ }
+
+
+ /*
+  *   This section of the stylesheet contains custom CSS.
+  *
+  */
+.pointer {
+  cursor: pointer;
+}
+
+.striped-rows > .row.form-group {
+  margin-bottom: 0rem;
+  margin-left: 15px;
+}
+
+.striped-rows > .row:nth-of-type(odd) *[class*=' col'],
+.striped-rows > .row:nth-of-type(odd) *[class^='col'] {
+  background-color: #efefef;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.striped-rows > .row:nth-of-type(even) *[class*=' col'],
+.striped-rows > .row:nth-of-type(even) *[class^='col'] {
+  background-color: #ffffff;
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
+}
