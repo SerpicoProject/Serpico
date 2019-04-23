@@ -28,10 +28,10 @@ apt-get install -y libssl1.0-dev
 rvm get master
 
 # Install and use Ruby 2.1.5, the version used by Serpico
-rvm install 2.1.5
+rvm install 2.3.3
 
 source /etc/profile.d/rvm.sh
-rvm use 2.1.5
+rvm use 2.3.3
 
 # Serpico Dependencies
 apt-get -y install libsqlite3-dev libxslt-dev libxml2-dev zlib1g-dev gcc
