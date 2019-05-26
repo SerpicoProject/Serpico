@@ -3,6 +3,27 @@ require 'sinatra'
 
 config_options = JSON.parse(File.read('./config.json'))
 
+class Password_Complexity
+  attr_reader :counter
+  def initialize(check_pass)
+    @counter = 0
+    @check_pass = check_pass
+    if @check_pass =~ /(?=.*?[a-z])/
+      @counter += 1
+    end
+    if @check_pass =~ /(?=.*?[A-Z])/
+      @counter += 1
+    end
+    if @check_pass =~ /(?=.*?[0-9])/
+      @counter += 1
+    end
+    if @check_pass =~ /[^a-z^A-Z^0-9]/
+      @counter += 1
+    end
+    @check_pass = "passwordCleared"
+  end
+end
+
 # Used for 404 responses
 not_found do
   "Sorry, I don't know this page."
@@ -105,16 +126,28 @@ post '/reset' do
     return 'You are an LDAP user. You cannot change your password.'
   end
 
-  # check if the password is greater than 3 chars. legit complexity rules =/
-  #   TODO add password complexity requirements
-  if params[:new_pass].size < 4
-    return 'Srsly? Your password must be greater than 3 characters.'
+  #Check Password Minimum Length (Default: 12 characters)
+  unless params[:new_pass].size >= 12
+    return 'Srsly? Your password must be at least 12 characters in length.'
   end
 
+  #Check Password Complexity
+  pwd_counter = Password_Complexity.new(params[:new_pass])
+  if pwd_counter.counter <= 2
+     return 'Passwords must contain at least 3 of the following: numbers, uppercase, lowercase, and symbols.'
+  end
+
+  #Check that new password doesn't match old password
+  if params[:new_pass] == params[:old_pass]
+    return 'New password cannot be the same as the old password.'
+  end
+
+  #Prevent fat fingers, check password against confirmation entries
   if params[:new_pass] != params[:new_pass_confirm]
     return 'New password does not match.'
   end
 
+  #Check for current password
   unless User.authenticate(user.username, params[:old_pass])
     return 'Old password is incorrect.'
   end

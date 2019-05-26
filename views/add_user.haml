@@ -3,6 +3,15 @@
     %h1.h2 Edit User
   - else
     %h1.h2 Add User
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-0.border-top
+  Password must be a minimum 12 characters in length.
+  %br
+  Password must contain three out of the four following categories:
+.d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-0.pb-0.mb-0
+  <ul><li>Uppercase</li>
+  <li>Lowercase</li>
+  <li>Numbers</li>
+  <li>Symbols</li></ul>
 
 %form{ :method => "post", :action => "/admin/add_user" }
   .form-group.row

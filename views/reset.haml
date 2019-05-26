@@ -4,6 +4,16 @@
 - else
   .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
     %h1.h2 Change Password
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-left.pt-0.pb-3
+    Password must be a minimum 12 characters in length.
+    <br>
+    Password must contain three out of the four following categories:
+  .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-left.pt-0.pb-3
+    <ul><li>Uppercase</li>
+    <li>Lowercase</li>
+    <li>Numbers</li>
+    <li>Symbols</li>
+    </ul>
 
   %form{ :method => "post" }
     .form-group.row
