@@ -27,11 +27,11 @@ apt-get install -y libssl1.0-dev
 
 rvm get master
 
-# Install and use Ruby 2.1.5, the version used by Serpico
-rvm install 2.3.3
+# Install and use Ruby 2.6.3, the version used by Serpico
+rvm install 2.6.3
 
 source /etc/profile.d/rvm.sh
-rvm use 2.3.3
+rvm use 2.6.3
 
 # Serpico Dependencies
 apt-get -y install libsqlite3-dev libxslt-dev libxml2-dev zlib1g-dev gcc
@@ -41,9 +41,6 @@ git clone https://github.com/SerpicoProject/Serpico.git /opt/Serpico-Dev
 cd /opt/Serpico-Dev/
 
 gem install bundler
-
-# The Gemfile has an issue during installation, run the below to preemptively resolve it
-gem install msfrpc-client -v 1.0.3
 
 bundle install
 
