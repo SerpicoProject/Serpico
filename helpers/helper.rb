@@ -411,7 +411,7 @@ def nist800(data)
   if data["nist_impact"] == "Very Low"
     impact_val = 0
   elsif data["nist_impact"] == "Low"
-    impact_val = 25
+    impact_val = 16
   elsif data["nist_impact"] == "Moderate"
     impact_val = 30
   elsif data["nist_impact"] == "High"
@@ -455,9 +455,9 @@ def nist800(data)
     nist_rating = "High" 
   elsif nist800_total >= 90
     nist_rating = "Moderate" 
-  elsif nist800_total >= 50
+  elsif nist800_total >= 32
     nist_rating = "Low" 
-  elsif nist800_total <= 0
+  elsif nist800_total < 32
     nist_rating = "Very Low"
   end
 
