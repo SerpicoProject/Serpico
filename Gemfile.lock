@@ -76,7 +76,7 @@ GEM
       mini_portile2 (~> 2.3.0)
     odle (0.0.8)
     public_suffix (3.0.3)
-    rack (2.0.5)
+    rack (2.0.7)
     rack-protection (2.0.4)
       rack
     rb-readline (0.5.5)
