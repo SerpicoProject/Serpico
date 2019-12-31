@@ -16,9 +16,11 @@
         - @users.each do |user|
           %tr
             %td
-              #{user.username}
+              :escaped
+                #{user.username}
             %td
-              #{user.type} / #{user.auth_type}
+              :escaped
+                #{user.type} / #{user.auth_type}
             %td.text-right
               %a.btn.btn-sm.btn-warning{ :href => "/admin/edit_user/#{user.id}" }
                 %i.fas.fa-pencil-alt{ :title => "Edit Password" }

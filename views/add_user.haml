@@ -50,6 +50,7 @@
           %option Administrator
 
   %br
+  %input#authenticity-token{:type => "hidden", :name => "authenticity_token", :value => "#{env['rack.session'][:csrf]}" }
   %input.btn.btn-primary{ :type => "submit", :value => "Add" }
   %a.btn.btn-secondary{ :href => "/admin/list_user" }
     Cancel

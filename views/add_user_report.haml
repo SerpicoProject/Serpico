@@ -1,5 +1,5 @@
 .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
-  %h1.h2 Editing #{@report.report_name} Report
+  %h1.h2 Editing #{@report.report_name} Report FFFF
 
 %h2.h4 Current Authors
 .table-responsive.col-6.px-0
@@ -14,7 +14,8 @@
         - @report.authors.each do |user|
           %tr
             %td
-              #{user}
+              :escaped
+                #{user}
             %td.text-right
               %a.btn.btn-sm.btn-danger{ :href => "/admin/del_user_report/#{@report.id}/#{user}" }
                 %i.far.fa-trash-alt{ :title => "Remove Author" }
