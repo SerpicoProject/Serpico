@@ -64,7 +64,7 @@ GEM
     json (1.8.6)
     json_pure (1.8.6)
     metasm (1.0.3)
-    mini_portile2 (2.3.0)
+    mini_portile2 (2.4.0)
     msfrpc-client (1.1.1)
       msgpack (~> 1)
       rex (~> 2)
@@ -72,8 +72,8 @@ GEM
     multi_json (1.13.1)
     mustermann (1.0.3)
     net-ldap (0.16.1)
-    nokogiri (1.8.1)
-      mini_portile2 (~> 2.3.0)
+    nokogiri (1.10.4)
+      mini_portile2 (~> 2.4.0)
     odle (0.0.8)
     public_suffix (3.0.3)
     rack (2.0.8)
@@ -112,7 +112,7 @@ DEPENDENCIES
   json
   msfrpc-client (= 1.1.1)
   net-ldap (~> 0.11)
-  nokogiri (= 1.8.1)
+  nokogiri (= 1.10.4)
   odle
   rubyzip
   sinatra
