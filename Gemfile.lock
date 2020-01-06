@@ -77,7 +77,7 @@ GEM
       mini_portile2 (~> 2.3.0)
     odle (0.0.8)
     public_suffix (4.0.3)
-    rack (2.0.3)
+    rack (2.0.8)
     rack-protection (2.0.8.1)
       rack
     rb-readline (0.5.5)
@@ -116,7 +116,7 @@ DEPENDENCIES
   net-ldap (~> 0.11)
   nokogiri (= 1.8.1)
   odle
-  rack (= 2.0.3)
+  rack (= 2.0.8)
   rubyzip
   sinatra
 

@@ -13,6 +13,6 @@ gem 'data_mapper', '1.2.0'
 gem 'dm-sqlite-adapter', '1.2.0'
 gem 'msfrpc-client', '1.1.1'
 gem 'odle'
-gem 'rack', '2.0.3'
+gem 'rack', '2.0.8'
 
 
