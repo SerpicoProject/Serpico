@@ -8,7 +8,23 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 
 ## Installation
 
-The installation options are:
+Getting started in a few commands:
+
+1. Create a working directory for Serpico and change to it:
+```
+mkdir SERPICO
+cd SERPICO
+```
+
+2. Pull down the newest version of Serpico:
+```
+docker run --name serpico -p 8443:8443 -v"$(pwd)/db":/Serpico/db -v"$(pwd)/tmp":/Serpico/tmp -v"$(pwd)/templates":/Serpico/templates -v"$(pwd)/attachments":/Serpico/attachments -it serpico/serpico
+```
+
+3. Browse to https://127.0.0.1:8443 and start using it.
+
+
+More detailed information:
 
 * [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker): The prefered method of installation. 
 
