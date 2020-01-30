@@ -8,7 +8,7 @@ COPY ./docker/docker.sh scripts/docker.sh
 RUN bundle install
 
 # Allow DB to be on a shared volume
-VOLUME ["$SRP_ROOT/db"]
+VOLUME ["$SRP_ROOT/"]
 EXPOSE 8443
 
 CMD ["bash", "scripts/docker.sh"]
