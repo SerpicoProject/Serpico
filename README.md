@@ -10,13 +10,13 @@ Serpico is a penetration testing report generation and collaboration tool. It wa
 
 The installation options are:
 
-* [Install Official Release](https://github.com/SerpicoProject/Serpico/releases): The prefered method of installation which includes all dependencies in one package.
+* [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker): The prefered method of installation. 
+
+* [Install Official Release](https://github.com/SerpicoProject/Serpico/releases): As of v1.3.0 (06/2018) we are no longer creating packaged builds.
 
 * [Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Developer-Build): Simple Instructions to build from clone
 
-* [Windows Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation): Serpico can also be built and run on Windows
-
-* [Running Serpico From Docker](https://github.com/SerpicoProject/Serpico/wiki/Running-Serpico-From-Docker) 
+* [Windows Developer Build](https://github.com/SerpicoProject/Serpico/wiki/Windows-Installation): Building Serpico from source on Windows; Docker is the easiest installation method.
 
 ## Post-Installation Releases : Getting Started
 
@@ -87,5 +87,3 @@ See also:
 * [Issue](https://github.com/SerpicoProject/Serpico/issues/new) : If you have found a bug or would like a new feature
 * [E-mail Support](https://www.serpicoproject.com/support/): For teams of users or template related questions
 
-## GOTCHAS
-* Microsoft has a really annoying habit of changing a character for you. Always beware of this when working with the meta language
