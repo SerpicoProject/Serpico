@@ -18,7 +18,10 @@ cd SERPICO
 
 2. Pull down the newest version of Serpico:
 ```
-docker run --name serpico -p 8443:8443 -v"$(pwd)/db":/Serpico/db -v"$(pwd)/tmp":/Serpico/tmp -v"$(pwd)/templates":/Serpico/templates -v"$(pwd)/attachments":/Serpico/attachments -it serpico/serpico
+docker run --name serpico -p 8443:8443 \
+  -v"$(pwd)/db":/Serpico/db -v"$(pwd)/tmp":/Serpico/tmp \
+  -v"$(pwd)/attachments":/Serpico/attachments \
+  -it serpico/serpico
 ```
 
 3. Browse to https://127.0.0.1:8443 and start using it.
