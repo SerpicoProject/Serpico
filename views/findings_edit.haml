@@ -676,10 +676,6 @@
               %option{ :value => "#{r_type}", :selected => "selected" } #{risk_types[r_type]}
             - else
               %option{ :value => "#{r_type}"} #{risk_types[r_type]}
-
-
-    <!-- do not show remediation effort for NIST800, however show it for all others -->
-  - if !@nist800
     .form-group.row
       %label.col-lg-2.col-form-label{ :for => "effort" } Remediation Effort
       .col-lg-4

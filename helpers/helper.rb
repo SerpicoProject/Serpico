@@ -181,15 +181,15 @@ def add_findings_totals(udv, findings, config_options)
     end
   elsif(config_options["nist800"])
     findings.each do |finding|
-      if finding.nist800_total >= 120
+      if finding.nist800_total >= 240
         critical += 1
-      elsif finding.nist800_total >= 90 and finding.nist800_total <= 80
+      elsif finding.nist800_total >= 150
         high += 1
-      elsif finding.nist800_total >= 60 and finding.nist800_total <= 30
+      elsif finding.nist800_total >= 90
         moderate += 1
-      elsif finding.nist800_total >= 1 and finding.nist800_total <= 20
+      elsif finding.nist800_total >= 50
         low += 1
-      elsif finding.nist800_total <= 0
+      elsif finding.nist800_total <= 40
         informational += 1
       end
 	  end
@@ -408,50 +408,57 @@ end
 
 # created NIST800 helper to cut down repetitive code
 def nist800(data)
-  if data["nist_impact"] == "Informational"
+  if data["nist_impact"] == "Very Low"
     impact_val = 0
   elsif data["nist_impact"] == "Low"
-    impact_val = 1
+    impact_val = 16
   elsif data["nist_impact"] == "Moderate"
-    impact_val = 20
-  elsif data["nist_impact"] == "High"
     impact_val = 30
-  elsif data["nist_impact"] == "Critical"
+  elsif data["nist_impact"] == "High"
     impact_val = 40
+  elsif data["nist_impact"] == "Very High"
+    impact_val = 60
   end
 
-  if data["nist_likelihood"] == "Low"
+  if data["nist_likelihood"] == "Very Low"
     likelihood_val = 1
-  elsif data["nist_likelihood"] == "Moderate"
+  elsif data["nist_likelihood"] == "Low"
     likelihood_val = 2
-  elsif data["nist_likelihood"] == "High"
+  elsif data["nist_likelihood"] == "Moderate"
     likelihood_val = 3
+  elsif data["nist_likelihood"] == "High"
+    likelihood_val = 4
+  elsif data["nist_likelihood"] == "Very High"
+    likelihood_val = 5
+
   end
 
   nist800_total = impact_val * likelihood_val
 
   # Calulate nist total numeriacl score (Numbers used not NIST offical)
   # I came up with the math to match this table:
-  # +------------+----------+---------------+-----+----------+----------+----------+
-  # |                                     Impact                                   |
-  # +------------+----------+---------------+-----+----------+----------+----------+
-  # |            |          | Informational | Low | Moderate | High     | Critical |
-  # +            +----------+---------------+-----+----------+----------+----------+
-  # | likeihood  | High     | Informational | Low | Moderate | High     | Critical |
-  # |            | Moderate | Informational | Low | Moderate | Moderate | High     |
-  # |            | Low      | Informational | Low | Low      | Moderate | Moderate |
-  # +------------+----------+---------------+-----+----------+----------+----------+
+  # +------------+-----------+---------------+----------+----------+----------+-----------+
+  # |                        |                       Impact                               |
+  # +------------+-----------+---------------+----------+----------+----------+-----------+
+  # |            |           |   Very Low    |   Low    | Moderate |   High   | Very High |
+  # +            +-----------+---------------+----------+----------+----------+-----------+
+  # |            | Very High |   Very Low    |   Low    | Moderate |   High   | Very High |
+  # | likeihood  |   High    |   Very Low    |   Low    | Moderate |   High   | Very High |
+  # |            | Moderate  |   Very Low    |   Low    | Moderate | Moderate |   High    |
+  # |            |   Low     |   Very Low    |   Low    |   Low    |   Low    | Moderate  |
+  # |            | Very Low  |   Very Low    | Very Low | Very Low |   Low    |   Low     |
+  # +------------+-----------+---------------+----------+----------+----------+-----------+
 
-  if nist800_total >= 120
-   nist_rating = "Critical" 
-  elsif nist800_total <= 90 and nist800_total >= 80
-   nist_rating = "High" 
-  elsif nist800_total <= 60 and nist800_total >= 30
-   nist_rating = "Moderate" 
-  elsif nist800_total <= 20 and nist800_total >= 1
-   nist_rating = "Low" 
-  elsif nist800_total == 0
-   nist_rating = "Informational" 
+  if nist800_total >= 240
+    nist_rating = "Very High" 
+  elsif nist800_total >= 150
+    nist_rating = "High" 
+  elsif nist800_total >= 90
+    nist_rating = "Moderate" 
+  elsif nist800_total >= 32
+    nist_rating = "Low" 
+  elsif nist800_total < 32
+    nist_rating = "Very Low"
   end
 
   data['impact_val'] = impact_val

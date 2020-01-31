@@ -434,24 +434,40 @@
       .col-lg-4
         %textarea#likelihood_rationale.form-control.input-xxlarge.allowMarkupShortcut{ :rows => "3", :name => "likelihood_rationale" }
 
-    -#-------------------- End of add NIST800 findings in master database --------------------#-
+    -#-------------------- Start of add NIST800 findings in master database --------------------#-
   - elsif @nist800
     .form-group.row
       %label.col-lg-2.col-form-label{ :for => "nist_impact" } Impact
       .col-lg-4
         %select#nist_impact.custom-select{ :name => "nist_impact" }
-          %option{ :value => "Informational" }= "Informational"
+          %option{ :value => "Very Low" }= "Very Low"
           %option{ :value => "Low" }= "Low"
           %option{ :value => "Moderate" }= "Moderate"
           %option{ :value => "High" }= "High"
-          %option{ :value => "Critical" }= "Critical"
+          %option{ :value => "Very High" }= "Very High"
     .form-group.row
       %label.col-lg-2.col-form-label{ :for => "nist_likelihood" } Likelihood
       .col-lg-4
         %select#nist_likelihood.custom-select{ :name => "nist_likelihood" }
+          %option{ :value => "Very Low" }= "Very Low"
           %option{ :value => "Low" }= "Low"
           %option{ :value => "Moderate" }= "Moderate"
           %option{ :value => "High" }= "High"
+          %option{ :value => "Very High" }= "Very High"
+    .form-group.row
+      %label.col-lg-2.col-form-label{ :for => "effort" } Remediation Effort
+      .col-lg-4
+        %select#effort.custom-select{ :name => "effort" }
+          - if @finding
+            - settings.effort.each do |effort|
+              - if effort == @finding.effort
+                %option{ :selected => "selected" } #{effort}
+              - else
+                %option #{effort}
+          - else
+            - settings.effort.each do |effort|
+              %option #{effort}
+
     -#-------------------- End of add NIST800 findings in master database --------------------#-
 
   - else
