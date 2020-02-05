@@ -14,7 +14,7 @@
 
 %form{ :method => "post", :action => "/report/#{@report.id}/import_scan_data", :enctype => "multipart/form-data" }
   .form-group.row
-    %label.col-lg-2.col-form-label{ :for => "auth_type" } Authorization Type
+    %label.col-lg-2.col-form-label{ :for => "auth_type" } Data Type
     .col-lg-4
       %select#type.custom-select{ :name => "type"}
         - %w[\  Nessus BurpV1 Metasploit NMap].each do |type|
