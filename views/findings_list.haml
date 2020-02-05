@@ -175,8 +175,10 @@
                   vulns["severe"] += 1
                 elsif finding.risk == 2
                   vulns["moderate"] += 1
-                else finding.risk == 1
+                elsif finding.risk == 1
                   vulns["low"] += 1
+                else finding.risk == 0
+                  vulns["informational"] += 1
                 end
               end
               labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
@@ -191,7 +193,7 @@
                 if(#{@nist800}){
                 var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["Very High"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["High"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["Moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["Low"]}},{"label":"#{labels["label_5"]}", "value": #{vulns["Very Low"]}}];
                 }else{
-                var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["Very High"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["High"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["Moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["Low"]}}, {"label":"#{labels["label_5"]}", "value": #{vulns["Very Low"]}}];
+                var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
                 }
                 var w = 250;
                 var h = 250;
@@ -216,6 +218,7 @@
                   .attr("stroke", "white")
                   .attr("stroke-width", 2.0)
                   .attr("d", function (d) {
+                    console.log(d);
                     console.log(arc(d));
                     return arc(d);
                   });
