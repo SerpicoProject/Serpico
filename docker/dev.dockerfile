@@ -1,4 +1,4 @@
-FROM ruby:2.3.5
+FROM ruby:2.6.3
 MAINTAINER Serpico
 ENV SRP_ROOT /Serpico
 WORKDIR $SRP_ROOT

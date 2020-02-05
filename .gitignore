@@ -8,3 +8,6 @@ attachments/*
 config.json
 plugins/*
 log/
+
+# For the Jetbrains squad
+.idea

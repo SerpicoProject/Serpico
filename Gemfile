@@ -14,5 +14,3 @@ gem 'dm-sqlite-adapter', '1.2.0'
 gem 'msfrpc-client', '1.1.1'
 gem 'odle'
 gem 'rack'
-
-
