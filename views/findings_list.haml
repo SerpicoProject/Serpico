@@ -177,11 +177,11 @@
                   vulns["moderate"] += 1
                 elsif finding.risk == 1
                   vulns["low"] += 1
-                else finding.risk == 0
+                elsif finding.risk == 0
                   vulns["informational"] += 1
                 end
               end
-              labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Informational" }
+              labels = {"label_1" => "Critical", "label_2" => "High", "label_3" => "Moderate", "label_4" => "Low", "label_5" => "Info." }
             end
           - if @chart
             %div{ :id =>"chart" }
@@ -192,6 +192,8 @@
               <script type= "text/javascript">
                 if(#{@nist800}){
                 var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["Very High"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["High"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["Moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["Low"]}},{"label":"#{labels["label_5"]}", "value": #{vulns["Very Low"]}}];
+                }else if(#{@risk}){
+                var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}},{"label":"#{labels["label_5"]}", "value": #{vulns["informational"]}}];
                 }else{
                 var data = [{"label":"#{labels["label_1"]}", "value": #{vulns["critical"]}},{"label":"#{labels["label_2"]}", "value": #{vulns["severe"]}}, {"label":"#{labels["label_3"]}", "value":#{vulns["moderate"]}}, {"label":"#{labels["label_4"]}", "value": #{vulns["low"]}}];
                 }
