@@ -73,7 +73,7 @@ GEM
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     net-ldap (0.16.2)
-    nokogiri (1.10.7)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     odle (0.0.8)
     public_suffix (4.0.3)
