@@ -1,4 +1,9 @@
 # Serpico
+
+# April 9th, 2020 - Archiving...
+
+I am currently looking for a new home for Serpico. Until we find a new maintainer and company it will remain read-only. Thank you for 7(!) years with this project. 
+
 ## SimplE RePort wrIting and CollaboratiOn tool
 Serpico is a penetration testing report generation and collaboration tool. It was developed to cut down on the amount of time it takes to write a penetration testing report.
 
