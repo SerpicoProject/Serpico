@@ -56,6 +56,7 @@ end
 
 # create backup of all attachments
 get '/admin/attacments_backup' do
+  redirect to('/no_access') unless is_administrator?
   bdate = Time.now
   zip_file = './tmp/Attachments' + '-' + (bdate.strftime('%Y%m%d%H%M%S') + '.zip')
   Zip::File.open(zip_file, Zip::File::CREATE) do |zipfile|
