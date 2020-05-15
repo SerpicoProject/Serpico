@@ -3,6 +3,28 @@ require 'zip'
 
 config_options = JSON.parse(File.read('./config.json'))
 
+#Class for password Complexity Checking
+class Password_Complexity
+  attr_reader :counter
+  def initialize(check_pass)
+    @counter = 0
+    @check_pass = check_pass
+    if @check_pass =~ /(?=.*?[a-z])/
+      @counter += 1
+    end
+    if @check_pass =~ /(?=.*?[A-Z])/
+      @counter += 1
+    end
+    if @check_pass =~ /(?=.*?[0-9])/
+      @counter += 1
+    end
+    if @check_pass =~ /[^a-z^A-Z^0-9]/
+      @counter += 1
+    end
+    @check_pass = "passwordCleared"
+  end
+end
+
 # set the report_assessment_types for <1.2 versions of Serpico
 unless config_options['report_assessment_types']
   config_options['report_assessment_types'] = ['Network Internal', 'External', 'Web application', 'Physical', 'Social engineering', 'Configuration audit']
@@ -75,26 +97,37 @@ post '/admin/add_user' do
 
   user = User.first(username: params[:username])
 
-  if user
-    if params[:password] && (params[:password].size > 1)
-      # we have to hardcode the input params to prevent param pollution
-      user.update(type: params[:type], auth_type: params[:auth_type], password: params[:password])
-    else
-      # we have to hardcode the params to prevent param pollution
-      user.update(type: params[:type], auth_type: params[:auth_type])
-    end
-  else
-    user = User.new
-    user.username = params[:username]
-    user.password = params[:password]
-    user.type = params[:type]
-    user.auth_type = params[:auth_type]
-    user.save
+  #Check Password Length
+  unless params[:password].size >= 12
+    return 'Srsly? Your password must be at least 12 characters in length.'
   end
 
-  serpico_log("User #{user.username} created")
-  redirect to('/admin/list_user')
-end
+  #Check Password Complexity
+  pwd_counter = Password_Complexity.new(params[:password])
+  if pwd_counter.counter <= 2
+     return 'Passwords must contain at least 3 of the following: numbers, uppercase, lowercase, and symbols.'
+  else
+  #All good, carry on.
+    if user
+      if params[:password] && (params[:password].size > 12)
+        # we have to hardcode the input params to prevent param pollution
+        user.update(type: params[:type], auth_type: params[:auth_type], password: params[:password])
+      else
+        # we have to hardcode the params to prevent param pollution
+        user.update(type: params[:type], auth_type: params[:auth_type])
+      end
+    else
+      user = User.new
+      user.username = params[:username]
+      user.password = params[:password]
+      user.type = params[:type]
+      user.auth_type = params[:auth_type]
+      user.save
+    end
+    serpico_log("User #{user.username} created")
+    redirect to('/admin/list_user')
+  end
+end 
 
 get '/admin/list_user' do
   redirect to('/no_access') unless is_administrator?
