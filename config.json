@@ -5,6 +5,7 @@
     "ssl_certificate":"./cert.pem",
     "ssl_key":"key.pem",
     "ldap":"false",
+    "date_format": "%-m/%-d/%Y",
     "ldap_domain":"",
     "ldap_dc":"",
     "dread":false,  //DREAD risk scoring not used by default

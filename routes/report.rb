@@ -1407,7 +1407,17 @@ get '/report/:id/generate' do
   plugins_xml = PluginNotifier.instance.notify_report_generated(@report)
 
   # we bring all xml together
-  report_xml = "<report>#{CGI.unescapeHTML(@report.to_xml)}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}#{all_appendices_xml}#{plugins_xml}</report>"
+
+  # To adjust the date format we change it manually here:
+  date_format = config_options['date_format']
+  if !@report.assessment_start_date.empty?
+    @report.assessment_start_date = Date.parse(@report.assessment_start_date).strftime(date_format)
+  end
+  if !@report.assessment_end_date.empty?
+    @report.assessment_end_date = Date.parse(@report.assessment_end_date).strftime(date_format)
+  end
+  # Here we replace all variables in the template with variables from the database
+  report_xml = "<report>#{@report.to_xml}#{udv}#{findings_xml}#{udo_xml}#{services_xml}#{hosts_xml}</report>"
   noko_report_xml = Nokogiri::XML(report_xml)
   #no use to go on with report generation if report XML is malformed
   if !noko_report_xml.errors.empty?
